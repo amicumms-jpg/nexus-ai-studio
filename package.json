@@ -1,13 +1,9 @@
 {
   "name": "nexus-ai-app",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
+  "private": true,
   "dependencies": {
     "express": "^4.19.2",
     "@google/generative-ai": "^0.21.0"
   }
 }
-
