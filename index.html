@@ -825,6 +825,28 @@
       const langs = { 'ro': 'Română', 'en': 'English', 'fr': 'Français', 'de': 'Deutsch', 'es': 'Español' };
       return langs[code] || 'Română';
     }
+async function sendMessage(e) {
+  if (e) e.preventDefault();
+  const inputEl = document.getElementById('user-input');
+  const chatMessages = document.getElementById('chat-messages');
+  if (!inputEl || !inputEl.value.trim()) return;
+
+  const userText = inputEl.value.trim();
+  inputEl.value = '';
+
+  // Afișăm mesajul utilizatorului pe ecran
+  chatMessages.innerHTML += `<div class="flex justify-end mb-4"><div class="bg-indigo-600 text-white p-3 rounded-2xl max-w-xl">${userText}</div></div>`;
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  try {
+    const responseText = await callGeminiAPI(userText);
+    // Afișăm răspunsul de la Gemini
+    chatMessages.innerHTML += `<div class="flex justify-start mb-4"><div class="glass-card p-4 rounded-2xl max-w-2xl text-sm leading-relaxed border border-gray-800">${responseText}</div></div>`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } catch (err) {
+    chatMessages.innerHTML += `<div class="flex justify-start mb-4"><div class="bg-red-900/50 text-red-200 p-3 rounded-2xl max-w-xl border border-red-800">Eroare: ${err.message}</div></div>`;
+  }
+}
 
     // --- APEL CU MODELUL RECOMANDAT SI FALLBACK AUTOMAT ---
    async function callGeminiAPI(promptText, customInstruction = "") {
@@ -847,13 +869,13 @@
 }
 
 // Codul de mai jos (bucla veche) este dezactivat
-function oldLoopDisabled() {
+async function oldLoopDisabled() {
 
       for (const model of candidateModels) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         
         try {
-          const response = await fetch(url, {
+           const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
