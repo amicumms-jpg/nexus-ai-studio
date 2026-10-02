@@ -827,19 +827,27 @@
     }
 
     // --- APEL CU MODELUL RECOMANDAT SI FALLBACK AUTOMAT ---
-    async function callGeminiAPI(promptText, customInstruction = "") {
-     // Cheia este gestionata automat din backend pe Vercel
-      const targetLang = getSelectedLanguageName();
-      const defaultInstruction = `Răspunde direct și EXCLUSIV în limba: ${targetLang}. Oferă doar răspunsul final bine structurat.`;
-      const fullPrompt = `${defaultInstruction}\n\n${customInstruction}\n\nÎntrebarea utilizatorului: ${promptText}`;
+   async function callGeminiAPI(promptText, customInstruction = "") {
+  const targetLang = getSelectedLanguageName();
+  const fullPrompt = `${customInstruction ? customInstruction + "\n\n" : ""}Răspunde în limba ${targetLang}: ${promptText}`;
 
-      const candidateModels = [
-        'gemini-3.8-flash',
-        'gemini-3.5-flash',
-        'gemini-flash-latest'
-      ];
+  const response = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: fullPrompt })
+  });
 
-      let lastError = null;
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.details || data.error || 'Eroare la conectarea cu serverul.');
+  }
+
+  return data.text;
+}
+
+// Codul de mai jos (bucla veche) este dezactivat
+function oldLoopDisabled() {
 
       for (const model of candidateModels) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
