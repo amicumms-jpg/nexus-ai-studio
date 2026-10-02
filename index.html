@@ -828,13 +828,7 @@
 
     // --- APEL CU MODELUL RECOMANDAT SI FALLBACK AUTOMAT ---
     async function callGeminiAPI(promptText, customInstruction = "") {
-      let apiKey = localStorage.getItem('NEXUS_GEMINI_KEY');
-      if (!apiKey) {
-        apiKey = prompt("Introdu Cheia API Google Gemini:");
-        if (apiKey) localStorage.setItem('NEXUS_GEMINI_KEY', apiKey.trim());
-        else throw new Error("Cheia API este necesară pentru a continua.");
-      }
-
+     // Cheia este gestionata automat din backend pe Vercel
       const targetLang = getSelectedLanguageName();
       const defaultInstruction = `Răspunde direct și EXCLUSIV în limba: ${targetLang}. Oferă doar răspunsul final bine structurat.`;
       const fullPrompt = `${defaultInstruction}\n\n${customInstruction}\n\nÎntrebarea utilizatorului: ${promptText}`;
