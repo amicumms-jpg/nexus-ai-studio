@@ -149,7 +149,7 @@
                 <!-- Input Chat -->
                 <div class="p-4 border-t border-white/10 bg-black/30">
                     <div class="flex items-center space-x-2">
-                        <input type="text" id="chatInput" placeholder="Scrie un mesaj sau folosește vocea..." class="flex-1 glass-input px-4 py-3 rounded-xl text-sm outline-none focus:border-neonGreen" onkeypress="handleChatKeyPress(event)">
+                        <input type="text" id="chatInput" onkeydown="if(event.key=== 'Enter') sendMessage();" placeholder="Scrie un mesaj sau folosește vocea..." class="flex-1 glass-input px-4 py-3 rounded-xl text-sm outline-none focus:border-neonGreen" onkeypress="handleChatKeyPress(event)">
                         <button onclick="sendMessage()" class="w-12 h-12 rounded-xl bg-gradient-to-r from-neonGreen to-neonCyan text-darkBg flex items-center justify-center font-bold shadow-lg hover:opacity-90 transition">
                             <i class="fa-solid fa-paper-plane"></i>
                         </button>
