@@ -390,7 +390,6 @@ async function sendMessage() {
 
     const chatMessages = document.getElementById('chatMessages');
     
-    // Adaugă mesaj utilizator în interfață
     chatMessages.innerHTML += `
         <div class="flex items-start justify-end space-x-3">
             <div class="glass-panel p-4 rounded-2xl max-w-2xl text-sm text-gray-200 bg-cyan-950/40">
@@ -404,7 +403,6 @@ async function sendMessage() {
     input.value = '';
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // Adaugă un indicator de încărcare (Se generează răspunsul...)
     const loadingId = 'loading-' + Date.now();
     chatMessages.innerHTML += `
         <div id="${loadingId}" class="flex items-start space-x-3">
@@ -419,7 +417,6 @@ async function sendMessage() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     try {
-        // Preia cheia API salvată sau cere-o
         let apiKey = localStorage.getItem('nexus_gemini_api_key') || '';
         if(!apiKey) {
             apiKey = prompt("Te rugăm să introduci cheia ta Google Gemini API:") || '';
@@ -434,14 +431,13 @@ async function sendMessage() {
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div class="glass-panel p-4 rounded-2xl text-sm text-red-300">
-                        Eroare: Nu ai introdus nicio cheie Gemini API validă. Setează cheia în setări sau introduce-o când este solicitată.
+                        Eroare: Nu ai introdus nicio cheie Gemini API validă.
                     </div>
                 </div>
             `;
             return;
         }
 
-        // Apel real către Gemini API (gemini-2.5-flash)
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -476,7 +472,7 @@ async function sendMessage() {
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div class="glass-panel p-4 rounded-2xl text-sm text-red-300">
-                    Eroare la comunicarea cu Gemini API: ${error.message}
+                    Eroare: ${error.message}
                 </div>
             </div>
         `;
@@ -485,38 +481,6 @@ async function sendMessage() {
 }
 
 
-
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Adaugă mesaj utilizator
-            chatMessages.innerHTML += `
-                <div class="flex items-start justify-end space-x-3">
-                    <div class="glass-panel p-4 rounded-2xl max-w-2xl text-sm text-gray-200 bg-cyan-950/40">
-                        ${escapeHtml(text)}
-                    </div>
-                    <div class="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                </div>
-            `;
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Răspuns simulat AI inteligent
-            setTimeout(() => {
-                chatMessages.innerHTML += `
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-neonGreen/20 text-neonGreen flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-robot"></i>
-                        </div>
-                        <div class="glass-panel p-4 rounded-2xl max-w-2xl text-sm text-gray-200">
-                            Am recepționat solicitarea ta legată de "${escapeHtml(text)}". Analizez parametrii ceruți și îți ofer suport tehnic complet în Nexus AI Studio Pro!
-                        </div>
-                    </div>
-                `;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        }
 
         function handleChatKeyPress(event) {
             if(event.key === 'Enter') sendMessage();
