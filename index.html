@@ -42,7 +42,7 @@
             <button onclick="switchTab('agents')" id="nav-agents" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-2 transition"><i class="fa-solid fa-robot"></i><span>Agenți & Autonomie</span></button>
             <button onclick="switchTab('security')" id="nav-security" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-2 transition"><i class="fa-solid fa-shield-halved"></i><span>Securitate & Code</span></button>
             <button onclick="switchTab('billing')" id="nav-billing" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-2 transition"><i class="fa-solid fa-credit-card"></i><span>Abonamente</span></button>
-            <button onclick="switchTab('auth')" id="nav-auth" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-2 transition"><i class="fa-solid fa-user-shield"></i><span>Autentificare</span></button>
+            <button onclick="switchTab('auth')" id="nav-auth" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-2 transition"><i class="fa-solid fa-user-shield"></i><span>Autentificare & API</span></button>
         </nav>
 
         <div class="flex items-center space-x-3">
@@ -50,7 +50,7 @@
                 <option value="ro">ro Română</option>
                 <option value="en">en English</option>
             </select>
-            <button class="text-gray-400 hover:text-white text-sm"><i class="fa-solid fa-gear"></i></button>
+            <button onclick="switchTab('auth')" class="text-gray-400 hover:text-white text-sm" title="Setări API"><i class="fa-solid fa-gear"></i></button>
         </div>
     </header>
 
@@ -79,7 +79,7 @@
                 <div class="text-gray-400 text-[11px]">Model activ:</div>
                 <div class="font-semibold text-neonGreen mt-0.5 flex items-center space-x-1.5">
                     <span class="w-2 h-2 rounded-full bg-neonGreen animate-pulse"></span>
-                    <span>Gemini 2.5 Flash</span>
+                    <span>Gemini 3.8 Flash</span>
                 </div>
             </div>
         </aside>
@@ -89,27 +89,25 @@
             
             <!-- Tab Chat AI -->
             <div id="tab-chat" class="flex-1 flex flex-col h-full overflow-hidden">
-                <!-- Chat Header info -->
                 <div class="px-6 py-3 border-b border-gray-800/60 bg-panelBg/30 flex items-center justify-between shrink-0">
                     <div>
                         <h2 class="font-bold text-sm text-white">Nexus Neural Assistant</h2>
                         <p class="text-xs text-gray-400">Pregătit pentru comenzi complexe și codare avansată.</p>
                     </div>
-                    <div class="text-xs text-gray-400 flex items-center space-x-1 cursor-pointer hover:text-white">
-                        <i class="fa-solid fa-microphone text-accentBlue"></i>
-                        <span>Voice Ready</span>
+                    <div class="text-xs text-gray-400 flex items-center space-x-1">
+                        <span id="apiKeyStatus" class="inline-block w-2 h-2 rounded-full bg-red-500"></span>
+                        <span id="apiKeyStatusText" class="cursor-pointer hover:underline" onclick="switchTab('auth')">Cheie API neconfigurată</span>
                     </div>
                 </div>
 
                 <!-- Messages Container -->
                 <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-                    <!-- Welcome message -->
                     <div class="flex items-start space-x-3">
                         <div class="w-8 h-8 rounded-xl bg-neonGreen/20 text-neonGreen flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-robot"></i>
                         </div>
                         <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%] sm:max-w-[70%] shadow-md">
-                            Salut! Sunt Nexus AI. Cu ce te pot ajuta astăzi? Poți folosi asistentul vocal, comenzi sau scrie direct în chat.
+                            Salut! Sunt Nexus AI. Înainte de a înceite, asigură-te că ai introdus cheia ta API în tab-ul <b>Autentificare & API</b> de sus.
                         </div>
                     </div>
                 </div>
@@ -125,34 +123,69 @@
                 </div>
             </div>
 
-            <!-- Alte tab-uri ascunse implicit -->
+            <!-- Tab Autentificare & Securitate API (Noul panou sigur) -->
+            <div id="tab-auth" class="hidden flex-1 p-6 overflow-y-auto max-w-xl">
+                <h2 class="text-lg font-bold mb-2 text-white"><i class="fa-solid fa-key text-accentBlue mr-2"></i>Configurare Cheie API Google Gemini</h2>
+                <p class="text-sm text-gray-400 mb-6">Cheia ta este salvată strict în browserul tău (localStorage) și nu este trimită pe niciun server extern, asigurând securitatea contului tău.</p>
+                
+                <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-2">Introdu cheia ta API (Google AI Studio):</label>
+                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-accentBlue">
+                    </div>
+                    <button onclick="saveApiKey()" class="bg-neonGreen hover:bg-neonGreen/80 text-darkBg font-bold text-xs py-2.5 px-4 rounded-xl transition shadow">
+                        Salvează Cheia în Browser
+                    </button>
+                    <div id="saveNotification" class="text-xs text-neonGreen font-medium hidden">
+                        <i class="fa-solid fa-check mr-1"></i> Cheia a fost salvată cu succes! Poți reveni la Chat.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Celelalte tab-uri -->
             <div id="tab-social" class="hidden flex-1 p-6 overflow-y-auto">
                 <h2 class="text-lg font-bold mb-2">Social Video & Story</h2>
-                <p class="text-sm text-gray-400">Generator automat de conținut video și povești pentru rețelele sociale integrat cu fluxul tău de afaceri.</p>
+                <p class="text-sm text-gray-400">Generator automat de conținut video și povești pentru rețelele sociale.</p>
             </div>
             <div id="tab-agents" class="hidden flex-1 p-6 overflow-y-auto">
                 <h2 class="text-lg font-bold mb-2">Agenți & Autonomie</h2>
-                <p class="text-sm text-gray-400">Configurează agenți autonomi pentru sarcini repetitive și management de date.</p>
+                <p class="text-sm text-gray-400">Configurează agenți autonomi pentru sarcini repetitive.</p>
             </div>
             <div id="tab-security" class="hidden flex-1 p-6 overflow-y-auto">
                 <h2 class="text-lg font-bold mb-2">Securitate & Code</h2>
-                <p class="text-sm text-gray-400">Unelte de diagnostic hardware/rețea și analiză securizată a codului sursă.</p>
+                <p class="text-sm text-gray-400">Unelte de diagnostic hardware/rețea și analiză securizată a codului.</p>
             </div>
             <div id="tab-billing" class="hidden flex-1 p-6 overflow-y-auto">
                 <h2 class="text-lg font-bold mb-2">Abonamente</h2>
-                <p class="text-sm text-gray-400">Gestionează planul tău Nexus AI Studio Pro și resursele API disponibile.</p>
-            </div>
-            <div id="tab-auth" class="hidden flex-1 p-6 overflow-y-auto">
-                <h2 class="text-lg font-bold mb-2">Autentificare</h2>
-                <p class="text-sm text-gray-400">Setări cont utilizator, chei API Google Gemini și preferințe de sesiune.</p>
+                <p class="text-sm text-gray-400">Gestionează planul tău Nexus AI Studio Pro.</p>
             </div>
 
         </main>
     </div>
 
-    <!-- Script de integrare robust cu Gemini 2.5 Flash -->
+    <!-- Script de integrare securizată -->
     <script>
-        const apiKey = "AQ.Ab8RN6JfyZks6F6lpJn1oV8ep14eL23g4Q00UXGe6IG4v7kUBQ"; // Poți introduce cheia ta direct sau o preiei din setări
+        // Verifică starea cheii la încărcare
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('nexus_gemini_key');
+            if (savedKey) {
+                document.getElementById('apiKeyStatus').className = "inline-block w-2 h-2 rounded-full bg-neonGreen animate-pulse";
+                document.getElementById('apiKeyStatusText').innerText = "Cheie activă (Securizată)";
+                document.getElementById('apiKeyInput').value = savedKey;
+            }
+        });
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (key) {
+                localStorage.setItem('nexus_gemini_key', key);
+                document.getElementById('apiKeyStatus').className = "inline-block w-2 h-2 rounded-full bg-neonGreen animate-pulse";
+                document.getElementById('apiKeyStatusText').innerText = "Cheie activă (Securizată)";
+                const notif = document.getElementById('saveNotification');
+                notif.classList.remove('hidden');
+                setTimeout(() => notif.classList.add('hidden'), 4000);
+            }
+        }
 
         function switchTab(tabId) {
             ['chat', 'social', 'agents', 'security', 'billing', 'auth'].forEach(t => {
@@ -183,13 +216,19 @@
         }
 
         async function handleSendMessage() {
+            const apiKey = localStorage.getItem('nexus_gemini_key');
+            if (!apiKey) {
+                alert("Te rugăm să introduci mai întâi cheia API în tab-ul 'Autentificare & API'!");
+                switchTab('auth');
+                return;
+            }
+
             const inputField = document.getElementById('userInput');
             const messageText = inputField.value.trim();
             if (!messageText) return;
 
             const chatMessages = document.getElementById('chatMessages');
 
-            // Afișează mesajul utilizatorului
             chatMessages.innerHTML += `
                 <div class="flex items-start justify-end space-x-3">
                     <div class="bg-accentBlue text-white p-3.5 rounded-2xl text-sm max-w-[85%] sm:max-w-[70%] shadow-md">
@@ -203,7 +242,6 @@
             inputField.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Indicator de încărcare
             const loadingId = "loading_" + Date.now();
             chatMessages.innerHTML += `
                 <div id="${loadingId}" class="flex items-start space-x-3">
@@ -211,14 +249,13 @@
                         <i class="fa-solid fa-robot"></i>
                     </div>
                     <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-400 italic">
-                        Nexus AI procesează cu Gemini 2.5 Flash...
+                        Nexus AI procesează cu Gemini 3.8 Flash...
                     </div>
                 </div>
             `;
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                // Apel către cea mai nouă versiune oficială Gemini 2.5 Flash
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -237,7 +274,6 @@
                     aiReply = `Eroare Google API: ${data.error.message}`;
                 }
 
-                // Afișează răspunsul AI
                 chatMessages.innerHTML += `
                     <div class="flex items-start space-x-3">
                         <div class="w-8 h-8 rounded-xl bg-neonGreen/20 text-neonGreen flex items-center justify-center shrink-0">
@@ -264,7 +300,6 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Permite trimiterea cu tasta Enter
         document.getElementById('userInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 handleSendMessage();
