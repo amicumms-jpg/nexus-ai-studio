@@ -488,7 +488,7 @@
         }
 
         async function handleLogout() {
-            if (supabase) await supabase.auth.signOut();
+            if (nexusSupabase) await nexusSupabase.auth.signOut();
             localStorage.removeItem('nexus_logged_user');
             location.reload();
         }
