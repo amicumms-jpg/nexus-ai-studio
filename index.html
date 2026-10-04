@@ -10,6 +10,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Stripe Script pentru Plăți -->
     <script src="https://js.stripe.com/v3/"></script>
+        <!-- Import SDK Oficial Google Gemini -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run"
+        }
+      }
+    </script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -510,7 +519,7 @@
             }
         }
 
-        async function handleSendMessage() {
+       async function handleSendMessage() {
     const apiKey = localStorage.getItem('nexus_gemini_key');
     if (!apiKey) {
         alert("Introdu mai întâi cheia API în tab-ul dedicat!");
@@ -541,20 +550,20 @@
     container.scrollTop = container.scrollHeight;
 
     try {
-        // Trimitem cererea către modelul stabil 1.5-flash pentru a evita blocajele
-        const response = await fetch(`https://googleapis.com{apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
-        });
-        const data = await response.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nu am putut procesa un răspuns valid.";
+        // Conexiune securizată utilizând SDK-ul oficial Google Gemini adăugat în head
+        const { GoogleGenAI } = await import('@google/generative-ai');
+        const ai = new GoogleGenAI({ apiKey: apiKey });
         
-        // Ștergem textul cu "Nexus se gândește..."
+        // Apelăm modelul stabil prin conexiunea autorizată de Google
+        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(text);
+        const reply = result.response.text();
+        
+        // Ștergem loader-ul animat
         const loadingElement = document.getElementById(loadingId);
         if (loadingElement) loadingElement.remove();
 
-        // Afișăm răspunsul final de la AI
+        // Afișăm răspunsul final primit de la AI
         container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
         container.scrollTop = container.scrollHeight;
 
@@ -564,7 +573,6 @@
         alert("Eroare de conexiune la API-ul Gemini: " + e.message);
     }
 }
-
 
         async function generateVideoStoryboard() {
             const apiKey = localStorage.getItem('nexus_gemini_key');
