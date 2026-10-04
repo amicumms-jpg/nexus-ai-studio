@@ -116,13 +116,35 @@
                     </div>
                 </div>
 
-                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
-                    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
-                        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
-                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
-                    </div>
-                </div>
-            </div>
+               <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
+    <div class="max-w-4xl mx-auto">
+        <!-- Zona de previzualizare fișier atașat -->
+        <div id="filePreviewContainer" class="hidden items-center gap-2 mb-2 px-3 py-1.5 bg-[#1a1d24] border border-gray-700 rounded-lg text-sm text-gray-300 w-fit">
+            <i class="fa-solid fa-file-lines text-neonViolet"></i>
+            <span id="fileNameDisplay" class="truncate max-w-xs"></span>
+            <button type="button" id="removeFileBtn" class="text-gray-400 hover:text-red-400 ml-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Caseta de text și butonul de atașare -->
+        <div class="flex items-center space-x-2 bg-gray-900 border border-gray-800 rounded-xl p-2">
+            <!-- Input ascuns pentru fișiere -->
+            <input type="file" id="fileInput" class="hidden" accept="image/*,.pdf,.txt,.doc,.docx">
+            
+            <!-- Butonul vizibil (agrafa) -->
+            <label for="fileInput" class="cursor-pointer text-gray-400 hover:text-white p-2 transition flex items-center justify-center" title="Atașază fișier">
+                <i class="fa-solid fa-paperclip text-lg"></i>
+            </label>
+
+            <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent border-none outline-none text-white px-2 placeholder-gray-500">
+            <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white px-4 py-2 rounded-lg transition flex items-center justify-center">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
 
             <!-- Tab 2: Gemini Live & Voice Studio -->
             <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
