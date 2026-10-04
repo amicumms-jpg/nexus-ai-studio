@@ -954,30 +954,8 @@
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
-      <!-- Fereastra de Autentificare și Logica Supabase -->
-<div id="auth-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-    <div class="bg-panelBg border border-gray-800 p-6 rounded-2xl w-96 max-w-full relative shadow-2xl">
-        <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-        <h3 id="auth-title" class="text-lg font-bold text-white mb-4">Autentificare Nexus AI</h3>
-        
-        <div class="space-y-3">
-            <input type="email" id="auth-email" placeholder="Adresă email" class="w-full bg-darkBg border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accentBlue">
-            <input type="password" id="auth-password" placeholder="Parolă" class="w-full bg-darkBg border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accentBlue">
-            
-            <button onclick="handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-accentBlue text-white rounded-lg py-2 text-sm font-medium hover:opacity-90 transition">
-                Intră în cont
-            </button>
-            
-            <div class="text-center mt-3">
-                <button onclick="toggleAuthMode()" id="auth-switch-text" class="text-xs text-gray-400 hover:text-white underline">
-                    Nu ai cont? Înregistrează-te
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
+     
+     
   let isSignUpMode = false;
 
   function openAuthModal() {
