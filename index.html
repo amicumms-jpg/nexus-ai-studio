@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ro" class="dark">
 <head>
   <!-- Librăria Supabase -->
@@ -981,13 +981,19 @@
   let isSignUpMode = false;
 
   function openAuthModal() {
-      document.getElementById('auth-modal').classList.remove('hidden');
-      document.getElementById('auth-modal').classList.add('flex');
+      const modal = document.getElementById('auth-modal');
+      if(modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+      }
   }
 
   function closeAuthModal() {
-      document.getElementById('auth-modal').classList.add('hidden');
-      document.getElementById('auth-modal').classList.remove('flex');
+      const modal = document.getElementById('auth-modal');
+      if(modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+      }
   }
 
   function toggleAuthMode() {
@@ -1010,7 +1016,7 @@
           const { data, error } = await supabase.auth.signUp({ email, password });
           if (error) alert(error.message);
           else {
-              alert('Cont creat cu succes! Verifică emailul pentru confirmare.');
+              alert('Cont creat cu succes!');
               closeAuthModal();
           }
       } else {
@@ -1025,10 +1031,11 @@
   }
 
   async function checkUserSession() {
+      if (typeof supabase === 'undefined') return;
       const { data: { session } } = await supabase.auth.getSession();
       const authContainer = document.getElementById('auth-container');
       
-      if (session) {
+      if (session && authContainer) {
           authContainer.innerHTML = `
               <span class="text-xs text-gray-300 hidden sm:inline">${session.user.email}</span>
               <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/80 text-white text-xs font-medium hover:bg-red-600 transition">
@@ -1045,6 +1052,7 @@
 
   window.addEventListener('DOMContentLoaded', checkUserSession);
 </script>
+
 
 </body>
 </html>
