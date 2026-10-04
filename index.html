@@ -968,7 +968,17 @@
       document.getElementById('auth-submit-btn').innerText = isSignUpMode ? 'Înregistrare' : 'Intră în cont';
       document.getElementById('auth-switch-text').innerText = isSignUpMode ? 'Ai deja cont? Autentifică-te' : 'Nu ai cont? Înregistrează-te';
   }
-
+async function checkUserSession() {
+    if (typeof supabase === 'undefined') return;
+    const { data: { session } } = await supabase.auth.getSession();
+    const authContainer = document.getElementById('auth-container');
+    if (session && authContainer) {
+        authContainer.innerHTML = `
+            <span class="text-xs text-gray-300 hidden sm:inline">${session.user.email}</span>
+            <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/80 text-white">Ieși</button>
+        `;
+    }
+}
 
   async function handleLogout() {
       await supabase.auth.signOut();
