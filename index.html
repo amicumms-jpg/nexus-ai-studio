@@ -981,23 +981,30 @@
       document.getElementById('auth-switch-text').innerText = isSignUpMode ? 'Ai deja cont? Autentifică-te' : 'Nu ai cont? Înregistrează-te';
   }
 
-  async function handleAuthSubmit() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-
-      if (!email || !password) {
-          alert('Te rog introdu emailul și parola.');
-          return;
-      }
-
-      async function handleAuthSubmit() {
-    const email = document.getElementById('auth-email').value;
-    const password = document.getElementById('auth-password').value;
+ async function handleAuthSubmit() {
+    const email = document.getElementById('loginEmailInput').value;
+    const password = document.getElementById('loginPassInput').value;
 
     if (!email || !password) {
         alert('Te rog introdu emailul și parola.');
         return;
     }
+
+    let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        let { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+        if (signUpError) {
+            alert(signUpError.message);
+        } else {
+            alert('Cont creat și autentificare reușită!');
+            closeAuthModal();
+        }
+    } else {
+        alert('Autentificare reușită!');
+        closeAuthModal();
+    }
+}
 
     let { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
