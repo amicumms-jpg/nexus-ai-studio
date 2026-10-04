@@ -10,15 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Stripe Script pentru Plăți -->
     <script src="https://js.stripe.com/v3/"></script>
-        <!-- Import SDK Oficial Google Gemini -->
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run"
-        }
-      }
-    </script>
-
+          <!-- Scriptul Oficial Google Gemini pre-compilat pentru browser -->
+    <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai@0.24.1/dist/index.min.js"></script>
+ 
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -550,12 +544,11 @@
     container.scrollTop = container.scrollHeight;
 
     try {
-        // Conexiune securizată utilizând SDK-ul oficial Google Gemini adăugat în head
-        const { GoogleGenAI } = await import('@google/generative-ai');
-        const ai = new GoogleGenAI({ apiKey: apiKey });
+        // Inițializăm instanța nativă din librăria încărcată în head
+        const genAI = new window.GoogleGenerativeAI.GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         
-        // Apelăm modelul stabil prin conexiunea autorizată de Google
-        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Generăm conținutul utilizând conexiunea SDK stabilă
         const result = await model.generateContent(text);
         const reply = result.response.text();
         
@@ -573,6 +566,7 @@
         alert("Eroare de conexiune la API-ul Gemini: " + e.message);
     }
 }
+        
 
         async function generateVideoStoryboard() {
             const apiKey = localStorage.getItem('nexus_gemini_key');
