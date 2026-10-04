@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus AI Studio Pro - Ultimate Edition v9.6</title>
+    <title>Nexus AI Studio Pro - Ultimate Edition v9.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Script Supabase Client -->
@@ -46,19 +46,19 @@
 
         <!-- Buton Cont / Autentificare din Header -->
         <div id="auth-container" class="flex items-center space-x-2">
-            <button onclick="switchTab('authAccount')" class="px-3 py-1.5 rounded-lg bg-accentIndigo text-white text-xs font-medium hover:opacity-90 transition flex items-center shadow">
+            <button onclick="switchTab('authAccount')" class="px-3 py-1.5 rounded-lg bg-accentIndigo text-white text-xs font-medium hover:opacity-90 transition flex items-center shadow cursor-pointer">
                 <i class="fa-solid fa-user mr-1.5"></i> Cont / Autentificare
             </button>
         </div>
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
-            <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
-            <button onclick="switchTab('geminiLive')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
-            <button onclick="switchTab('aiVideoMaker')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
-            <button onclick="switchTab('socialSuite')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
-            <button onclick="switchTab('authAccount')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
-            <button onclick="switchTab('billing')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
-            <button onclick="switchTab('auth')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-key"></i><span>API Key</span></button>
+            <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
+            <button onclick="switchTab('geminiLive')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
+            <button onclick="switchTab('aiVideoMaker')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
+            <button onclick="switchTab('socialSuite')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
+            <button onclick="switchTab('authAccount')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
+            <button onclick="switchTab('billing')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
+            <button onclick="switchTab('auth')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-key"></i><span>API Key</span></button>
         </nav>
     </header>
 
@@ -67,7 +67,7 @@
         
         <!-- Sidebar -->
         <aside class="w-64 bg-panelBg/80 border-r border-gray-800/80 flex flex-col shrink-0 p-3 hidden sm:flex z-10">
-            <button onclick="newSession()" class="w-full bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-md transition">
+            <button onclick="newSession()" class="w-full bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-md transition cursor-pointer">
                 <i class="fa-solid fa-plus"></i>
                 <span>Sesiune Nouă AI</span>
             </button>
@@ -75,13 +75,13 @@
             <div class="mt-5 flex-1 overflow-y-auto space-y-1">
                 <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold px-2">Navigare Rapidă</span>
                 <div class="mt-2 space-y-1 text-xs">
-                    <button onclick="switchTab('chat')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-comments text-accentIndigo"></i><span>Chat General</span></button>
-                    <button onclick="switchTab('geminiLive')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-wave-square text-neonViolet"></i><span>Gemini Live & Voice</span></button>
-                    <button onclick="switchTab('aiVideoMaker')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-video text-neonViolet"></i><span>AI Video Maker</span></button>
-                    <button onclick="switchTab('socialSuite')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-share-nodes text-purple-400"></i><span>Social Media Hub</span></button>
-                    <button onclick="switchTab('authAccount')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-user-shield text-accentIndigo"></i><span>Autentificare / Cont</span></button>
-                    <button onclick="switchTab('billing')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-credit-card text-successGreen"></i><span>Plată Card / Abonament</span></button>
-                    <button onclick="switchTab('auth')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2"><i class="fa-solid fa-key text-yellow-500"></i><span>Setare API Key</span></button>
+                    <button onclick="switchTab('chat')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-comments text-accentIndigo"></i><span>Chat General</span></button>
+                    <button onclick="switchTab('geminiLive')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-wave-square text-neonViolet"></i><span>Gemini Live & Voice</span></button>
+                    <button onclick="switchTab('aiVideoMaker')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-video text-neonViolet"></i><span>AI Video Maker</span></button>
+                    <button onclick="switchTab('socialSuite')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-share-nodes text-purple-400"></i><span>Social Media Hub</span></button>
+                    <button onclick="switchTab('authAccount')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-user-shield text-accentIndigo"></i><span>Autentificare / Cont</span></button>
+                    <button onclick="switchTab('billing')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-credit-card text-successGreen"></i><span>Plată Card / Abonament</span></button>
+                    <button onclick="switchTab('auth')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-key text-yellow-500"></i><span>Setare API Key</span></button>
                 </div>
             </div>
 
@@ -118,20 +118,20 @@
                 <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
                     <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
                         <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
-                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
                     </div>
                 </div>
             </div>
 
             <!-- Tab 2: Gemini Live & Voice Studio -->
-            <div id="tab-geminiLive" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-6 space-y-4">
+            <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
                 <div class="flex items-center justify-between shrink-0">
                     <div>
                         <h2 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-wave-square text-neonViolet mr-2 animate-pulse"></i>Gemini Live & Interactive Voice</h2>
                         <p class="text-xs text-gray-400">Conversație în timp real prin text sau voce cu feedback audio generat.</p>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <button onclick="toggleVoiceOutput()" id="voiceToggleBtn" class="px-3 py-1.5 rounded-xl bg-gray-800 text-gray-300 text-xs font-medium hover:bg-gray-700 transition flex items-center border border-gray-700">
+                        <button onclick="toggleVoiceOutput()" id="voiceToggleBtn" class="px-3 py-1.5 rounded-xl bg-gray-800 text-gray-300 text-xs font-medium hover:bg-gray-700 transition flex items-center border border-gray-700 cursor-pointer">
                             <i class="fa-solid fa-volume-high mr-1.5 text-neonViolet"></i> Voce AI: <span id="voiceStatusText" class="ml-1 text-neonViolet font-bold">Activă</span>
                         </button>
                     </div>
@@ -149,7 +149,7 @@
                     <span id="liveStateLabel" class="text-xs text-gray-400 mt-2 font-medium">Pregătit pentru conversație live (Text & Voce)</span>
                 </div>
 
-                <div id="liveChatMessages" class="flex-1 overflow-y-auto p-4 bg-panelBg/40 border border-gray-800/80 rounded-2xl space-y-3">
+                <div id="liveChatMessages" class="flex-1 overflow-y-auto p-4 bg-panelBg/40 border border-gray-800/80 rounded-2xl space-y-3" style="max-height: calc(100vh - 350px);">
                     <div class="flex items-start space-x-3">
                         <div class="w-8 h-8 rounded-xl bg-neonViolet/20 text-neonViolet flex items-center justify-center shrink-0"><i class="fa-solid fa-microphone-lines"></i></div>
                         <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%] shadow-sm">
@@ -159,11 +159,11 @@
                 </div>
 
                 <div class="p-3 bg-panelBg/60 border border-gray-800 rounded-2xl shrink-0 flex items-center space-x-3 shadow-lg">
-                    <button onclick="startListening()" id="micBtn" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-neonViolet hover:text-white text-gray-300 flex items-center justify-center transition border border-gray-700 shadow" title="Vorbește la microfon">
+                    <button onclick="startListening()" id="micBtn" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-neonViolet hover:text-white text-gray-300 flex items-center justify-center transition border border-gray-700 shadow cursor-pointer" title="Vorbește la microfon">
                         <i class="fa-solid fa-microphone text-sm"></i>
                     </button>
                     <input type="text" id="liveInput" placeholder="Scrie mesajul tău pentru sesiunea live..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleLiveSendMessage()">
-                    <button onclick="handleLiveSendMessage()" class="bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow flex items-center space-x-1.5">
+                    <button onclick="handleLiveSendMessage()" class="bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow flex items-center space-x-1.5 cursor-pointer">
                         <span>Trimite Live</span>
                         <i class="fa-solid fa-paper-plane text-[10px]"></i>
                     </button>
@@ -171,36 +171,40 @@
             </div>
 
             <!-- Tab 3: AI Video Maker -->
-            <div id="tab-aiVideoMaker" class="app-tab hidden flex-1 p-6 overflow-y-auto space-y-6">
-                <div>
-                    <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-video text-neonViolet mr-2"></i>AI Video & Storyboard Generator</h2>
-                    <p class="text-sm text-gray-400">Generează scenarii și cadre vizuale detaliate pentru clipurile tale promoționale.</p>
-                </div>
-                <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 max-w-2xl shadow-lg">
-                    <label class="block text-xs font-semibold text-gray-300">Descrie conceptul video:</label>
-                    <textarea id="videoPrompt" rows="3" placeholder="Ex: Un clip de 30 secunde despre inovații tech..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none focus:border-accentIndigo"></textarea>
-                    <button onclick="generateVideoStoryboard()" class="bg-accentIndigo hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow">Generează Storyboard</button>
-                    <div id="videoResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
+            <div id="tab-aiVideoMaker" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-video text-neonViolet mr-2"></i>AI Video & Storyboard Generator</h2>
+                        <p class="text-sm text-gray-400">Generează scenarii și cadre vizuale detaliate pentru clipurile tale promoționale.</p>
+                    </div>
+                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
+                        <label class="block text-xs font-semibold text-gray-300">Descrie conceptul video:</label>
+                        <textarea id="videoPrompt" rows="3" placeholder="Ex: Un clip de 30 secunde despre inovații tech..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none focus:border-accentIndigo"></textarea>
+                        <button onclick="generateVideoStoryboard()" class="bg-accentIndigo hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow cursor-pointer">Generează Storyboard</button>
+                        <div id="videoResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Tab 4: Social Media Suite -->
-            <div id="tab-socialSuite" class="app-tab hidden flex-1 p-6 overflow-y-auto space-y-6">
-                <div>
-                    <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-share-nodes text-purple-400 mr-2"></i>Social Media Hub</h2>
-                    <p class="text-sm text-gray-400">Creează conținut optimizat pentru campanii online și social media.</p>
-                </div>
-                <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 max-w-2xl shadow-lg">
-                    <label class="block text-xs font-semibold text-gray-300">Subiectul postării:</label>
-                    <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-accentIndigo">
-                    <button onclick="generateSocialPost()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow">Generează Postare & Hashtag-uri</button>
-                    <div id="socialResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
+            <div id="tab-socialSuite" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-share-nodes text-purple-400 mr-2"></i>Social Media Hub</h2>
+                        <p class="text-sm text-gray-400">Creează conținut optimizat pentru campanii online și social media.</p>
+                    </div>
+                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
+                        <label class="block text-xs font-semibold text-gray-300">Subiectul postării:</label>
+                        <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-accentIndigo">
+                        <button onclick="generateSocialPost()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow cursor-pointer">Generează Postare & Hashtag-uri</button>
+                        <div id="socialResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Tab 5: Autentificare / Cont -->
-            <div id="tab-authAccount" class="app-tab hidden flex-1 p-6 overflow-y-auto flex items-center justify-center">
-                <div class="bg-panelBg border border-gray-800 p-8 rounded-2xl max-w-md w-full space-y-6 shadow-2xl">
+            <div id="tab-authAccount" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem; align-items: center; justify-content: center; display: none;">
+                <div class="bg-panelBg border border-gray-800 p-8 rounded-2xl max-w-md w-full space-y-6 shadow-2xl mx-auto my-auto">
                     <div class="text-center space-y-2">
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-accentIndigo to-neonViolet flex items-center justify-center text-white font-bold text-xl mx-auto shadow-lg">
                             <i class="fa-solid fa-user-shield"></i>
@@ -218,7 +222,7 @@
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Parolă:</label>
                             <input type="password" id="mainPassInput" placeholder="••••••••" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-accentIndigo">
                         </div>
-                        <button type="submit" id="main-auth-btn" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow">
+                        <button type="submit" id="main-auth-btn" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
                             Intră în Cont
                         </button>
                     </form>
@@ -232,51 +236,55 @@
             </div>
 
             <!-- Tab 6: Plăți cu Cardul & Abonamente -->
-            <div id="tab-billing" class="app-tab hidden flex-1 p-6 overflow-y-auto space-y-6 max-w-3xl">
-                <div>
-                    <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-credit-card text-successGreen mr-2"></i>Plată securizată & Abonamente Pro</h2>
-                    <p class="text-sm text-gray-400">Deblochează accesul nelimitat la funcțiile avansate prin plata securizată via Stripe.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="bg-panelBg border border-gray-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-lg">
-                        <div>
-                            <h3 class="font-bold text-base text-white">Plan Lunar Pro</h3>
-                            <div class="text-2xl font-bold text-successGreen my-2">49 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
-                            <p class="text-xs text-gray-300">Acces complet la generare video avansată, unelte social media și nelimitat AI.</p>
-                        </div>
-                        <button onclick="startStripeCheckout('price_pro_monthly')" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow">
-                            <i class="fa-solid fa-lock mr-1.5"></i> Abonează-te cu Cardul
-                        </button>
+            <div id="tab-billing" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
+                <div class="space-y-6 max-w-3xl">
+                    <div>
+                        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-credit-card text-successGreen mr-2"></i>Plată securizată & Abonamente Pro</h2>
+                        <p class="text-sm text-gray-400">Deblochează accesul nelimitat la funcțiile avansate prin plata securizată via Stripe.</p>
                     </div>
-
-                    <div class="bg-panelBg border border-successGreen p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-xl">
-                        <div>
-                            <span class="text-[10px] bg-successGreen/20 text-successGreen px-2 py-0.5 rounded font-bold uppercase">Cel mai popular</span>
-                            <h3 class="font-bold text-base text-white mt-1">Plan Anual VIP</h3>
-                            <div class="text-2xl font-bold text-successGreen my-2">399 RON <span class="text-xs font-normal text-gray-400">/ an</span></div>
-                            <p class="text-xs text-gray-300">Economisești 30% cu pachetul anual complet și suport prioritar dedicat.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="bg-panelBg border border-gray-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-lg">
+                            <div>
+                                <h3 class="font-bold text-base text-white">Plan Lunar Pro</h3>
+                                <div class="text-2xl font-bold text-successGreen my-2">49 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
+                                <p class="text-xs text-gray-300">Acces complet la generare video avansată, unelte social media și nelimitat AI.</p>
+                            </div>
+                            <button onclick="startStripeCheckout('price_pro_monthly')" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
+                                <i class="fa-solid fa-lock mr-1.5"></i> Abonează-te cu Cardul
+                            </button>
                         </div>
-                        <button onclick="startStripeCheckout('price_vip_yearly')" class="w-full bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow">
-                            <i class="fa-solid fa-lock mr-1.5"></i> Cumpără Planul Anual
-                        </button>
+
+                        <div class="bg-panelBg border border-successGreen p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-xl">
+                            <div>
+                                <span class="text-[10px] bg-successGreen/20 text-successGreen px-2 py-0.5 rounded font-bold uppercase">Cel mai popular</span>
+                                <h3 class="font-bold text-base text-white mt-1">Plan Anual VIP</h3>
+                                <div class="text-2xl font-bold text-successGreen my-2">399 RON <span class="text-xs font-normal text-gray-400">/ an</span></div>
+                                <p class="text-xs text-gray-300">Economisești 30% cu pachetul anual complet și suport prioritar dedicat.</p>
+                            </div>
+                            <button onclick="startStripeCheckout('price_vip_yearly')" class="w-full bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
+                                <i class="fa-solid fa-lock mr-1.5"></i> Cumpără Planul Anual
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Tab 7: API Key -->
-            <div id="tab-auth" class="app-tab hidden flex-1 p-6 overflow-y-auto max-w-xl">
-                <h2 class="text-lg font-bold mb-2 text-white"><i class="fa-solid fa-key text-accentIndigo mr-2"></i>Configurare Cheie API Google Gemini</h2>
-                <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-2">Introdu cheia ta API (Google AI Studio):</label>
-                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-accentIndigo">
-                    </div>
-                    <button onclick="saveApiKey()" class="bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-2.5 px-4 rounded-xl transition shadow">
-                        Salvează Cheia în Browser
-                    </button>
-                    <div id="saveNotification" class="text-xs text-successGreen font-medium hidden">
-                        <i class="fa-solid fa-check mr-1"></i> Cheia a fost salvată și activată cu succes!
+            <div id="tab-auth" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
+                <div class="max-w-xl space-y-4">
+                    <h2 class="text-lg font-bold mb-2 text-white"><i class="fa-solid fa-key text-accentIndigo mr-2"></i>Configurare Cheie API Google Gemini</h2>
+                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Introdu cheia ta API (Google AI Studio):</label>
+                            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-accentIndigo">
+                        </div>
+                        <button onclick="saveApiKey()" class="bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-2.5 px-4 rounded-xl transition shadow cursor-pointer">
+                            Salvează Cheia în Browser
+                        </button>
+                        <div id="saveNotification" class="text-xs text-successGreen font-medium hidden">
+                            <i class="fa-solid fa-check mr-1"></i> Cheia a fost salvată și activată cu succes!
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,6 +312,8 @@
             if (savedUser) {
                 updateAuthHeader(savedUser);
             }
+            // Setează tab-ul de chat ca fiind activ din start
+            switchTab('chat');
         });
 
         function updateApiStatus(isActive) {
@@ -319,14 +329,26 @@
         }
 
         function switchTab(tabId) {
-            // Ascunde toate tab-urile care au clasa .app-tab
-            document.querySelectorAll('.app-tab').forEach(el => {
-                el.classList.add('hidden');
+            console.log("Comutare la tab-ul:", tabId);
+            // Parcurge toate elementele cu clasa .app-tab și ascunde-le total
+            const tabs = document.querySelectorAll('.app-tab');
+            tabs.forEach(tab => {
+                tab.style.display = 'none';
             });
-            // Afișează tab-ul dorit
+
+            // Afișează tab-ul selectat
             const target = document.getElementById(`tab-${tabId}`);
             if (target) {
-                target.classList.remove('hidden');
+                // Dacă e tabul de cont, folosește flex pentru centrare, altfel block/flex normal
+                if (tabId === 'authAccount') {
+                    target.style.display = 'flex';
+                } else if (tabId === 'chat' || tabId === 'geminiLive') {
+                    target.style.display = 'flex';
+                } else {
+                    target.style.display = 'block';
+                }
+            } else {
+                console.error("Nu s-a găsit elementul pentru tab:", tabId);
             }
         }
 
@@ -460,7 +482,7 @@
             const container = document.getElementById('auth-container');
             container.innerHTML = `
                 <span class="text-xs text-gray-300 hidden sm:inline mr-2">${email}</span>
-                <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/80 text-white text-xs font-medium hover:bg-red-700 transition">Ieși</button>
+                <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/80 text-white text-xs font-medium hover:bg-red-700 transition cursor-pointer">Ieși</button>
             `;
         }
 
