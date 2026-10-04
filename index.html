@@ -551,6 +551,37 @@
                 alert("Te rugăm să introduci o cheie validă!");
             }
         }
+let selectedFileBase64 = null;
+let selectedFileName = null;
+
+// Ascultăm când utilizatorul alege un fișier
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        selectedFileName = file.name;
+        const reader = new FileReader();
+        reader.onload = function(uploadEvent) {
+            selectedFileBase64 = uploadEvent.target.result;
+            const previewContainer = document.getElementById('filePreviewContainer');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            fileNameDisplay.textContent = selectedFileName;
+            previewContainer.classList.remove('hidden');
+            previewContainer.classList.add('flex');
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Butonul pentru a șterge fișierul atașat
+document.getElementById('removeFileBtn').addEventListener('click', function() {
+    selectedFileBase64 = null;
+    selectedFileName = null;
+    document.getElementById('fileInput').value = '';
+    const previewContainer = document.getElementById('filePreviewContainer');
+    previewContainer.classList.remove('flex');
+    previewContainer.classList.add('hidden');
+});
+
 
        async function handleSendMessage() {
     const apiKey = localStorage.getItem('nexus_gemini_key');
