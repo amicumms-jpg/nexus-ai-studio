@@ -645,7 +645,7 @@ document.getElementById('removeFileBtn').addEventListener('click', function() {
 
 
             const data = await response.json();
-           const reply = data.candidates.?[0].?content.?parts.?[0].?text || "Nu s-a primit niciun răspuns.";
+           const reply = data.candidates ?.[0] ?.content ?.parts ?.[0] ?.text || "Nu s-a primit niciun răspuns.";
 
         
         // Ștergem loader-ul animat
