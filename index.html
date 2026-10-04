@@ -83,6 +83,12 @@
                 <span class="text-xs text-gray-400">Ultimate Edition v8.0</span>
             </div>
         </div>
+ <!-- Buton Autentificare / Cont Supabase -->
+    <div id="auth-container" class="flex items-center space-x-2">
+        <button id="login-btn" onclick="openAuthModal()" class="px-3 py-1.5 rounded-lg bg-accentBlue text-white text-xs font-medium hover:opacity-90 transition flex items-center">
+            <i class="fa-solid fa-user mr-1.5"></i> Autentificare
+        </button>
+    </div>
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
             <button onclick="switchTab('chat')" id="nav-chat" class="px-2.5 py-2 rounded-lg bg-accentBlue/20 text-accentBlue flex items-center space-x-1.5 transition"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
