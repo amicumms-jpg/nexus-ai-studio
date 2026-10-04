@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus AI Studio Pro - Ultimate Edition v9.7</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Script Supabase Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Stripe Script pentru Plăți -->
-    <script src="https://js.stripe.com/v3/"></script>
+    <title>Nexus AI Studio Pro - Ultimate Edition</title>
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <!-- Supabase Client -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- Stripe -->
+    <script src="https://stripe.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -52,13 +52,13 @@
         </div>
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
-            <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
-            <button onclick="switchTab('geminiLive')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
-            <button onclick="switchTab('aiVideoMaker')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
-            <button onclick="switchTab('socialSuite')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
-            <button onclick="switchTab('authAccount')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
-            <button onclick="switchTab('billing')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
-            <button onclick="switchTab('auth')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-key"></i><span>API Key</span></button>
+            <button onclick="switchTab('chat')" class="nav-btn px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer" id="nav-chat"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
+            <button onclick="switchTab('geminiLive')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-geminiLive"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
+            <button onclick="switchTab('aiVideoMaker')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-aiVideoMaker"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
+            <button onclick="switchTab('socialSuite')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-socialSuite"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
+            <button onclick="switchTab('authAccount')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-authAccount"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
+            <button onclick="switchTab('billing')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-billing"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
+            <button onclick="switchTab('auth')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-auth"><i class="fa-solid fa-key"></i><span>API Key</span></button>
         </nav>
     </header>
 
@@ -97,480 +97,29 @@
         <!-- Dynamic Content Tabs -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
-            <!-- Tab 1: Chat AI -->
+            <!-- TAB 1: Chat General -->
             <div id="tab-chat" class="app-tab flex-1 flex flex-col h-full overflow-hidden">
-                <div class="px-6 py-3 border-b border-gray-800/60 bg-panelBg/30 flex items-center justify-between shrink-0">
-                    <div>
-                        <h2 class="font-bold text-sm text-white">Nexus Neural Assistant</h2>
-                        <p class="text-xs text-gray-400">Asistent inteligent pentru codare, marketing și creație digitală.</p>
-                    </div>
+                <div class="px-6 py-4 border-b border-gray-800/60 bg-panelBg/30 shrink-0">
+                    <h2 class="font-bold text-base text-white">Nexus Neural Assistant</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Asistent inteligent pentru codare, marketing și creație digitală.</p>
                 </div>
-
-                <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                <!-- Chat Area Separata -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chat-messages-general">
                     <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-accentIndigo/20 text-accentIndigo flex items-center justify-center shrink-0"><i class="fa-solid fa-robot"></i></div>
-                        <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%] shadow-sm">
-                            Sesiune nouă inițializată. Cu ce te pot ajuta astăzi?
+                        <div class="w-8 h-8 rounded-lg bg-accentIndigo flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-robot text-xs"></i></div>
+                        <div class="bg-gray-800/50 rounded-2xl px-4 py-2.5 max-w-[80%] text-sm border border-gray-700/30">
+                            Sesiune nouă inițializată în <b>Chat General</b>. Cu ce te pot ajuta astăzi?
                         </div>
                     </div>
                 </div>
-
-                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
-                    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
-                        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
-                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                <!-- Input Box Separata -->
+                <div class="p-4 border-t border-gray-800/60 bg-panelBg/20 shrink-0">
+                    <div class="max-w-4xl mx-auto flex items-center bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 focus-within:border-accentIndigo/50 transition">
+                        <input type="text" placeholder="Scrie un mesaj sau o cerere în Chat General..." class="bg-transparent flex-1 text-sm outline-none text-white placeholder-gray-500">
+                        <button class="text-accentIndigo hover:text-white transition cursor-pointer pl-2"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab 2: Gemini Live & Voice Studio -->
-            <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
-                <div class="flex items-center justify-between shrink-0">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-wave-square text-neonViolet mr-2 animate-pulse"></i>Gemini Live & Interactive Voice</h2>
-                        <p class="text-xs text-gray-400">Conversație în timp real prin text sau voce cu feedback audio generat.</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="toggleVoiceOutput()" id="voiceToggleBtn" class="px-3 py-1.5 rounded-xl bg-gray-800 text-gray-300 text-xs font-medium hover:bg-gray-700 transition flex items-center border border-gray-700 cursor-pointer">
-                            <i class="fa-solid fa-volume-high mr-1.5 text-neonViolet"></i> Voce AI: <span id="voiceStatusText" class="ml-1 text-neonViolet font-bold">Activă</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-panelBg border border-gray-800 rounded-2xl p-6 flex flex-col items-center justify-center shrink-0 shadow-lg relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-neonViolet/5 via-accentIndigo/5 to-transparent pointer-events-none"></div>
-                    <div id="liveVisualizer" class="flex items-center space-x-1.5 h-12 my-2">
-                        <div class="w-1.5 bg-neonViolet h-4 rounded-full animate-bounce"></div>
-                        <div class="w-1.5 bg-accentIndigo h-8 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                        <div class="w-1.5 bg-neonViolet h-12 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                        <div class="w-1.5 bg-accentIndigo h-6 rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
-                        <div class="w-1.5 bg-neonViolet h-10 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
-                    </div>
-                    <span id="liveStateLabel" class="text-xs text-gray-400 mt-2 font-medium">Pregătit pentru conversație live (Text & Voce)</span>
-                </div>
-
-                <div id="liveChatMessages" class="flex-1 overflow-y-auto p-4 bg-panelBg/40 border border-gray-800/80 rounded-2xl space-y-3" style="max-height: calc(100vh - 350px);">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-neonViolet/20 text-neonViolet flex items-center justify-center shrink-0"><i class="fa-solid fa-microphone-lines"></i></div>
-                        <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%] shadow-sm">
-                            Salut! Sunt modulul tău Gemini Live. Poți să îmi scrii sau să apeși pe microfon. Te ascult!
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-panelBg/60 border border-gray-800 rounded-2xl shrink-0 flex items-center space-x-3 shadow-lg">
-                    <button onclick="startListening()" id="micBtn" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-neonViolet hover:text-white text-gray-300 flex items-center justify-center transition border border-gray-700 shadow cursor-pointer" title="Vorbește la microfon">
-                        <i class="fa-solid fa-microphone text-sm"></i>
-                    </button>
-                    <input type="text" id="liveInput" placeholder="Scrie mesajul tău pentru sesiunea live..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleLiveSendMessage()">
-                    <button onclick="handleLiveSendMessage()" class="bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow flex items-center space-x-1.5 cursor-pointer">
-                        <span>Trimite Live</span>
-                        <i class="fa-solid fa-paper-plane text-[10px]"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Tab 3: AI Video Maker -->
-            <div id="tab-aiVideoMaker" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
-                <div class="space-y-6 max-w-2xl">
-                    <div>
-                        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-video text-neonViolet mr-2"></i>AI Video & Storyboard Generator</h2>
-                        <p class="text-sm text-gray-400">Generează scenarii și cadre vizuale detaliate pentru clipurile tale promoționale.</p>
-                    </div>
-                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
-                        <label class="block text-xs font-semibold text-gray-300">Descrie conceptul video:</label>
-                        <textarea id="videoPrompt" rows="3" placeholder="Ex: Un clip de 30 secunde despre inovații tech..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none focus:border-accentIndigo"></textarea>
-                        <button onclick="generateVideoStoryboard()" class="bg-accentIndigo hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow cursor-pointer">Generează Storyboard</button>
-                        <div id="videoResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 4: Social Media Suite -->
-            <div id="tab-socialSuite" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
-                <div class="space-y-6 max-w-2xl">
-                    <div>
-                        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-share-nodes text-purple-400 mr-2"></i>Social Media Hub</h2>
-                        <p class="text-sm text-gray-400">Creează conținut optimizat pentru campanii online și social media.</p>
-                    </div>
-                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
-                        <label class="block text-xs font-semibold text-gray-300">Subiectul postării:</label>
-                        <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-accentIndigo">
-                        <button onclick="generateSocialPost()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow cursor-pointer">Generează Postare & Hashtag-uri</button>
-                        <div id="socialResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 5: Autentificare / Cont -->
-            <div id="tab-authAccount" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem; align-items: center; justify-content: center; display: none;">
-                <div class="bg-panelBg border border-gray-800 p-8 rounded-2xl max-w-md w-full space-y-6 shadow-2xl mx-auto my-auto">
-                    <div class="text-center space-y-2">
-                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-accentIndigo to-neonViolet flex items-center justify-center text-white font-bold text-xl mx-auto shadow-lg">
-                            <i class="fa-solid fa-user-shield"></i>
-                        </div>
-                        <h2 id="auth-main-title" class="text-xl font-bold text-white">Autentificare în Cont</h2>
-                        <p id="auth-main-desc" class="text-xs text-gray-400">Introdu datele tale pentru acces deplin în Nexus Studio.</p>
-                    </div>
-                    
-                    <form onsubmit="handleAccountFormSubmit(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1">Adresă Email:</label>
-                            <input type="email" id="mainEmailInput" placeholder="nume@exemplu.com" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-accentIndigo">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1">Parolă:</label>
-                            <input type="password" id="mainPassInput" placeholder="••••••••" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-accentIndigo">
-                        </div>
-                        <button type="submit" id="main-auth-btn" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
-                            Intră în Cont
-                        </button>
-                    </form>
-
-                    <div class="text-center">
-                        <p onclick="toggleMainAuthMode()" class="text-xs text-gray-400 cursor-pointer hover:underline" id="main-switch-text">
-                            Nu ai cont? Creează un cont nou aici
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 6: Plăți cu Cardul & Abonamente -->
-            <div id="tab-billing" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
-                <div class="space-y-6 max-w-3xl">
-                    <div>
-                        <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-credit-card text-successGreen mr-2"></i>Plată securizată & Abonamente Pro</h2>
-                        <p class="text-sm text-gray-400">Deblochează accesul nelimitat la funcțiile avansate prin plata securizată via Stripe.</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="bg-panelBg border border-gray-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-lg">
-                            <div>
-                                <h3 class="font-bold text-base text-white">Plan Lunar Pro</h3>
-                                <div class="text-2xl font-bold text-successGreen my-2">49 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
-                                <p class="text-xs text-gray-300">Acces complet la generare video avansată, unelte social media și nelimitat AI.</p>
-                            </div>
-                            <button onclick="startStripeCheckout('price_pro_monthly')" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
-                                <i class="fa-solid fa-lock mr-1.5"></i> Abonează-te cu Cardul
-                            </button>
-                        </div>
-
-                        <div class="bg-panelBg border border-successGreen p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-xl">
-                            <div>
-                                <span class="text-[10px] bg-successGreen/20 text-successGreen px-2 py-0.5 rounded font-bold uppercase">Cel mai popular</span>
-                                <h3 class="font-bold text-base text-white mt-1">Plan Anual VIP</h3>
-                                <div class="text-2xl font-bold text-successGreen my-2">399 RON <span class="text-xs font-normal text-gray-400">/ an</span></div>
-                                <p class="text-xs text-gray-300">Economisești 30% cu pachetul anual complet și suport prioritar dedicat.</p>
-                            </div>
-                            <button onclick="startStripeCheckout('price_vip_yearly')" class="w-full bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
-                                <i class="fa-solid fa-lock mr-1.5"></i> Cumpără Planul Anual
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 7: API Key -->
-            <div id="tab-auth" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
-                <div class="max-w-xl space-y-4">
-                    <h2 class="text-lg font-bold mb-2 text-white"><i class="fa-solid fa-key text-accentIndigo mr-2"></i>Configurare Cheie API Google Gemini</h2>
-                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-2">Introdu cheia ta API (Google AI Studio):</label>
-                            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-accentIndigo">
-                        </div>
-                        <button onclick="saveApiKey()" class="bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-2.5 px-4 rounded-xl transition shadow cursor-pointer">
-                            Salvează Cheia în Browser
-                        </button>
-                        <div id="saveNotification" class="text-xs text-successGreen font-medium hidden">
-                            <i class="fa-solid fa-check mr-1"></i> Cheia a fost salvată și activată cu succes!
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <script>
-        const SUPABASE_URL = 'https://exemplu.supabase.co';
-        const SUPABASE_ANON_KEY = 'exemplu-cheie-anon';
-        const supabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://exemplu.supabase.co') 
-            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
-            : null;
-
-        let isMainRegisterMode = false;
-        let voiceOutputEnabled = true;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedKey = localStorage.getItem('nexus_gemini_key');
-            if (savedKey) {
-                document.getElementById('apiKeyInput').value = savedKey;
-                updateApiStatus(true);
-            }
-            const savedUser = localStorage.getItem('nexus_logged_user');
-            if (savedUser) {
-                updateAuthHeader(savedUser);
-            }
-            // Setează tab-ul de chat ca fiind activ din start
-            switchTab('chat');
-        });
-
-        function updateApiStatus(isActive) {
-            const indicator = document.getElementById('apiStatusIndicator');
-            const text = document.getElementById('apiStatusText');
-            if (isActive) {
-                indicator.className = "w-2 h-2 rounded-full bg-successGreen animate-pulse";
-                text.innerText = "API Activ (Gemini)";
-            } else {
-                indicator.className = "w-2 h-2 rounded-full bg-red-500";
-                text.innerText = "API Key Neconfigurat";
-            }
-        }
-
-        function switchTab(tabId) {
-            console.log("Comutare la tab-ul:", tabId);
-            // Parcurge toate elementele cu clasa .app-tab și ascunde-le total
-            const tabs = document.querySelectorAll('.app-tab');
-            tabs.forEach(tab => {
-                tab.style.display = 'none';
-            });
-
-            // Afișează tab-ul selectat
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) {
-                // Dacă e tabul de cont, folosește flex pentru centrare, altfel block/flex normal
-                if (tabId === 'authAccount') {
-                    target.style.display = 'flex';
-                } else if (tabId === 'chat' || tabId === 'geminiLive') {
-                    target.style.display = 'flex';
-                } else {
-                    target.style.display = 'block';
-                }
-            } else {
-                console.error("Nu s-a găsit elementul pentru tab:", tabId);
-            }
-        }
-
-        function newSession() {
-            switchTab('chat');
-        }
-
-        function toggleVoiceOutput() {
-            voiceOutputEnabled = !voiceOutputEnabled;
-            document.getElementById('voiceStatusText').innerText = voiceOutputEnabled ? "Activă" : "Oprită";
-            document.getElementById('voiceStatusText').className = voiceOutputEnabled ? "ml-1 text-neonViolet font-bold" : "ml-1 text-gray-400 font-bold";
-        }
-
-        function speakText(text) {
-            if (!voiceOutputEnabled || !('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ro-RO';
-            utterance.rate = 1.0;
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function startListening() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Browserul tău nu suportă recunoașterea vocală directă.");
-                return;
-            }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'ro-RO';
-            recognition.interimResults = false;
-            
-            document.getElementById('liveStateLabel').innerText = "Ascult... Vorbește acum la microfon!";
-            document.getElementById('micBtn').classList.add('bg-neonViolet', 'text-white');
-
-            recognition.onresult = (event) => {
-                const speechToText = event.results[0][0].transcript;
-                document.getElementById('liveInput').value = speechToText;
-                document.getElementById('liveStateLabel').innerText = "Mesaj captat vocal. Se trimite...";
-                handleLiveSendMessage();
-            };
-
-            recognition.onerror = () => {
-                document.getElementById('liveStateLabel').innerText = "Eroare la preluarea audio.";
-                document.getElementById('micBtn').classList.remove('bg-neonViolet', 'text-white');
-            };
-
-            recognition.onend = () => {
-                document.getElementById('micBtn').classList.remove('bg-neonViolet', 'text-white');
-            };
-
-            recognition.start();
-        }
-
-        async function handleLiveSendMessage() {
-            const apiKey = localStorage.getItem('nexus_gemini_key');
-            if (!apiKey) {
-                alert("Introdu mai întâi cheia API în tab-ul dedicat!");
-                switchTab('auth');
-                return;
-            }
-            const inputField = document.getElementById('liveInput');
-            const text = inputField.value.trim();
-            if(!text) return;
-
-            const container = document.getElementById('liveChatMessages');
-            container.innerHTML += `<div class="text-right text-sm text-neonViolet mb-2 font-medium">${text}</div>`;
-            inputField.value = '';
-            document.getElementById('liveStateLabel').innerText = "Gemini Live generează răspunsul...";
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
-                });
-                const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat cu succes.";
-                
-                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
-                container.scrollTop = container.scrollHeight;
-                document.getElementById('liveStateLabel').innerText = "Pregătit pentru următoarea interacțiune live.";
-                
-                speakText(reply);
-            } catch(e) {
-                alert("Eroare de conexiune: " + e.message);
-                document.getElementById('liveStateLabel').innerText = "Eroare în timpul sesiunii live.";
-            }
-        }
-
-        function toggleMainAuthMode() {
-            isMainRegisterMode = !isMainRegisterMode;
-            document.getElementById('auth-main-title').innerText = isMainRegisterMode ? 'Creează Cont Nou' : 'Autentificare în Cont';
-            document.getElementById('auth-main-desc').innerText = isMainRegisterMode ? 'Completează datele pentru a-ți înregistra un cont nou.' : 'Introdu datele tale pentru acces deplin în Nexus Studio.';
-            document.getElementById('main-auth-btn').innerText = isMainRegisterMode ? 'Înregistrează-te Acum' : 'Intră în Cont';
-            document.getElementById('main-switch-text').innerText = isMainRegisterMode ? 'Ai deja cont? Autentifică-te' : 'Nu ai cont? Creează un cont nou aici';
-        }
-
-        async function handleAccountFormSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('mainEmailInput').value.trim();
-            const password = document.getElementById('mainPassInput').value.trim();
-
-            if (!supabase) {
-                localStorage.setItem('nexus_logged_user', email);
-                alert(isMainRegisterMode ? 'Cont creat cu succes (Mod Local)!' : 'Autentificare reușită (Mod Local)!');
-                switchTab('chat');
-                updateAuthHeader(email);
-                return;
-            }
-
-            if (isMainRegisterMode) {
-                const { error } = await supabase.auth.signUp({ email, password });
-                if (error) alert(error.message);
-                else {
-                    alert('Cont creat cu succes! Verifică emailul pentru confirmare.');
-                    switchTab('chat');
-                }
-            } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) alert(error.message);
-                else {
-                    alert('Autentificare reușită!');
-                    switchTab('chat');
-                    updateAuthHeader(email);
-                }
-            }
-        }
-
-        function updateAuthHeader(email) {
-            const container = document.getElementById('auth-container');
-            container.innerHTML = `
-                <span class="text-xs text-gray-300 hidden sm:inline mr-2">${email}</span>
-                <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/80 text-white text-xs font-medium hover:bg-red-700 transition cursor-pointer">Ieși</button>
-            `;
-        }
-
-        async function handleLogout() {
-            if (supabase) await supabase.auth.signOut();
-            localStorage.removeItem('nexus_logged_user');
-            location.reload();
-        }
-
-        function startStripeCheckout(priceId) {
-            alert(`Se inițializează plata securizată prin card pentru pachetul selectat (${priceId}). Redirecționare către Stripe...`);
-        }
-
-        function saveApiKey() {
-            const key = document.getElementById('apiKeyInput').value.trim();
-            if (key) {
-                localStorage.setItem('nexus_gemini_key', key);
-                updateApiStatus(true);
-                const notif = document.getElementById('saveNotification');
-                notif.classList.remove('hidden');
-                setTimeout(() => notif.classList.add('hidden'), 3000);
-            } else {
-                alert("Te rugăm să introduci o cheie validă!");
-            }
-        }
-
-        async function handleSendMessage() {
-            const apiKey = localStorage.getItem('nexus_gemini_key');
-            if (!apiKey) {
-                alert("Introdu mai întâi cheia API în tab-ul dedicat!");
-                switchTab('auth');
-                return;
-            }
-            const inputField = document.getElementById('userInput');
-            const text = inputField.value.trim();
-            if(!text) return;
-
-            const container = document.getElementById('chatMessages');
-            container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
-            inputField.value = '';
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
-                });
-                const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat cu succes.";
-                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
-                container.scrollTop = container.scrollHeight;
-            } catch(e) {
-                alert("Eroare de conexiune: " + e.message);
-            }
-        }
-
-        async function generateVideoStoryboard() {
-            const apiKey = localStorage.getItem('nexus_gemini_key');
-            const prompt = document.getElementById('videoPrompt').value.trim();
-            if(!apiKey || !prompt) { alert("Verifică cheia API și introdu un prompt!"); return; }
-            document.getElementById('videoResult').innerText = "Se generează storyboard-ul detaliat...";
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Creează un storyboard detaliat pentru video: " + prompt }] }] })
-                });
-                const data = await res.json();
-                document.getElementById('videoResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare la generare.";
-            } catch(e) { document.getElementById('videoResult').innerText = "Eroare: " + e.message; }
-        }
-
-        async function generateSocialPost() {
-            const apiKey = localStorage.getItem('nexus_gemini_key');
-            const topic = document.getElementById('socialTopic').value.trim();
-            if(!apiKey || !topic) { alert("Verifică cheia API și introdu subiectul!"); return; }
-            document.getElementById('socialResult').innerText = "Se generează postarea și hashtag-urile...";
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Creează o postare atractivă de social media cu hashtag-uri despre: " + topic }] }] })
-                });
-                const data = await res.json();
-                document.getElementById('socialResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare la generare.";
-            } catch(e) { document.getElementById('socialResult').innerText = "Eroare: " + e.message; }
-        }
-    </script>
-</body>
-</html>
-
+            <!-- TAB 2: Gemini Live & Voice -->
+            <div id="tab-geminiLive" class="app-tab flex-1 flex flex-col h-full overflow-hidden hidden">
