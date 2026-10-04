@@ -3,123 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus AI Studio Pro - Ultimate Edition</title>
-    <script src="https://tailwindcss.com"></script>
+    <title>Nexus AI Studio Pro - Ultimate Edition v9.7</title>
+    <!-- Stilul stabil compilat pentru Tailwind CSS -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
     <link rel="stylesheet" href="https://cloudflare.com">
-    <!-- Supabase Client -->
+    <!-- Supabase Client Script -->
     <script src="https://jsdelivr.net"></script>
-    <!-- Stripe -->
+    <!-- Stripe Script pentru Plăți -->
     <script src="https://stripe.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#080910',
-                        panelBg: '#121420',
-                        neonViolet: '#8b5cf6',
-                        accentIndigo: '#6366f1',
-                        successGreen: '#10b981'
-                    }
-                }
-            }
-        }
-    </script>
+    
+    <style>
+        /* Definirea temei de culori din imaginea ta originală */
+        body, .bg-darkBg { background-color: #080910 !important; }
+        .bg-panelBg { background-color: #121420; }
+        .bg-panelBg-80 { background-color: rgba(18, 20, 32, 0.8); }
+        .bg-panelBg-30 { background-color: rgba(18, 20, 32, 0.3); }
+        .bg-panelBg-20 { background-color: rgba(18, 20, 32, 0.2); }
+        .text-neonViolet { color: #8b5cf6; }
+        .text-accentIndigo { color: #6366f1; }
+        .bg-accentIndigo { background-color: #6366f1; }
+        .bg-accentIndigo-20 { background-color: rgba(99, 102, 241, 0.2); }
+        .text-successGreen { color: #10b981; }
+        .bg-successGreen { background-color: #10b981; }
+        .from-accentIndigo { --tw-gradient-from: #6366f1; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(99, 102, 241, 0)); }
+        .to-neonViolet { --tw-gradient-to: #8b5cf6; }
+        .border-gray-800 { border-color: #1f2937 !important; }
+        .focus-within-violet:focus-within { border-color: #8b5cf6 !important; }
+        .focus-within-indigo:focus-within { border-color: #6366f1 !important; }
+        .focus-within-purple:focus-within { border-color: #a855f7 !important; }
+        .focus-within-blue:focus-within { border-color: #3b82f6 !important; }
+    </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
 
     <!-- Top Navigation Bar -->
-    <header class="bg-panelBg border-b border-gray-800/80 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm z-20">
+    <header class="bg-panelBg border-b border-gray-800 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm z-20">
         <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-accentIndigo to-neonViolet flex items-center justify-center text-white font-bold shadow-lg shadow-violet-500/20">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-accentIndigo to-neonViolet flex items-center justify-center text-white font-bold shadow-lg">
                 <i class="fa-solid fa-brain"></i>
             </div>
             <div>
                 <h1 class="font-bold text-sm text-white tracking-wide">Nexus AI Studio Pro</h1>
-                <span class="text-[10px] text-gray-400 flex items-center space-x-1.5">
-                    <span id="apiStatusIndicator" class="w-2 h-2 rounded-full bg-red-500"></span>
-                    <span id="apiStatusText">API Key Neconfigurat</span>
+                <span class="text-[10px] text-gray-400 flex items-center space-x-1.5" style="font-size: 10px; display: flex; align-items: center;">
+                    <span id="apiStatusIndicator" class="w-2 h-2 rounded-full bg-red-500" style="width: 8px; height: 8px; display: inline-block;"></span>
+                    <span id="apiStatusText" class="ml-1">API Key Neconfigurat</span>
                 </span>
             </div>
         </div>
 
         <!-- Buton Cont / Autentificare din Header -->
         <div id="auth-container" class="flex items-center space-x-2">
-            <button onclick="switchTab('authAccount')" class="px-3 py-1.5 rounded-lg bg-accentIndigo text-white text-xs font-medium hover:opacity-90 transition flex items-center shadow cursor-pointer">
-                <i class="fa-solid fa-user mr-1.5"></i> Cont / Autentificare
+            <button onclick="switchTab('authAccount')" class="px-3 py-1.5 rounded-lg bg-accentIndigo text-white text-xs font-medium hover:opacity-90 transition flex items-center shadow cursor-pointer" style="border: none;">
+                <i class="fa-solid fa-user mr-1.5" style="margin-right: 6px;"></i> Cont / Autentificare
             </button>
         </div>
 
-        <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
-            <button onclick="switchTab('chat')" class="nav-btn px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer" id="nav-chat"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
-            <button onclick="switchTab('geminiLive')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-geminiLive"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
-            <button onclick="switchTab('aiVideoMaker')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-aiVideoMaker"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
-            <button onclick="switchTab('socialSuite')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-socialSuite"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
-            <button onclick="switchTab('authAccount')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-authAccount"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
-            <button onclick="switchTab('billing')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-billing"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
-            <button onclick="switchTab('auth')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer" id="nav-auth"><i class="fa-solid fa-key"></i><span>API Key</span></button>
+        <nav class="hidden xl:flex items-center space-x-1 font-medium overflow-x-auto" style="font-size: 11px; display: flex; gap: 4px;">
+            <button onclick="switchTab('chat')" class="nav-btn px-2.5 py-2 rounded-lg bg-accentIndigo-20 text-accentIndigo flex items-center transition cursor-pointer" id="nav-chat" style="border: none;"><i class="fa-solid fa-comments mr-1"></i><span>Chat AI</span></button>
+            <button onclick="switchTab('geminiLive')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white flex items-center transition cursor-pointer" id="nav-geminiLive" style="border: none; background: transparent;"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse mr-1"></i><span>Gemini Live</span></button>
+            <button onclick="switchTab('aiVideoMaker')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white flex items-center transition cursor-pointer" id="nav-aiVideoMaker" style="border: none; background: transparent;"><i class="fa-solid fa-video mr-1"></i><span>AI Video</span></button>
+            <button onclick="switchTab('socialSuite')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white flex items-center transition cursor-pointer" id="nav-socialSuite" style="border: none; background: transparent;"><i class="fa-solid fa-share-nodes mr-1"></i><span>Social Media</span></button>
+            <button onclick="switchTab('authAccount')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white flex items-center transition cursor-pointer" id="nav-authAccount" style="border: none; background: transparent;"><i class="fa-solid fa-user-plus mr-1"></i><span>Cont</span></button>
+            <button onclick="switchTab('billing')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white flex items-center transition cursor-pointer" id="nav-billing" style="border: none; background: transparent;"><i class="fa-solid fa-credit-card mr-1"></i><span>Plată</span></button>
+            <button onclick="switchTab('auth')" class="nav-btn px-2.5 py-2 rounded-lg text-gray-400 hover:text-white flex items-center transition cursor-pointer" id="nav-auth" style="border: none; background: transparent;"><i class="fa-solid fa-key mr-1"></i><span>API Key</span></button>
         </nav>
     </header>
 
     <!-- Main Content Area -->
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden" style="display: flex; flex-direction: row; height: 100%;">
         
         <!-- Sidebar -->
-        <aside class="w-64 bg-panelBg/80 border-r border-gray-800/80 flex flex-col shrink-0 p-3 hidden sm:flex z-10">
-            <button onclick="newSession()" class="w-full bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-md transition cursor-pointer">
-                <i class="fa-solid fa-plus"></i>
+        <aside class="w-64 bg-panelBg-80 border-r border-gray-800 flex flex-col shrink-0 p-3 hidden sm:flex z-10" style="width: 16rem;">
+            <button onclick="newSession()" class="w-full bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-md transition cursor-pointer" style="border: none; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-plus" style="margin-right: 6px;"></i>
                 <span>Sesiune Nouă AI</span>
             </button>
 
-            <div class="mt-5 flex-1 overflow-y-auto space-y-1">
-                <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold px-2">Navigare Rapidă</span>
-                <div class="mt-2 space-y-1 text-xs">
-                    <button onclick="switchTab('chat')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-comments text-accentIndigo"></i><span>Chat General</span></button>
-                    <button onclick="switchTab('geminiLive')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-wave-square text-neonViolet"></i><span>Gemini Live & Voice</span></button>
-                    <button onclick="switchTab('aiVideoMaker')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-video text-neonViolet"></i><span>AI Video Maker</span></button>
-                    <button onclick="switchTab('socialSuite')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-share-nodes text-purple-400"></i><span>Social Media Hub</span></button>
-                    <button onclick="switchTab('authAccount')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-user-shield text-accentIndigo"></i><span>Autentificare / Cont</span></button>
-                    <button onclick="switchTab('billing')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-credit-card text-successGreen"></i><span>Plată Card / Abonament</span></button>
-                    <button onclick="switchTab('auth')" class="w-full text-left p-2 rounded hover:bg-gray-800/60 text-gray-300 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-key text-yellow-500"></i><span>Setare API Key</span></button>
+            <div class="mt-5 flex-1 overflow-y-auto space-y-1" style="margin-top: 1.25rem; flex: 1 1 0%;">
+                <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold px-2" style="font-size: 10px; display: block; margin-bottom: 8px;">Navigare Rapidă</span>
+                <div class="space-y-1" style="font-size: 12px; display: flex; flex-direction: column; gap: 4px;">
+                    <button onclick="switchTab('chat')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-comments text-accentIndigo" style="width: 20px;"></i><span class="ml-2">Chat General</span></button>
+                    <button onclick="switchTab('geminiLive')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-wave-square text-neonViolet" style="width: 20px;"></i><span class="ml-2">Gemini Live & Voice</span></button>
+                    <button onclick="switchTab('aiVideoMaker')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-video text-neonViolet" style="width: 20px;"></i><span class="ml-2">AI Video Maker</span></button>
+                    <button onclick="switchTab('socialSuite')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-share-nodes text-purple-400" style="width: 20px;"></i><span class="ml-2">Social Media Hub</span></button>
+                    <button onclick="switchTab('authAccount')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-user-shield text-accentIndigo" style="width: 20px;"></i><span class="ml-2">Autentificare / Cont</span></button>
+                    <button onclick="switchTab('billing')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-credit-card text-successGreen" style="width: 20px;"></i><span class="ml-2">Plată Card / Abonament</span></button>
+                    <button onclick="switchTab('auth')" class="w-full text-left p-2 rounded hover:bg-gray-800 text-gray-300 flex items-center style-none" style="background: transparent; border: none; text-align: left; display: flex; align-items: center;"><i class="fa-solid fa-key text-yellow-500" style="width: 20px;"></i><span class="ml-2">Setare API Key</span></button>
                 </div>
             </div>
 
-            <div class="mt-auto pt-3 border-t border-gray-800/80 text-xs">
-                <div class="text-gray-400 text-[11px]">Model activ:</div>
-                <div class="font-semibold text-successGreen mt-0.5 flex items-center space-x-1.5">
-                    <span class="w-2 h-2 rounded-full bg-successGreen animate-pulse"></span>
-                    <span>Gemini 3.8 Flash</span>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Dynamic Content Tabs -->
-        <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
-            
-            <!-- TAB 1: Chat General -->
-            <div id="tab-chat" class="app-tab flex-1 flex flex-col h-full overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-800/60 bg-panelBg/30 shrink-0">
-                    <h2 class="font-bold text-base text-white">Nexus Neural Assistant</h2>
-                    <p class="text-xs text-gray-400 mt-0.5">Asistent inteligent pentru codare, marketing și creație digitală.</p>
-                </div>
-                <!-- Chat Area Separata -->
-                <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chat-messages-general">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-lg bg-accentIndigo flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-robot text-xs"></i></div>
-                        <div class="bg-gray-800/50 rounded-2xl px-4 py-2.5 max-w-[80%] text-sm border border-gray-700/30">
-                            Sesiune nouă inițializată în <b>Chat General</b>. Cu ce te pot ajuta astăzi?
-                        </div>
-                    </div>
-                </div>
-                <!-- Input Box Separata -->
-                <div class="p-4 border-t border-gray-800/60 bg-panelBg/20 shrink-0">
-                    <div class="max-w-4xl mx-auto flex items-center bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 focus-within:border-accentIndigo/50 transition">
-                        <input type="text" placeholder="Scrie un mesaj sau o cerere în Chat General..." class="bg-transparent flex-1 text-sm outline-none text-white placeholder-gray-500">
-                        <button class="text-accentIndigo hover:text-white transition cursor-pointer pl-2"><i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 2: Gemini Live & Voice -->
-            <div id="tab-geminiLive" class="app-tab flex-1 flex flex-col h-full overflow-hidden hidden">
+            <div class="mt-auto pt-3 text-xs border-t border-gray-800" style="margin-top: auto;">
