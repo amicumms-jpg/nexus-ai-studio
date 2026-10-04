@@ -990,23 +990,30 @@
           return;
       }
 
-      if (isSignUpMode) {
-          const { data, error } = await supabase.auth.signUp({ email, password });
-          if (error) alert(error.message);
-          else {
-              alert('Cont creat cu succes!');
-              closeAuthModal();
-          }
-      } else {
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) alert(error.message);
-          else {
-              alert('Autentificare reușită!');
-              closeAuthModal();
-              checkUserSession();
-          }
-      }
-  }
+      async function handleAuthSubmit() {
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+
+    if (!email || !password) {
+        alert('Te rog introdu emailul și parola.');
+        return;
+    }
+
+    let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        let { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+        if (signUpError) {
+            alert(signUpError.message);
+        } else {
+            alert('Cont creat și autentificare reușită!');
+            closeAuthModal();
+        }
+    } else {
+        alert('Autentificare reușită!');
+        closeAuthModal();
+    }
+ }
 
   async function checkUserSession() {
       if (typeof supabase === 'undefined') return;
