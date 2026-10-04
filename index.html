@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus AI Studio Pro - Ultimate Edition v9.5</title>
+    <title>Nexus AI Studio Pro - Ultimate Edition v9.6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Script Supabase Client -->
@@ -30,7 +30,7 @@
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
 
     <!-- Top Navigation Bar -->
-    <header class="bg-panelBg border-b border-gray-800/80 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm">
+    <header class="bg-panelBg border-b border-gray-800/80 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm z-20">
         <div class="flex items-center space-x-3">
             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-accentIndigo to-neonViolet flex items-center justify-center text-white font-bold shadow-lg shadow-violet-500/20">
                 <i class="fa-solid fa-brain"></i>
@@ -52,13 +52,13 @@
         </div>
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
-            <button onclick="switchTab('chat')" id="nav-chat" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
-            <button onclick="switchTab('geminiLive')" id="nav-geminiLive" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
-            <button onclick="switchTab('aiVideoMaker')" id="nav-aiVideoMaker" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
-            <button onclick="switchTab('socialSuite')" id="nav-socialSuite" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
-            <button onclick="switchTab('authAccount')" id="nav-authAccount" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
-            <button onclick="switchTab('billing')" id="nav-billing" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
-            <button onclick="switchTab('auth')" id="nav-auth" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-key"></i><span>API Key</span></button>
+            <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
+            <button onclick="switchTab('geminiLive')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
+            <button onclick="switchTab('aiVideoMaker')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
+            <button onclick="switchTab('socialSuite')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
+            <button onclick="switchTab('authAccount')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
+            <button onclick="switchTab('billing')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
+            <button onclick="switchTab('auth')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition"><i class="fa-solid fa-key"></i><span>API Key</span></button>
         </nav>
     </header>
 
@@ -66,7 +66,7 @@
     <div class="flex flex-1 overflow-hidden">
         
         <!-- Sidebar -->
-        <aside class="w-64 bg-panelBg/80 border-r border-gray-800/80 flex flex-col shrink-0 p-3 hidden sm:flex">
+        <aside class="w-64 bg-panelBg/80 border-r border-gray-800/80 flex flex-col shrink-0 p-3 hidden sm:flex z-10">
             <button onclick="newSession()" class="w-full bg-gradient-to-r from-accentIndigo to-neonViolet hover:opacity-90 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-md transition">
                 <i class="fa-solid fa-plus"></i>
                 <span>Sesiune Nouă AI</span>
@@ -98,7 +98,7 @@
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
             <!-- Tab 1: Chat AI -->
-            <div id="tab-chat" class="flex-1 flex flex-col h-full overflow-hidden">
+            <div id="tab-chat" class="app-tab flex-1 flex flex-col h-full overflow-hidden">
                 <div class="px-6 py-3 border-b border-gray-800/60 bg-panelBg/30 flex items-center justify-between shrink-0">
                     <div>
                         <h2 class="font-bold text-sm text-white">Nexus Neural Assistant</h2>
@@ -123,8 +123,8 @@
                 </div>
             </div>
 
-            <!-- Tab Nou: Gemini Live & Voice Studio -->
-            <div id="tab-geminiLive" class="hidden flex-1 flex flex-col h-full overflow-hidden p-6 space-y-4">
+            <!-- Tab 2: Gemini Live & Voice Studio -->
+            <div id="tab-geminiLive" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-6 space-y-4">
                 <div class="flex items-center justify-between shrink-0">
                     <div>
                         <h2 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-wave-square text-neonViolet mr-2 animate-pulse"></i>Gemini Live & Interactive Voice</h2>
@@ -137,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- Ecran Visualizator Undă / Status Live -->
                 <div class="bg-panelBg border border-gray-800 rounded-2xl p-6 flex flex-col items-center justify-center shrink-0 shadow-lg relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-r from-neonViolet/5 via-accentIndigo/5 to-transparent pointer-events-none"></div>
                     <div id="liveVisualizer" class="flex items-center space-x-1.5 h-12 my-2">
@@ -150,17 +149,15 @@
                     <span id="liveStateLabel" class="text-xs text-gray-400 mt-2 font-medium">Pregătit pentru conversație live (Text & Voce)</span>
                 </div>
 
-                <!-- Mesaje Live -->
                 <div id="liveChatMessages" class="flex-1 overflow-y-auto p-4 bg-panelBg/40 border border-gray-800/80 rounded-2xl space-y-3">
                     <div class="flex items-start space-x-3">
                         <div class="w-8 h-8 rounded-xl bg-neonViolet/20 text-neonViolet flex items-center justify-center shrink-0"><i class="fa-solid fa-microphone-lines"></i></div>
                         <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%] shadow-sm">
-                            Salut! Sunt modulul tău Gemini Live. Poți să îmi scrii sau să apeși pe butonul de microfon pentru a vorbi direct. Te ascult!
+                            Salut! Sunt modulul tău Gemini Live. Poți să îmi scrii sau să apeși pe microfon. Te ascult!
                         </div>
                     </div>
                 </div>
 
-                <!-- Input & Microfon Bar -->
                 <div class="p-3 bg-panelBg/60 border border-gray-800 rounded-2xl shrink-0 flex items-center space-x-3 shadow-lg">
                     <button onclick="startListening()" id="micBtn" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-neonViolet hover:text-white text-gray-300 flex items-center justify-center transition border border-gray-700 shadow" title="Vorbește la microfon">
                         <i class="fa-solid fa-microphone text-sm"></i>
@@ -173,36 +170,36 @@
                 </div>
             </div>
 
-            <!-- Tab 2: AI Video Maker -->
-            <div id="tab-aiVideoMaker" class="hidden flex-1 p-6 overflow-y-auto space-y-6">
+            <!-- Tab 3: AI Video Maker -->
+            <div id="tab-aiVideoMaker" class="app-tab hidden flex-1 p-6 overflow-y-auto space-y-6">
                 <div>
                     <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-video text-neonViolet mr-2"></i>AI Video & Storyboard Generator</h2>
                     <p class="text-sm text-gray-400">Generează scenarii și cadre vizuale detaliate pentru clipurile tale promoționale.</p>
                 </div>
                 <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 max-w-2xl shadow-lg">
                     <label class="block text-xs font-semibold text-gray-300">Descrie conceptul video:</label>
-                    <textarea id="videoPrompt" rows="3" placeholder="Ex: Un clip de 30 secunde despre inovații tech pentru promovare pe TikTok..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none focus:border-accentIndigo"></textarea>
+                    <textarea id="videoPrompt" rows="3" placeholder="Ex: Un clip de 30 secunde despre inovații tech..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none focus:border-accentIndigo"></textarea>
                     <button onclick="generateVideoStoryboard()" class="bg-accentIndigo hover:opacity-90 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow">Generează Storyboard</button>
                     <div id="videoResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
                 </div>
             </div>
 
-            <!-- Tab 3: Social Media Suite -->
-            <div id="tab-socialSuite" class="hidden flex-1 p-6 overflow-y-auto space-y-6">
+            <!-- Tab 4: Social Media Suite -->
+            <div id="tab-socialSuite" class="app-tab hidden flex-1 p-6 overflow-y-auto space-y-6">
                 <div>
                     <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-share-nodes text-purple-400 mr-2"></i>Social Media Hub</h2>
                     <p class="text-sm text-gray-400">Creează conținut optimizat pentru campanii online și social media.</p>
                 </div>
                 <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 max-w-2xl shadow-lg">
                     <label class="block text-xs font-semibold text-gray-300">Subiectul postării:</label>
-                    <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online pentru afaceri locale..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-accentIndigo">
+                    <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-accentIndigo">
                     <button onclick="generateSocialPost()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow">Generează Postare & Hashtag-uri</button>
                     <div id="socialResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
                 </div>
             </div>
 
-            <!-- Tab 4: Creare Cont & Autentificare Nou -->
-            <div id="tab-authAccount" class="hidden flex-1 p-6 overflow-y-auto flex items-center justify-center">
+            <!-- Tab 5: Autentificare / Cont -->
+            <div id="tab-authAccount" class="app-tab hidden flex-1 p-6 overflow-y-auto flex items-center justify-center">
                 <div class="bg-panelBg border border-gray-800 p-8 rounded-2xl max-w-md w-full space-y-6 shadow-2xl">
                     <div class="text-center space-y-2">
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-accentIndigo to-neonViolet flex items-center justify-center text-white font-bold text-xl mx-auto shadow-lg">
@@ -234,8 +231,8 @@
                 </div>
             </div>
 
-            <!-- Tab 5: Plăți cu Cardul & Abonamente -->
-            <div id="tab-billing" class="hidden flex-1 p-6 overflow-y-auto space-y-6 max-w-3xl">
+            <!-- Tab 6: Plăți cu Cardul & Abonamente -->
+            <div id="tab-billing" class="app-tab hidden flex-1 p-6 overflow-y-auto space-y-6 max-w-3xl">
                 <div>
                     <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-credit-card text-successGreen mr-2"></i>Plată securizată & Abonamente Pro</h2>
                     <p class="text-sm text-gray-400">Deblochează accesul nelimitat la funcțiile avansate prin plata securizată via Stripe.</p>
@@ -267,8 +264,8 @@
                 </div>
             </div>
 
-            <!-- Tab 6: API Key -->
-            <div id="tab-auth" class="hidden flex-1 p-6 overflow-y-auto max-w-xl">
+            <!-- Tab 7: API Key -->
+            <div id="tab-auth" class="app-tab hidden flex-1 p-6 overflow-y-auto max-w-xl">
                 <h2 class="text-lg font-bold mb-2 text-white"><i class="fa-solid fa-key text-accentIndigo mr-2"></i>Configurare Cheie API Google Gemini</h2>
                 <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
                     <div>
@@ -288,7 +285,6 @@
     </div>
 
     <script>
-        // Configurare Supabase
         const SUPABASE_URL = 'https://exemplu.supabase.co';
         const SUPABASE_ANON_KEY = 'exemplu-cheie-anon';
         const supabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://exemplu.supabase.co') 
@@ -322,6 +318,22 @@
             }
         }
 
+        function switchTab(tabId) {
+            // Ascunde toate tab-urile care au clasa .app-tab
+            document.querySelectorAll('.app-tab').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // Afișează tab-ul dorit
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+        }
+
+        function newSession() {
+            switchTab('chat');
+        }
+
         function toggleVoiceOutput() {
             voiceOutputEnabled = !voiceOutputEnabled;
             document.getElementById('voiceStatusText').innerText = voiceOutputEnabled ? "Activă" : "Oprită";
@@ -353,7 +365,7 @@
             recognition.onresult = (event) => {
                 const speechToText = event.results[0][0].transcript;
                 document.getElementById('liveInput').value = speechToText;
-                document.getElementById('liveStateLabel').innerText = "Mesaj captat vocal. Se trimite către Gemini...";
+                document.getElementById('liveStateLabel').innerText = "Mesaj captat vocal. Se trimite...";
                 handleLiveSendMessage();
             };
 
@@ -460,19 +472,6 @@
 
         function startStripeCheckout(priceId) {
             alert(`Se inițializează plata securizată prin card pentru pachetul selectat (${priceId}). Redirecționare către Stripe...`);
-        }
-
-        function switchTab(tabId) {
-            ['chat', 'geminiLive', 'aiVideoMaker', 'socialSuite', 'authAccount', 'billing', 'auth'].forEach(t => {
-                const el = document.getElementById(`tab-${t}`);
-                if(el) el.classList.add('hidden');
-            });
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            if(targetTab) targetTab.classList.remove('hidden');
-        }
-
-        function newSession() {
-            switchTab('chat');
         }
 
         function saveApiKey() {
