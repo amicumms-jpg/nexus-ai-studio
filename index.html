@@ -295,9 +295,10 @@
     <script>
         const SUPABASE_URL = 'https://exemplu.supabase.co';
         const SUPABASE_ANON_KEY = 'exemplu-cheie-anon';
-        const supabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://exemplu.supabase.co') 
-            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
-            : null;
+        const nexusSupabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://exemplu.supabase.co') 
+               ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+           : null;
 
         let isMainRegisterMode = false;
         let voiceOutputEnabled = true;
@@ -452,7 +453,7 @@
             const email = document.getElementById('mainEmailInput').value.trim();
             const password = document.getElementById('mainPassInput').value.trim();
 
-            if (!supabase) {
+            if (!nexusSupabase) {
                 localStorage.setItem('nexus_logged_user', email);
                 alert(isMainRegisterMode ? 'Cont creat cu succes (Mod Local)!' : 'Autentificare reușită (Mod Local)!');
                 switchTab('chat');
@@ -461,14 +462,14 @@
             }
 
             if (isMainRegisterMode) {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const { error } = await nexusSupabase.auth.signUp({ email, password });
                 if (error) alert(error.message);
                 else {
                     alert('Cont creat cu succes! Verifică emailul pentru confirmare.');
                     switchTab('chat');
                 }
             } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                const { error } = await nexusSupabase.auth.signInWithPassword({ email, password });
                 if (error) alert(error.message);
                 else {
                     alert('Autentificare reușită!');
