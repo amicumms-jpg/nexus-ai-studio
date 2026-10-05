@@ -295,12 +295,6 @@
            <script>
         
 
-        window.addEventListener('DOMContentLoaded', () => {
-            localStorage.setItem('nexus_gemini_key', HARDCODED_API_KEY);
-            updateApiStatus(true);
-            switchTab('chat');
-        });
-
         function updateApiStatus(isActive) {
             const indicator = document.getElementById('apiStatusIndicator');
             const text = document.getElementById('apiStatusText');
