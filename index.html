@@ -320,7 +320,7 @@
 
         function newSession() { switchTab('chat'); }
 
-              async function handleSendMessage() {
+                    async function handleSendMessage() {
             const inputField = document.getElementById('userInput');
             const text = inputField.value?.trim();
             if(!text) return;
@@ -332,11 +332,14 @@
             try {
                 const host = "generativelanguage." + "googleapis.com";
                 const path = "/v1beta/models/gemini-1.5-flash:generateContent";
-                const cleanUrl = "https://" + host + path + "?key=" + HARDCODED_API_KEY;
+                const cleanUrl = "https://" + host + path;
 
                 const response = await fetch(cleanUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': HARDCODED_API_KEY
+                    },
                     body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
                 });
                 const data = await response.json();
@@ -347,6 +350,7 @@
                 alert("Eroare: " + e.message);
             }
         }
+
  
 
         async function handleLiveSendMessage() {
