@@ -320,7 +320,7 @@
 
         function newSession() { switchTab('chat'); }
                
-         async function handleSendMessage() {
+        async function handleSendMessage() {
     const inputField = document.getElementById('userInput');
     const text = inputField.value?.trim();
     if(!text) return;
@@ -330,7 +330,6 @@
     inputField.value = '';
 
     try {
-        // Apelăm propria rută serverless, care nu are restricții de CORS
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 
@@ -342,17 +341,18 @@
         const data = await response.json();
         
         if (data.error) {
-            container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error.message}</div>`;
+            container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error}</div>`;
             return;
         }
 
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nu s-a putut genera răspunsul.";
+        const reply = data.text || "Nu s-a putut genera răspunsul.";
         container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
         container.scrollTop = container.scrollHeight;
     } catch(e) {
         alert("Eroare rețea: " + e.message);
     }
 }
+
 
         async function handleLiveSendMessage() {
             const inputField = document.getElementById('liveInput');
