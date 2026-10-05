@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Stripe Script pentru Plăți -->
     <script src="https://js.stripe.com/v3/"></script>
-         
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -116,35 +115,13 @@
                     </div>
                 </div>
 
-               <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
-    <div class="max-w-4xl mx-auto">
-        <!-- Zona de previzualizare fișier atașat -->
-        <div id="filePreviewContainer" class="hidden items-center gap-2 mb-2 px-3 py-1.5 bg-[#1a1d24] border border-gray-700 rounded-lg text-sm text-gray-300 w-fit">
-            <i class="fa-solid fa-file-lines text-neonViolet"></i>
-            <span id="fileNameDisplay" class="truncate max-w-xs"></span>
-            <button type="button" id="removeFileBtn" class="text-gray-400 hover:text-red-400 ml-2">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <!-- Caseta de text și butonul de atașare -->
-        <div class="flex items-center space-x-2 bg-gray-900 border border-gray-800 rounded-xl p-2">
-            <!-- Input ascuns pentru fișiere -->
-            <input type="file" id="fileInput" class="hidden" accept="image/*,.pdf,.txt,.doc,.docx">
-            
-            <!-- Butonul vizibil (agrafa) -->
-            <label for="fileInput" class="cursor-pointer text-gray-400 hover:text-white p-2 transition flex items-center justify-center" title="Atașază fișier">
-                <i class="fa-solid fa-paperclip text-lg"></i>
-            </label>
-
-            <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent border-none outline-none text-white px-2 placeholder-gray-500">
-            <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white px-4 py-2 rounded-lg transition flex items-center justify-center">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-</div>
-
+                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
+                    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
+                        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
+                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                    </div>
+                </div>
+            </div>
 
             <!-- Tab 2: Gemini Live & Voice Studio -->
             <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
@@ -318,10 +295,9 @@
     <script>
         const SUPABASE_URL = 'https://exemplu.supabase.co';
         const SUPABASE_ANON_KEY = 'exemplu-cheie-anon';
-        const nexusSupabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://exemplu.supabase.co') 
-               ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-           : null;
+        const supabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://exemplu.supabase.co') 
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
+            : null;
 
         let isMainRegisterMode = false;
         let voiceOutputEnabled = true;
@@ -444,33 +420,14 @@
             document.getElementById('liveStateLabel').innerText = "Gemini Live generează răspunsul...";
 
             try {
-               let response;
-            let data;
-            let retries = 3;
-
-            while (retries > 0) {
-                response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
                 });
+                const data = await response.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat cu succes.";
                 
-                if (response.status === 503) {
-                    retries--;
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    continue;
-                }
-                
-                data = await response.json();
-                break;
-            }
-
-            if (!data || data.error) {
-                throw new Error(data?.error?.message || "Serviciul este temporar indisponibil.");
-            }
-
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat.";
- 
                 container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
                 document.getElementById('liveStateLabel').innerText = "Pregătit pentru următoarea interacțiune live.";
@@ -495,7 +452,7 @@
             const email = document.getElementById('mainEmailInput').value.trim();
             const password = document.getElementById('mainPassInput').value.trim();
 
-            if (!nexusSupabase) {
+            if (!supabase) {
                 localStorage.setItem('nexus_logged_user', email);
                 alert(isMainRegisterMode ? 'Cont creat cu succes (Mod Local)!' : 'Autentificare reușită (Mod Local)!');
                 switchTab('chat');
@@ -504,14 +461,14 @@
             }
 
             if (isMainRegisterMode) {
-                const { error } = await nexusSupabase.auth.signUp({ email, password });
+                const { error } = await supabase.auth.signUp({ email, password });
                 if (error) alert(error.message);
                 else {
                     alert('Cont creat cu succes! Verifică emailul pentru confirmare.');
                     switchTab('chat');
                 }
             } else {
-                const { error } = await nexusSupabase.auth.signInWithPassword({ email, password });
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) alert(error.message);
                 else {
                     alert('Autentificare reușită!');
@@ -530,7 +487,7 @@
         }
 
         async function handleLogout() {
-            if (nexusSupabase) await nexusSupabase.auth.signOut();
+            if (supabase) await supabase.auth.signOut();
             localStorage.removeItem('nexus_logged_user');
             location.reload();
         }
@@ -551,120 +508,36 @@
                 alert("Te rugăm să introduci o cheie validă!");
             }
         }
-let selectedFileBase64 = null;
-let selectedFileName = null;
 
-// Ascultăm când utilizatorul alege un fișier
-document.getElementById('fileInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        selectedFileName = file.name;
-        const reader = new FileReader();
-        reader.onload = function(uploadEvent) {
-            selectedFileBase64 = uploadEvent.target.result;
-            const previewContainer = document.getElementById('filePreviewContainer');
-            const fileNameDisplay = document.getElementById('fileNameDisplay');
-            fileNameDisplay.textContent = selectedFileName;
-            previewContainer.classList.remove('hidden');
-            previewContainer.classList.add('flex');
-        };
-        reader.readAsDataURL(file);
-    }
-});
+        async function handleSendMessage() {
+            const apiKey = localStorage.getItem('nexus_gemini_key');
+            if (!apiKey) {
+                alert("Introdu mai întâi cheia API în tab-ul dedicat!");
+                switchTab('auth');
+                return;
+            }
+            const inputField = document.getElementById('userInput');
+            const text = inputField.value.trim();
+            if(!text) return;
 
-// Butonul pentru a șterge fișierul atașat
-document.getElementById('removeFileBtn').addEventListener('click', function() {
-    selectedFileBase64 = null;
-    selectedFileName = null;
-    document.getElementById('fileInput').value = '';
-    const previewContainer = document.getElementById('filePreviewContainer');
-    previewContainer.classList.remove('flex');
-    previewContainer.classList.add('hidden');
-});
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
+            inputField.value = '';
 
-
-       async function handleSendMessage() {
-    const apiKey = localStorage.getItem('nexus_gemini_key');
-    if (!apiKey) {
-        alert("Introdu mai întâi cheia API în tab-ul dedicat!");
-        switchTab('auth');
-        return;
-    }
-    const inputField = document.getElementById('userInput');
-    const text = inputField.value.trim();
-    if(!text) return;
-
-    const container = document.getElementById('chatMessages');
-    
-    // Afișăm mesajul tău în interfață
-    container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
-    inputField.value = '';
-    container.scrollTop = container.scrollHeight;
-// Resetăm fișierul atașat după trimitere
-        selectedFileBase64 = null;
-        selectedFileName = null;
-        document.getElementById('fileInput').value = '';
-        document.getElementById('filePreviewContainer').classList.remove('flex');
-        document.getElementById('filePreviewContainer').classList.add('hidden');
-
-    // Generăm un ID unic pentru animația de încărcare
-    const loadingId = 'loading-' + Date.now();
-    container.innerHTML += `
-        <div id="${loadingId}" class="flex items-start space-x-3 mb-2 opacity-70 animate-pulse">
-            <div class="w-8 h-8 rounded-xl bg-accentIndigo/20 text-accentIndigo flex items-center justify-center shrink-0"><i class="fa-solid fa-spinner animate-spin"></i></div>
-            <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-400 max-w-[85%] shadow-sm">
-                Nexus se gândește la un răspuns...
-            </div>
-        </div>
-    `;
-    container.scrollTop = container.scrollHeight;
-
-    try {
-        // Inițializăm instanța nativă din librăria încărcată în head
-               // Construim părțile mesajului (text + opțional fișier/imagine în Base64)
-        let partsArray = [{ text: text }];
-        
-        if (selectedFileBase64) {
-            // Extragem tipul MIME și datele pure din șirul Base64 generat de FileReader
-            const mimeType = selectedFileBase64.split(';')[0].split(':')[1];
-            const base64Data = selectedFileBase64.split(',')[1];
-            
-            partsArray.push({
-                inlineData: {
-                    mimeType: mimeType,
-                    data: base64Data
-                }
-            });
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
+                });
+                const data = await response.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat cu succes.";
+                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
+                container.scrollTop = container.scrollHeight;
+            } catch(e) {
+                alert("Eroare de conexiune: " + e.message);
+            }
         }
-
-const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=AQ.Ab8RN6gJxMF9chkR1a0FkOPRBbellu1Xk6RVldzUW4sFRF3sA", {
-    method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: partsArray }] })
-});
-
-
-
-
-        const data = await response.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nu s-a primit niciun răspuns.";
-
-        
-        // Ștergem loader-ul animat
-        const loadingElement = document.getElementById(loadingId);
-        if (loadingElement) loadingElement.remove();
-
-        // Afișăm răspunsul final primit de la AI
-        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
-        container.scrollTop = container.scrollHeight;
-
-    } catch(e) {
-        const loadingElement = document.getElementById(loadingId);
-        if (loadingElement) loadingElement.remove();
-        alert("Eroare de conexiune la API-ul Gemini: " + e.message);
-    }
-}
-        
 
         async function generateVideoStoryboard() {
             const apiKey = localStorage.getItem('nexus_gemini_key');
