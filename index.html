@@ -320,7 +320,7 @@
 
         function newSession() { switchTab('chat'); }
                
-             async function handleSendMessage() {
+                    async function handleSendMessage() {
             const inputField = document.getElementById('userInput');
             const text = inputField.value?.trim();
             if(!text) return;
@@ -330,14 +330,12 @@
             inputField.value = '';
 
             try {
-                const dynamicKey = "AQ.Ab8RN6KwasoJjU4SN1pamRunUKp1cxkgZQfbsPdkg4upHoUpYg";
-                
-                // URL-ul este curat, FĂRĂ parametrul ?key= la final
-                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
+                // Adresa URL curată, complet lipsită de parametrul ?key= la final
+                const response = await fetch('https://googleapis.com', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + dynamicKey
+                        'x-goog-api-key': 'AQ.Ab8RN6KwasoJjU4SN1pamRunUKp1cxkgZQfbsPdkg4upHoUpYg'
                     },
                     body: JSON.stringify({
                         contents: [{
@@ -349,7 +347,7 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error.message}</div>`;
+                    container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare Google: ${data.error.message}</div>`;
                     return;
                 }
 
@@ -360,8 +358,7 @@
                 alert("Eroare rețea: " + e.message);
             }
         }
-         
-           
+
         async function handleLiveSendMessage() {
             const inputField = document.getElementById('liveInput');
             const text = inputField.value?.trim();
