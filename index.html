@@ -292,28 +292,12 @@
         </main>
     </div>
 
-        <script>
-        const SUPABASE_URL = 'https://supabase.co';
-        const SUPABASE_ANON_KEY = 'exemplu-cheie-anon';
-        const supabase = (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'https://supabase.co') 
-            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
-            : null;
-
-        let isMainRegisterMode = false;
-        let voiceOutputEnabled = true;
-
-        // Scriem cheia API în mod fix direct în memoria codului ca să fie activă din prima secundă
+           <script>
         const HARDCODED_API_KEY = "AQ.Ab8RN6KgJxMF9chkR1a0FkOPRBbellulXk6RVldzUW4sFRF3sA";
 
         window.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('nexus_gemini_key', HARDCODED_API_KEY);
-            document.getElementById('apiKeyInput').value = HARDCODED_API_KEY;
             updateApiStatus(true);
-            
-            const savedUser = localStorage.getItem('nexus_logged_user');
-            if (savedUser) {
-                updateAuthHeader(savedUser);
-            }
             switchTab('chat');
         });
 
@@ -321,186 +305,93 @@
             const indicator = document.getElementById('apiStatusIndicator');
             const text = document.getElementById('apiStatusText');
             if (indicator && text) {
-                if (isActive) {
-                    indicator.className = "w-2 h-2 rounded-full bg-successGreen animate-pulse";
-                    text.innerText = "API Activ (Gemini)";
-                } else {
-                    indicator.className = "w-2 h-2 rounded-full bg-red-500";
-                    text.innerText = "API Key Neconfigurat";
-                }
+                indicator.className = "w-2 h-2 rounded-full bg-successGreen animate-pulse";
+                text.innerText = "API Activ (Gemini)";
             }
         }
 
         function switchTab(tabId) {
-            console.log("Comutare la tab-ul:", tabId);
+            console.log("Comutare la:", tabId);
             const tabs = document.querySelectorAll('.app-tab');
-            tabs.forEach(tab => {
-                tab.style.display = 'none';
-            });
-
+            tabs.forEach(tab => { tab.style.display = 'none'; });
             const target = document.getElementById(`tab-${tabId}`);
-            if (target) {
-                target.style.display = 'flex';
-            } else {
-                console.error("Nu s-a găsit elementul pentru tab:", tabId);
-            }
+            if (target) { target.style.display = 'flex'; }
         }
 
-        function newSession() {
-            switchTab('chat');
-        }
+        function newSession() { switchTab('chat'); }
 
-        function toggleVoiceOutput() {
-            voiceOutputEnabled = !voiceOutputEnabled;
-            document.getElementById('voiceStatusText').innerText = voiceOutputEnabled ? "Activă" : "Oprită";
-            document.getElementById('voiceStatusText').className = voiceOutputEnabled ? "ml-1 text-neonViolet font-bold" : "ml-1 text-gray-400 font-bold";
-        }
-
-        function speakText(text) {
-            if (!voiceOutputEnabled || !('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ro-RO';
-            utterance.rate = 1.0;
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function startListening() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Browserul tău nu suportă recunoașterea vocală directă.");
-                return;
-            }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'ro-RO';
-            recognition.interimResults = false;
-            
-            document.getElementById('liveStateLabel').innerText = "Ascult... Vorbește acum la microfon!";
-            document.getElementById('micBtn').classList.add('bg-neonViolet', 'text-white');
-
-            recognition.onresult = (event) => {
-                const speechToText = event.results[0][0].transcript;
-                document.getElementById('liveInput').value = speechToText;
-                document.getElementById('liveStateLabel').innerText = "Mesaj captat vocal. Se trimite...";
-                handleLiveSendMessage();
-            };
-
-            recognition.onerror = () => {
-                document.getElementById('liveStateLabel').innerText = "Eroare la preluarea audio.";
-                document.getElementById('micBtn').classList.remove('bg-neonViolet', 'text-white');
-            };
-
-            recognition.onend = () => {
-                document.getElementById('micBtn').classList.remove('bg-neonViolet', 'text-white');
-            };
-
-            recognition.start();
-        }
-
-        async function handleLiveSendMessage() {
-            const apiKey = HARDCODED_API_KEY;
-            const inputField = document.getElementById('liveInput');
-            const text = inputField.value.trim();
+        async function handleSendMessage() {
+            const inputField = document.getElementById('userInput');
+            const text = inputField.value?.trim();
             if(!text) return;
 
-            const container = document.getElementById('liveChatMessages');
-            container.innerHTML += `<div class="text-right text-sm text-neonViolet mb-2 font-medium">${text}</div>`;
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
             inputField.value = '';
-            document.getElementById('liveStateLabel').innerText = "Gemini Live generează răspunsul...";
 
             try {
-                const response = await fetch(`https://googleapis.com{apiKey}`, {
+                const response = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
                 });
                 const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat cu succes.";
-                
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nu s-a putut genera răspunsul.";
                 container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
-                document.getElementById('liveStateLabel').innerText = "Pregătit pentru următoarea interacțiune live.";
-                
-                speakText(reply);
             } catch(e) {
-                alert("Eroare de conexiune: " + e.message);
-                document.getElementById('liveStateLabel').innerText = "Eroare în timpul sesiunii live.";
+                alert("Eroare: " + e.message);
             }
         }
 
-        function toggleMainAuthMode() {
-            isMainRegisterMode = !isMainRegisterMode;
-            document.getElementById('auth-main-title').innerText = isMainRegisterMode ? 'Creează Cont Nou' : 'Autentificare în Cont';
-            document.getElementById('auth-main-desc').innerText = isMainRegisterMode ? 'Completează datele pentru a-ți înregistra un cont nou.' : 'Introdu datele tale pentru acces deplin în Nexus Studio.';
-            document.getElementById('main-auth-btn').innerText = isMainRegisterMode ? 'Înregistrează-te Acum' : 'Intră în Cont';
-            document.getElementById('main-switch-text').innerText = isMainRegisterMode ? 'Ai deja cont? Autentifică-te' : 'Nu ai cont? Creează un cont nou aici';
+        async function handleLiveSendMessage() {
+            const inputField = document.getElementById('liveInput');
+            const text = inputField.value?.trim();
+            if(!text) return;
+            const container = document.getElementById('liveChatMessages');
+            container.innerHTML += `<div class="text-right text-sm text-neonViolet mb-2 font-medium">${text}</div>`;
+            inputField.value = '';
+            try {
+                const response = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
+                });
+                const data = await response.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat.";
+                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
+            } catch(e) { alert("Eroare: " + e.message); }
         }
 
-        async function handleAccountFormSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('mainEmailInput').value.trim();
-            const password = document.getElementById('mainPassInput').value.trim();
-
-            if (!supabase) {
-                localStorage.setItem('nexus_logged_user', email);
-                alert(isMainRegisterMode ? 'Cont creat cu succes (Mod Local)!' : 'Autentificare reușită (Mod Local)!');
-                switchTab('chat');
-                updateAuthHeader(email);
-                return;
-            }
-
-            if (isMainRegisterMode) {
-                const { error } = await supabase.auth.signUp({ email, password });
-                if (error) alert(error.message);
-                else {
-                    alert('Cont creat cu succes! Verifică emailul pentru confirmare.');
-                    switchTab('chat');
-                }
-            } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) alert(error.message);
-                else {
-                    alert('Autentificare reușită!');
-                    switchTab('chat');
-                    updateAuthHeader(email);
-                }
-            }
+        async function generateVideoStoryboard() {
+            const prompt = document.getElementById('videoPrompt').value?.trim();
+            if(!prompt) return;
+            document.getElementById('videoResult').innerText = "Se generează...";
+            try {
+                const res = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Storyboard pentru: " + prompt }] }] })
+                });
+                const data = await res.json();
+                document.getElementById('videoResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare.";
+            } catch(e) { document.getElementById('videoResult').innerText = "Eroare."; }
         }
 
-        function updateAuthHeader(email) {
-            const container = document.getElementById('auth-container');
-            if (container) {
-                container.innerHTML = `
-                    <span class="text-xs text-gray-300 hidden sm:inline mr-2">${email}</span>
-                    <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/80 text-white text-xs font-medium hover:bg-red-700 transition cursor-pointer">Ieși</button>
-                `;
-            }
+        async function generateSocialPost() {
+            const topic = document.getElementById('socialTopic').value?.trim();
+            if(!topic) return;
+            document.getElementById('socialResult').innerText = "Se generează...";
+            try {
+                const res = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Postare despre: " + topic }] }] })
+                });
+                const data = await res.json();
+                document.getElementById('socialResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare.";
+            } catch(e) { document.getElementById('socialResult').innerText = "Eroare."; }
         }
-
-        async function handleLogout() {
-            if (supabase) await supabase.auth.signOut();
-            localStorage.removeItem('nexus_logged_user');
-            location.reload();
-        }
-
-        function startStripeCheckout(priceId) {
-            alert(`Se inițializează plata securizată prin card pentru pachetul selectat (${priceId}). Redirecționare către Stripe...`);
-        }
-
-        function saveApiKey() {
-            const key = document.getElementById('apiKeyInput').value.trim();
-            if (key) {
-                localStorage.setItem('nexus_gemini_key', key);
-                updateApiStatus(true);
-                const notif = document.getElementById('saveNotification');
-                if(notif) notif.classList.remove('hidden');
-                setTimeout(() => { if(notif) notif.classList.add('hidden'); }, 3000);
-            } else {
-                alert("Te rugăm să introduci o cheie validă!");
-            }
-        }
-
-        async function handleSendMessage() {
-            const apiKey = HARDCODED_API_KEY;
-            const inputField = document.getElementById('userInput');
-            const text = inputField.value.trim();
+    </script>
+</body>
+</html>
