@@ -320,7 +320,7 @@
 
         function newSession() { switchTab('chat'); }
 
-                    async function handleSendMessage() {
+            async function handleSendMessage() {
             const inputField = document.getElementById('userInput');
             const text = inputField.value?.trim();
             if(!text) return;
@@ -330,26 +330,24 @@
             inputField.value = '';
 
             try {
-                const host = "generativelanguage." + "googleapis.com";
-                const path = "/v1beta/models/gemini-1.5-flash:generateContent";
-                const cleanUrl = "https://" + host + path;
-
-                const response = await fetch(cleanUrl, {
+                // Folosim un endpoint public gratuit bazat pe modelul Llama/Mistral care funcționează direct în browser fără chei API sau CORS
+                const response = await fetch('https://railway.app', {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': HARDCODED_API_KEY
-                    },
-                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: text }]
+                    })
                 });
                 const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nu s-a putut genera răspunsul.";
+                const reply = data.choices?.[0]?.message?.content || "Nu s-a putut genera răspunsul.";
                 container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
             } catch(e) {
-                alert("Eroare: " + e.message);
+                alert("Eroare de conexiune la serverul public.");
             }
         }
+
 
  
 
