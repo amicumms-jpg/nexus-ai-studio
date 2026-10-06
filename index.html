@@ -136,7 +136,11 @@
 
                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
     <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-800 rounded-2xl p-2">
-        
+        <div class="flex justify-between items-center px-2 pt-1 text-[11px] text-gray-500">
+    <span>Apasă Enter pentru a trimite</span>
+    <span id="charCounter">0 caractere | 0 cuvinte</span>
+</div>
+
         <!-- Selector Rapid Emoji -->
         <div class="relative inline-block">
             <button onclick="toggleEmojiPicker()" class="px-2.5 py-2 bg-gray-800 text-gray-300 rounded-xl hover:text-white text-sm" title="Emoji">😊</button>
@@ -640,6 +644,21 @@ function exportChat() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+// Contor dinamic pentru caractere și cuvinte
+const userInputField = document.getElementById('userInput');
+if (userInputField) {
+    userInputField.addEventListener('input', () => {
+        const text = userInputField.value;
+        const charCount = text.length;
+        const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        
+        const counter = document.getElementById('charCounter');
+        if (counter) {
+            counter.innerText = `${charCount} caractere | ${wordCount} cuvinte`;
+        }
+    });
+}
+
 
 
 
