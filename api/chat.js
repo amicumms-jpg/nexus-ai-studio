@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const genAI = new GoogleGenerativeAI(apiKey);
         
         // Folosim modelul Flash din versiunea 2.5, complet suportat și extrem de rapid
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+       const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
 
         // Generăm răspunsul utilizând sintaxa nativă a pachetului tău
         const result = await model.generateContent(prompt);
