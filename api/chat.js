@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -11,24 +9,35 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Prompt lipsa' });
         }
 
-        // Citim direct cheia configurată securizat în panoul Vercel
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return res.status(500).json({ error: 'Eroare: GEMINI_API_KEY nu este configurata in Vercel!' });
         }
 
-        // Inițializăm SDK-ul oficial versiunea 0.21.0 cu cheia din server
-        const genAI = new GoogleGenerativeAI(apiKey);
-        
-        // Folosim modelul Flash din versiunea 2.5, complet suportat și extrem de rapid
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Apel nativ simplu, stabil și complet compatibil cu noile chei Google (prefix "AQ.")
+        const response = await fetch(`https://googleapis.com{apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
 
-        // Generăm răspunsul utilizând sintaxa nativă a pachetului tău
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
+        const data = await response.json();
 
-        // Returnăm JSON-ul curat pe care index.html îl așteaptă
-        return res.status(200).json({ text: responseText });
+        if (data.error) {
+            return res.status(data.error.code || 400).json({ error: data.error.message });
+        }
+
+        // Extragerea corectă și sigură a proprietăților JSON conform specificațiilor oficiale Google
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+            const aiResponseText = data.candidates[0].content.parts[0].text;
+            return res.status(200).json({ text: aiResponseText });
+        } else {
+            return res.status(500).json({ error: 'Structura raspunsului de la Google este neasteptata.', raw: data });
+        }
 
     } catch (error) {
         console.error("Gemini API Error:", error);
