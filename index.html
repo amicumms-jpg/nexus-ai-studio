@@ -37,10 +37,11 @@
             </div>
             <div>
                 <h1 class="font-bold text-sm text-white tracking-wide">Nexus AI Studio Pro</h1>
-                <span class="text-[10px] text-gray-400 flex items-center space-x-1.5">
-                    <span id="apiStatusIndicator" class="w-2 h-2 rounded-full bg-red-500"></span>
-                    <span id="apiStatusText">API Key Neconfigurat</span>
-                </span>
+              <span class="text-[10px] text-emerald-400 flex items-center space-x-1.5 mt-0.5">
+    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    <span>Sistem Activ • Model Gemini</span>
+</span>
+
             </div>
         </div>
 
@@ -331,24 +332,7 @@
                 </div>
             </div>
 
-            <!-- Tab 7: API Key -->
-            <div id="tab-auth" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem;">
-                <div class="max-w-xl space-y-4">
-                    <h2 class="text-lg font-bold mb-2 text-white"><i class="fa-solid fa-key text-accentIndigo mr-2"></i>Configurare Cheie API Google Gemini</h2>
-                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-2">Introdu cheia ta API (Google AI Studio):</label>
-                            <input type="password" id="apiKeyInput" placeholder="AQ.Ab8RN6LHjeAdOp5ZlyhzE-CJDLyWwWdnOvEu1hCrf_TJoLt2Og" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-accentIndigo">
-                        </div>
-                        <button onclick="saveApiKey()" class="bg-successGreen hover:opacity-90 text-darkBg font-bold text-xs py-2.5 px-4 rounded-xl transition shadow cursor-pointer">
-                            Salvează Cheia în Browser
-                        </button>
-                        <div id="saveNotification" class="text-xs text-successGreen font-medium hidden">
-                            <i class="fa-solid fa-check mr-1"></i> Cheia a fost salvată și activată cu succes!
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
         </main>
     </div>
@@ -365,25 +349,7 @@
             }
         }
 
-        function switchTab(tabId) {
-            console.log("Comutare la:", tabId);
-            const tabs = document.querySelectorAll('.app-tab');
-            tabs.forEach(tab => { tab.style.display = 'none'; });
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) { target.style.display = 'flex'; }
-        }
-function saveApiKey() {
-    const apiKeyField = document.getElementById('apiKeyInput'); 
-    
-    if (apiKeyField && apiKeyField.value.trim() !== '') {
-        localStorage.setItem('GEMINI_API_KEY', apiKeyField.value.trim());
-        alert('Cheia API a fost salvată cu succes în browser!');
-        location.reload();
-    } else {
-        alert('Eroare: Nu am putut citi cheia. Te rugăm să verifici dacă ai completat câmpul.');
-    }
-}
-
+       
 
 function newSession() { switchTab('chat'); }
 
