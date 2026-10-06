@@ -339,10 +339,11 @@ function newSession() { switchTab('chat'); }
     inputField.value = '';
 
     try {
-        const response = await fetch('/api/chat', {
+                const response = await fetch('/api/chat', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json'
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': localStorage.getItem('GEMINI_API_KEY') || ''
             },
             body: JSON.stringify({ prompt: text })
         });
