@@ -68,6 +68,12 @@
     <button onclick="exportChat()" class="px-2.5 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white transition" title="Exportă Conversația">
         💾 Export
     </button>
+    <!-- Control Temperatură AI -->
+    <div class="flex items-center space-x-2 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-xl ml-2 inline-flex">
+        <span class="text-xs text-gray-400">🌡️ Temp: <strong id="tempValue" class="text-white">0.7</strong></span>
+        <input type="range" id="aiTemperature" min="0" max="1" step="0.1" value="0.7" class="w-20 accent-accentIndigo cursor-pointer" onchange="updateTemperature(this.value)">
+    </div>
+
 
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
@@ -658,6 +664,16 @@ if (userInputField) {
         }
     });
 }
+let currentTemperature = 0.7;
+
+function updateTemperature(val) {
+    currentTemperature = parseFloat(val);
+    const tempDisplay = document.getElementById('tempValue');
+    if (tempDisplay) {
+        tempDisplay.innerText = val;
+    }
+}
+
 
 
 
