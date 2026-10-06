@@ -7,7 +7,9 @@ export default async function handler(req, res) {
 
   try {
     const { prompt } = req.body;
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const userApiKey = req.headers['x-api-key'] || process.env.GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(userApiKey);
+
     
     // Folosim direct endpoint-ul HTTP nativ prin SDK-ul corectat
     const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
