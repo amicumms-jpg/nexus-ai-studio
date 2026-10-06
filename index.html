@@ -118,6 +118,7 @@
                 <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
                     <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
                         <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
+                        <input type="file" onchange="handleFileUpload(event)" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-accentIndigo/20 file:text-accentIndigo hover:file:bg-accentIndigo/30 cursor-pointer">
                         <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
                     </div>
                 </div>
@@ -397,6 +398,49 @@ function newSession() { switchTab('chat'); }
                 document.getElementById('videoResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare.";
             } catch(e) { document.getElementById('videoResult').innerText = "Eroare."; }
         }
+// Starea globală pentru taburi independente și fișiere izolate
+const tabStates = {
+    chat: { messages: [], fileData: null },
+    video: { messages: [], fileData: null },
+    social: { messages: [], fileData: null }
+};
+let currentActiveTab = 'chat';
+function switchTab(tabName) {
+    if (tabStates[tabName]) {
+        currentActiveTab = tabName;
+        console.log("Tab activ schimbat la:", currentActiveTab);
+        
+        // Ascunde toate secțiunile de taburi
+        document.querySelectorAll('[id^="tab-"]').forEach(el => {
+            el.classList.add('hidden');
+        });
+        
+        // Afișează secțiunea corespunzătoare tabului selectat
+        const activeTabEl = document.getElementById('tab-' + tabName) || document.getElementById(tabName);
+        if (activeTabEl) {
+            activeTabEl.classList.remove('hidden');
+        }
+    }
+}
+
+ // Funcție pentru gestionarea fișierelor per tab
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            tabStates[currentActiveTab].fileData = {
+                name: file.name,
+                type: file.type,
+                content: e.target.result
+            };
+            console.log(`Fișier încărcat în [${currentActiveTab}]:`, file.name);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+
 
         async function generateSocialPost() {
             const topic = document.getElementById('socialTopic').value?.trim();
