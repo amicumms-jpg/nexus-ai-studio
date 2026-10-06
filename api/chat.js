@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const genAI = new GoogleGenerativeAI(apiKey);
         
         // Apelăm modelul corect cerut în mod obligatoriu de Google
-        const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         // Generăm conținutul utilizând funcțiile native stabile ale SDK-ului
         const result = await model.generateContent(prompt);
