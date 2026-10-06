@@ -475,54 +475,78 @@ function refreshChatUI(tabId) {
 }
          
 
-        async function handleLiveSendMessage() {
-            const inputField = document.getElementById('liveInput');
-            const text = inputField.value?.trim();
-            if(!text) return;
-            const container = document.getElementById('liveChatMessages');
-            container.innerHTML += `<div class="text-right text-sm text-neonViolet mb-2 font-medium">${text}</div>`;
-            inputField.value = '';
-            try {
-                const response = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
-                });
-                const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat.";
-                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
-            } catch(e) { alert("Eroare: " + e.message); }
-        }
+      // Funcția pentru tab-ul Gemini Live
+async function handleLiveSendMessage() {
+    const inputField = document.getElementById('liveInput');
+    if (!inputField) return;
+    const text = inputField.value.trim();
+    if (!text) return;
 
-        async function generateVideoStoryboard() {
-            const prompt = document.getElementById('videoPrompt').value?.trim();
-            if(!prompt) return;
-            document.getElementById('videoResult').innerText = "Se generează...";
-            try {
-                const res = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Storyboard pentru: " + prompt }] }] })
-                });
-                const data = await res.json();
-                document.getElementById('videoResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare.";
-            } catch(e) { document.getElementById('videoResult').innerText = "Eroare."; }
-        }
+    chatSessions[currentActiveTab].push({ role: 'user', message: text });
+    refreshChatUI(currentActiveTab);
+    inputField.value = '';
 
-        async function generateSocialPost() {
-            const topic = document.getElementById('socialTopic').value?.trim();
-            if(!topic) return;
-            document.getElementById('socialResult').innerText = "Se generează...";
-            try {
-                const res = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Postare despre: " + topic }] }] })
-                });
-                const data = await res.json();
-                document.getElementById('socialResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare.";
-            } catch(e) { document.getElementById('socialResult').innerText = "Eroare."; }
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: text, tabId: currentActiveTab })
+        });
+        const data = await response.json();
+        if (data.error) {
+            chatSessions[currentActiveTab].push({ role: 'ai', message: `Eroare: ${data.error}` });
+        } else {
+            chatSessions[currentActiveTab].push({ role: 'ai', message: data.text });
         }
+        refreshChatUI(currentActiveTab);
+    } catch (err) {
+        chatSessions[currentActiveTab].push({ role: 'ai', message: 'Eroare de rețea.' });
+        refreshChatUI(currentActiveTab);
+    }
+}
+
+// Funcția pentru tab-ul AI Video Maker
+async function generateVideoStoryboard() {
+    const promptInput = document.getElementById('videoPrompt');
+    const resultContainer = document.getElementById('videoResult');
+    if (!promptInput || !promptInput.value.trim()) return;
+
+    if (resultContainer) resultContainer.innerText = "Se generează storyboard...";
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: "Creează un storyboard pentru: " + promptInput.value.trim(), tabId: currentActiveTab })
+        });
+        const data = await response.json();
+        if (resultContainer) resultContainer.innerText = data.text || "Eroare la generare.";
+    } catch (e) {
+        if (resultContainer) resultContainer.innerText = "Eroare server.";
+    }
+}
+
+// Funcția pentru tab-ul Social Media Hub
+async function generateSocialPost() {
+    const topicInput = document.getElementById('socialTopic');
+    const resultContainer = document.getElementById('socialResult');
+    if (!topicInput || !topicInput.value.trim()) return;
+
+    if (resultContainer) resultContainer.innerText = "Se generează postarea...";
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: "Scrie o postare social media despre: " + topicInput.value.trim(), tabId: currentActiveTab })
+        });
+        const data = await response.json();
+        if (resultContainer) resultContainer.innerText = data.text || "Eroare la generare.";
+    } catch (e) {
+        if (resultContainer) resultContainer.innerText = "Eroare server.";
+    }
+}
+ 
     </script>
 </body>
 </html>
