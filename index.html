@@ -318,16 +318,59 @@
             }
         }
 
-        function switchTab(tabId) {
-            console.log("Comutare la:", tabId);
-            const tabs = document.querySelectorAll('.app-tab');
-            tabs.forEach(tab => { tab.style.display = 'none'; });
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) { target.style.display = 'flex'; }
-        }
+        // Funcția pentru actualizarea indicatorului API de pe ecran
+function updateApiStatus(isActive) {
+    const indicator = document.getElementById('apiStatusIndicator');
+    const text = document.getElementById('apiStatusText');
+    if (indicator && text) {
+        indicator.className = "w-2 h-2 rounded-full bg-successGreen animate-pulse";
+        text.innerText = "API Activ (Gemini)";
+    }
+}
+
+// Memorie cache pentru sesiuni de chat complet independente per Tab
+let chatSessions = {
+    'tab-chat': [],      // Chat General
+    'tab-geminilive': [], // Gemini Live & Voice Studio
+    'tab-video': [],     // AI Video Maker
+    'tab-social': []     // Social Media Hub
+};
+
+let currentActiveTab = 'tab-chat'; // Setăm tab-ul activ implicit
+let currentAttachedFile = null;    // Stocăm temporar fișierul atașat curent
+
+// Executăm din start comanda de activare a primului tab ca să nu mai rămână ecranul negru
+document.addEventListener("DOMContentLoaded", () => {
+    switchTab('tab-chat');
+});
+
+// Schimbă ecranele când dai click pe meniuri
+function switchTab(tabId) {
+    currentActiveTab = tabId;
+    console.log("Comutare la:", tabId);
+    
+    // Ascundem vizual toate ecranele de tab-uri din codul tău HTML
+    const tabs = document.querySelectorAll('.app-tab') || document.querySelectorAll('[id^="tab-"]');
+    tabs.forEach(tab => {
+        tab.style.display = 'none';
+    });
+    
+    // Afișăm pe ecran doar tab-ul pe care s-a dat click
+    const activeTabEl = document.getElementById(tabId);
+    if (activeTabEl) {
+        activeTabEl.style.display = 'flex';
+    } else {
+        const fallbackEl = document.getElementById(tabId.replace('tab-', ''));
+        if (fallbackEl) fallbackEl.style.display = 'flex';
+    }
+    
+    // Reîncărcăm în caseta de mesaje exclusiv istoricul care aparține de acest tab
+    refreshChatUI(tabId);
+}
+
+// Salvare cheie API în browser
 function saveApiKey() {
     const apiKeyField = document.getElementById('apiKeyInput'); 
-    
     if (apiKeyField && apiKeyField.value.trim() !== '') {
         localStorage.setItem('GEMINI_API_KEY', apiKeyField.value.trim());
         alert('Cheia API a fost salvată cu succes în browser!');
@@ -337,36 +380,11 @@ function saveApiKey() {
     }
 }
 
-
-function newSession() { switchTab('chat'); }
-
-// Memorie cache pentru chat-uri complet independente per Tab
-let chatSessions = {
-    'tab-chat': [],      // Chat General
-    'tab-geminilive': [], // Gemini Live & Voice Studio
-    'tab-video': [],     // AI Video Maker
-    'tab-social': []     // Social Media Hub
-};
-
-let currentActiveTab = 'tab-chat'; // Tab-ul activ implicit
-let currentAttachedFile = null;    // Stocăm temporar fișierul atașat curent
-
-// Rulează când dai click pe meniurile din stânga pentru a schimba ecranele fără să le amesteci
-function switchTab(tabId) {
-    currentActiveTab = tabId;
-    
-    // Ascundem vizual toate ecranele de tab-uri din codul tău HTML
-    document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
-    
-    // Afișăm pe ecran doar tab-ul pe care s-a dat click
-    const activeTabEl = document.getElementById(tabId);
-    if (activeTabEl) activeTabEl.style.display = 'flex';
-    
-    // Reîncărcăm în caseta de mesaje exclusiv istoricul care aparține de acest tab
-    refreshChatUI(tabId);
+function newSession() { 
+    switchTab('tab-chat'); 
 }
 
-// Transformă fișierul adăugat într-un text citibil de API (Base64)
+// Transformă fișierul adăugat într-un text binar citibil de API (Base64)
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -393,14 +411,15 @@ function handleFileSelect(event) {
 function clearAttachedFile(e) {
     if(e) e.stopPropagation();
     currentAttachedFile = null;
-    document.getElementById('mediaFileInput').value = '';
+    const fileInput = document.getElementById('mediaFileInput');
+    if (fileInput) fileInput.value = '';
     const badge = document.getElementById('filePreviewBadge');
     if (badge) badge.style.display = 'none';
 }
 
-// Înlocuiește funcția ta veche "handleSendMessage()" cu această versiune avansată:
+// Funcția universală de trimitere mesaje prin backend-ul tău stabil din Vercel
 async function handleSendMessage() {
-    const inputField = document.getElementById('userInput');
+    const inputField = document.getElementById('userInput') || document.getElementById('liveInput');
     if (!inputField) return;
     const text = inputField.value.trim();
     
@@ -446,106 +465,83 @@ async function handleSendMessage() {
     }
 }
 
-// Rederizează mesajele specifice doar pentru tab-ul deschis
-function refreshChatUI(tabId) {
-        const messagesContainer = document.getElementById('chatMessages');
-
-    if (!messagesContainer) return;
-    
-    if (chatSessions[tabId].length === 0) {
-        // Dacă nu s-a vorbit în tab, îl lăsăm curat cu interfața implicită
-        return;
-    }
-    
-    messagesContainer.innerHTML = '';
-    chatSessions[tabId].forEach(chat => {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `flex ${chat.role === 'user' ? 'justify-end' : 'justify-start'} my-3 px-4`;
-        
-        messageDiv.innerHTML = `
-            <div style="background: ${chat.role === 'user' ? '#4f46e5' : '#1f2937'}; padding: 12px 16px; border-radius: 12px; max-width: 75%; color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <p style="margin: 0; font-size: 14px; line-height: 1.5;">${chat.message}</p>
-                ${chat.fileName ? `<small style="color: #38bdf8; display: block; margin-top: 6px; font-size: 11px; font-weight: 500;">📎 Atașat: \${chat.fileName}</small>` : ''}
-            </div>
-        `;
-        messagesContainer.innerHTML += messageDiv.outerHTML;
-    });
-    
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-         
-
-      // Funcția pentru tab-ul Gemini Live
+// Scurtătură pentru tab-ul secundar Gemini Live
 async function handleLiveSendMessage() {
-    const inputField = document.getElementById('liveInput');
-    if (!inputField) return;
-    const text = inputField.value.trim();
-    if (!text) return;
-
-    chatSessions[currentActiveTab].push({ role: 'user', message: text });
-    refreshChatUI(currentActiveTab);
-    inputField.value = '';
-
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: text, tabId: currentActiveTab })
-        });
-        const data = await response.json();
-        if (data.error) {
-            chatSessions[currentActiveTab].push({ role: 'ai', message: `Eroare: ${data.error}` });
-        } else {
-            chatSessions[currentActiveTab].push({ role: 'ai', message: data.text });
-        }
-        refreshChatUI(currentActiveTab);
-    } catch (err) {
-        chatSessions[currentActiveTab].push({ role: 'ai', message: 'Eroare de rețea.' });
-        refreshChatUI(currentActiveTab);
-    }
+    await handleSendMessage();
 }
 
 // Funcția pentru tab-ul AI Video Maker
 async function generateVideoStoryboard() {
     const promptInput = document.getElementById('videoPrompt');
-    const resultContainer = document.getElementById('videoResult');
     if (!promptInput || !promptInput.value.trim()) return;
-
-    if (resultContainer) resultContainer.innerText = "Se generează storyboard...";
-
+    
+    const originalValue = promptInput.value;
+    promptInput.value = "Se generează storyboard...";
+    
     try {
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: "Creează un storyboard pentru: " + promptInput.value.trim(), tabId: currentActiveTab })
+            body: JSON.stringify({ prompt: "Creează un storyboard complet detaliat pentru: " + originalValue, tabId: currentActiveTab })
         });
         const data = await response.json();
+        const resultContainer = document.getElementById('videoResult');
         if (resultContainer) resultContainer.innerText = data.text || "Eroare la generare.";
     } catch (e) {
-        if (resultContainer) resultContainer.innerText = "Eroare server.";
+        console.error(e);
     }
+    promptInput.value = originalValue;
 }
 
 // Funcția pentru tab-ul Social Media Hub
 async function generateSocialPost() {
     const topicInput = document.getElementById('socialTopic');
-    const resultContainer = document.getElementById('socialResult');
     if (!topicInput || !topicInput.value.trim()) return;
-
-    if (resultContainer) resultContainer.innerText = "Se generează postarea...";
+    
+    const originalValue = topicInput.value;
+    topicInput.value = "Se generează postarea...";
 
     try {
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: "Scrie o postare social media despre: " + topicInput.value.trim(), tabId: currentActiveTab })
+            body: JSON.stringify({ prompt: "Scrie o postare optimizată pentru rețelele sociale despre: " + originalValue, tabId: currentActiveTab })
         });
         const data = await response.json();
+        const resultContainer = document.getElementById('socialResult');
         if (resultContainer) resultContainer.innerText = data.text || "Eroare la generare.";
     } catch (e) {
-        if (resultContainer) resultContainer.innerText = "Eroare server.";
+        console.error(e);
     }
+    topicInput.value = originalValue;
 }
+
+// Rederizează mesajele specifice doar pentru tab-ul deschis
+function refreshChatUI(tabId) {
+    const container = document.getElementById('chatMessages') || document.getElementById('liveChatMessages');
+    if (!container) return;
+    
+    if (chatSessions[tabId].length === 0) {
+        return;
+    }
+    
+    container.innerHTML = '';
+    chatSessions[tabId].forEach(chat => {
+        if (chat.role === 'user') {
+            container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium" style="color: #818cf8; margin-bottom: 8px;">
+                ${chat.message}
+                ${chat.fileName ? `<br><small style="color: #38bdf8; font-size: 11px;">📁 Document atașat: \${chat.fileName}</small>` : ''}
+            </div>`;
+        } else {
+            container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm" style="background: #1e1b4b; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #312e81;">
+                ${chat.message}
+            </div>`;
+        }
+    });
+    
+    container.scrollTop = container.scrollHeight;
+}
+
  
     </script>
 </body>
