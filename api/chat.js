@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, tabId, fileData } = req.body; // Primi prompt-ul, tab-ul curent și fișierul atașat
+        const { prompt, tabId, fileData } = req.body;
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt lipsa' });
         }
@@ -19,10 +19,10 @@ export default async function handler(req, res) {
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
 
-        // Pregătim conținutul mixt (Text + Media) conform documentației Google
+        // Construim matricea multimodală de conținut conform specificațiilor oficiale Google
         let contentsParts = [];
-        
-        // Dacă utilizatorul a încărcat un fișier de la frontend
+
+        // Dacă utilizatorul a atașat o poză, un document sau un video de la frontend
         if (fileData && fileData.base64 && fileData.mimeType) {
             contentsParts.push({
                 inlineData: {
@@ -31,8 +31,8 @@ export default async function handler(req, res) {
                 }
             });
         }
-        
-        // Adăugăm promptul text
+
+        // Adăugăm textul utilizatorului
         contentsParts.push({ text: prompt });
 
         let retries = 3;
@@ -41,7 +41,6 @@ export default async function handler(req, res) {
 
         while (retries > 0) {
             try {
-                // Transmitem matricea completă de părți conținut direct la model
                 result = await model.generateContent({ contents: [{ parts: contentsParts }] });
                 break;
             } catch (apiError) {
@@ -58,7 +57,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ text: responseText });
 
     } catch (error) {
-        console.error("Gemini SDK Multimodal Error:", error);
+        console.error("Gemini Multimodal Error:", error);
         return res.status(500).json({ error: error.message || 'Eroare interna server.' });
     }
 }
