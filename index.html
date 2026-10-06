@@ -55,6 +55,15 @@
     <button onclick="changeLanguage('ro')" class="px-2 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white">RO</button>
     <button onclick="changeLanguage('en')" class="px-2 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white">EN</button>
 </div>
+  <!-- Utilitare Antet: Dark/Light Mode & Clear Chat -->
+    <div class="flex items-center space-x-2 ml-2">
+        <button onclick="toggleTheme()" class="px-2.5 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white" title="Schimbă Tema">
+            <span id="themeIcon">🌙</span>
+        </button>
+        <button onclick="clearChat()" class="px-2.5 py-1 rounded text-xs font-semibold bg-red-900/40 text-red-300 hover:bg-red-900/60 transition" title="Șterge Conversația">
+            🗑️ Curăță
+        </button>
+    </div>
 
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
@@ -571,6 +580,32 @@ function changeLanguage(lang) {
         apiStatusText.innerText = translations[lang].apiNotConfigured;
     }
 }
+// Funcție pentru schimbarea temei (Dark / Light)
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const themeIcon = document.getElementById('themeIcon');
+    if (document.body.classList.contains('light-mode')) {
+        themeIcon.innerText = '☀️';
+    } else {
+        themeIcon.innerText = '🌙';
+    }
+}
+
+// Funcție pentru ștergerea istoricului de chat
+function clearChat() {
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-accentIndigo/20 text-accentIndigo flex items-center justify-center shrink-0">✨</div>
+                <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-300">
+                    Sesiune nouă curățată. Cu ce te pot ajuta în continuare?
+                </div>
+            </div>
+        `;
+    }
+}
+
 
  
     </script>
