@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt } = req.body;
+        const { prompt, tabId, fileData } = req.body; // Primi prompt-ul, tab-ul curent și fișierul atașat
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt lipsa' });
         }
@@ -19,21 +19,37 @@ export default async function handler(req, res) {
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
 
-        let retries = 3; // Încearcă de maximum 3 ori dacă dă eroarea 503
-        let delay = 1000; // Așteaptă 1 secundă între încercări
+        // Pregătim conținutul mixt (Text + Media) conform documentației Google
+        let contentsParts = [];
+        
+        // Dacă utilizatorul a încărcat un fișier de la frontend
+        if (fileData && fileData.base64 && fileData.mimeType) {
+            contentsParts.push({
+                inlineData: {
+                    data: fileData.base64,
+                    mimeType: fileData.mimeType
+                }
+            });
+        }
+        
+        // Adăugăm promptul text
+        contentsParts.push({ text: prompt });
+
+        let retries = 3;
+        let delay = 1000;
         let result;
 
         while (retries > 0) {
             try {
-                result = await model.generateContent(prompt);
-                break; // Dacă are succes, oprește bucla
+                // Transmitem matricea completă de părți conținut direct la model
+                result = await model.generateContent({ contents: [{ parts: contentsParts }] });
+                break;
             } catch (apiError) {
-                // Dacă eroarea este 503 (Service Unavailable), mai încercăm o dată
                 if (apiError.message && apiError.message.includes("503") && retries > 1) {
                     retries--;
                     await new Promise(resolve => setTimeout(resolve, delay));
                 } else {
-                    throw apiError; // Dacă este altă eroare sau s-au terminat încercările, o trimitem mai departe
+                    throw apiError;
                 }
             }
         }
@@ -42,7 +58,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ text: responseText });
 
     } catch (error) {
-        console.error("Gemini SDK Error:", error);
+        console.error("Gemini SDK Multimodal Error:", error);
         return res.status(500).json({ error: error.message || 'Eroare interna server.' });
     }
 }
