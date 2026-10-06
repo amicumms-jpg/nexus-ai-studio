@@ -1,3 +1,5 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -9,45 +11,27 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Prompt lipsa' });
         }
 
+        // Citim direct cheia configurată securizat în panoul Vercel
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return res.status(500).json({ error: 'Eroare: GEMINI_API_KEY nu este configurata in Vercel!' });
         }
 
-        const response = await fetch(`https://googleapis.com{apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
-
-        // Citim răspunsul brut de la Google ca text mai întâi pentru siguranță
-        const responseTextRaw = await response.text();
+        // Inițializăm SDK-ul oficial versiunea 0.21.0 cu cheia din server
+        const genAI = new GoogleGenerativeAI(apiKey);
         
-        let data;
-        try {
-            data = JSON.parse(responseTextRaw);
-        } catch (e) {
-            return res.status(500).json({ error: "Raspuns invalid de la Google API: " + responseTextRaw });
-        }
+        // Folosim modelul Flash din versiunea 2.5, complet suportat și extrem de rapid
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        if (data.error) {
-            return res.status(data.error.code || 400).json({ error: data.error.message });
-        }
+        // Generăm răspunsul utilizând sintaxa nativă a pachetului tău
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text();
 
-        // Extragerea corectă și sigură a textului din structura Gemini API [0]
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
-            const aiResponseText = data.candidates[0].content.parts[0].text;
-            return res.status(200).json({ text: aiResponseText });
-        } else {
-            return res.status(500).json({ error: 'Structura raspunsului de la Google este neasteptata.', raw: data });
-        }
+        // Returnăm JSON-ul curat pe care index.html îl așteaptă
+        return res.status(200).json({ text: responseText });
 
     } catch (error) {
-        console.error("Gemini Native Fetch Error:", error);
+        console.error("Gemini API Error:", error);
         return res.status(500).json({ error: error.message || 'Eroare interna server.' });
     }
 }
