@@ -311,8 +311,21 @@
             const target = document.getElementById(`tab-${tabId}`);
             if (target) { target.style.display = 'flex'; }
         }
+function saveApiKey() {
+    const apiKeyField = document.getElementById('liveInput') || document.querySelector('input[type="password"]'); 
+    if (apiKeyField && apiKeyField.value.trim() !== '') {
+        localStorage.setItem('GEMINI_API_KEY', apiKeyField.value.trim());
+        alert('Cheia API a fost salvată cu succes în browser!');
+        location.reload();
+    } else {
+        alert('Te rugăm să introduci o cheie API validă.');
+    }
+}
 
-        function newSession() { switchTab('chat'); }
+function newSession() { switchTab('chat'); }
+
+         
+        
                
         async function handleSendMessage() {
     const inputField = document.getElementById('userInput');
