@@ -1,3 +1,5 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -9,38 +11,27 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Prompt lipsa' });
         }
 
+        // Citim direct cheia securizată din panoul Vercel
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return res.status(500).json({ error: 'Eroare: GEMINI_API_KEY nu este configurata in Vercel!' });
         }
 
-        // Apel nativ simplu, stabil și complet compatibil cu noile chei Google (prefix "AQ.")
-        const response = await fetch(`https://googleapis.com{apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
+        // Inițializăm SDK-ul oficial utilizând cheia stocată în server
+        const genAI = new GoogleGenerativeAI(apiKey);
+        
+        // Apelăm modelul corect cerut în mod obligatoriu de Google
+        const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
 
-        const data = await response.json();
+        // Generăm conținutul utilizând funcțiile native stabile ale SDK-ului
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text();
 
-        if (data.error) {
-            return res.status(data.error.code || 400).json({ error: data.error.message });
-        }
-
-        // Extragerea corectă și sigură a proprietăților JSON conform specificațiilor oficiale Google
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
-            const aiResponseText = data.candidates[0].content.parts[0].text;
-            return res.status(200).json({ text: aiResponseText });
-        } else {
-            return res.status(500).json({ error: 'Structura raspunsului de la Google este neasteptata.', raw: data });
-        }
+        // Trimitem înapoi textul curat în format JSON
+        return res.status(200).json({ text: responseText });
 
     } catch (error) {
-        console.error("Gemini API Error:", error);
+        console.error("Gemini SDK Error:", error);
         return res.status(500).json({ error: error.message || 'Eroare interna server.' });
     }
 }
