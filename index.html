@@ -50,6 +50,12 @@
                 <i class="fa-solid fa-user mr-1.5"></i> Cont / Autentificare
             </button>
         </div>
+<!-- Selector Limba -->
+<div class="flex items-center space-x-1 ml-2">
+    <button onclick="changeLanguage('ro')" class="px-2 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white">RO</button>
+    <button onclick="changeLanguage('en')" class="px-2 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white">EN</button>
+</div>
+
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
             <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
@@ -115,13 +121,44 @@
                     </div>
                 </div>
 
-                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
-                    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
-                        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
-                        <input type="file" onchange="handleFileUpload(event)" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-accentIndigo/20 file:text-accentIndigo hover:file:bg-accentIndigo/30 cursor-pointer">
-                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
-                    </div>
-                </div>
+               <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
+    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-800 rounded-2xl p-2">
+        
+        <!-- Selector Rapid Emoji -->
+        <div class="relative inline-block">
+            <button onclick="toggleEmojiPicker()" class="px-2.5 py-2 bg-gray-800 text-gray-300 rounded-xl hover:text-white text-sm" title="Emoji">😊</button>
+            <div id="emojiDropdown" class="absolute bottom-full mb-2 hidden bg-panelBg border border-gray-800 p-3 rounded-xl shadow-2xl grid grid-cols-6 gap-2 z-50 w-64">
+                <button onclick="insertEmoji('😊')" class="p-1 hover:bg-gray-800 rounded text-lg">😊</button>
+                <button onclick="insertEmoji('🚀')" class="p-1 hover:bg-gray-800 rounded text-lg">🚀</button>
+                <button onclick="insertEmoji('💡')" class="p-1 hover:bg-gray-800 rounded text-lg">💡</button>
+                <button onclick="insertEmoji('🔥')" class="p-1 hover:bg-gray-800 rounded text-lg">🔥</button>
+                <button onclick="insertEmoji('💻')" class="p-1 hover:bg-gray-800 rounded text-lg">💻</button>
+                <button onclick="insertEmoji('👍')" class="p-1 hover:bg-gray-800 rounded text-lg">👍</button>
+                <button onclick="insertEmoji('✨')" class="p-1 hover:bg-gray-800 rounded text-lg">✨</button>
+                <button onclick="insertEmoji('🛠')" class="p-1 hover:bg-gray-800 rounded text-lg">🛠️</button>
+                <button onclick="insertEmoji('⭐')" class="p-1 hover:bg-gray-800 rounded text-lg">⭐</button>
+                <button onclick="insertEmoji('🎯')" class="p-1 hover:bg-gray-800 rounded text-lg">🎯</button>
+                <button onclick="insertEmoji('🤖')" class="p-1 hover:bg-gray-800 rounded text-lg">🤖</button>
+                <button onclick="insertEmoji('⚡')" class="p-1 hover:bg-gray-800 rounded text-lg">⚡</button>
+                <button onclick="insertEmoji('📊')" class="p-1 hover:bg-gray-800 rounded text-lg">📊</button>
+                <button onclick="insertEmoji('📈')" class="p-1 hover:bg-gray-800 rounded text-lg">📈</button>
+                <button onclick="insertEmoji('📁')" class="p-1 hover:bg-gray-800 rounded text-lg">📁</button>
+                <button onclick="insertEmoji('📝')" class="p-1 hover:bg-gray-800 rounded text-lg">📝</button>
+                <button onclick="insertEmoji('💬')" class="p-1 hover:bg-gray-800 rounded text-lg">💬</button>
+                <button onclick="insertEmoji('🔗')" class="p-1 hover:bg-gray-800 rounded text-lg">🔗</button>
+                <button onclick="insertEmoji('📌')" class="p-1 hover:bg-gray-800 rounded text-lg">📌</button>
+                <button onclick="insertEmoji('☕')" class="p-1 hover:bg-gray-800 rounded text-lg">☕</button>
+                <button onclick="insertEmoji('🎉')" class="p-1 hover:bg-gray-800 rounded text-lg">🎉</button>
+                <button onclick="insertEmoji('🔍')" class="p-1 hover:bg-gray-800 rounded text-lg">🔍</button>
+                <button onclick="insertEmoji('⚙️')" class="p-1 hover:bg-gray-800 rounded text-lg">⚙️</button>
+            </div>
+        </div>
+
+        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent border-none text-white focus:outline-none px-2 text-sm">
+        <input type="file" id="fileInput" onchange="handleFileUpload(event)" class="hidden">
+        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white px-4 py-2 rounded-xl text-sm font-medium transition">Trimite</button>
+    </div>
+</div>
             </div>
 
             <!-- Tab 2: Gemini Live & Voice Studio -->
@@ -375,7 +412,31 @@ function newSession() { switchTab('chat'); }
     }
 }
      
-               
+ const translations = {
+    ro: {
+        placeholder: "Scrie un mesaj sau o cerere...",
+        apiNotConfigured: "API Key Neconfigurat"
+    },
+    en: {
+        placeholder: "Type a message or request...",
+        apiNotConfigured: "API Key Not Configured"
+    }
+};
+
+let currentLang = 'ro';
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    const inputField = document.getElementById('userInput');
+    if (inputField) {
+        inputField.placeholder = translations[lang].placeholder;
+    }
+    const apiStatusText = document.getElementById('apiStatusText');
+    if (apiStatusText) {
+        apiStatusText.innerText = translations[lang].apiNotConfigured;
+    }
+}
+              
 
 
         async function handleLiveSendMessage() {
@@ -469,6 +530,49 @@ function handleFileUpload(event) {
                 document.getElementById('socialResult').innerText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eroare.";
             } catch(e) { document.getElementById('socialResult').innerText = "Eroare."; }
         }
+
+              function toggleEmojiPicker() {
+    const dropdown = document.getElementById('emojiDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('hidden');
+    }
+}
+
+function insertEmoji(emoji) {
+    const inputField = document.getElementById('userInput');
+    if (inputField) {
+        inputField.value += emoji;
+        inputField.focus();
+    }
+    toggleEmojiPicker();
+}
+
+const translations = {
+    ro: {
+        placeholder: "Scrie un mesaj sau o cerere...",
+        apiNotConfigured: "API Key Neconfigurat"
+    },
+    en: {
+        placeholder: "Type a message or request...",
+        apiNotConfigured: "API Key Not Configured"
+    }
+};
+
+let currentLang = 'ro';
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    const inputField = document.getElementById('userInput');
+    if (inputField) {
+        inputField.placeholder = translations[lang].placeholder;
+    }
+    const apiStatusText = document.getElementById('apiStatusText');
+    if (apiStatusText) {
+        apiStatusText.innerText = translations[lang].apiNotConfigured;
+    }
+}
+
+ 
     </script>
 </body>
 </html>
