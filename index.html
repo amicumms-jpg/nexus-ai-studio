@@ -312,8 +312,7 @@
             if (target) { target.style.display = 'flex'; }
         }
 function saveApiKey() {
-    // Caută mai întâi câmpul de parolă din pagină, iar dacă nu îl găsește, caută orice câmp de text din zona de configurare
-    const apiKeyField = document.querySelector('input[type="password"]') || document.querySelector('.key-input') || document.getElementById('liveInput'); 
+    const apiKeyField = document.getElementById('apiKeyInput'); 
     
     if (apiKeyField && apiKeyField.value.trim() !== '') {
         localStorage.setItem('GEMINI_API_KEY', apiKeyField.value.trim());
@@ -323,6 +322,7 @@ function saveApiKey() {
         alert('Eroare: Nu am putut citi cheia. Te rugăm să verifici dacă ai completat câmpul.');
     }
 }
+
 
 function newSession() { switchTab('chat'); }
 
