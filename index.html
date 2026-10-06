@@ -328,41 +328,54 @@ function saveApiKey() {
 function newSession() { switchTab('chat'); }
 
          
-        
-               
-        async function handleSendMessage() {
+   async function handleSendMessage() {
     const inputField = document.getElementById('userInput');
     const text = inputField.value?.trim();
-    if(!text) return;
+    
+    // Preluăm fișierul specific din starea tabului activ
+    const currentFile = tabStates[currentActiveTab]?.fileData;
+    if (!text && !currentFile) return;
 
     const container = document.getElementById('chatMessages');
-    container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
+    if (text) {
+        container.innerHTML += `<div class="text-right text-sm text-accentIndigo my-2">${text}</div>`;
+    }
+    if (currentFile) {
+        container.innerHTML += `<div class="text-right text-xs text-gray-400 my-1">[Fișier atașat: ${currentFile.name}]</div>`;
+    }
+    
     inputField.value = '';
 
     try {
-                        const response = await fetch('/api/chat', {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ prompt: text })
+            body: JSON.stringify({ 
+                prompt: text, 
+                fileData: currentFile,
+                tab: currentActiveTab 
+            })
         });
-
         
         const data = await response.json();
         
         if (data.error) {
-            container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error}</div>`;
+            container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3 rounded-lg text-sm text-red-200 my-2">Eroare: ${data.error}</div>`;
             return;
         }
 
         const reply = data.text || "Nu s-a putut genera răspunsul.";
-        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
+        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3 rounded-lg text-sm text-white my-2">${reply}</div>`;
         container.scrollTop = container.scrollHeight;
-    } catch(e) {
-        alert("Eroare rețea: " + e.message);
+
+    } catch (e) {
+        alert("Erore retea: " + e.message);
     }
 }
+     
+               
 
 
         async function handleLiveSendMessage() {
