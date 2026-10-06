@@ -521,26 +521,27 @@ function refreshChatUI(tabId) {
     const container = document.getElementById('chatMessages') || document.getElementById('liveChatMessages');
     if (!container) return;
     
-    if (chatSessions[tabId].length === 0) {
+    if (!chatSessions[tabId] || chatSessions[tabId].length === 0) {
         return;
     }
     
     container.innerHTML = '';
     chatSessions[tabId].forEach(chat => {
         if (chat.role === 'user') {
-            container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium" style="color: #818cf8; margin-bottom: 8px;">
-                ${chat.message}
-                ${chat.fileName ? `<br><small style="color: #38bdf8; font-size: 11px;">📁 Document atașat: \${chat.fileName}</small>` : ''}
-            </div>`;
+            container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium" style="color: #818cf8; margin-bottom: 8px;">` + 
+                chat.message + 
+                (chat.fileName ? `<br><small style="color: #38bdf8; font-size: 11px;">📁 Document atasat: ` + chat.fileName + `</small>` : '') + 
+            `</div>`;
         } else {
-            container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm" style="background: #1e1b4b; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #312e81;">
-                ${chat.message}
-            </div>`;
+            container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm" style="background: #1e1b4b; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #312e81;">` + 
+                chat.message + 
+            `</div>`;
         }
     });
     
     container.scrollTop = container.scrollHeight;
 }
+
 
  
     </script>
