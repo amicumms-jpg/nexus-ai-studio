@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -7,23 +5,33 @@ export default async function handler(req, res) {
 
   try {
     const { prompt } = req.body;
-    const userApiKey = req.headers['x-api-key'] || process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(userApiKey);
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt lipsă' });
+    }
 
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('Lipsește cheia API în setările de pe Vercel.');
+    }
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    });
+
+    const data = await response.json();
     
-    // Folosim direct endpoint-ul HTTP nativ prin SDK-ul corectat
-    const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'Eroare de la serverul Google');
+    }
 
+    const text = data.candidates[0].content.parts[0].text;
     return res.status(200).json({ text });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 }
-
-
-
-
-
 
