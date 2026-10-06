@@ -64,6 +64,10 @@
             🗑️ Curăță
         </button>
     </div>
+ <!-- Buton Export Chat -->
+    <button onclick="exportChat()" class="px-2.5 py-1 rounded text-xs font-semibold bg-gray-800 text-gray-300 hover:text-white transition" title="Exportă Conversația">
+        💾 Export
+    </button>
 
 
         <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
@@ -605,6 +609,38 @@ function clearChat() {
         `;
     }
 }
+// Funcție pentru copierea unui text în clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Text copiat în clipboard!");
+    }).catch(err => {
+        console.error("Eroare la copiere: ", err);
+    });
+}
+
+// Funcție pentru exportul întregului chat ca fișier text (.txt)
+function exportChat() {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
+    
+    let textToExport = "";
+    const messages = chatMessages.querySelectorAll('.flex');
+    
+    messages.forEach(msg => {
+        textToExport += msg.innerText + "\n-----------------------------------\n";
+    });
+
+    const blob = new Blob([textToExport], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nexus-chat-export.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 
 
  
