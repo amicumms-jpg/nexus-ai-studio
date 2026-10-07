@@ -135,14 +135,37 @@
                     </div>
                 </div>
 
-                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
-                    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
-                        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
-                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
-                    </div>
-                </div>
+                      <div class="max-w-4xl mx-auto flex flex-col space-y-2 bg-[#141622] border border-gray-800 rounded-xl px-4 py-2.5">
+            <!-- Zona de Input + Agrafă Universală + Buton -->
+            <div class="flex items-center space-x-3">
+                <!-- Butonul Agrafă (Deschide selectorul pentru orice fișier) -->
+                <button type="button" onclick="document.getElementById('chat-file-upload').click()" class="text-gray-400 hover:text-white transition p-1" title="Atașează orice tip de fișier (Imagine, Document, Audio, Text)">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                    </svg>
+                </button>
+
+                <!-- Input universal: Fără parametrul 'accept', primește absolut orice extensie -->
+                <input type="file" id="chat-file-upload" class="hidden" onchange="handleChatFileSelect(this)">
+
+                <!-- Câmpul tău text original -->
+                <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-white focus:outline-none placeholder-gray-500">
+                
+                <!-- Butonul tău original de trimitere -->
+                <button type="button" onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
             </div>
 
+            <!-- Indicator dinamic pentru numele fișierului încărcat -->
+            <div id="chat-file-badge" class="hidden flex items-center space-x-2 text-xs bg-[#1a1d2e] border border-gray-800 rounded-lg px-2.5 py-1 text-gray-400 w-fit select-none">
+                <span id="chat-file-name" class="truncate max-w-[200px]"></span>
+                <button type="button" onclick="clearSelectedChatFile()" class="text-red-400 hover:text-red-300 font-bold ml-1">×</button>
+            </div>
+        </div>
+                
             <!-- Tab 2: Gemini Live & Voice Studio -->
             <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
                 <div class="flex items-center justify-between shrink-0">
@@ -534,7 +557,30 @@ function changeLanguage(lang) {
         }
     }
 }
+// --- LOGICĂ UNIVERSALĂ PENTRU MANAGEMENTUL FIȘIERELOR UPLOADATE ---
+let selectedChatFile = null;
 
+function handleChatFileSelect(input) {
+    if (input.files && input.files[0]) {
+        selectedChatFile = input.files[0];
+        const badge = document.getElementById('chat-file-badge');
+        const nameDisplay = document.getElementById('chat-file-name');
+        
+        if (nameDisplay) nameDisplay.innerText = "📎 " + selectedChatFile.name;
+        if (badge) badge.classList.remove('hidden');
+        console.log("Fișier universal selectat pentru trimitere:", selectedChatFile.name);
+    }
+}
+
+function clearSelectedChatFile() {
+    selectedChatFile = null;
+    const input = document.getElementById('chat-file-upload');
+    const badge = document.getElementById('chat-file-badge');
+    
+    if (input) input.value = ''; 
+    if (badge) badge.classList.add('hidden');
+    console.log("Atașamentul a fost eliminat.");
+}
 
 const changeTab = switchTab;
 
