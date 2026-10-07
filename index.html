@@ -333,43 +333,38 @@
     </div>
 
            <script>
-      let currentActiveTab = 'chat'; // Definește tab-ul inițial implicit
-
+    
 function switchTab(tabId) {
-    // Actualizăm variabila globală pentru starea tab-ului
+    // Folosim variabila direct, fără să o mai declarăm cu 'let', pentru că există deja la linia 528
     currentActiveTab = tabId;
     console.log("Tab activat:", tabId);
 
-    // 1. Lista tuturor ID-urilor secțiunilor (paginilor) din aplicația ta
-    // Asigură-te că aceste ID-uri coincid exact cu cele din secțiunile tale HTML (ex: <div id="sec-chat">)
     const sections = ['chat', 'voice', 'video', 'social', 'auth', 'payment', 'api'];
     
     sections.forEach(sec => {
         const sectionEl = document.getElementById(`sec-${sec}`);
         if (sectionEl) {
-            // Ascundem toate secțiunile prin adăugarea clasei 'hidden' din Tailwind
             sectionEl.classList.add('hidden');
         }
         
         const buttonEl = document.getElementById(`tab-${sec}`);
         if (buttonEl) {
-            // Opțional: scoatem stilul de buton selectat de pe celelalte butoane
             buttonEl.classList.remove('bg-accentIndigo', 'text-white'); 
         }
     });
 
-    // 2. Afișăm secțiunea selectată eliminând clasa 'hidden'
     const activeSection = document.getElementById(`sec-${tabId}`);
     if (activeSection) {
         activeSection.classList.remove('hidden');
     }
 
-    // Adăugăm stilul vizual activ pe butonul apăsat
     const activeButton = document.getElementById(`tab-${tabId}`);
     if (activeButton) {
         activeButton.classList.add('bg-accentIndigo', 'text-white');
     }
 }
+
+
  
     function updateApiStatus(isActive) {
         const indicator = document.getElementById('apiStatusIndicator');
