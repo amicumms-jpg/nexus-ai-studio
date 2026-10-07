@@ -582,12 +582,11 @@ function insertEmoji(emoji) {
 }
 
 
-   
-    const apiStatusText = document.getElementById('apiStatusText');
-    if (apiStatusText) {
-        apiStatusText.innerText = translations[lang].apiNotConfigured;
-    }
+const apiStatusText = document.getElementById('apiStatusText');
+if (apiStatusText) {
+    apiStatusText.innerText = translations[lang].apiNotConfigured;
 }
+
 // Funcție pentru schimbarea temei (Dark / Light)
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
