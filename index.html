@@ -446,7 +446,7 @@ async function handleSendMessage() {
 }
 
      
- const translations = {
+const translations = {
     ro: {
         placeholder: "Scrie un mesaj sau o cerere...",
         apiNotConfigured: "API Key Neconfigurat"
@@ -581,25 +581,8 @@ function insertEmoji(emoji) {
     toggleEmojiPicker();
 }
 
-const translations = {
-    ro: {
-        placeholder: "Scrie un mesaj sau o cerere...",
-        apiNotConfigured: "API Key Neconfigurat"
-    },
-    en: {
-        placeholder: "Type a message or request...",
-        apiNotConfigured: "API Key Not Configured"
-    }
-};
 
-let currentLang = 'ro';
-
-function changeLanguage(lang) {
-    currentLang = lang;
-    const inputField = document.getElementById('userInput');
-    if (inputField) {
-        inputField.placeholder = translations[lang].placeholder;
-    }
+   
     const apiStatusText = document.getElementById('apiStatusText');
     if (apiStatusText) {
         apiStatusText.innerText = translations[lang].apiNotConfigured;
