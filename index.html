@@ -363,7 +363,8 @@ function switchTab(tabId) {
         activeButton.classList.add('bg-accentIndigo', 'text-white');
     }
 }
-
+// Linie salvatoare: dacă butoanele tale din HTML apelează changeTab, va rula tot switchTab
+const changeTab = switchTab; 
 
  
     function updateApiStatus(isActive) {
