@@ -432,9 +432,9 @@ function toggleTheme() {
 }
 
 function changeLanguage(lang) {
-    console.log("Limba schimbată la:", lang);
+    console.log("Limba schimbată global la:", lang);
     
-    // 1. Schimbăm aspectul vizual al butoanelor RO / EN din bara de sus
+    // 1. Schimbăm starea vizuală a butoanelor RO / EN din bara de sus
     const roBtn = document.getElementById('lang-ro-btn');
     const enBtn = document.getElementById('lang-en-btn');
     if (lang === 'ro') {
@@ -445,36 +445,97 @@ function changeLanguage(lang) {
         if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
     }
 
-    // 2. Traducem dinamic textele formularului de autentificare
-    // Verificăm dacă dicționarul tău global de traduceri există în script
-    if (typeof translations !== 'undefined' && translations[lang]) {
-        const formTitle = document.getElementById('auth-main-title'); // ID-ul titlului h2 din HTML
-        const formDesc = document.getElementById('auth-main-desc');   // ID-ul descrierii p din HTML
-        const submitBtn = document.getElementById('main-auth-btn');   // ID-ul butonului mare mov
-
-        if (isSignUpMode) {
-            // Dacă utilizatorul este pe tab-ul de "Creare Cont"
-            if (formTitle) formTitle.innerText = lang === 'ro' ? "Creează Cont Nou" : "Create New Account";
-            if (formDesc) formDesc.innerText = lang === 'ro' ? "Completează datele de mai jos pentru a te înregistra." : "Fill in the details below to register.";
-            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Înregistrează-te" : "Sign Up";
-        } else {
-            // Dacă utilizatorul este pe tab-ul implicit de "Logare"
-            if (formTitle) formTitle.innerText = lang === 'ro' ? "Autentificare în Cont" : "Account Authentication";
-            if (formDesc) formDesc.innerText = lang === 'ro' ? "Introdu datele tale pentru acces deplin în Nexus Studio." : "Enter your details for full access to Nexus Studio.";
-            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Intră în Cont" : "Sign In";
+    // 2. Dicționarul complet pentru toată pagina Nexus Studio
+    const localDict = {
+        ro: {
+            navChat: "💬 Chat General",
+            navLive: "🎙️ Gemini Live & Voice",
+            navVideo: "🎬 AI Video Maker",
+            navSocial: "📢 Social Media Hub",
+            navAuth: "👤 Autentificare / Cont",
+            navBilling: "💳 Plată Card / Abonament",
+            navSettings: "⚙️ Setare API Key",
+            newSession: "+ Sesiune Nouă AI",
+            navTitle: "NAVIGARE RAPIDĂ",
+            inputPlaceholder: "Scrie un mesaj aici...",
+            videoPlaceholder: "Descrie videoclipul pe care dorești să îl generezi...",
+            socialPlaceholder: "Introdu subiectul pentru postare..."
+        },
+        en: {
+            navChat: "💬 General Chat",
+            navLive: "🎙️ Gemini Live & Voice",
+            navVideo: "🎬 AI Video Maker",
+            navSocial: "📢 Social Media Hub",
+            navAuth: "👤 Authentication / Account",
+            navBilling: "💳 Card Payment / Subscription",
+            navSettings: "⚙️ Setup API Key",
+            newSession: "+ New AI Session",
+            navTitle: "QUICK NAVIGATION",
+            inputPlaceholder: "Type a message here...",
+            videoPlaceholder: "Describe the video you want to generate...",
+            socialPlaceholder: "Enter the topic for your post..."
         }
+    };
 
-        // Actualizăm textul de comutare de jos (Link-ul mic)
-        const switchText = document.getElementById('main-switch-text');
-        if (switchText) {
-            if (isSignUpMode) {
-                switchText.innerHTML = lang === 'ro' ? "Ai deja cont? Intră în cont aici" : "Already have an account? Sign in here";
-            } else {
-                switchText.innerHTML = lang === 'ro' ? "Nu ai cont? Creează un cont nou aici" : "Don't have an account? Create a new account here";
-            }
+    const d = localDict[lang];
+
+    // 3. Traducem Bara Laterală (Meniul de Navigare)
+    // Căutăm butoanele după textul lor nativ sau le poți adăuga ID-uri similare în HTML
+    const navElements = {
+        'tab-chat': d.navChat,
+        'tab-voice': d.navLive,
+        'tab-video': d.navVideo,
+        'tab-social': d.navSocial,
+        'tab-auth': d.navAuth,
+        'tab-payment': d.navBilling,
+        'tab-api': d.navSettings
+    };
+
+    for (const [id, text] of Object.entries(navElements)) {
+        const el = document.getElementById(id);
+        if (el) {
+            // Dacă în interior ai text simplu sau iconiță, îi rescriem textul direct
+            const textSpan = el.querySelector('span') || el;
+            if (textSpan) textSpan.innerText = text;
         }
     }
+
+    // Traducem titlul meniului și butonul de sesiune nouă
+    const navTitleEl = document.querySelector('.text-gray-500.text-[10px]');
+    if (navTitleEl) navTitleEl.innerText = d.navTitle;
+    
+    const newSessionBtn = document.querySelector('button[onclick*="newSession"]');
+    if (newSessionBtn) newSessionBtn.innerText = d.newSession;
+
+    // 4. Traducem Input-urile din aplicație (Placeholders)
+    const mainInput = document.getElementById('userInput');
+    if (mainInput) mainInput.placeholder = d.inputPlaceholder;
+
+    const videoInput = document.getElementById('videoPrompt');
+    if (videoInput) videoInput.placeholder = d.videoPlaceholder;
+
+    const socialInput = document.getElementById('socialTopic');
+    if (socialInput) socialInput.placeholder = d.socialPlaceholder;
+
+    // 5. Traducem dinamic Caseta de Autentificare curentă
+    const formTitle = document.getElementById('auth-main-title');
+    const formDesc = document.getElementById('auth-main-desc');
+    const submitBtn = document.getElementById('main-auth-btn');
+    const switchText = document.getElementById('main-switch-text');
+
+    if (isSignUpMode) {
+        if (formTitle) formTitle.innerText = lang === 'ro' ? "Creează Cont Nou" : "Create New Account";
+        if (formDesc) formDesc.innerText = lang === 'ro' ? "Completează datele de mai jos pentru a te înregistra." : "Fill in the details below to register.";
+        if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Înregistrează-te" : "Sign Up";
+        if (switchText) switchText.innerHTML = lang === 'ro' ? "Ai deja cont? Intră în cont aici" : "Already have an account? Sign in here";
+    } else {
+        if (formTitle) formTitle.innerText = lang === 'ro' ? "Autentificare în Cont" : "Account Authentication";
+        if (formDesc) formDesc.innerText = lang === 'ro' ? "Introdu datele tale pentru acces deplin în Nexus Studio." : "Enter your details for full access to Nexus Studio.";
+        if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Intră în Cont" : "Sign In";
+        if (switchText) switchText.innerHTML = lang === 'ro' ? "Nu ai cont? Creează un cont nou aici" : "Don't have an account? Create a new account here";
+    }
 }
+
 
 
 const changeTab = switchTab;
