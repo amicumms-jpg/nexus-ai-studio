@@ -333,7 +333,11 @@
     </div>
 
            <script>
-        
+        function switchTab(tabId) {
+    console.log("Tab dezactivat:", tabId);
+}
+
+
 
         function updateApiStatus(isActive) {
             const indicator = document.getElementById('apiStatusIndicator');
@@ -343,6 +347,8 @@
                 text.innerText = "API Activ (Gemini)";
             }
         }
+}
+
 
        
 
