@@ -135,52 +135,36 @@
                     </div>
                 </div>
 
-                             <div class="max-w-4xl mx-auto flex flex-col space-y-2 bg-[#141622] border border-gray-800 rounded-xl px-4 py-2.5">
-            <!-- Zona de Input + Agrafă + Buton -->
+                      <div class="max-w-4xl mx-auto flex flex-col space-y-2 bg-[#141622] border border-gray-800 rounded-xl px-4 py-2.5">
+            <!-- Zona de Input + Agrafă Universală + Buton -->
             <div class="flex items-center space-x-3">
-                <!-- Butonul Agrafă Universală -->
-                <button type="button" onclick="document.getElementById('chat-file-upload').click()" class="text-gray-400 hover:text-white transition p-1 shrink-0" title="Atașează orice tip de fișier">
+                <!-- Butonul Agrafă (Deschide selectorul pentru orice fișier) -->
+                <button type="button" onclick="document.getElementById('chat-file-upload').click()" class="text-gray-400 hover:text-white transition p-1" title="Atașează orice tip de fișier (Imagine, Document, Audio, Text)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                     </svg>
                 </button>
 
-                       <!-- Zona de Input + Agrafă + Buton Trimitere -->
-        <div class="flex items-center space-x-3">
-            <!-- Butonul Agrafă Universală -->
-            <button type="button" onclick="document.getElementById('chat-file-upload').click()" class="text-gray-400 hover:text-white transition p-1 shrink-0" title="Atașează orice tip de fișier">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                </svg>
-            </button>
-            
-            <!-- Input-ul de fișiere ascuns -->
-            <input type="file" id="chat-file-upload" class="hidden" onchange="handleChatFileSelect(this)">
-            
-            <!-- Câmpul tău text original -->
-            <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-white focus:outline-none placeholder-gray-500">
-            
-            <!-- Butonul tău de trimitere -->
-            <button type="button" onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shrink-0">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-            </button>
-        </div>
+                <!-- Input universal: Fără parametrul 'accept', primește absolut orice extensie -->
+                <input type="file" id="chat-file-upload" class="hidden" onchange="handleChatFileSelect(this)">
 
-        <!-- Indicator vizual pentru numele fișierului încărcat -->
-        <div id="chat-file-badge" class="hidden flex items-center space-x-2 text-xs bg-[#1a1d2e] border border-gray-800 rounded-lg px-2.5 py-1 text-gray-400 w-fit select-none mt-2">
-            <span id="chat-file-name" class="truncate max-w-[200px]"></span>
-            <button type="button" onclick="clearSelectedChatFile()" class="text-red-400 hover:text-red-300 font-bold ml-1">×</button>
-        </div>
+                <!-- Câmpul tău text original -->
+                <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-white focus:outline-none placeholder-gray-500">
+                
+                <!-- Butonul tău original de trimitere -->
+                <button type="button" onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
 
-            <!-- Indicator vizual pentru numele fișierului încărcat -->
+            <!-- Indicator dinamic pentru numele fișierului încărcat -->
             <div id="chat-file-badge" class="hidden flex items-center space-x-2 text-xs bg-[#1a1d2e] border border-gray-800 rounded-lg px-2.5 py-1 text-gray-400 w-fit select-none">
                 <span id="chat-file-name" class="truncate max-w-[200px]"></span>
                 <button type="button" onclick="clearSelectedChatFile()" class="text-red-400 hover:text-red-300 font-bold ml-1">×</button>
             </div>
         </div>
-
                 
             <!-- Tab 2: Gemini Live & Voice Studio -->
             <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
@@ -252,44 +236,14 @@
                         <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-share-nodes text-purple-400 mr-2"></i>Social Media Hub</h2>
                         <p class="text-sm text-gray-400">Creează conținut optimizat pentru campanii online și social media.</p>
                     </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-            <!-- Coloana Stângă: Generatorul Clasic de Postări -->
-            <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg flex flex-col justify-between">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Subiectul postării:</label>
-                    <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-accentIndigo transition">
-                </div>
-                <button type="button" onclick="generateSocialPost()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition w-full shadow-md">
-                    Generează Postare Premium
-                </button>
-                <div id="socialResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-850 min-h-[120px] max-h-[200px] overflow-y-auto placeholder-style">
-                    Rezultatul generat va apărea aici...
-                </div>
-            </div>
-
-            <!-- Coloana Dreaptă: Noul Tab de Chat AI pentru Social Media -->
-            <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl flex flex-col h-[350px] shadow-lg">
-                <div class="text-xs font-bold text-white mb-2 flex items-center gap-1.5 border-b border-gray-850 pb-2 select-none">
-                    <span>🤖</span> Asistent Copilot Social Media
-                </div>
-                
-                <!-- Container Mesaje Chat Social -->
-                <div id="socialChatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs text-gray-300 min-h-[180px] custom-scrollbar">
-                    <div class="bg-gray-900/30 border border-gray-850 p-2.5 rounded-xl text-gray-400">
-                        Salut! Sunt asistentul tău dedicat pentru marketing. Spune-mi ce platformă vrei să optimizăm sau cere-mi idei de strategii de conținut!
+                    <div class="bg-panelBg border border-gray-800 p-5 rounded-2xl space-y-4 shadow-lg">
+                        <label class="block text-xs font-semibold text-gray-300">Subiectul postării:</label>
+                        <input type="text" id="socialTopic" placeholder="Ex: Lansare pachet servicii online..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-accentIndigo">
+                        <button onclick="generateSocialPost()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow cursor-pointer">Generează Postare & Hashtag-uri</button>
+                        <div id="socialResult" class="text-xs text-gray-300 mt-2 whitespace-pre-wrap bg-gray-900/50 p-3 rounded-xl border border-gray-800"></div>
                     </div>
                 </div>
-
-                <!-- Input + Buton pentru Chat-ul Social -->
-                <div class="mt-3 flex items-center space-x-2 bg-gray-900 border border-gray-800 rounded-xl px-3 py-1.5">
-                    <input type="text" id="socialChatInput" placeholder="Întreabă copilotul ceva..." class="flex-1 bg-transparent text-xs text-white focus:outline-none placeholder-gray-500">
-                    <button type="button" onclick="handleSocialChatMessage()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition shrink-0">
-                        Trimite
-                    </button>
-                </div>
             </div>
-        </div>
-
 
             <!-- Tab 5: Autentificare / Cont -->
             <div id="tab-authAccount" class="app-tab" style="display: none; flex: 1; overflow-y: auto; padding: 1.5rem; align-items: center; justify-content: center; display: none;">
@@ -309,24 +263,14 @@
     <label class="block text-xs font-semibold text-gray-300 mb-1">Nume complet:</label>
     <input type="text" id="mainNameInput" placeholder="Ion Popescu" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-accentIndigo transition">
 </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Adresă Email:</label>
-                <input type="email" id="mainEmailInput" placeholder="nume@exemplu.com" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-accentIndigo transition">
-            </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Parolă:</label>
-                <div class="relative w-full">
-                    <input type="password" id="mainPasswordInput" placeholder="••••••••" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 pr-10 text-sm text-white focus:outline-none focus:border-accentIndigo transition">
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white transition">
-                        <svg id="password-eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Adresă Email:</label>
+                            <input type="email" id="mainEmailInput" placeholder="nume@exemplu.com" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-accentIndigo">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Parolă:</label>
+                            <input type="password" id="mainPassInput" placeholder="••••••••" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-accentIndigo">
+                        </div>
                         <button type="submit" id="main-auth-btn" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
                             Intră în Cont
                         </button>
@@ -636,129 +580,6 @@ function clearSelectedChatFile() {
     if (input) input.value = ''; 
     if (badge) badge.classList.add('hidden');
     console.log("Atașamentul a fost eliminat.");
-}
-// --- FUNCȚIE PENTRU CHAT-UL COPILET DIN SOCIAL MEDIA HUB ---
-async function handleSocialChatMessage() {
-    const inputField = document.getElementById('socialChatInput');
-    const text = inputField.value?.trim();
-    if (!text) return;
-
-    const container = document.getElementById('socialChatMessages');
-    if (!container) return;
-
-    // Afișăm textul utilizatorului în mini-chat
-    container.innerHTML += `<div class="text-right text-xs text-purple-400 my-1.5 font-medium">${text}</div>`;
-    inputField.value = '';
-    container.scrollTop = container.scrollHeight;
-
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                prompt: "Ești un expert în Social Media și Marketing digital. Răspunde la următoarea cerere: " + text,
-                temperature: typeof geminiTemperature !== 'undefined' ? geminiTemperature : 0.7
-            })
-        });
-        const data = await response.json();
-        const reply = data.reply || data.text || "Eroare la generarea răspunsului.";
-        
-        container.innerHTML += `<div class="bg-gray-900/60 border border-gray-850 p-2.5 rounded-xl text-xs text-gray-200 my-1.5 leading-relaxed">${reply}</div>`;
-        container.scrollTop = container.scrollHeight;
-    } catch (e) {
-        container.innerHTML += `<div class="text-red-400 text-[10px] my-1">Eroare rețea: ${e.message}</div>`;
-    }
-}
-// --- [A] LOGICĂ PENTRU MANAGEMENTUL FIȘIERELOR UPLOADATE (AGRAFĂ) ---
-let selectedChatFile = null;
-
-function handleChatFileSelect(input) {
-    if (input.files && input.files[0]) {
-        selectedChatFile = input.files[0];
-        const badge = document.getElementById('chat-file-badge');
-        const nameDisplay = document.getElementById('chat-file-name');
-        if (nameDisplay) nameDisplay.innerText = "📎 " + selectedChatFile.name;
-        if (badge) badge.classList.remove('hidden');
-        console.log("Fișier universal selectat:", selectedChatFile.name);
-    }
-}
-
-function clearSelectedChatFile() {
-    selectedChatFile = null;
-    const input = document.getElementById('chat-file-upload');
-    const badge = document.getElementById('chat-file-badge');
-    if (input) input.value = ''; 
-    if (badge) badge.classList.add('hidden');
-    console.log("Atașamentul a fost eliminat.");
-}
-
-// --- [B] LOGICĂ PENTRU ASCUNDERE/AFIȘARE PAROLĂ (OCHIȘOR) ---
-let isPasswordVisible = false;
-function togglePasswordVisibility() {
-    isPasswordVisible = !isPasswordVisible;
-    const passwordInput = document.getElementById('mainPasswordInput');
-    const eyeIcon = document.getElementById('password-eye-icon');
-    
-    if (passwordInput && eyeIcon) {
-        if (isPasswordVisible) {
-            passwordInput.type = "text";
-            eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>`;
-        } else {
-            passwordInput.type = "password";
-            eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>`;
-        }
-    }
-}
-
-// --- [C] LOGICĂ PENTRU ISTORIC CONVERSAȚII BARA LATERALĂ ---
-let chatSessions = [];
-function createNewChatSession() {
-    const container = document.getElementById('chatMessages');
-    if (!container) return;
-    
-    // Salvăm sesiunea veche dacă avea mesaje
-    if (container.children.length > 1) {
-        const sessionTitle = "Conversație #" + (chatSessions.length + 1);
-        chatSessions.push({
-            id: Date.now(),
-            title: sessionTitle,
-            html: container.innerHTML
-        });
-        updateSessionsSidebar();
-    }
-    
-    // Curățăm ecranul pentru o sesiune nouă
-    container.innerHTML = `<div class="bg-gray-900/30 border border-gray-850 p-2.5 rounded-xl text-gray-400 text-xs select-none">Sesiune nouă inițializată. Cu ce te pot ajuta astăzi?</div>`;
-    if (typeof clearSelectedChatFile === 'function') clearSelectedChatFile();
-}
-
-function updateSessionsSidebar() {
-    // Presupunem că ai o zonă sub butonul de sesiune nouă cu id="history-list"
-    const historyList = document.getElementById('history-list');
-    if (!historyList) return;
-    
-    historyList.innerHTML = '';
-    chatSessions.forEach(session => {
-        historyList.innerHTML += `
-            <button onclick="loadChatSession(${session.id})" class="w-full text-left text-xs text-gray-400 hover:text-white px-3 py-2 rounded-lg hover:bg-gray-800/40 transition truncate flex items-center gap-2">
-                <span>📝</span> ${session.title}
-            </button>
-        `;
-    });
-}
-
-function loadChatSession(id) {
-    const session = chatSessions.find(s => s.id === id);
-    const container = document.getElementById('chatMessages');
-    if (session && container) {
-        container.innerHTML = session.html;
-        container.scrollTop = container.scrollHeight;
-    }
-}
-
-// Redirecționăm funcția originală de Sesiune Nouă către logica noastră cu istoric
-function newSession() {
-    createNewChatSession();
 }
 
 const changeTab = switchTab;
