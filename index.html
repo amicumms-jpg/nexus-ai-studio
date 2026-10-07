@@ -434,7 +434,7 @@ function toggleTheme() {
 function changeLanguage(lang) {
     console.log("Limba schimbată global la:", lang);
     
-    // 1. Schimbăm starea vizuală a butoanelor RO / EN din bara de sus
+    // 1. Actualizăm vizual butoanele RO / EN din bara de sus
     const roBtn = document.getElementById('lang-ro-btn');
     const enBtn = document.getElementById('lang-en-btn');
     if (lang === 'ro') {
@@ -445,71 +445,36 @@ function changeLanguage(lang) {
         if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
     }
 
-    // 2. Dicționarul complet pentru toată pagina Nexus Studio
-    const localDict = {
+    // 2. Dicționarul complet pentru elementele principale din pagină
+    const d = {
         ro: {
-            navChat: "💬 Chat General",
-            navLive: "🎙️ Gemini Live & Voice",
-            navVideo: "🎬 AI Video Maker",
-            navSocial: "📢 Social Media Hub",
-            navAuth: "👤 Autentificare / Cont",
-            navBilling: "💳 Plată Card / Abonament",
-            navSettings: "⚙️ Setare API Key",
+            title: "NAVIGARE RAPIDĂ",
             newSession: "+ Sesiune Nouă AI",
-            navTitle: "NAVIGARE RAPIDĂ",
-            inputPlaceholder: "Scrie un mesaj aici...",
+            placeholder: "Scrie un mesaj aici...",
             videoPlaceholder: "Descrie videoclipul pe care dorești să îl generezi...",
             socialPlaceholder: "Introdu subiectul pentru postare..."
         },
         en: {
-            navChat: "💬 General Chat",
-            navLive: "🎙️ Gemini Live & Voice",
-            navVideo: "🎬 AI Video Maker",
-            navSocial: "📢 Social Media Hub",
-            navAuth: "👤 Authentication / Account",
-            navBilling: "💳 Card Payment / Subscription",
-            navSettings: "⚙️ Setup API Key",
+            title: "QUICK NAVIGATION",
             newSession: "+ New AI Session",
-            navTitle: "QUICK NAVIGATION",
-            inputPlaceholder: "Type a message here...",
+            placeholder: "Type a message here...",
             videoPlaceholder: "Describe the video you want to generate...",
             socialPlaceholder: "Enter the topic for your post..."
         }
-    };
+    }[lang];
 
-    const d = localDict[lang];
-
-    // 3. Traducem Bara Laterală (Meniul de Navigare)
-    // Căutăm butoanele după textul lor nativ sau le poți adăuga ID-uri similare în HTML
-    const navElements = {
-        'tab-chat': d.navChat,
-        'tab-voice': d.navLive,
-        'tab-video': d.navVideo,
-        'tab-social': d.navSocial,
-        'tab-auth': d.navAuth,
-        'tab-payment': d.navBilling,
-        'tab-api': d.navSettings
-    };
-
-    for (const [id, text] of Object.entries(navElements)) {
-        const el = document.getElementById(id);
-        if (el) {
-            // Dacă în interior ai text simplu sau iconiță, îi rescriem textul direct
-            const textSpan = el.querySelector('span') || el;
-            if (textSpan) textSpan.innerText = text;
-        }
+    // 3. Traducem elementele text de control fixe
+    const navTitleEl = document.querySelector('.text-gray-500.text-\\[10px\\]') || document.querySelector('.text-gray-500');
+    if (navTitleEl && (navTitleEl.innerText.includes("NAVIGARE") || navTitleEl.innerText.includes("NAVIGATION"))) {
+        navTitleEl.innerText = d.title;
     }
-
-    // Traducem titlul meniului și butonul de sesiune nouă
-    const navTitleEl = document.querySelector('.text-gray-500.text-[10px]');
-    if (navTitleEl) navTitleEl.innerText = d.navTitle;
     
     const newSessionBtn = document.querySelector('button[onclick*="newSession"]');
     if (newSessionBtn) newSessionBtn.innerText = d.newSession;
 
-    // 4. Traducem Input-urile din aplicație (Placeholders)
+    // 4. Traducem Input-urile din pagini (Placeholders)
     const mainInput = document.getElementById('userInput');
-    if (mainInput) mainInput.placeholder = d.inputPlaceholder;
+    if (mainInput) mainInput.placeholder = d.placeholder;
 
     const videoInput = document.getElementById('videoPrompt');
     if (videoInput) videoInput.placeholder = d.videoPlaceholder;
@@ -517,25 +482,58 @@ function changeLanguage(lang) {
     const socialInput = document.getElementById('socialTopic');
     if (socialInput) socialInput.placeholder = d.socialPlaceholder;
 
-    // 5. Traducem dinamic Caseta de Autentificare curentă
+    // 5. Traducem elementele din meniul lateral folosind selectoare sigure după funcția onclick
+    const menuMapping = {
+        'chat': { ro: '💬 Chat General', en: '💬 General Chat' },
+        'voice': { ro: '🎙️ Gemini Live & Voice', en: '🎙️ Gemini Live & Voice' },
+        'video': { ro: '🎬 AI Video Maker', en: '🎬 AI Video Maker' },
+        'social': { ro: '📢 Social Media Hub', en: '📢 Social Media Hub' },
+        'auth': { ro: '👤 Autentificare / Cont', en: '👤 Authentication / Account' },
+        'payment': { ro: '💳 Plată Card / Abonament', en: '💳 Card Payment / Subscription' },
+        'api': { ro: '⚙️ Setare API Key', en: '⚙️ Setup API Key' }
+    };
+
+    // Parcurgem toate elementele care au evenimente de click atașate pentru schimbarea taburilor
+    document.querySelectorAll('[onclick*="switchTab"], [onclick*="changeTab"]').forEach(el => {
+        const attr = el.getAttribute('onclick');
+        for (const [key, labels] of Object.entries(menuMapping)) {
+            if (attr.includes(`'${key}'`) || attr.includes(`"${key}"`)) {
+                // Actualizăm textul direct în interiorul elementului fără a-i distruge structura HTML
+                const targetSpan = el.querySelector('span') || el;
+                if (targetSpan && targetSpan.children.length === 0) {
+                    targetSpan.innerText = labels[lang];
+                } else if (el.childNodes.length > 0) {
+                    // Dacă textul e direct nod intern, îl înlocuim doar pe el păstrând iconițele SVG intacte
+                    for (let node of el.childNodes) {
+                        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 1) {
+                            node.textContent = ` ${labels[lang].substring(2)}`; // Păstrează textul curat fără duplicarea iconițelor dacă sunt separate
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // 6. Traducem dinamic Caseta de Autentificare curentă (dacă elementele există pe ecran)
     const formTitle = document.getElementById('auth-main-title');
     const formDesc = document.getElementById('auth-main-desc');
     const submitBtn = document.getElementById('main-auth-btn');
     const switchText = document.getElementById('main-switch-text');
 
-    if (isSignUpMode) {
-        if (formTitle) formTitle.innerText = lang === 'ro' ? "Creează Cont Nou" : "Create New Account";
-        if (formDesc) formDesc.innerText = lang === 'ro' ? "Completează datele de mai jos pentru a te înregistra." : "Fill in the details below to register.";
-        if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Înregistrează-te" : "Sign Up";
-        if (switchText) switchText.innerHTML = lang === 'ro' ? "Ai deja cont? Intră în cont aici" : "Already have an account? Sign in here";
-    } else {
-        if (formTitle) formTitle.innerText = lang === 'ro' ? "Autentificare în Cont" : "Account Authentication";
-        if (formDesc) formDesc.innerText = lang === 'ro' ? "Introdu datele tale pentru acces deplin în Nexus Studio." : "Enter your details for full access to Nexus Studio.";
-        if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Intră în Cont" : "Sign In";
-        if (switchText) switchText.innerHTML = lang === 'ro' ? "Nu ai cont? Creează un cont nou aici" : "Don't have an account? Create a new account here";
+    if (typeof isSignUpMode !== 'undefined') {
+        if (isSignUpMode) {
+            if (formTitle) formTitle.innerText = lang === 'ro' ? "Creează Cont Nou" : "Create New Account";
+            if (formDesc) formDesc.innerText = lang === 'ro' ? "Completează datele de mai jos pentru a te înregistra." : "Fill in the details below to register.";
+            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Înregistrează-te" : "Sign Up";
+            if (switchText) switchText.innerHTML = lang === 'ro' ? "Ai deja cont? Intră în cont aici" : "Already have an account? Sign in here";
+        } else {
+            if (formTitle) formTitle.innerText = lang === 'ro' ? "Autentificare în Cont" : "Account Authentication";
+            if (formDesc) formDesc.innerText = lang === 'ro' ? "Introdu datele tale pentru acces deplin în Nexus Studio." : "Enter your details for full access to Nexus Studio.";
+            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Intră în Cont" : "Sign In";
+            if (switchText) switchText.innerHTML = lang === 'ro' ? "Nu ai cont? Creează un cont nou aici" : "Don't have an account? Create a new account here";
+        }
     }
 }
-
 
 
 const changeTab = switchTab;
