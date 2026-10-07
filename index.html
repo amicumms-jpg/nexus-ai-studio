@@ -51,15 +51,35 @@
             </button>
         </div>
 
-        <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
-            <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
-            <button onclick="switchTab('geminiLive')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
-            <button onclick="switchTab('aiVideoMaker')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
-            <button onclick="switchTab('socialSuite')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
-            <button onclick="switchTab('authAccount')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
-            <button onclick="switchTab('billing')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
-            <button onclick="switchTab('auth')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-key"></i><span>API Key</span></button>
-        </nav>
+           <!-- Meniu Utilități Premium (Bara de Sus) -->
+    <div class="flex items-center gap-4 ml-auto">
+        <!-- Indicator Credite AI -->
+        <div class="flex items-center gap-1.5 bg-[#1a1d2e] border border-gray-800 px-3 py-1.5 rounded-xl text-[11px] text-gray-300 font-medium select-none">
+            <span>🪙</span>
+            <span>Credite: <strong class="text-accentIndigo">Nelimitat</strong></span>
+        </div>
+
+        <!-- 🌡️ Termometru Temperatură Gemini (Creativitate AI) -->
+        <div class="flex items-center gap-2 bg-[#1a1d2e] border border-gray-800 px-3 py-1.5 rounded-xl text-[11px] text-gray-300">
+            <span title="Temperatură Gemini (Creativitate)">🌡️ Temp:</span>
+            <input type="range" id="gemini-temp-slider" min="0" max="2" step="0.1" value="0.7" oninput="updateGeminiTemp(this.value)" class="w-14 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accentIndigo">
+            <span id="gemini-temp-val" class="font-bold text-accentIndigo min-w-[15px] text-center">0.7</span>
+        </div>
+
+        <!-- Schimbare Limbă (RO/EN) -->
+        <div class="flex items-center bg-[#1a1d2e] border border-gray-800 rounded-xl p-0.5 text-[11px] select-none">
+            <button type="button" onclick="changeLanguage('ro')" id="lang-ro-btn" class="px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition">RO</button>
+            <button type="button" onclick="changeLanguage('en')" id="lang-en-btn" class="px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition">EN</button>
+        </div>
+
+        <!-- Comutator Dark/Light Mode -->
+        <button type="button" onclick="toggleTheme()" class="p-1.5 bg-[#1a1d2e] border border-gray-800 rounded-xl text-gray-400 hover:text-white transition flex items-center justify-center" title="Schimbă tema">
+            <svg id="theme-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+    </div>
+
     </header>
 
     <!-- Main Content Area -->
@@ -388,6 +408,41 @@ function toggleMainAuthMode() {
     }
 }
 
+let geminiTemperature = 0.7;
+
+function updateGeminiTemp(val) {
+    geminiTemperature = parseFloat(val);
+    const valDisplay = document.getElementById('gemini-temp-val');
+    if (valDisplay) valDisplay.innerText = val;
+    console.log("Temperatura Gemini actualizată la:", geminiTemperature);
+}
+
+let isDarkMode = true;
+function toggleTheme() {
+    isDarkMode = !isDarkMode;
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    if (!isDarkMode) {
+        body.classList.add('bg-white', 'text-gray-900');
+        body.classList.remove('bg-mainBg', 'text-white');
+    } else {
+        body.classList.remove('bg-white', 'text-gray-900');
+        body.classList.add('bg-mainBg', 'text-white');
+    }
+}
+
+function changeLanguage(lang) {
+    console.log("Limba schimbată la:", lang);
+    const roBtn = document.getElementById('lang-ro-btn');
+    const enBtn = document.getElementById('lang-en-btn');
+    if (lang === 'ro') {
+        if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition";
+        if (enBtn) enBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
+    } else {
+        if (enBtn) enBtn.className = "px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition";
+        if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
+    }
+}
 
 const changeTab = switchTab;
 
