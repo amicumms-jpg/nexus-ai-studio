@@ -354,6 +354,30 @@ function handleSocialLogin(provider) {
         alert("Autentificarea prin Facebook va fi disponibilă în curând.");
     }
 }
+let isSignUpMode = false; // Starea inițială este pentru Logare
+
+function toggleMainAuthMode() {
+    isSignUpMode = !isSignUpMode; // Comutăm starea
+
+    const formTitle = document.querySelector('#sec-auth h2'); // Titlul principal al panoului
+    const formSubtitle = document.querySelector('#sec-auth p'); // Subtitlul
+    const submitBtn = document.getElementById('main-auth-btn'); // Butonul mare mov
+    const switchText = document.getElementById('main-switch-text'); // Textul clicabil de jos
+
+    if (isSignUpMode) {
+        // Schimbăm interfața pentru modul: CREARE CONT NOU
+        if (formTitle) formTitle.innerText = "Creează Cont Nou";
+        if (formSubtitle) formSubtitle.innerText = "Completează datele de mai jos pentru a te înregistra.";
+        if (submitBtn) submitBtn.innerText = "Înregistrează-te";
+        if (switchText) switchText.innerHTML = "Ai deja cont? Intră în cont aici";
+    } else {
+        // Revenim la modul implicit: AUTENTIFICARE
+        if (formTitle) formTitle.innerText = "Autentificare în Cont";
+        if (formSubtitle) formSubtitle.innerText = "Introdu datele tale pentru acces deplin în Nexus Studio.";
+        if (submitBtn) submitBtn.innerText = "Intră în Cont";
+        if (switchText) switchText.innerHTML = "Nu ai cont? Creează un cont nou aici";
+    }
+}
 
 const changeTab = switchTab;
 
