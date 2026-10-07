@@ -328,40 +328,64 @@ function newSession() { switchTab('chat'); }
 
          
         
-               
-        async function handleSendMessage() {
+       async function handleSendMessage() {
     const inputField = document.getElementById('userInput');
     const text = inputField.value?.trim();
-    if(!text) return;
+    if (!text) return;
 
     const container = document.getElementById('chatMessages');
+    if (!container) return;
+
+    // 1. Afișăm instantaneu mesajul utilizatorului în bule stilizate de chat
     container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
     inputField.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    // 2. Adăugăm un indicator vizual de tip animat "Thinking..."
+    const loadingId = 'loading-' + Date.now();
+    container.innerHTML += `<div id="${loadingId}" class="bg-panelBg border border-gray-800 p-3 rounded-2xl text-sm text-gray-400 mb-2 shadow-sm animate-pulse">Nexus AI procesează...</div>`;
+    container.scrollTop = container.scrollHeight;
 
     try {
-                        const response = await fetch('/api/chat', {
+        // Apelăm endpoint-ul intern al aplicației tale hostate pe Vercel
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ prompt: text })
+            body: JSON.stringify({
+                prompt: text // Transmitem textul către API-ul tău de server Node.js/Python
+            })
         });
 
-        
+        // Îndepărtăm mesajul temporar "Thinking..."
+        document.getElementById(loadingId)?.remove();
+
         const data = await response.json();
-        
+
+        // Verificăm dacă backend-ul a returnat vreo eroare legată de cheie sau server
         if (data.error) {
-            container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error}</div>`;
+            container.innerHTML += `<div class="bg-red-950 border border-red-850 p-3 rounded-2xl text-sm text-red-400 mb-2">Eroare server: ${data.error}</div>`;
+            container.scrollTop = container.scrollHeight;
             return;
         }
 
-        const reply = data.text || "Nu s-a putut genera răspunsul.";
-        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
+        // Citim răspunsul trimis înapoi de fișierul tău de backend (de regulă se află în data.reply sau data.text)
+        const reply = data.reply || data.text || "Nu s-a putut genera un răspuns valid.";
+        
+        // 3. Afișăm răspunsul inteligent primit de la Gemini
+        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm leading-relaxed">${reply}</div>`;
         container.scrollTop = container.scrollHeight;
-    } catch(e) {
-        alert("Eroare rețea: " + e.message);
+
+    } catch (e) {
+        // În caz de eroare de conectare la rută, curățăm ecranul și informăm utilizatorul
+        document.getElementById(loadingId)?.remove();
+        container.innerHTML += `<div class="bg-red-950 border border-red-850 p-3 rounded-2xl text-sm text-red-400 mb-2">Eroare conexiune: Rețeaua Vercel nu a răspuns.</div>`;
+        container.scrollTop = container.scrollHeight;
     }
 }
+        
+       
 
 
        async function handleSendMessage() {
