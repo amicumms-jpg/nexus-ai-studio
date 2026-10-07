@@ -51,35 +51,15 @@
             </button>
         </div>
 
-           <!-- Meniu Utilități Premium (Bara de Sus) -->
-    <div class="flex items-center gap-4 ml-auto">
-        <!-- Indicator Credite AI -->
-        <div class="flex items-center gap-1.5 bg-[#1a1d2e] border border-gray-800 px-3 py-1.5 rounded-xl text-[11px] text-gray-300 font-medium select-none">
-            <span>🪙</span>
-            <span>Credite: <strong class="text-accentIndigo">Nelimitat</strong></span>
-        </div>
-
-        <!-- 🌡️ Termometru Temperatură Gemini (Creativitate AI) -->
-        <div class="flex items-center gap-2 bg-[#1a1d2e] border border-gray-800 px-3 py-1.5 rounded-xl text-[11px] text-gray-300">
-            <span title="Temperatură Gemini (Creativitate)">🌡️ Temp:</span>
-            <input type="range" id="gemini-temp-slider" min="0" max="2" step="0.1" value="0.7" oninput="updateGeminiTemp(this.value)" class="w-14 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accentIndigo">
-            <span id="gemini-temp-val" class="font-bold text-accentIndigo min-w-[15px] text-center">0.7</span>
-        </div>
-
-        <!-- Schimbare Limbă (RO/EN) -->
-        <div class="flex items-center bg-[#1a1d2e] border border-gray-800 rounded-xl p-0.5 text-[11px] select-none">
-            <button type="button" onclick="changeLanguage('ro')" id="lang-ro-btn" class="px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition">RO</button>
-            <button type="button" onclick="changeLanguage('en')" id="lang-en-btn" class="px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition">EN</button>
-        </div>
-
-        <!-- Comutator Dark/Light Mode -->
-        <button type="button" onclick="toggleTheme()" class="p-1.5 bg-[#1a1d2e] border border-gray-800 rounded-xl text-gray-400 hover:text-white transition flex items-center justify-center" title="Schimbă tema">
-            <svg id="theme-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-            </svg>
-        </button>
-    </div>
-
+        <nav class="hidden xl:flex items-center space-x-1 text-[11px] font-medium overflow-x-auto">
+            <button onclick="switchTab('chat')" class="px-2.5 py-2 rounded-lg bg-accentIndigo/20 text-accentIndigo flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-comments"></i><span>Chat AI</span></button>
+            <button onclick="switchTab('geminiLive')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-wave-square text-neonViolet animate-pulse"></i><span>Gemini Live</span></button>
+            <button onclick="switchTab('aiVideoMaker')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-video"></i><span>AI Video</span></button>
+            <button onclick="switchTab('socialSuite')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-share-nodes"></i><span>Social Media</span></button>
+            <button onclick="switchTab('authAccount')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-user-plus"></i><span>Cont</span></button>
+            <button onclick="switchTab('billing')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-credit-card"></i><span>Plată</span></button>
+            <button onclick="switchTab('auth')" class="px-2.5 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 flex items-center space-x-1.5 transition cursor-pointer"><i class="fa-solid fa-key"></i><span>API Key</span></button>
+        </nav>
     </header>
 
     <!-- Main Content Area -->
@@ -135,37 +115,14 @@
                     </div>
                 </div>
 
-                      <div class="max-w-4xl mx-auto flex flex-col space-y-2 bg-[#141622] border border-gray-800 rounded-xl px-4 py-2.5">
-            <!-- Zona de Input + Agrafă Universală + Buton -->
-            <div class="flex items-center space-x-3">
-                <!-- Butonul Agrafă (Deschide selectorul pentru orice fișier) -->
-                <button type="button" onclick="document.getElementById('chat-file-upload').click()" class="text-gray-400 hover:text-white transition p-1" title="Atașează orice tip de fișier (Imagine, Document, Audio, Text)">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                    </svg>
-                </button>
-
-                <!-- Input universal: Fără parametrul 'accept', primește absolut orice extensie -->
-                <input type="file" id="chat-file-upload" class="hidden" onchange="handleChatFileSelect(this)">
-
-                <!-- Câmpul tău text original -->
-                <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-white focus:outline-none placeholder-gray-500">
-                
-                <!-- Butonul tău original de trimitere -->
-                <button type="button" onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
+                <div class="p-4 bg-panelBg/40 border-t border-gray-800 shrink-0">
+                    <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900 border border-gray-700/80 rounded-xl px-4 py-2.5 shadow-inner">
+                        <input type="text" id="userInput" placeholder="Scrie un mesaj sau o cerere..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none" onkeypress="if(event.key==='Enter') handleSendMessage()">
+                        <button onclick="handleSendMessage()" class="bg-accentIndigo hover:opacity-90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition shadow cursor-pointer"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Indicator dinamic pentru numele fișierului încărcat -->
-            <div id="chat-file-badge" class="hidden flex items-center space-x-2 text-xs bg-[#1a1d2e] border border-gray-800 rounded-lg px-2.5 py-1 text-gray-400 w-fit select-none">
-                <span id="chat-file-name" class="truncate max-w-[200px]"></span>
-                <button type="button" onclick="clearSelectedChatFile()" class="text-red-400 hover:text-red-300 font-bold ml-1">×</button>
-            </div>
-        </div>
-                
             <!-- Tab 2: Gemini Live & Voice Studio -->
             <div id="tab-geminiLive" class="app-tab" style="display: none; flex: 1; flex-direction: column; height: 100%; overflow-hidden; padding: 1.5rem; gap: 1rem;">
                 <div class="flex items-center justify-between shrink-0">
@@ -258,12 +215,6 @@
                     
                     <form onsubmit="handleAccountFormSubmit(event)" class="space-y-4">
                         <div>
-                            <!-- Câmp dinamic pentru Nume Complet -->
-<div id="name-field-group" class="hidden mb-4">
-    <label class="block text-xs font-semibold text-gray-300 mb-1">Nume complet:</label>
-    <input type="text" id="mainNameInput" placeholder="Ion Popescu" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-accentIndigo transition">
-</div>
-
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Adresă Email:</label>
                             <input type="email" id="mainEmailInput" placeholder="nume@exemplu.com" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-accentIndigo">
                         </div>
@@ -274,27 +225,6 @@
                         <button type="submit" id="main-auth-btn" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
                             Intră în Cont
                         </button>
-                                            <!-- Separator vizual -->
-    <div class="relative my-4">
-        <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-850"></div>
-        </div>
-        <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-[#11131e] px-2 text-gray-500 font-medium">Sau</span>
-        </div>
-    </div>
-
-    <!-- Butoane Social Media -->
-    <div class="grid grid-cols-2 gap-4 mb-2">
-        <button type="button" onclick="handleSocialLogin('google')" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1a1d2e] border border-gray-800 rounded-xl text-sm font-medium text-white hover:bg-gray-800 transition duration-200">
-            Gmail
-        </button>
-        <button type="button" onclick="handleSocialLogin('facebook')" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1a1d2e] border border-gray-800 rounded-xl text-sm font-medium text-white hover:bg-gray-800 transition duration-200">
-            Facebook
-        </button>
-    </div>
- 
-
                     </form>
 
                     <div class="text-center">
@@ -395,254 +325,64 @@ function saveApiKey() {
 
 
 function newSession() { switchTab('chat'); }
-function handleSocialLogin(provider) {
-    console.log("Autentificare inițiată cu providerul:", provider);
-    if (provider === 'google') {
-        alert("Autentificarea prin Gmail este în curs de configurare prin Vercel OAuth.");
-    } else if (provider === 'facebook') {
-        alert("Autentificarea prin Facebook va fi disponibilă în curând.");
-    }
-}
-let isSignUpMode = false; // Starea inițială este pentru Logare
-
-function toggleMainAuthMode() {
-    isSignUpMode = !isSignUpMode; // Comutăm starea
-
-    const formTitle = document.querySelector('#sec-auth h2'); // Titlul principal al panoului
-    const formSubtitle = document.querySelector('#sec-auth p'); // Subtitlul
-    const submitBtn = document.getElementById('main-auth-btn'); // Butonul mare mov
-    const switchText = document.getElementById('main-switch-text'); // Textul clicabil de jos
-    const nameField = document.getElementById('name-field-group'); // Câmpul dinamic nou creat
-
-    if (isSignUpMode) {
-        // Schimbăm interfața pentru modul: CREARE CONT NOU
-        if (formTitle) formTitle.innerText = "Creează Cont Nou";
-        if (formSubtitle) formSubtitle.innerText = "Completează datele de mai jos pentru a te înregistra.";
-        if (submitBtn) submitBtn.innerText = "Înregistrează-te";
-        if (switchText) switchText.innerHTML = "Ai deja cont? Intră în cont aici";
-        if (nameField) nameField.classList.remove('hidden'); // Afișăm câmpul de nume
-    } else {
-        // Revenim la modul implicit: AUTENTIFICARE
-        if (formTitle) formTitle.innerText = "Autentificare în Cont";
-        if (formSubtitle) formSubtitle.innerText = "Introdu datele tale pentru acces deplin în Nexus Studio.";
-        if (submitBtn) submitBtn.innerText = "Intră în Cont";
-        if (switchText) switchText.innerHTML = "Nu ai cont? Creează un cont nou aici";
-        if (nameField) nameField.classList.add('hidden'); // Ascundem din nou câmpul de nume
-    }
-}
-
-let geminiTemperature = 0.7;
-
-function updateGeminiTemp(val) {
-    geminiTemperature = parseFloat(val);
-    const valDisplay = document.getElementById('gemini-temp-val');
-    if (valDisplay) valDisplay.innerText = val;
-    console.log("Temperatura Gemini actualizată la:", geminiTemperature);
-}
-
-let isDarkMode = true;
-function toggleTheme() {
-    isDarkMode = !isDarkMode;
-    const body = document.body;
-    const themeIcon = document.getElementById('theme-icon');
-    if (!isDarkMode) {
-        body.classList.add('bg-white', 'text-gray-900');
-        body.classList.remove('bg-mainBg', 'text-white');
-    } else {
-        body.classList.remove('bg-white', 'text-gray-900');
-        body.classList.add('bg-mainBg', 'text-white');
-    }
-}
-
-function changeLanguage(lang) {
-    console.log("Limba schimbată global la:", lang);
-    
-    // 1. Actualizăm vizual butoanele RO / EN din bara de sus
-    const roBtn = document.getElementById('lang-ro-btn');
-    const enBtn = document.getElementById('lang-en-btn');
-    if (lang === 'ro') {
-        if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition";
-        if (enBtn) enBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
-    } else {
-        if (enBtn) enBtn.className = "px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition";
-        if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
-    }
-
-    // 2. Dicționarul complet pentru elementele principale din pagină
-    const d = {
-        ro: {
-            title: "NAVIGARE RAPIDĂ",
-            newSession: "+ Sesiune Nouă AI",
-            placeholder: "Scrie un mesaj aici...",
-            videoPlaceholder: "Descrie videoclipul pe care dorești să îl generezi...",
-            socialPlaceholder: "Introdu subiectul pentru postare..."
-        },
-        en: {
-            title: "QUICK NAVIGATION",
-            newSession: "+ New AI Session",
-            placeholder: "Type a message here...",
-            videoPlaceholder: "Describe the video you want to generate...",
-            socialPlaceholder: "Enter the topic for your post..."
-        }
-    }[lang];
-
-    // 3. Traducem elementele text de control fixe
-    const navTitleEl = document.querySelector('.text-gray-500.text-\\[10px\\]') || document.querySelector('.text-gray-500');
-    if (navTitleEl && (navTitleEl.innerText.includes("NAVIGARE") || navTitleEl.innerText.includes("NAVIGATION"))) {
-        navTitleEl.innerText = d.title;
-    }
-    
-    const newSessionBtn = document.querySelector('button[onclick*="newSession"]');
-    if (newSessionBtn) newSessionBtn.innerText = d.newSession;
-
-    // 4. Traducem Input-urile din pagini (Placeholders)
-    const mainInput = document.getElementById('userInput');
-    if (mainInput) mainInput.placeholder = d.placeholder;
-
-    const videoInput = document.getElementById('videoPrompt');
-    if (videoInput) videoInput.placeholder = d.videoPlaceholder;
-
-    const socialInput = document.getElementById('socialTopic');
-    if (socialInput) socialInput.placeholder = d.socialPlaceholder;
-
-    // 5. Traducem elementele din meniul lateral folosind selectoare sigure după funcția onclick
-    const menuMapping = {
-        'chat': { ro: '💬 Chat General', en: '💬 General Chat' },
-        'voice': { ro: '🎙️ Gemini Live & Voice', en: '🎙️ Gemini Live & Voice' },
-        'video': { ro: '🎬 AI Video Maker', en: '🎬 AI Video Maker' },
-        'social': { ro: '📢 Social Media Hub', en: '📢 Social Media Hub' },
-        'auth': { ro: '👤 Autentificare / Cont', en: '👤 Authentication / Account' },
-        'payment': { ro: '💳 Plată Card / Abonament', en: '💳 Card Payment / Subscription' },
-        'api': { ro: '⚙️ Setare API Key', en: '⚙️ Setup API Key' }
-    };
-
-    // Parcurgem toate elementele care au evenimente de click atașate pentru schimbarea taburilor
-    document.querySelectorAll('[onclick*="switchTab"], [onclick*="changeTab"]').forEach(el => {
-        const attr = el.getAttribute('onclick');
-        for (const [key, labels] of Object.entries(menuMapping)) {
-            if (attr.includes(`'${key}'`) || attr.includes(`"${key}"`)) {
-                // Actualizăm textul direct în interiorul elementului fără a-i distruge structura HTML
-                const targetSpan = el.querySelector('span') || el;
-                if (targetSpan && targetSpan.children.length === 0) {
-                    targetSpan.innerText = labels[lang];
-                } else if (el.childNodes.length > 0) {
-                    // Dacă textul e direct nod intern, îl înlocuim doar pe el păstrând iconițele SVG intacte
-                    for (let node of el.childNodes) {
-                        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 1) {
-                            node.textContent = ` ${labels[lang].substring(2)}`; // Păstrează textul curat fără duplicarea iconițelor dacă sunt separate
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // 6. Traducem dinamic Caseta de Autentificare curentă (dacă elementele există pe ecran)
-    const formTitle = document.getElementById('auth-main-title');
-    const formDesc = document.getElementById('auth-main-desc');
-    const submitBtn = document.getElementById('main-auth-btn');
-    const switchText = document.getElementById('main-switch-text');
-
-    if (typeof isSignUpMode !== 'undefined') {
-        if (isSignUpMode) {
-            if (formTitle) formTitle.innerText = lang === 'ro' ? "Creează Cont Nou" : "Create New Account";
-            if (formDesc) formDesc.innerText = lang === 'ro' ? "Completează datele de mai jos pentru a te înregistra." : "Fill in the details below to register.";
-            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Înregistrează-te" : "Sign Up";
-            if (switchText) switchText.innerHTML = lang === 'ro' ? "Ai deja cont? Intră în cont aici" : "Already have an account? Sign in here";
-        } else {
-            if (formTitle) formTitle.innerText = lang === 'ro' ? "Autentificare în Cont" : "Account Authentication";
-            if (formDesc) formDesc.innerText = lang === 'ro' ? "Introdu datele tale pentru acces deplin în Nexus Studio." : "Enter your details for full access to Nexus Studio.";
-            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Intră în Cont" : "Sign In";
-            if (switchText) switchText.innerHTML = lang === 'ro' ? "Nu ai cont? Creează un cont nou aici" : "Don't have an account? Create a new account here";
-        }
-    }
-}
-// --- LOGICĂ UNIVERSALĂ PENTRU MANAGEMENTUL FIȘIERELOR UPLOADATE ---
-let selectedChatFile = null;
-
-function handleChatFileSelect(input) {
-    if (input.files && input.files[0]) {
-        selectedChatFile = input.files[0];
-        const badge = document.getElementById('chat-file-badge');
-        const nameDisplay = document.getElementById('chat-file-name');
-        
-        if (nameDisplay) nameDisplay.innerText = "📎 " + selectedChatFile.name;
-        if (badge) badge.classList.remove('hidden');
-        console.log("Fișier universal selectat pentru trimitere:", selectedChatFile.name);
-    }
-}
-
-function clearSelectedChatFile() {
-    selectedChatFile = null;
-    const input = document.getElementById('chat-file-upload');
-    const badge = document.getElementById('chat-file-badge');
-    
-    if (input) input.value = ''; 
-    if (badge) badge.classList.add('hidden');
-    console.log("Atașamentul a fost eliminat.");
-}
-
-const changeTab = switchTab;
 
          
         
-       async function handleSendMessage() {
+               
+        async function handleSendMessage() {
     const inputField = document.getElementById('userInput');
     const text = inputField.value?.trim();
-    if (!text) return;
+    if(!text) return;
 
     const container = document.getElementById('chatMessages');
-    if (!container) return;
-
-    // 1. Afișăm instantaneu mesajul utilizatorului în bule stilizate de chat
     container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
     inputField.value = '';
-    container.scrollTop = container.scrollHeight;
-
-    // 2. Adăugăm un indicator vizual de tip animat "Thinking..."
-    const loadingId = 'loading-' + Date.now();
-    container.innerHTML += `<div id="${loadingId}" class="bg-panelBg border border-gray-800 p-3 rounded-2xl text-sm text-gray-400 mb-2 shadow-sm animate-pulse">Nexus AI procesează...</div>`;
-    container.scrollTop = container.scrollHeight;
 
     try {
-        // Apelăm endpoint-ul intern al aplicației tale hostate pe Vercel
-        const response = await fetch('/api/chat', {
+                        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                prompt: text // Transmitem textul către API-ul tău de server Node.js/Python
-            })
+            body: JSON.stringify({ prompt: text })
         });
 
-        // Îndepărtăm mesajul temporar "Thinking..."
-        document.getElementById(loadingId)?.remove();
-
+        
         const data = await response.json();
-
-        // Verificăm dacă backend-ul a returnat vreo eroare legată de cheie sau server
+        
         if (data.error) {
-            container.innerHTML += `<div class="bg-red-950 border border-red-850 p-3 rounded-2xl text-sm text-red-400 mb-2">Eroare server: ${data.error}</div>`;
-            container.scrollTop = container.scrollHeight;
+            container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3.5 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error}</div>`;
             return;
         }
 
-        // Citim răspunsul trimis înapoi de fișierul tău de backend (de regulă se află în data.reply sau data.text)
-        const reply = data.reply || data.text || "Nu s-a putut genera un răspuns valid.";
-        
-        // 3. Afișăm răspunsul inteligent primit de la Gemini
-        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm leading-relaxed">${reply}</div>`;
+        const reply = data.text || "Nu s-a putut genera răspunsul.";
+        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
         container.scrollTop = container.scrollHeight;
-
-    } catch (e) {
-        // În caz de eroare de conectare la rută, curățăm ecranul și informăm utilizatorul
-        document.getElementById(loadingId)?.remove();
-        container.innerHTML += `<div class="bg-red-950 border border-red-850 p-3 rounded-2xl text-sm text-red-400 mb-2">Eroare conexiune: Rețeaua Vercel nu a răspuns.</div>`;
-        container.scrollTop = container.scrollHeight;
+    } catch(e) {
+        alert("Eroare rețea: " + e.message);
     }
 }
-        
+
+
+        async function handleLiveSendMessage() {
+            const inputField = document.getElementById('liveInput');
+            const text = inputField.value?.trim();
+            if(!text) return;
+            const container = document.getElementById('liveChatMessages');
+            container.innerHTML += `<div class="text-right text-sm text-neonViolet mb-2 font-medium">${text}</div>`;
+            inputField.value = '';
+            try {
+                const response = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
+                });
+                const data = await response.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat.";
+                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
+            } catch(e) { alert("Eroare: " + e.message); }
+        }
+
         async function generateVideoStoryboard() {
             const prompt = document.getElementById('videoPrompt').value?.trim();
             if(!prompt) return;
