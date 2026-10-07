@@ -364,24 +364,58 @@ function newSession() { switchTab('chat'); }
 }
 
 
-        async function handleLiveSendMessage() {
-            const inputField = document.getElementById('liveInput');
-            const text = inputField.value?.trim();
-            if(!text) return;
-            const container = document.getElementById('liveChatMessages');
-            container.innerHTML += `<div class="text-right text-sm text-neonViolet mb-2 font-medium">${text}</div>`;
-            inputField.value = '';
-            try {
-                const response = await fetch(`https://googleapis.com{HARDCODED_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text }] }] })
-                });
-                const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns generat.";
-                container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
-            } catch(e) { alert("Eroare: " + e.message); }
+       async function handleSendMessage() {
+    const inputField = document.getElementById('userInput');
+    const text = inputField.value?.trim();
+    if (!text) return;
+
+    const container = document.getElementById('chatMessages');
+    if (!container) return;
+
+    // Afișăm textul trimis de utilizator în chat
+    container.innerHTML += `<div class="text-right text-sm text-accentIndigo mb-2 font-medium">${text}</div>`;
+    inputField.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    // Adăugăm un mesaj temporar de tip "Thinking..."
+    const loadingId = 'loading-' + Date.now();
+    container.innerHTML += `<div id="${loadingId}" class="bg-panelBg border border-gray-800 p-3 rounded-2xl text-sm text-gray-400 mb-2 shadow-sm animate-pulse">Nexus se gândește...</div>`;
+    container.scrollTop = container.scrollHeight;
+
+    try {
+        // Folosește URL-ul exact pe care l-ai definit și în celelalte funcții funcționale din codul tău
+        const response = await fetch('https://googleapis.com{HARDCODED_API_KEY}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: text }] }]
+            })
+        });
+
+        // Ștergem mesajul de încărcare imediat ce avem un răspuns
+        document.getElementById(loadingId)?.remove();
+
+        const data = await response.json();
+
+        if (data.error) {
+            container.innerHTML += `<div class="bg-red-950 border border-red-850 p-3 rounded-2xl text-sm text-red-400 mb-2">Eroare: ${data.error.message || 'Eroare API'}</div>`;
+            container.scrollTop = container.scrollHeight;
+            return;
         }
+
+        // Extragerea corectă a textului din structura oficială Google Gemini pe care o ai și la linia 381
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nu s-a putut genera răspunsul.";
+        
+        container.innerHTML += `<div class="bg-panelBg border border-gray-800 p-3 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm">${reply}</div>`;
+        container.scrollTop = container.scrollHeight;
+
+    } catch (e) {
+        document.getElementById(loadingId)?.remove();
+        alert("Eroare rețea: " + e.message);
+    }
+}
 
         async function generateVideoStoryboard() {
             const prompt = document.getElementById('videoPrompt').value?.trim();
