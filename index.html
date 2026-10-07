@@ -333,45 +333,88 @@
     </div>
 
            <script>
-        function switchTab(tabId) {
-    console.log("Tab dezactivat:", tabId);
-}
+      let currentActiveTab = 'chat'; // Definește tab-ul inițial implicit
 
+function switchTab(tabId) {
+    // Actualizăm variabila globală pentru starea tab-ului
+    currentActiveTab = tabId;
+    console.log("Tab activat:", tabId);
 
-
-        function updateApiStatus(isActive) {
-            const indicator = document.getElementById('apiStatusIndicator');
-            const text = document.getElementById('apiStatusText');
-            if (indicator && text) {
-                indicator.className = "w-2 h-2 rounded-full bg-successGreen animate-pulse";
-                text.innerText = "API Activ (Gemini)";
-            }
+    // 1. Lista tuturor ID-urilor secțiunilor (paginilor) din aplicația ta
+    // Asigură-te că aceste ID-uri coincid exact cu cele din secțiunile tale HTML (ex: <div id="sec-chat">)
+    const sections = ['chat', 'voice', 'video', 'social', 'auth', 'payment', 'api'];
+    
+    sections.forEach(sec => {
+        const sectionEl = document.getElementById(`sec-${sec}`);
+        if (sectionEl) {
+            // Ascundem toate secțiunile prin adăugarea clasei 'hidden' din Tailwind
+            sectionEl.classList.add('hidden');
         }
+        
+        const buttonEl = document.getElementById(`tab-${sec}`);
+        if (buttonEl) {
+            // Opțional: scoatem stilul de buton selectat de pe celelalte butoane
+            buttonEl.classList.remove('bg-accentIndigo', 'text-white'); 
+        }
+    });
+
+    // 2. Afișăm secțiunea selectată eliminând clasa 'hidden'
+    const activeSection = document.getElementById(`sec-${tabId}`);
+    if (activeSection) {
+        activeSection.classList.remove('hidden');
+    }
+
+    // Adăugăm stilul vizual activ pe butonul apăsat
+    const activeButton = document.getElementById(`tab-${tabId}`);
+    if (activeButton) {
+        activeButton.classList.add('bg-accentIndigo', 'text-white');
+    }
 }
+ 
+    function updateApiStatus(isActive) {
+        const indicator = document.getElementById('apiStatusIndicator');
+        const text = document.getElementById('apiStatusText');
+        if (indicator && text) {
+            indicator.className = "w-2 h-2 rounded-full bg-successGreen animate-pulse";
+            text.innerText = "API Activ (Gemini)";
+        }
+    }
 
-
-       
-
-function newSession() { switchTab('chat'); }
-
-         
-   async function handleSendMessage() {
+    function newSession() { 
+        switchTab('chat'); 
+    }
+async function handleSendMessage() {
     const inputField = document.getElementById('userInput');
     const text = inputField.value?.trim();
-    
+
     // Preluăm fișierul specific din starea tabului activ
-    const currentFile = tabStates[currentActiveTab]?.fileData;
+    const currentTabState = typeof tabStates !== 'undefined' ? tabStates[currentActiveTab] : null;
+    const currentFile = currentTabState ? currentTabState.fileData : null;
+
+    // Oprim funcția dacă nu avem nici text, nici fișier atașat
     if (!text && !currentFile) return;
 
     const container = document.getElementById('chatMessages');
+    if (!container) return;
+
+    // Afișăm textul utilizatorului în chat
     if (text) {
         container.innerHTML += `<div class="text-right text-sm text-accentIndigo my-2">${text}</div>`;
     }
-    if (currentFile) {
+
+    // Afișăm numele fișierului atașat dacă există
+    if (currentFile && currentFile.name) {
         container.innerHTML += `<div class="text-right text-xs text-gray-400 my-1">[Fișier atașat: ${currentFile.name}]</div>`;
     }
-    
+
+    // Resetăm câmpul de introducere imediat pentru un UX fluid
     inputField.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    // Adăugăm un element vizual temporar de „încărcare”
+    const loadingId = 'loading-' + Date.now();
+    container.innerHTML += `<div id="${loadingId}" class="bg-panelBg text-sm text-gray-500 my-2 animate-pulse">Se generează răspunsul...</div>`;
+    container.scrollTop = container.scrollHeight;
 
     try {
         const response = await fetch('/api/chat', {
@@ -379,17 +422,21 @@ function newSession() { switchTab('chat'); }
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 
-                prompt: text, 
+            body: JSON.stringify({
+                prompt: text,
                 fileData: currentFile,
-                tab: currentActiveTab 
+                tab: currentActiveTab
             })
         });
-        
+
+        // Îndepărtăm mesajul de încărcare
+        document.getElementById(loadingId)?.remove();
+
         const data = await response.json();
-        
+
         if (data.error) {
             container.innerHTML += `<div class="bg-red-950 border border-red-800 p-3 rounded-lg text-sm text-red-200 my-2">Eroare: ${data.error}</div>`;
+            container.scrollTop = container.scrollHeight;
             return;
         }
 
@@ -398,9 +445,11 @@ function newSession() { switchTab('chat'); }
         container.scrollTop = container.scrollHeight;
 
     } catch (e) {
-        alert("Erore retea: " + e.message);
+        document.getElementById(loadingId)?.remove();
+        alert("Eroare rețea: " + e.message);
     }
 }
+
      
  const translations = {
     ro: {
