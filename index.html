@@ -225,6 +225,27 @@
                         <button type="submit" id="main-auth-btn" class="w-full bg-accentIndigo hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
                             Intră în Cont
                         </button>
+                                            <!-- Separator vizual -->
+    <div class="relative my-4">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-850"></div>
+        </div>
+        <div class="relative flex justify-center text-xs uppercase">
+            <span class="bg-[#11131e] px-2 text-gray-500 font-medium">Sau</span>
+        </div>
+    </div>
+
+    <!-- Butoane Social Media -->
+    <div class="grid grid-cols-2 gap-4 mb-2">
+        <button type="button" onclick="handleSocialLogin('google')" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1a1d2e] border border-gray-800 rounded-xl text-sm font-medium text-white hover:bg-gray-800 transition duration-200">
+            Gmail
+        </button>
+        <button type="button" onclick="handleSocialLogin('facebook')" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1a1d2e] border border-gray-800 rounded-xl text-sm font-medium text-white hover:bg-gray-800 transition duration-200">
+            Facebook
+        </button>
+    </div>
+ 
+
                     </form>
 
                     <div class="text-center">
@@ -325,6 +346,16 @@ function saveApiKey() {
 
 
 function newSession() { switchTab('chat'); }
+function handleSocialLogin(provider) {
+    console.log("Autentificare inițiată cu providerul:", provider);
+    if (provider === 'google') {
+        alert("Autentificarea prin Gmail este în curs de configurare prin Vercel OAuth.");
+    } else if (provider === 'facebook') {
+        alert("Autentificarea prin Facebook va fi disponibilă în curând.");
+    }
+}
+
+const changeTab = switchTab;
 
          
         
