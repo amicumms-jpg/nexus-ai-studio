@@ -433,6 +433,8 @@ function toggleTheme() {
 
 function changeLanguage(lang) {
     console.log("Limba schimbată la:", lang);
+    
+    // 1. Schimbăm aspectul vizual al butoanelor RO / EN din bara de sus
     const roBtn = document.getElementById('lang-ro-btn');
     const enBtn = document.getElementById('lang-en-btn');
     if (lang === 'ro') {
@@ -442,7 +444,38 @@ function changeLanguage(lang) {
         if (enBtn) enBtn.className = "px-2 py-0.5 rounded-lg font-bold bg-accentIndigo text-white transition";
         if (roBtn) roBtn.className = "px-2 py-0.5 rounded-lg font-medium text-gray-400 hover:text-white transition";
     }
+
+    // 2. Traducem dinamic textele formularului de autentificare
+    // Verificăm dacă dicționarul tău global de traduceri există în script
+    if (typeof translations !== 'undefined' && translations[lang]) {
+        const formTitle = document.getElementById('auth-main-title'); // ID-ul titlului h2 din HTML
+        const formDesc = document.getElementById('auth-main-desc');   // ID-ul descrierii p din HTML
+        const submitBtn = document.getElementById('main-auth-btn');   // ID-ul butonului mare mov
+
+        if (isSignUpMode) {
+            // Dacă utilizatorul este pe tab-ul de "Creare Cont"
+            if (formTitle) formTitle.innerText = lang === 'ro' ? "Creează Cont Nou" : "Create New Account";
+            if (formDesc) formDesc.innerText = lang === 'ro' ? "Completează datele de mai jos pentru a te înregistra." : "Fill in the details below to register.";
+            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Înregistrează-te" : "Sign Up";
+        } else {
+            // Dacă utilizatorul este pe tab-ul implicit de "Logare"
+            if (formTitle) formTitle.innerText = lang === 'ro' ? "Autentificare în Cont" : "Account Authentication";
+            if (formDesc) formDesc.innerText = lang === 'ro' ? "Introdu datele tale pentru acces deplin în Nexus Studio." : "Enter your details for full access to Nexus Studio.";
+            if (submitBtn) submitBtn.innerText = lang === 'ro' ? "Intră în Cont" : "Sign In";
+        }
+
+        // Actualizăm textul de comutare de jos (Link-ul mic)
+        const switchText = document.getElementById('main-switch-text');
+        if (switchText) {
+            if (isSignUpMode) {
+                switchText.innerHTML = lang === 'ro' ? "Ai deja cont? Intră în cont aici" : "Already have an account? Sign in here";
+            } else {
+                switchText.innerHTML = lang === 'ro' ? "Nu ai cont? Creează un cont nou aici" : "Don't have an account? Create a new account here";
+            }
+        }
+    }
 }
+
 
 const changeTab = switchTab;
 
