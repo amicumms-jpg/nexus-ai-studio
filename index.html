@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device
 width, initial-scale=1.0">
-<title>Nexus AI Studio Pro - Multi-Language 
-Edition</title>
+<title>Nexus AI Studio Pro - Dark Mode Fix</title>
 <script src="https://cdn.tailwindcss.com"></
 script>
 <link rel="stylesheet" href="https://
@@ -43,8 +42,8 @@ opacity: 0.15;
 </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans 
-h-screen flex flex-col overflow-hidden transition
-colors duration-300 relative" id="appBody">
+h-screen flex flex-col overflow-hidden relative" 
+id="appBody">
 <!-- Canvas Matrix -->
 <canvas id="matrixCanvas"></canvas>
 <!-- Notificări Toast Container -->
@@ -120,10 +119,9 @@ shadow-lg shadow-emerald-500/20 text-lg">
 wide">Nexus AI Studio</h1>
 <span class="text-[10px] bg-emerald-500/20 text
 emerald-400 border border-emerald-500/30 px-2 
-py-0.5 rounded-full font-semibold">v5.5 Pro</
+py-0.5 rounded-full font-semibold">v5.6 Pro</
 span>
 </div>
-<!-- Breadcrumbs Dinamice -->
 <div class="text-[11px] text-gray-400 flex items
 center space-x-1 mt-0.5">
 <span class="text-cyanNeon"><i class="fa-solid 
@@ -134,7 +132,7 @@ gray-200 font-medium">Chat General</span>
 </div>
 </div>
 </div>
-<!-- Selector Limbi (Multi-Language European) -->
+<!-- Selector Limbi (Multi-Language) -->
 <div class="flex items-center space-x-2">
 <div class="bg-gray-900 border border-gray-700 
 rounded-xl px-2.5 py-1 flex items-center space
@@ -155,6 +153,7 @@ none cursor-pointer font-medium">
 <option value="it">
 </select>
 </div>
+</div>
 🇩🇪
 🇮🇹
  Română</option>
@@ -162,7 +161,6 @@ none cursor-pointer font-medium">
  Français</option>
  Deutsch</option>
  Italiano</option>
-</div>
 <!-- Controale & Status Vercel -->
 <div class="flex items-center space-x-2.5">
 <div class="hidden lg:flex items-center space-x-2 
@@ -178,7 +176,7 @@ strong></span>
 gray-900 border border-red-500/40 text-xs text
 red-400 px-3 py-1.5 rounded-xl hover:bg
 red-950/40 transition cursor-pointer flex items
-center space-x-1" title="Mod Șef / Excel">
+center space-x-1">
 <i class="fa-solid fa-user-secret"></i> <span 
 class="hidden sm:inline" data
 i18n="bossBtn">Mod Șef</span>
@@ -187,7 +185,7 @@ i18n="bossBtn">Mod Șef</span>
 gray-900 border border-emerald-500/40 text-xs 
 text-emerald-400 px-3 py-1.5 rounded-xl 
 hover:bg-emerald-950/40 transition cursor
-pointer" title="Matrix Rain">
+pointer">
 <i class="fa-solid fa-code"></i>
 </button>
 </div>
@@ -419,9 +417,9 @@ column; height: 100%; overflow-y: auto; padding:
 <div class="max-w-3xl mx-auto w-full space-y-6">
 <div>
 <h2 class="text-lg font-bold text-white flex items
-center"><i class="fa-solid fa-headphones text
-violetPop mr-2"></i>Ambient Soundscapes for 
-Deep Work 
+center"><i class="fa-solid fa-headphones 
+text-violetPop mr-2"></i>Ambient Soundscapes 
+for Deep Work 
 �
 �🌧️
 </h2>
@@ -501,8 +499,8 @@ cursor-pointer" data-i18n="tarotBtn">Cere
 Predicția</button>
 <div id="tarotAnswer" class="text-xs font
 medium text-amber-300 min-h-[40px] flex items
-center justify-center bg-gray-950 p-3 
-rounded-xl border border-gray-800"></div>
+center justify-center bg-gray-950 p-3 rounded-xl 
+border border-gray-800"></div>
 </div>
 </div>
 <!-- Tab 5%Ď Time Capsule -
@@ -658,10 +656,10 @@ mainHubs: "Hub-uri Principale",
 tabChat: "Chat General",
 tabArcade: "AI Mini-Game & Snake",
 tabAmbient: "Ambient Soundscapes",
-�
-�🤖✨
 tabTarot: "Cyber Tarot & Oracol",
 tabCapsule: "Time Capsule",
+�
+�🤖✨
 tabPlan: "Planificator Editorial",
 tabAuth: "Înregistrare / Cont",
 chatSub: "Conectat la Gemini • Gata de acțiune 
@@ -777,6 +775,8 @@ toastSuccess: "Operation successful!",
 toastError: "Error! Complete required fields."
 },
 fr: {
+�
+�✨
 bossBtn: "Mode Boss",
 bossExit: "Quitter le Mode Secret",
 newSession: "Nouvelle Session IA",
@@ -795,13 +795,12 @@ tabAuth: "Inscription / Compte",
 chatSub: "Connecté à Gemini • Prêt à l'action 
 ",
 tokenLabel: "Jetons utilisés:",
-🤖✨
-💡
 welcomeMsg: "Bonjour! L'interface est prête. 
 Comment puis-je vous aider aujourd'hui? 
 �
 �
 ",
+💡
 chatPlaceholder: "Écrivez votre message... 
 (Appuyez sur Entrée)",
 arcadeSub: "Jouez à un Snake classique 
@@ -843,7 +842,6 @@ toastError: "Erreur! Remplissez les champs."
 de: {
 bossBtn: "Chef-Modus",
 bossExit: "Geheimen Modus verlassen",
-✨
 newSession: "Neue KI-Sitzung",
 aiPersonaLabel: "KI-Rolle (Persona)",
 personaGeneral: "Allgemeiner Assistent",
@@ -858,18 +856,19 @@ tabCapsule: "Zeitkapsel",
 tabPlan: "Redaktionsplaner",
 tabAuth: "Registrierung / Konto",
 chatSub: "Verbunden mit Gemini • Bereit 
+�
+�🤖
+✨
 ",
 tokenLabel: "Verwendete Token:",
 welcomeMsg: "Hallo! Die Benutzeroberfläche ist 
 bereit. Wie kann ich Ihnen heute helfen? 
-�
-�🤖
 ",
 chatPlaceholder: "Schreiben Sie Ihre Nachricht... 
 (Enter drücken)",
-🚀
 arcadeSub: "Spielen Sie ein klassisches Snake
 Spiel direkt im Browser.",
+🚀
 startSnakeBtn: "Retro Snake starten",
 snakePrompt: "Klicken Sie oben, um Snake zu 
 starten 
@@ -911,10 +910,10 @@ bossBtn: "Modalità Capo",
 bossExit: "Esci dalla Modalità Segreta",
 newSession: "Nuova Sessione IA",
 aiPersonaLabel: "Ruolo IA (Persona)",
-�
-�🤖✨
 personaGeneral: "Assistente Generalista",
 personaDev: "Sviluppatore Esperto Fullstack",
+�
+�🤖✨
 personaGrowth: "Esperto di Crescita Virale",
 mainHubs: "Hub Principali",
 tabChat: "Chat Generale",
@@ -1091,9 +1090,9 @@ document.getElementById('userAccountStatus').i
 nnerText = Cont creat:${name} (${email}) 
 ;
 showToast(translations[currentLang].toastSucce
-ss, 'success');
-}
 ✅
+s, 'success');
+}
 function startRetroSnake() {
 const container = 
 document.getElementById('gameScreenContaine
@@ -1107,11 +1106,11 @@ height="200" class="bg-black border border
 emeraldNeon/50 rounded"&gt;&lt;/canvas&gt; 
 &lt;div class="flex space-x-2 mt-1"&gt; &lt;button 
 onclick="snakeDir='UP'" class="bg-gray-800 px-3 
-py-1 rounded text
-white"&gt;
+py-1 rounded text-white"&gt;
 ⬆️ 
-&lt;/button&gt; &lt;button 
-onclick="snakeDir='DOWN'" class="bg-gray-800 
+&lt;/button&gt; 
+&lt;button onclick="snakeDir='DOWN'" class="bg
+gray-800 
 px-3 py-1 rounded text-white"&gt;
 ⬇️ 
 &lt;/
@@ -1198,7 +1197,7 @@ document.getElementById('tarotAnswer').innerTe
 xt = preds[Math.floor(Math.random() * 
 preds.length)];
 showToast(translations[currentLang].toastSucce
-ss, 'success');
+s, 'success');
 }
 function saveTimeCapsule() {
 const val = 
@@ -1230,10 +1229,10 @@ document.getElementById('userAccountStatus').i
 nnerText = Autentificat:${savedName} 
 }
 });
-function switchTab(tabId, titleName) {
-document.querySelectorAll('.app
 ✅
 `;
+function switchTab(tabId, titleName) {
+document.querySelectorAll('.app
 tab').forEach(tab => tab.style.display = 'none');
 const target = document.getElementById(tab-$
 {tabId}`);
@@ -1248,12 +1247,11 @@ document.getElementById('chatMessages').inner
 HTML = <div class="bg-panelBg border border
 gray-800 p-3.5 rounded-2xl text-sm text-gray-200 
 max-w-[85%]"&gt;Sesiune nouă inițializată. 
-�
-�
 &lt;/div>;
 showToast(translations[currentLang].toastSucce
 ss, 'success');
 }
+🚀
 function handleKeyDown(e, tabType) {
 if (e.key === 'Enter') 
 handleSendMessage(tabType);
