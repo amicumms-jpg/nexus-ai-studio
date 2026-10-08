@@ -12,7 +12,7 @@
   ],
   "routes": [
     {
-      "src": "/api/chat",
+      "src": "/api/generate",
       "dest": "/api/chat.js"
     },
     {
@@ -21,3 +21,4 @@
     }
   ]
 }
+
