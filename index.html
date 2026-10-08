@@ -1016,8 +1016,10 @@ function removeAttachment(tabKey) {
 async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
     const inputEl = document.getElementById(inputId);
     const msgBox = document.getElementById(messagesContainerId);
+    if (!inputEl || !msgBox) return;
+
     const text = inputEl.value.trim();
-    const file = attachedFiles[tabKey];
+    const file = attachedFiles ? attachedFiles[tabKey] : null;
 
     if (!text && !file) return;
 
@@ -1029,7 +1031,7 @@ async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKe
     inputEl.value = '';
     msgBox.scrollTop = msgBox.scrollHeight;
 
-    // Pregătim datele pentru fișier (conversie în Base64 dacă există)
+    // Pregătim datele pentru fișier (dacă există)
     let fileDataPayload = null;
     if (file) {
         const base64String = await new Promise((resolve) => {
@@ -1043,7 +1045,7 @@ async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKe
         };
     }
 
-    // Curățăm atașamentul din interfață
+    // Curățăm atașamentul în siguranță
     removeAttachment(tabKey);
 
     const loadingId = 'load-' + Date.now();
@@ -1062,14 +1064,16 @@ async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKe
         });
 
         const data = await res.json();
-        document.getElementById(loadingId).remove();
+        const loadEl = document.getElementById(loadingId);
+        if (loadEl) loadEl.remove();
 
         if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
 
         msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.response}</div>`;
         msgBox.scrollTop = msgBox.scrollHeight;
     } catch (err) {
-        document.getElementById(loadingId).remove();
+        const loadEl = document.getElementById(loadingId);
+        if (loadEl) loadEl.remove();
         msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
     }
 }
