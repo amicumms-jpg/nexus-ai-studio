@@ -197,32 +197,72 @@
         <!-- Dynamic Content Container -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
-            <!-- Tab 1: Chat General (Cyan) -->
-            <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-hidden">
-                <div class="px-6 py-3 border-b border-cyan-500/30 bg-cyan-950/30 flex items-center justify-between shrink-0">
-                    <div>
-                        <h2 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-comments text-cyanNeon mr-2"></i> Nexus Neural Assistant - Chat General</h2>
-                        <p class="text-xs text-gray-400">Asistent general conectat la Gemini &bull; Independent</p>
+            <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-cyanNeon/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
+                    <h2 class="font-bold text-sm text-cyanNeon mb-2"><i class="fa-solid fa-comments mr-2"></i> Nexus Neural Assistant - Chat General</h2>
+                    <div id="chatMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
+                        <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="clearTabChat('chat')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-2.5 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
-                    </div>
-                </div>
-                <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div>
-                        <div class="bg-panelBg border border-cyanNeon/30 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%] shadow-md">
-                            Salut! Acesta este chatul General independent. Cu ce te pot ajuta? 🚀
-                        </div>
-                    </div>
-                </div>
-                <div class="p-4 bg-panelBg border-t border-gray-800 shrink-0">
-                    <div class="max-w-4xl mx-auto bg-gray-900 border border-cyanNeon/40 rounded-xl p-2.5 shadow-inner flex items-center space-x-2">
-                        <input type="text" id="chatInput" placeholder="Scrie mesajul tău pentru Chat General..." class="flex-1 bg-transparent text-sm text-gray-100 outline-none px-1" onkeydown="handleKeyDown(event, 'chat')">
-                        <button onclick="handleSendMessage('chat')" class="bg-cyanNeon text-darkBg font-bold w-9 h-9 rounded-lg flex items-center justify-center transition cursor-pointer hover:opacity-90"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                    <div class="flex space-x-2">
+                        <input type="text" id="chatInput" placeholder="Scrie mesajul tău pentru Chat General..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('chatMessages', 'chatInput')">
+                        <button onclick="sendChatMessage('chatMessages', 'chatInput')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
+
+            <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-tiktokColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
+                    <h2 class="font-bold text-sm text-tiktokColor mb-2"><i class="fa-brands fa-tiktok mr-2"></i> TikTok Viral AI Chat & Studio</h2>
+                    <div id="tiktokMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
+                        <div class="text-gray-400">Salut! Acesta este chatul tău dedicat pentru TikTok. Scrie subiectul și generăm hook-uri sau scripturi virale aici!</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="tiktokInput" placeholder="Ex: Idei de video viral despre tech..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-tiktokColor" onkeydown="if(event.key==='Enter') sendChatMessage('tiktokMessages', 'tiktokInput', 'Generează conținut viral TikTok despre: ')">
+                        <button onclick="sendChatMessage('tiktokMessages', 'tiktokInput', 'Generează conținut viral TikTok despre: ')" class="bg-tiktokColor text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-instaStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-instaColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
+                    <h2 class="font-bold text-sm text-instaColor mb-2"><i class="fa-brands fa-instagram mr-2"></i> Instagram AI Creator & Caption Chat</h2>
+                    <div id="instaMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
+                        <div class="text-gray-400">Salut! Aici scriem descrieri (captions) și idei de carusel pentru Instagram.</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="instaInput" placeholder="Scrie subiectul pentru Instagram..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-instaColor" onkeydown="if(event.key==='Enter') sendChatMessage('instaMessages', 'instaInput', 'Generează caption și idei carusel Instagram despre: ')">
+                        <button onclick="sendChatMessage('instaMessages', 'instaInput', 'Generează caption și idei carusel Instagram despre: ')" class="bg-instaColor text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-ytStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-ytColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
+                    <h2 class="font-bold text-sm text-ytColor mb-2"><i class="fa-brands fa-youtube mr-2"></i> YouTube AI Scriptwriter Chat</h2>
+                    <div id="ytMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
+                        <div class="text-gray-400">Salut! Pregătim scenarii detaliate pentru videoclipurile tale de YouTube.</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="ytInput" placeholder="Titlu sau idee video YouTube..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-ytColor" onkeydown="if(event.key==='Enter') sendChatMessage('ytMessages', 'ytInput', 'Generează un scenariu YouTube structurat despre: ')">
+                        <button onclick="sendChatMessage('ytMessages', 'ytInput', 'Generează un scenariu YouTube structurat despre: ')" class="bg-ytColor text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-videoStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-videoColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
+                    <h2 class="font-bold text-sm text-videoColor mb-2"><i class="fa-solid fa-video mr-2"></i> Video AI Studio & Cronologie Chat</h2>
+                    <div id="videoMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
+                        <div class="text-gray-400">Transformă ideile scrise în cadre video și indicații de regie.</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="videoInput" placeholder="Ex: Prezentare produs tech..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-videoColor" onkeydown="if(event.key==='Enter') sendChatMessage('videoMessages', 'videoInput', 'Creează scenariu video pas cu pas pe cadre pentru: ')">
+                        <button onclick="sendChatMessage('videoMessages', 'videoInput', 'Creează scenariu video pas cu pas pe cadre pentru: ')" class="bg-videoColor text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
 
             <!-- Tab 2: TikTok AI Studio (Tiktok Pink/Red) -->
             <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-hidden">
@@ -854,6 +894,38 @@
                 document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
             }
         });
+        // Funcția unificată pentru chat-urile independente din taburi
+async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
+    const inputEl = document.getElementById(inputId);
+    const msgBox = document.getElementById(messagesContainerId);
+    if (!inputEl || !msgBox) return;
+    
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    // Afișează mesajul tău în fereastra curentă
+    msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
+    inputEl.value = '';
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    // Indicator de încărcare
+    const loadingId = 'load-' + Date.now();
+    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se generează răspunsul prin Gemini AI...</div>`;
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    try {
+        const finalPrompt = customPrefix ? `${customPrefix} "${text}"` : text;
+        const responseText = await fetchFromServer(finalPrompt);
+        
+        // Înlocuiește loaderul cu răspunsul de la AI
+        document.getElementById(loadingId).remove();
+        msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${responseText}</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+    } catch (err) {
+        document.getElementById(loadingId).remove();
+        msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+    }
+}
     </script>
 </body>
 </html>
