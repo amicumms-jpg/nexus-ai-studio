@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus AI Studio Pro - Ultimate Edition V16 (Server Gemini)</title>
+    <title>Nexus AI Studio Pro - Cloud Edition (Server Gemini)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -48,7 +48,6 @@
     <canvas id="matrixCanvas"></canvas>
     <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    <!-- Modul Boss Key -->
     <div id="bossExcelScreen" class="fixed inset-0 bg-white text-black z-50 p-6 hidden overflow-auto font-mono">
         <div class="flex justify-between items-center mb-4 border-b pb-2">
             <h2 class="text-lg font-bold">Financial Balances & Quarterly Sheet Q3/Q4</h2>
@@ -69,7 +68,6 @@
         </table>
     </div>
 
-    <!-- Header Sus -->
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2 flex items-center justify-between shrink-0 shadow-lg z-20">
         <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold text-sm">
@@ -83,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Zonă Mijloc / Dreapta -->
         <div class="flex items-center space-x-3 text-xs">
             <div class="hidden md:flex items-center space-x-2 bg-gradient-to-r from-emerald-950/60 to-cyan-950/60 border border-emeraldNeon/50 px-3 py-1 rounded-lg text-emerald-300 text-[11px] font-semibold ad-banner-glow">
                 <i class="fa-solid fa-bullhorn text-amberGlow animate-bounce"></i>
@@ -102,11 +99,10 @@
                 <i class="fa-solid fa-robot"></i> Chat AI
             </button>
 
-            <button onclick="toggleBossKey()" class="bg-gray-900 border border-red-500/40 text-red-400 px-2 py-1 rounded-lg text-[11px] cursor-pointer" title="Mod Șef"><i class="fa-solid fa-user-secret"></i></button>
+            <button onclick="toggleBossKey()" class="bg-gray-900 border border-red-500/40 text-red-400 px-2 py-1 rounded-lg text-[11px] cursor-pointer" title="Mod Secret"><i class="fa-solid fa-user-secret"></i></button>
         </div>
     </header>
 
-    <!-- Popup Notiță -->
     <div id="quickNoteModal" class="fixed top-14 right-5 bg-panelBg border border-amberGlow/50 p-3 rounded-xl shadow-2xl z-50 w-64 hidden space-y-2">
         <div class="flex justify-between items-center border-b border-gray-800 pb-1">
             <span class="text-xs font-bold text-amberGlow">Notiță Rapidă</span>
@@ -115,10 +111,8 @@
         <textarea id="quickNoteText" rows="3" placeholder="Scrie aici..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none resize-none" oninput="saveQuickNoteState()"></textarea>
     </div>
 
-    <!-- Layout Principal -->
     <div class="flex flex-1 overflow-hidden z-10 relative">
         
-        <!-- Sidebar Principal (Stânga) -->
         <aside id="appSidebar" class="w-60 bg-panelBg border-r border-gray-800 flex flex-col shrink-0 p-3 overflow-y-auto space-y-2">
             <button onclick="newSession()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon text-darkBg text-xs font-bold py-2 px-2 rounded-xl flex items-center justify-center space-x-1.5 shadow cursor-pointer">
                 <i class="fa-solid fa-plus"></i><span>Sesiune Nouă</span>
@@ -144,10 +138,8 @@
             </div>
         </aside>
 
-        <!-- Conținut Dinamic Unelte -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
-            <!-- Tab 1: Chat General -->
             <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-xl max-w-2xl space-y-3">
                     <h2 class="font-bold text-sm text-cyanNeon flex items-center"><i class="fa-solid fa-comments mr-2"></i> Chat General cu Gemini AI</h2>
@@ -161,7 +153,6 @@
                 </div>
             </div>
 
-            <!-- Tab 2: TikTok Studio -->
             <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-xl max-w-2xl space-y-3">
                     <h2 class="font-bold text-sm text-tiktokColor flex items-center"><i class="fa-brands fa-tiktok mr-2"></i> TikTok AI Creator & Studio</h2>
@@ -169,11 +160,11 @@
                         <input type="text" id="tiktokTopic" placeholder="Subiect sau nișă TikTok..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
                         <button onclick="callServerAI('tiktokTopic', 'tiktokResult', 'Generează 3 hook-uri virale, o descriere captivantă și hashtag-uri pentru TikTok despre:')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer w-full">Generează cu Gemini AI</button>
                         <div id="tiktokResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[80px] whitespace-pre-line">Așteptare comandă...</div>
+                        <button onclick="downloadResult('tiktokResult', 'tiktok-scenariu.txt')" class="text-[11px] text-cyanNeon hover:underline cursor-pointer"><i class="fa-solid fa-download mr-1"></i> Descarcă textul generat</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab 3: Instagram Studio -->
             <div id="tab-instaStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-instaColor/30 p-4 rounded-xl max-w-2xl space-y-3">
                     <h2 class="font-bold text-sm text-instaColor flex items-center"><i class="fa-brands fa-instagram mr-2"></i> Instagram AI Creator</h2>
@@ -181,11 +172,11 @@
                         <input type="text" id="instaTopic" placeholder="Subiect pentru Instagram..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
                         <button onclick="callServerAI('instaTopic', 'instaResult', 'Generează o descriere (caption) captivantă și idei pentru carusel Instagram despre:')" class="bg-instaColor text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer w-full">Generează cu Gemini AI</button>
                         <div id="instaResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[80px] whitespace-pre-line">Așteptare comandă...</div>
+                        <button onclick="downloadResult('instaResult', 'instagram-caption.txt')" class="text-[11px] text-cyanNeon hover:underline cursor-pointer"><i class="fa-solid fa-download mr-1"></i> Descarcă textul generat</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab 4: YouTube Studio -->
             <div id="tab-ytStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-ytColor/30 p-4 rounded-xl max-w-2xl space-y-3">
                     <h2 class="font-bold text-sm text-ytColor flex items-center"><i class="fa-brands fa-youtube mr-2"></i> YouTube AI Scriptwriter</h2>
@@ -193,11 +184,11 @@
                         <input type="text" id="ytTopic" placeholder="Titlu sau idee video YouTube..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
                         <button onclick="callServerAI('ytTopic', 'ytResult', 'Generează o structură de scenariu pentru YouTube cu titlu catchy, introducere și secțiuni principale despre:')" class="bg-ytColor text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer w-full">Generează cu Gemini AI</button>
                         <div id="ytResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[80px] whitespace-pre-line">Așteptare comandă...</div>
+                        <button onclick="downloadResult('ytResult', 'youtube-script.txt')" class="text-[11px] text-cyanNeon hover:underline cursor-pointer"><i class="fa-solid fa-download mr-1"></i> Descarcă scenariul</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab 5: European Translator Hub -->
             <div id="tab-euroTranslator" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-euroBlue/40 p-4 rounded-xl max-w-2xl space-y-3">
                     <h2 class="font-bold text-sm text-euroBlue flex items-center"><i class="fa-solid fa-language mr-2"></i> European Translator & Multilingual Hub</h2>
@@ -239,7 +230,6 @@
                 </div>
             </div>
 
-            <!-- Tab 6: Hashtag & SEO -->
             <div id="tab-hashtagStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-violetPop/30 p-4 rounded-xl space-y-2 max-w-xl">
                     <h2 class="font-bold text-sm text-violetPop flex items-center"><i class="fa-solid fa-hashtag mr-2"></i> Hashtag & SEO Generator</h2>
@@ -251,7 +241,6 @@
                 </div>
             </div>
 
-            <!-- Tab 7: Calendar Editorial -->
             <div id="tab-editorialStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl">
                     <div class="bg-panelBg border border-gray-800 p-3 rounded-xl space-y-2">
@@ -266,7 +255,6 @@
                 </div>
             </div>
 
-            <!-- Tab 8: A/B Testing -->
             <div id="tab-abTestingStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-xl space-y-2 max-w-xl">
                     <h2 class="font-bold text-sm text-cyanNeon flex items-center"><i class="fa-solid fa-vials mr-2"></i> A/B Testing Titluri</h2>
@@ -276,7 +264,6 @@
                 </div>
             </div>
 
-            <!-- Tab 9: Abonamente & Plată cu Cardul -->
             <div id="tab-pricingStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
                 <div class="max-w-4xl w-full space-y-4">
                     <div class="text-center space-y-1">
@@ -328,7 +315,6 @@
                 </div>
             </div>
 
-            <!-- Tab 10: Retro Snake Arcade -->
             <div id="tab-arcadeStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 flex flex-col items-center justify-center space-y-3">
                 <div class="bg-panelBg border border-emeraldNeon/30 p-6 rounded-2xl flex flex-col items-center space-y-3 shadow-xl">
                     <h2 class="text-sm font-bold text-emeraldNeon"><i class="fa-solid fa-gamepad mr-2"></i> Retro Snake Arcade</h2>
@@ -337,7 +323,6 @@
                 </div>
             </div>
 
-            <!-- Tab 11: Cont & Login -->
             <div id="tab-authAccount" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6 items-center justify-center">
                 <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-2xl max-w-md w-full space-y-4 shadow-xl">
                     <h2 class="text-base font-bold text-white text-center">Autentificare Cont</h2>
@@ -350,7 +335,6 @@
 
         </main>
 
-        <!-- Panou Lateral AI (Dreapta) -->
         <aside id="aiSidebarPanel" class="w-80 bg-panelBg border-l border-gray-800 flex flex-col shrink-0 transition-all duration-300 z-20">
             <div class="p-3 border-b border-gray-800 flex items-center justify-between bg-gray-900/50">
                 <span class="text-xs font-bold text-cyanNeon flex items-center"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Asistent AI Principal</span>
@@ -377,7 +361,6 @@
 
     </div>
 
-    <!-- Buton Plutitor Chat -->
     <button id="floatingChatBtn" onclick="toggleAiSidebar()" class="fixed bottom-5 right-5 w-12 h-12 bg-gradient-to-tr from-emeraldNeon to-cyanNeon text-darkBg rounded-full shadow-2xl flex items-center justify-center text-lg font-bold cursor-pointer hidden z-50 hover:scale-110 transition">
         <i class="fa-solid fa-robot"></i>
     </button>
@@ -391,7 +374,6 @@
             if(clockEl) clockEl.innerText = now.toLocaleTimeString('ro-RO');
         }, 1000);
 
-        // Funcție generală pentru apelarea serverului (ascunde cheia pe backend)
         async function fetchFromServer(promptText) {
             const res = await fetch('/api/generate', {
                 method: 'POST',
@@ -486,6 +468,19 @@
             } catch(err) {
                 resBox.innerHTML = `<span class="text-red-400">Eroare: ${err.message}</span>`;
             }
+        }
+
+        function downloadResult(elementId, filename) {
+            const text = document.getElementById(elementId).innerText;
+            if(!text || text.includes('Așteptare comandă')) return showToast('Nu există conținut de descărcat!', 'error');
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Fișier descărcat cu succes! 📁', 'success');
         }
 
         function toggleQuickNotePopup() {
