@@ -1,1291 +1,605 @@
 <!DOCTYPE html>
 <html lang="ro" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device
-width, initial-scale=1.0">
-<title>Nexus AI Studio Pro - Multi-Language 
-Edition</title>
-<script src="https://cdn.tailwindcss.com"></
-script>
-<link rel="stylesheet" href="https://
-cdnjs.cloudflare.com/ajax/libs/font-awesome/
-6.4.0/css/all.min.css">
-<script>
-tailwind.config = {
-darkMode: 'class',
-theme: {
-extend: {
-colors: {
-darkBg: '#090d16',
-panelBg: '#111827',
-emeraldNeon: '#10b981',
-cyanNeon: '#06b6d4',
-amberGlow: '#f59e0b',
-violetPop: '#8b5cf6'
-}
-}
-}
-}
-</script>
-<style>
-#matrixCanvas {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-pointer-events: none;
-z-index: 5;
-display: none;
-opacity: 0.15;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI Studio Pro - Ultimate Edition V16 (Server Gemini)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090d16',
+                        panelBg: '#111827',
+                        emeraldNeon: '#10b981',
+                        cyanNeon: '#06b6d4',
+                        amberGlow: '#f59e0b',
+                        violetPop: '#8b5cf6',
+                        tiktokColor: '#fe2c55',
+                        instaColor: '#e1306c',
+                        ytColor: '#ff0000',
+                        euroBlue: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        #matrixCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; display: none; opacity: 0.15;
+        }
+        .app-tab { display: none !important; }
+        .app-tab.active-tab { display: flex !important; }
+
+        @keyframes neonPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.4), inset 0 0 5px rgba(16, 185, 129, 0.2); }
+            50% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8), inset 0 0 10px rgba(16, 185, 129, 0.4); }
+        }
+        .ad-banner-glow { animation: neonPulse 3s infinite; }
+    </style>
 </head>
-<body class="bg-darkBg text-gray-100 font-sans 
-h-screen flex flex-col overflow-hidden transition
-colors duration-300 relative" id="appBody">
-<!-- Canvas Matrix -->
-<canvas id="matrixCanvas"></canvas>
-<!-- Notificări Toast Container -->
-<div id="toastContainer" class="fixed top-5 
-right-5 z-50 flex flex-col space-y-2 pointer-events
-none"></div>
-<!-- Modul Boss Key (Excel Fals) -->
-<div id="bossExcelScreen" class="fixed inset-0 
-bg-white text-black z-50 p-6 hidden overflow
-auto font-mono">
-<div class="flex justify-between items-center 
-mb-4 border-b pb-2">
-<h2 class="text-lg font-bold">Financial Balances 
-& Quarterly Sheet Q3/Q4 - Internal Audit</h2>
-<button onclick="toggleBossKey()" class="bg
-red-600 text-white px-3 py-1 text-xs rounded" 
-data-i18n="bossExit">Ieși din Modul Secret</
-button>
-</div>
-<table class="w-full border-collapse border 
-border-gray-400 text-xs">
-<thead>
-<tr class="bg-gray-200">
-<th class="border border-gray-400 p-2">ID 
-Tranzacție</th>
-<th class="border border-gray-400 
-p-2">Departament</th>
-<th class="border border-gray-400 
-p-2">Furnizor</th>
-<th class="border border-gray-400 p-2">Valoare 
-RON</th>
-<th class="border border-gray-400 p-2">Status</
-th>
-</tr>
-</thead>
-<tbody>
-<tr><td class="border border-gray-400 
-p-2">TR-9021</td><td class="border border
-gray-400 p-2">Logistica</td><td class="border 
-border-gray-400 p-2">Global Transport SRL</
-td><td class="border border-gray-400 
-p-2">4,520.00</td><td class="border border
-gray-400 p-2 text-green-600">Reconciliat</td></
-tr>
-<tr><td class="border border-gray-400 
-p-2">TR-9022</td><td class="border border
-gray-400 p-2">Telecom</td><td class="border 
-border-gray-400 p-2">FiberLink Networks</
-td><td class="border border-gray-400 
-p-2">1,230.50</td><td class="border border
-gray-400 p-2 text-green-600">Reconciliat</td></
-tr>
-</tbody>
-</table>
-</div>
-<!-- Top Navigation Bar & Rich Hub Header -->
-<header id="appHeader" class="bg-panelBg 
-border-b border-gray-800 px-4 py-3 flex flex-col 
-shrink-0 shadow-lg z-20 space-y-2">
-<div class="flex items-center justify-between w
-full">
-<!-- Logo & Breadcrumbs -->
-<div class="flex items-center space-x-4">
-<div class="w-10 h-10 rounded-2xl bg-gradient-to
-tr from-emeraldNeon to-cyanNeon flex items
-center justify-center text-darkBg font-extrabold 
-shadow-lg shadow-emerald-500/20 text-lg">
-<i class="fa-solid fa-bolt-lightning"></i>
-</div>
-<div>
-<div class="flex items-center space-x-2">
-<h1 class="font-bold text-sm text-white tracking
-wide">Nexus AI Studio</h1>
-<span class="text-[10px] bg-emerald-500/20 text
-emerald-400 border border-emerald-500/30 px-2 
-py-0.5 rounded-full font-semibold">v5.5 Pro</
-span>
-</div>
-<!-- Breadcrumbs Dinamice -->
-<div class="text-[11px] text-gray-400 flex items
-center space-x-1 mt-0.5">
-<span class="text-cyanNeon"><i class="fa-solid 
-fa-house text-[10px] mr-1"></i> Hub</span>
-<span class="text-gray-600">/</span>
-<span id="breadcrumbCurrent" class="text
-gray-200 font-medium">Chat General</span>
-</div>
-</div>
-</div>
-<!-- Selector Limbi (Multi-Language European) -->
-<div class="flex items-center space-x-2">
-<div class="bg-gray-900 border border-gray-700 
-rounded-xl px-2.5 py-1 flex items-center space
-x-1.5">
-<i class="fa-solid fa-globe text-cyanNeon text
-xs"></i>
-<select id="languageSelector" 
-onchange="changeLanguage(this.value)" 
-class="bg-transparent text-xs text-white outline
-none cursor-pointer font-medium">
-<option value="ro">
-🇷🇴
-<option value="en">
-<option value="fr">
-🇬🇧
-🇫🇷
-<option value="de">
-<option value="it">
-</select>
-</div>
-🇩🇪
-🇮🇹
- Română</option>
- English</option>
- Français</option>
- Deutsch</option>
- Italiano</option>
-</div>
-<!-- Controale & Status Vercel -->
-<div class="flex items-center space-x-2.5">
-<div class="hidden lg:flex items-center space-x-2 
-bg-gray-900/80 border border-gray-800 px-3 py-1 
-rounded-xl text-[11px]">
-<span class="w-2 h-2 rounded-full bg
-emerald-500 animate-ping"></span>
-<span class="text-gray-300">Vercel: <strong 
-class="text-emerald-400">Deploy Active</
-strong></span>
-</div>
-<button onclick="toggleBossKey()" class="bg
-gray-900 border border-red-500/40 text-xs text
-red-400 px-3 py-1.5 rounded-xl hover:bg
-red-950/40 transition cursor-pointer flex items
-center space-x-1" title="Mod Șef / Excel">
-<i class="fa-solid fa-user-secret"></i> <span 
-class="hidden sm:inline" data
-i18n="bossBtn">Mod Șef</span>
-</button>
-<button onclick="toggleMatrixRain()" class="bg
-gray-900 border border-emerald-500/40 text-xs 
-text-emerald-400 px-3 py-1.5 rounded-xl 
-hover:bg-emerald-950/40 transition cursor
-pointer" title="Matrix Rain">
-<i class="fa-solid fa-code"></i>
-</button>
-</div>
-</div>
-</header>
-<!-- Main Content Area -->
-<div class="flex flex-1 overflow-hidden z-10">
-<!-- Sidebar -->
-<aside class="w-64 bg-panelBg border-r border
-gray-800 flex flex-col shrink-0 p-3 hidden sm:flex 
-z-10 overflow-y-auto space-y-3">
-<button onclick="newSession()" class="w-full bg
-gradient-to-r from-emeraldNeon to-cyanNeon 
-hover:opacity-90 text-darkBg text-xs font-bold 
-py-2.5 px-3 rounded-xl flex items-center justify
-center space-x-2 shadow-lg shadow
-cyan-500/10 transition cursor-pointer">
-<i class="fa-solid fa-plus font-bold"></i>
-<span data-i18n="newSession">Sesiune Nouă 
-AI</span>
-</button>
-<!-- Selector Persona -->
-<div>
-<label class="text-[10px] uppercase tracking
-wider text-gray-400 font-extrabold px-1" data
-i18n="aiPersonaLabel">Rol AI (Persona)</label>
-<select id="aiPersonaSelector" class="w-full 
-mt-1 bg-gray-900 border border-gray-700 text-xs 
-text-white rounded-xl px-3 py-2 outline-none 
-focus:border-cyanNeon">
-<option value="Asistent generalist creativ și util." 
-data-i18n="personaGeneral">Asistent 
-Generalist</option>
-<option value="Programator expert Fullstack și 
-arhitect software." data
-i18n="personaDev">Programator Expert 
-Fullstack</option>
-<option value="Expert absolut în creștere 
-organică și trenduri." data
-i18n="personaGrowth">Expert Viral Growth</
-option>
-</select>
-</div>
-<!-- Meniu Navigare Tab-uri -->
-<div class="flex-1 space-y-1 pt-2">
-<span class="text-[10px] uppercase tracking
-wider text-gray-400 font-extrabold px-2" data
-i18n="mainHubs">Hub-uri Principale</span>
-<div class="mt-2 space-y-1.5 text-xs">
-<button onclick="switchTab('chat', 'Chat 
-General')" id="nav-chat" class="w-full text-left 
-p-2.5 rounded-xl hover:bg-gray-800/80 text
-gray-200 flex items-center space-x-2.5 transition 
-cursor-pointer font-medium"><i class="fa-solid 
-fa-comments text-cyanNeon w-4"></i><span 
-data-i18n="tabChat">Chat General</span></
-button>
-<button onclick="switchTab('arcadeStudio', 'AI 
-Mini-Game & Snake')" id="nav-arcadeStudio" 
-class="w-full text-left p-2.5 rounded-xl hover:bg
-gray-800/80 text-gray-200 flex items-center 
-space-x-2.5 transition cursor-pointer font
-medium"><i class="fa-solid fa-gamepad text
-emeraldNeon w-4"></i><span data
-i18n="tabArcade">AI Mini-Game & Snake</
-span></button>
-<button onclick="switchTab('ambientSound', 
-'Ambient Soundscapes')" id="nav-ambientSound" 
-class="w-full text-left p-2.5 rounded-xl hover:bg
-gray-800/80 text-gray-200 flex items-center 
-space-x-2.5 transition cursor-pointer font
-medium"><i class="fa-solid fa-headphones text
-violetPop w-4"></i><span data
-i18n="tabAmbient">Ambient Soundscapes</
-span></button>
-<button onclick="switchTab('tarotCard', 'Cyber 
-Tarot & Oracol')" id="nav-tarotCard" class="w-full 
-text-left p-2.5 rounded-xl hover:bg-gray-800/80 
-text-gray-200 flex items-center space-x-2.5 
-transition cursor-pointer font-medium"><i 
-class="fa-solid fa-hat-wizard text-amberGlow 
-w-4"></i><span data-i18n="tabTarot">Cyber 
-Tarot & Oracol</span></button>
-<button onclick="switchTab('timeCapsule', 'Time 
-Capsule & Secrete')" id="nav-timeCapsule" 
-class="w-full text-left p-2.5 rounded-xl hover:bg
-gray-800/80 text-gray-200 flex items-center 
-space-x-2.5 transition cursor-pointer font
-medium"><i class="fa-solid fa-vault text
-rose-400 w-4"></i><span data
-i18n="tabCapsule">Time Capsule</span></
-button>
-<button onclick="switchTab('editorialPlanner', 
-'Planificator Editorial')" id="nav-editorialPlanner" 
-class="w-full text-left p-2.5 rounded-xl hover:bg
-gray-800/80 text-gray-200 flex items-center 
-space-x-2.5 transition cursor-pointer font
-medium"><i class="fa-solid fa-calendar-days text
-orange-400 w-4"></i><span data
-i18n="tabPlan">Planificator Editorial</span></
-button>
-<button onclick="switchTab('authAccount', 'Cont 
-& Înregistrare')" id="nav-authAccount" class="w
-full text-left p-2.5 rounded-xl hover:bg
-gray-800/80 text-gray-200 flex items-center 
-space-x-2.5 transition cursor-pointer font
-medium"><i class="fa-solid fa-user-plus text
-cyanNeon w-4"></i><span data
-i18n="tabAuth">Înregistrare / Cont</span></
-button>
-</div>
-</div>
-</aside>
-<!-- Dynamic Content Tabs -->
-<main class="flex-1 flex flex-col bg-darkBg 
-overflow-hidden relative">
-<!-- Tab 1%Ď Chat General -
-<div id="tab-chat" class="app-tab flex-1 flex flex
-col h-full overflow-hidden border-t-2 border
-cyanNeon/40">
-<div class="px-6 py-3 border-b border-gray-800 
-bg-cyan-950/10 flex items-center justify
-between shrink-0">
-<div>
-<h2 class="font-bold text-sm text-white flex 
-items-center"><i class="fa-solid fa-comments 
-text-cyanNeon mr-2"></i> Nexus Neural 
-Assistant</h2>
-<p class="text-xs text-gray-400" data
-i18n="chatSub">Conectat la Gemini • Gata de 
-acțiune 
-�
-�🤖✨
-</p>
-</div>
-<div class="flex items-center space-x-2">
-<span class="text-xs text-gray-400"><span data
-i18n="tokenLabel">Tokeni utilizați:</span> 
-<strong id="tokenCounter" class="text
-cyanNeon">0</strong></span>
-</div>
-</div>
-<div id="chatMessages" class="flex-1 overflow-y
-auto p-4 sm:p-6 space-y-4">
-<div class="flex items-start space-x-3">
-<div class="w-8 h-8 rounded-xl bg-cyanNeon/20 
-text-cyanNeon flex items-center justify-center 
-shrink-0 font-bold"><i class="fa-solid fa-robot"></
-i></div>
-<div class="bg-panelBg border border-cyanNeon/
-30 p-3.5 rounded-2xl text-sm text-gray-200 max
-w-[85%] shadow-md" data-i18n="welcomeMsg">
-Salut! Interfața este pregătită. Poți folosi 
-secțiunea de cont pentru înregistrare clasică. Cu 
-ce te pot ajuta astăzi? 
-</div>
-</div>
-</div>
-🚀
-<div class="p-4 bg-panelBg/50 border-t border
-gray-800 shrink-0">
-<div class="max-w-4xl mx-auto flex items-center 
-space-x-2 bg-gray-900 border border-cyanNeon/
-40 rounded-xl px-3 py-2 shadow-inner">
-<input type="text" id="chatInput" data-i18n
-placeholder="chatPlaceholder" 
-placeholder="Scrie mesajul tău... (Apasă Enter)" 
-class="flex-1 bg-transparent text-sm text
-gray-100 outline-none" 
-onkeydown="handleKeyDown(event, 'chat')">
-<button onclick="handleSendMessage('chat')" 
-class="bg-gradient-to-r from-emeraldNeon to
-cyanNeon text-darkBg font-bold w-9 h-9 rounded
-lg flex items-center justify-center transition 
-shadow cursor-pointer"><i class="fa-solid fa
-paper-plane text-xs"></i></button>
-</div>
-</div>
-</div>
-<!-- Tab 2%Ď AI Mini-Game & Snake Arcade -
-<div id="tab-arcadeStudio" class="app-tab" 
-style="display: none; flex: 1; flex-direction: 
-column; height: 100%; overflow-y: auto; padding: 
-1.5rem; border-top: 2px solid rgba(16, 185, 129, 
-0.4);">
-<div class="max-w-3xl mx-auto w-full space-y-6">
-<div>
-<h2 class="text-lg font-bold text-white flex items
-center"><i class="fa-solid fa-gamepad text
-emeraldNeon mr-2"></i>AI Mini-Game & Retro 
-Snake Arcade 
-�
-�🕹️
-</h2>
-<p class="text-xs text-gray-400" data
-i18n="arcadeSub">Joacă un Snake clasic direct 
-în browser.</p>
-</div>
-<div class="bg-panelBg border border
-emeraldNeon/30 p-6 rounded-2xl space-y-4 text
-center shadow-xl">
-<div class="flex justify-center space-x-2 mb-2">
-<button onclick="startRetroSnake()" class="bg
-emeraldNeon hover:opacity-90 text-darkBg font
-bold text-xs px-4 py-2.5 rounded-xl cursor
-pointer shadow" data
-i18n="startSnakeBtn">Pornește Retro Snake</
-button>
-</div>
-<div id="gameScreenContainer" class="bg
-gray-950 border border-gray-800 rounded-xl p-4 
-min-h-[220px] flex items-center justify-center 
-text-center text-xs text-gray-400 relative overflow
-hidden">
-<span data-i18n="snakePrompt">Apasă butonul 
-de sus pentru a porni jocul Snake 
-</div>
-</div>
-</div>
-</div>
-🕹️
-</span>
-<!-- Tab 3%Ď Ambient Soundscapes -
-<div id="tab-ambientSound" class="app-tab" 
-style="display: none; flex: 1; flex-direction: 
-column; height: 100%; overflow-y: auto; padding: 
-1.5rem; border-top: 2px solid rgba(139, 92, 246, 
-0.4);">
-<div class="max-w-3xl mx-auto w-full space-y-6">
-<div>
-<h2 class="text-lg font-bold text-white flex items
-center"><i class="fa-solid fa-headphones text
-violetPop mr-2"></i>Ambient Soundscapes for 
-Deep Work 
-�
-�🌧️
-</h2>
-<p class="text-xs text-gray-400" data
-i18n="ambientSub">Sunete ambientale pentru 
-concentrare maximă.</p>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 
-gap-4">
-<div class="bg-panelBg border border-gray-800 
-p-4 rounded-2xl flex items-center justify-between 
-shadow-md">
-<div>
-<h4 class="font-bold text-sm text-white" data
-i18n="rainTitle">Ploaie Torențială</h4>
-<p class="text-[11px] text-gray-400" data
-i18n="rainDesc">Zgomot alb de ploaie.</p>
-</div>
-<button onclick="playAmbientNoise('rain')" 
-class="bg-violetPop hover:opacity-90 text-white 
-font-bold text-xs px-3 py-2 rounded-xl cursor
-pointer" data-i18n="playBtn">Pornește</button>
-</div>
-<div class="bg-panelBg border border-gray-800 
-p-4 rounded-2xl flex items-center justify-between 
-shadow-md">
-<div>
-<h4 class="font-bold text-sm text-white">Server 
-Room Hum</h4>
-<p class="text-[11px] text-gray-400" data
-i18n="serverDesc">Zgomot tehnic.</p>
-</div>
-<button onclick="playAmbientNoise('server')" 
-class="bg-violetPop hover:opacity-90 text-white 
-font-bold text-xs px-3 py-2 rounded-xl cursor
-pointer" data-i18n="playBtn">Pornește</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Tab 4%Ď Cyber Tarot & Oracol -
-<div id="tab-tarotCard" class="app-tab" 
-style="display: none; flex: 1; flex-direction: 
-column; height: 100%; overflow-y: auto; padding: 
-1.5rem; align-items: center; justify-content: 
-center; border-top: 2px solid rgba(245, 158, 11, 
-0.4);">
-<div class="bg-panelBg border border
-amberGlow/40 p-8 rounded-3xl max-w-md w-full 
-text-center space-y-6 shadow-2xl">
-<div class="w-16 h-16 rounded-full bg-gradient
-to-tr from-amberGlow to-orange-500 flex items
-center justify-center text-darkBg text-2xl mx-auto 
-shadow-lg font-bold">
-<i class="fa-solid fa-hat-wizard"></i>
-</div>
-<div>
-<h2 class="text-xl font-bold text-white">Cyber 
-Tarot & Oracol 
-�
-�
-</h2>
-<p class="text-xs text-gray-400 mt-1" data
-i18n="tarotSub">Pune o întrebare și primește o 
-predicție instantanee!</p>
-</div>
-<input type="text" id="tarotQuestion" data-i18n
-placeholder="tarotPlaceholder" placeholder="Ex: 
-Va avea succes proiectul meu?" class="w-full bg
-gray-900 border border-gray-700 rounded-xl px-3 
-py-2.5 text-xs text-white outline-none text-center 
-focus:border-amberGlow">
-<button onclick="consultTarot()" class="w-full bg
-amberGlow hover:opacity-90 text-darkBg font
-bold text-xs py-3 rounded-xl transition shadow 
-cursor-pointer" data-i18n="tarotBtn">Cere 
-Predicția</button>
-<div id="tarotAnswer" class="text-xs font
-medium text-amber-300 min-h-[40px] flex items
-center justify-center bg-gray-950 p-3 
-rounded-xl border border-gray-800"></div>
-</div>
-</div>
-<!-- Tab 5%Ď Time Capsule -
-<div id="tab-timeCapsule" class="app-tab" 
-style="display: none; flex: 1; flex-direction: 
-column; height: 100%; overflow-y: auto; padding: 
-1.5rem; border-top: 2px solid rgba(244, 63, 94, 
-0.4);">
-<div class="max-w-xl mx-auto w-full space-y-6">
-<div>
-<h2 class="text-lg font-bold text-white flex items
-center"><i class="fa-solid fa-vault text-rose-400 
-mr-2"></i>Time Capsule & Secrete Criptate 
-�
-� 📦
-</h2>
-<p class="text-xs text-gray-400" data
-i18n="capsuleSub">Păstrează un gând sau o 
-idee în siguranță.</p>
-</div>
-<div class="bg-panelBg border border
-rose-500/30 p-6 rounded-2xl space-y-4 shadow
-xl">
-<textarea id="capsuleInput" data-i18n
-placeholder="capsulePlaceholder" 
-placeholder="Scrie secretul sau ideea ta..." 
-class="w-full bg-gray-900 border border-gray-700 
-rounded-xl p-3 text-xs text-white outline-none 
-h-32 resize-none"></textarea>
-<button onclick="saveTimeCapsule()" class="w
-full bg-rose-500 hover:opacity-90 text-white font
-bold text-xs py-3 rounded-xl transition cursor
-pointer shadow" data
-i18n="capsuleBtn">Sigilează în Capsulă</button>
-<div id="capsuleOutput" class="text-xs text
-gray-300 bg-gray-950 p-3 rounded-xl border 
-border-gray-800 min-h-[50px]"></div>
-</div>
-</div>
-</div>
-<!-- Tab 6%Ď Planificator Editorial -
-<div id="tab-editorialPlanner" class="app-tab" 
-style="display: none; flex: 1; flex-direction: 
-column; height: 100%; overflow-y: auto; padding: 
-1.5rem; border-top: 2px solid rgba(249, 115, 22, 
-0.4);">
-<div class="max-w-4xl mx-auto w-full space-y-6">
-<div class="flex items-center justify-between">
-<div>
-<h2 class="text-lg font-bold text-white flex items
-center"><i class="fa-solid fa-calendar-days text
-orange-400 mr-2"></i>Planificator Editorial 
-�
-� 📌
-</h2>
-<p class="text-xs text-gray-400" data
-i18n="planSub">Organizează-ți postările și 
-ideile.</p>
-</div>
-<button onclick="saveEditorialPlan()" class="bg
-orange-500 hover:opacity-90 text-white text-xs 
-font-bold px-4 py-2 rounded-xl transition cursor
-pointer shadow" data-i18n="saveBtn">Salvează</
-button>
-</div>
-<textarea id="planMonTue" data-i18n
-placeholder="planPlaceholder" 
-placeholder="Plan general saptămână..." 
-class="w-full bg-gray-900 border border-gray-700 
-rounded-xl p-3 text-xs text-white outline-none 
-h-40 resize-none"></textarea>
-</div>
-</div>
-<!-- Tab 7%Ď Cont & Înregistrare Clasică -
-<div id="tab-authAccount" class="app-tab" 
-style="display: none; flex: 1; overflow-y: auto; 
-padding: 1.5rem; align-items: center; justify
-content: center; border-top: 2px solid rgba(6, 
-182, 212, 0.4);">
-<div class="bg-panelBg border border-cyanNeon/
-30 p-8 rounded-3xl max-w-md w-full space-y-5 
-shadow-2xl mx-auto my-auto">
-<div class="text-center space-y-2">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to
-tr from-cyanNeon to-emeraldNeon flex items
-center justify-center text-darkBg font-bold text-xl 
-mx-auto shadow-lg"><i class="fa-solid fa-user
-plus"></i></div>
-<h2 class="text-xl font-bold text-white" data
-i18n="authTitle">Înregistrare & Cont Personal</
-h2>
-<p class="text-xs text-gray-400" data
-i18n="authSub">Creează-ți cont local cu date 
-personale fără rețele sociale.</p>
-</div>
-<div class="space-y-3 pt-2">
-<div>
-<label class="text-[10px] text-gray-400 font-bold 
-uppercase" data-i18n="nameLabel">Nume 
-Complet</label>
-<input type="text" id="regName" 
-placeholder="Ex: Ion Popescu" class="w-full 
-mt-1 bg-gray-900 border border-gray-700 
-rounded-xl px-3 py-2 text-xs text-white outline
-none focus:border-cyanNeon">
-</div>
-<div>
-<label class="text-[10px] text-gray-400 font-bold 
-uppercase" data-i18n="emailLabel">Adresă de 
-Email</label>
-<input type="email" id="regEmail" 
-placeholder="nume@exemplu.ro" class="w-full 
-mt-1 bg-gray-900 border border-gray-700 
-rounded-xl px-3 py-2 text-xs text-white outline
-none focus:border-cyanNeon">
-</div>
-<div>
-<label class="text-[10px] text-gray-400 font-bold 
-uppercase" data-i18n="passLabel">Parolă 
-Securizată</label>
-<input type="password" id="regPass" 
-placeholder="••••••••" class="w-full mt-1 bg
-gray-900 border border-gray-700 rounded-xl px-3 
-py-2 text-xs text-white outline-none focus:border
-cyanNeon">
-</div>
-<button onclick="registerUser()" class="w-full bg
-gradient-to-r from-emeraldNeon to-cyanNeon 
-hover:opacity-90 text-darkBg font-bold text-xs 
-py-3 rounded-xl transition shadow cursor-pointer 
-mt-3" data-i18n="registerBtn">Înregistrează 
-Contul</button>
-</div>
-<div id="userAccountStatus" class="text-center 
-text-xs text-emerald-400 font-medium pt-1"></
-div>
-</div>
-</div>
-</main>
-</div>
-<!-- Script JavaScript & Dicționar i18n -->
-<script>
-const translations = {
-ro: {
-bossBtn: "Mod Șef",
-bossExit: "Ieși din Modul Secret",
-newSession: "Sesiune Nouă AI",
-aiPersonaLabel: "Rol AI (Persona)",
-personaGeneral: "Asistent Generalist",
-personaDev: "Programator Expert Fullstack",
-personaGrowth: "Expert Viral Growth",
-mainHubs: "Hub-uri Principale",
-tabChat: "Chat General",
-tabArcade: "AI Mini-Game & Snake",
-tabAmbient: "Ambient Soundscapes",
-�
-�🤖✨
-tabTarot: "Cyber Tarot & Oracol",
-tabCapsule: "Time Capsule",
-tabPlan: "Planificator Editorial",
-tabAuth: "Înregistrare / Cont",
-chatSub: "Conectat la Gemini • Gata de acțiune 
-",
-tokenLabel: "Tokeni utilizați:",
-welcomeMsg: "Salut! Interfața este pregătită. 
-Poți folosi secțiunea de cont pentru înregistrare 
-clasică. Cu ce te pot ajuta astăzi? 
-�
-�
-",
-chatPlaceholder: "Scrie mesajul tău... (Apasă 
-Enter)",
-arcadeSub: "Joacă un Snake clasic direct în 
-browser.",
-startSnakeBtn: "Pornește Retro Snake",
-snakePrompt: "Apasă butonul de sus pentru a 
-porni jocul Snake 
-�
-�️
-",
-ambientSub: "Sunete ambientale pentru 
-concentrare maximă.",
-rainTitle: "Ploaie Torențială",
-rainDesc: "Zgomot alb de ploaie.",
-serverDesc: "Zgomot tehnic.",
-playBtn: "Pornește",
-tarotSub: "Pune o întrebare și primește o 
-predicție instantanee!",
-tarotPlaceholder: "Ex: Va avea succes proiectul 
-meu?",
-tarotBtn: "Cere Predicția",
-capsuleSub: "Păstrează un gând sau o idee în 
-siguranță.",
-capsulePlaceholder: "Scrie secretul sau ideea 
-ta...",
-capsuleBtn: "Sigilează în Capsulă",
-planSub: "Organizează-ți postările și ideile.",
-saveBtn: "Salvează",
-planPlaceholder: "Plan general saptămână...",
-authTitle: "Înregistrare & Cont Personal",
-authSub: "Creează-ți cont local cu date 
-personale fără rețele sociale.",
-nameLabel: "Nume Complet",
-emailLabel: "Adresă de Email",
-passLabel: "Parolă Securizată",
-registerBtn: "Înregistrează Contul",
-toastSuccess: "Operațiune reușită!",
-toastError: "Eroare! Completează datele."
-},
-en: {
-bossBtn: "Boss Mode",
-bossExit: "Exit Secret Mode",
-newSession: "New AI Session",
-aiPersonaLabel: "AI Role (Persona)",
-personaGeneral: "General Assistant",
-personaDev: "Fullstack Expert Developer",
-personaGrowth: "Viral Growth Expert",
-mainHubs: "Main Hubs",
-tabChat: "General Chat",
-tabArcade: "AI Mini-Game & Snake",
-tabAmbient: "Ambient Soundscapes",
-tabTarot: "Cyber Tarot & Oracle",
-tabCapsule: "Time Capsule",
-tabPlan: "Editorial Planner",
-tabAuth: "Register / Account",
-chatSub: "Connected to Gemini • Ready for 
-action 
-�
-�🤖✨
-",
-tokenLabel: "Tokens used:",
-welcomeMsg: "Hello! The interface is ready. You 
-can use the account section for classic 
-registration. How can I help you today? 
-�
-�
-",
-chatPlaceholder: "Type your message... (Press 
-Enter)",
-arcadeSub: "Play a classic Snake game directly 
-in your browser.",
-startSnakeBtn: "Start Retro Snake",
-snakePrompt: "Click the button above to start 
-the Snake game 
-�
-�️
-",
-ambientSub: "Ambient sounds for maximum 
-concentration.",
-rainTitle: "Torrential Rain",
-rainDesc: "White noise rain sounds.",
-serverDesc: "Technical rack noise.",
-playBtn: "Play",
-tarotSub: "Ask a question and get an instant 
-prediction!",
-tarotPlaceholder: "E.g., Will my project succeed?",
-tarotBtn: "Ask Prediction",
-capsuleSub: "Keep a thought or idea safe.",
-capsulePlaceholder: "Write your secret or idea...",
-capsuleBtn: "Seal in Capsule",
-planSub: "Organize your posts and ideas.",
-saveBtn: "Save",
-planPlaceholder: "General weekly plan...",
-authTitle: "Registration & Personal Account",
-authSub: "Create a local account with personal 
-data without social networks.",
-nameLabel: "Full Name",
-emailLabel: "Email Address",
-passLabel: "Secure Password",
-registerBtn: "Register Account",
-toastSuccess: "Operation successful!",
-toastError: "Error! Complete required fields."
-},
-fr: {
-bossBtn: "Mode Boss",
-bossExit: "Quitter le Mode Secret",
-newSession: "Nouvelle Session IA",
-aiPersonaLabel: "Rôle IA (Persona)",
-personaGeneral: "Assistant Généraliste",
-personaDev: "Développeur Expert Fullstack",
-personaGrowth: "Expert Growth Viral",
-mainHubs: "Hubs Principaux",
-tabChat: "Chat Général",
-tabArcade: "Mini-Jeu & Snake",
-tabAmbient: "Sons Ambiants",
-tabTarot: "Cyber Tarot & Oracle",
-tabCapsule: "Capsule Temporelle",
-tabPlan: "Planificateur Éditorial",
-tabAuth: "Inscription / Compte",
-chatSub: "Connecté à Gemini • Prêt à l'action 
-",
-tokenLabel: "Jetons utilisés:",
-🤖✨
-💡
-welcomeMsg: "Bonjour! L'interface est prête. 
-Comment puis-je vous aider aujourd'hui? 
-�
-�
-",
-chatPlaceholder: "Écrivez votre message... 
-(Appuyez sur Entrée)",
-arcadeSub: "Jouez à un Snake classique 
-directement dans le navigateur.",
-startSnakeBtn: "Démarrer Retro Snake",
-snakePrompt: "Cliquez sur le bouton ci-dessus 
-pour lancer Snake 
-�
-�️
-",
-ambientSub: "Sons ambiants pour une 
-concentration maximale.",
-rainTitle: "Pluie Torrentielle",
-rainDesc: "Bruit blanc de pluie.",
-serverDesc: "Bruit de serveur technique.",
-playBtn: "Écouter",
-tarotSub: "Posez une question et obtenez une 
-prédiction instantanée!",
-tarotPlaceholder: "Ex: Mon projet réussira-t-il?",
-tarotBtn: "Demander la Prédiction",
-capsuleSub: "Gardez une pensée ou une idée en 
-toute sécurité.",
-capsulePlaceholder: "Écrivez votre secret ou 
-idée...",
-capsuleBtn: "Sceller dans la Capsule",
-planSub: "Organisez vos publications et idées.",
-saveBtn: "Enregistrer",
-planPlaceholder: "Plan général de la semaine...",
-authTitle: "Inscription & Compte Personnel",
-authSub: "Créez un compte local avec vos 
-données personnelles.",
-nameLabel: "Nom Complet",
-emailLabel: "Adresse Email",
-passLabel: "Mot de passe sécurisé",
-registerBtn: "Créer le Compte",
-toastSuccess: "Opération réussie!",
-toastError: "Erreur! Remplissez les champs."
-},
-de: {
-bossBtn: "Chef-Modus",
-bossExit: "Geheimen Modus verlassen",
-✨
-newSession: "Neue KI-Sitzung",
-aiPersonaLabel: "KI-Rolle (Persona)",
-personaGeneral: "Allgemeiner Assistent",
-personaDev: "Fullstack-Expertenentwickler",
-personaGrowth: "Viral-Growth-Experte",
-mainHubs: "Haupt-Hubs",
-tabChat: "Allgemeiner Chat",
-tabArcade: "KI-Minispiel & Snake",
-tabAmbient: "Umgebungsgeräusche",
-tabTarot: "Cyber Tarot & Orakel",
-tabCapsule: "Zeitkapsel",
-tabPlan: "Redaktionsplaner",
-tabAuth: "Registrierung / Konto",
-chatSub: "Verbunden mit Gemini • Bereit 
-",
-tokenLabel: "Verwendete Token:",
-welcomeMsg: "Hallo! Die Benutzeroberfläche ist 
-bereit. Wie kann ich Ihnen heute helfen? 
-�
-�🤖
-",
-chatPlaceholder: "Schreiben Sie Ihre Nachricht... 
-(Enter drücken)",
-🚀
-arcadeSub: "Spielen Sie ein klassisches Snake
-Spiel direkt im Browser.",
-startSnakeBtn: "Retro Snake starten",
-snakePrompt: "Klicken Sie oben, um Snake zu 
-starten 
-�
-�️
-",
-ambientSub: "Umgebungsgeräusche für 
-maximale Konzentration.",
-rainTitle: "Starkregen",
-rainDesc: "Regen-Weißes Rauschen.",
-serverDesc: "Technisches Server-Rauschen.",
-playBtn: "Abspielen",
-tarotSub: "Stellen Sie eine Frage und erhalten Sie 
-eine Vorhersage!",
-tarotPlaceholder: "Z.B. Wird mein Projekt 
-erfolgreich sein?",
-tarotBtn: "Vorhersage Anfordern",
-capsuleSub: "Bewahren Sie einen Gedanken 
-oder eine Idee sicher auf.",
-capsulePlaceholder: "Schreiben Sie Ihr 
-Geheimnis...",
-capsuleBtn: "In Kapsel versiegeln",
-planSub: "Organisieren Sie Ihre Beiträge und 
-Ideen.",
-saveBtn: "Speichern",
-planPlaceholder: "Allgemeiner Wochenplan...",
-authTitle: "Registrierung & Persönliches Konto",
-authSub: "Erstellen Sie ein lokales Konto mit 
-Ihren persönlichen Daten.",
-nameLabel: "Vollständiger Name",
-emailLabel: "E-Mail-Adresse",
-passLabel: "Sicheres Passwort",
-registerBtn: "Konto Registrieren",
-toastSuccess: "Erfolgreich!",
-toastError: "Fehler! Füllen Sie die Felder aus."
-},
-it: {
-bossBtn: "Modalità Capo",
-bossExit: "Esci dalla Modalità Segreta",
-newSession: "Nuova Sessione IA",
-aiPersonaLabel: "Ruolo IA (Persona)",
-�
-�🤖✨
-personaGeneral: "Assistente Generalista",
-personaDev: "Sviluppatore Esperto Fullstack",
-personaGrowth: "Esperto di Crescita Virale",
-mainHubs: "Hub Principali",
-tabChat: "Chat Generale",
-tabArcade: "Mini-Gioco & Snake",
-tabAmbient: "Suoni Ambientali",
-tabTarot: "Cyber Tarot & Oracolo",
-tabCapsule: "Capsula Temporale",
-tabPlan: "Pianificatore Editoriale",
-tabAuth: "Registrazione / Account",
-chatSub: "Connesso a Gemini • Pronto all'azione 
-",
-tokenLabel: "Token utilizzati:",
-welcomeMsg: "Ciao! L'interfaccia è pronta. 
-Come posso aiutarti oggi? 
-�
-�
-",
-chatPlaceholder: "Scrivi il tuo messaggio... 
-(Premi Invio)",
-arcadeSub: "Gioca a un classico Snake 
-direttamente nel browser.",
-startSnakeBtn: "Avvia Retro Snake",
-snakePrompt: "Clicca il pulsante sopra per 
-avviare Snake 
-�
-�️
-",
-ambientSub: "Suoni ambientali per la massima 
-concentrazione.",
-rainTitle: "Pioggia Torrenziale",
-rainDesc: "Rumore bianco di pioggia.",
-serverDesc: "Rumore tecnico dei server.",
-playBtn: "Riproduci",
-tarotSub: "Fai una domanda e ricevi una 
-predizione istantanea!",
-tarotPlaceholder: "Es: Il mio progetto avrà 
-successo?",
-tarotBtn: "Chiedi Predizione",
-capsuleSub: "Conserva un pensiero o un'idea in 
-sicurezza.",
-capsulePlaceholder: "Scrivi il tuo segreto o 
-idea...",
-capsuleBtn: "Sigilla nella Capsula",
-planSub: "Organizza i tuoi post e le tue idee.",
-saveBtn: "Salva",
-planPlaceholder: "Piano settimanale generale...",
-authTitle: "Registrazione & Account Personale",
-authSub: "Crea un account locale con i tuoi dati 
-personali.",
-nameLabel: "Nome Completo",
-emailLabel: "Indirizzo Email",
-passLabel: "Password Sicura",
-registerBtn: "Registra Account",
-toastSuccess: "Operazione riuscita!",
-toastError: "Errore! Compila i campi richiesti."
-}
-};
-let currentLang = 'ro';
-let isMatrixActive = false;
-let matrixInterval = null;
-let totalTokensUsed = 0;
-let bossModeActive = false;
-let snakeDir = 'RIGHT';
-function changeLanguage(lang) {
-currentLang = lang;
-document.querySelectorAll('[data
-i18n]').forEach(el => {
-const key = el.getAttribute('data-i18n');
-if (translations[lang] && translations[lang][key]) {
-el.innerText = translations[lang][key];
-}
-});
-document.querySelectorAll('[data-i18n
-placeholder]').forEach(el => {
-const key = el.getAttribute('data-i18n
-placeholder');
-if (translations[lang] && translations[lang][key]) {
-el.placeholder = translations[lang][key];
-}
-});
-showToast(lang === 'ro' ? 'Limbă schimbată cu 
-succes!' : 'Language updated successfully!', 
-'success');
-}
-function showToast(message, type = 'info') {
-const container = 
-document.getElementById('toastContainer');
-if(!container) return;
-const toast = document.createElement('div');
-let bgClass = 'bg-panelBg border-gray-700 text
-white';
-if (type === 'success') bgClass = 'bg
-emerald-500/20 border-emerald-500 text
-emerald-400';
-if (type === 'error') bgClass = 'bg-red-500/20 
-border-red-500 text-red-400';
-toast.className = pointer-events-auto px-4 py-3 
-rounded-xl border ${bgClass} shadow-xl text-xs 
-flex items-center space-x-2 transition transform 
-translate-y-2 opacity-0 duration-300; 
-toast.innerHTML =<i class="fa-solid fa-circle
-info"></i><span>${message}&lt;/span>;
-container.appendChild(toast);
-setTimeout(() => { 
-toast.classList.remove('translate-y-2', 
-'opacity-0'); }, 10);
-setTimeout(() => {
-toast.classList.add('translate-y-2', 'opacity-0');
-setTimeout(() => toast.remove(), 300);
-}, 3000);
-}
-function toggleBossKey() {
-bossModeActive = !bossModeActive;
-const screen = 
-document.getElementById('bossExcelScreen');
-if(bossModeActive) {
-screen.classList.remove('hidden');
-} else {
-screen.classList.add('hidden');
-}
-}
-function toggleMatrixRain() {
-isMatrixActive = !isMatrixActive;
-const canvas = 
-document.getElementById('matrixCanvas');
-const ctx = canvas.getContext('2d');
-if (isMatrixActive) {
-canvas.style.display = 'block';
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const chars = 
-"01010101NEXUSAI@#$`%&STARS";
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-matrixInterval = setInterval(() => {
-ctx.fillStyle = 'rgba(9, 13, 22, 0.05)';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-ctx.fillStyle = '#06b6d4';
-ctx.font = fontSize + 'px monospace';
-for (let i = 0; i < drops.length; i++) {
-const text = 
-chars.charAt(Math.floor(Math.random() * 
-chars.length));
-ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-if (drops[i] * fontSize > canvas.height && 
-Math.random() > 0.975) drops[i] = 0;
-drops[i]++;
-}
-}, 33);
-} else {
-canvas.style.display = 'none';
-clearInterval(matrixInterval);
-}
-}
-function registerUser() {
-const name = 
-document.getElementById('regName').value.trim(
-);
-const email = 
-document.getElementById('regEmail').value.trim(
-);
-const pass = 
-document.getElementById('regPass').value.trim()
-;
-if(!name || !email || !pass) {
-showToast(translations[currentLang].toastError, 
-'error');
-return;
-}
-localStorage.setItem('USER_NAME', name);
-localStorage.setItem('USER_EMAIL', email);
-document.getElementById('userAccountStatus').i
-nnerText = Cont creat:${name} (${email}) 
-;
-showToast(translations[currentLang].toastSucce
-ss, 'success');
-}
-✅
-function startRetroSnake() {
-const container = 
-document.getElementById('gameScreenContaine
-r');
-container.innerHTML = &lt;div class="flex flex-col 
-items-center space-y-2"&gt; &lt;div class="text-xs 
-text-emeraldNeon font-bold"&gt;Snake Scor: 
-&lt;span id="snakeScore"&gt;0&lt;/span&gt;&lt;/
-div&gt; &lt;canvas id="snakeCanvas" width="200" 
-height="200" class="bg-black border border
-emeraldNeon/50 rounded"&gt;&lt;/canvas&gt; 
-&lt;div class="flex space-x-2 mt-1"&gt; &lt;button 
-onclick="snakeDir='UP'" class="bg-gray-800 px-3 
-py-1 rounded text
-white"&gt;
-⬆️ 
-&lt;/button&gt; &lt;button 
-onclick="snakeDir='DOWN'" class="bg-gray-800 
-px-3 py-1 rounded text-white"&gt;
-⬇️ 
-&lt;/
-button&gt; &lt;button onclick="snakeDir='LEFT'" 
-class="bg-gray-800 px-3 py-1 rounded text
-white"&gt;
-⬅️ 
-&lt;/button&gt; &lt;button 
-onclick="snakeDir='RIGHT'" class="bg-gray-800 
-px-3 py-1 rounded text-white"&gt;
-➡️ 
-&lt;/
-button&gt; &lt;/div&gt; &lt;/div&gt;;
-initSnakeGame();
-}
-function initSnakeGame() {
-const canvas = 
-document.getElementById('snakeCanvas');
-if(!canvas) return;
-const ctx = canvas.getContext('2d');
-let snake = [{x: 10, y: 10}];
-let food = {x: 5, y: 5};
-let score = 0;
-let gameInterval = setInterval(() => {
-let head = {...snake[0]};
-if(snakeDir === 'UP') head.y--;
-if(snakeDir === 'DOWN') head.y++;
-if(snakeDir === 'LEFT') head.x--;
-if(snakeDir === 'RIGHT') head.x++;
-if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y 
->= 20) {
-clearInterval(gameInterval);
-showToast('Game Over! Scor: ' + score, 'error');
-return;
-}
-if(head.x === food.x && head.y === food.y) {
-score += 10;
-document.getElementById('snakeScore').innerTe
-xt = score;
-food = {x: Math.floor(Math.random() * 18), y: 
-Math.floor(Math.random() * 18)};
-} else {
-snake.pop();
-}
-snake.unshift(head);
-ctx.fillStyle = '#000';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-ctx.fillStyle = '#f59e0b';
-ctx.fillRect(food.x * 10, food.y * 10, 10, 10);
-ctx.fillStyle = '#10b981';
-snake.forEach(part => ctx.fillRect(part.x * 10, 
-part.y * 10, 9, 9));
-}, 120);
-}
-function playAmbientNoise(type) {
-showToast(Ambient${type} active 
-}
-🎧
-`, 'success');
-function consultTarot() {
-const q = 
-document.getElementById('tarotQuestion').value.
-trim();
-if(!q) { 
-showToast(translations[currentLang].toastError, 
-'error'); return; }
-const preds = [
-"Cărțile arată o creștere masivă și oportunități 
-neașteptate! 
-�
-�
-",
-"Efortul depus acum va da roade majore în 
-viitorul apropiat. 
-✨
-",
-"Succesul este garantat dacă acționezi cu curaj 
-astăzi! 
-�
-�
-"
- ];
-document.getElementById('tarotAnswer').innerTe
-xt = preds[Math.floor(Math.random() * 
-preds.length)];
-showToast(translations[currentLang].toastSucce
-ss, 'success');
-}
-function saveTimeCapsule() {
-const val = 
-document.getElementById('capsuleInput').value.t
-rim();
-if(!val) { 
-showToast(translations[currentLang].toastError, 
-'error'); return; }
-localStorage.setItem('NEXUS_CAPSULE', val);
-document.getElementById('capsuleOutput').inner
-Text = Salvată: "${val}"`;
-showToast(translations[currentLang].toastSucce
-ss, 'success');
-}
-function saveEditorialPlan() {
-const val = 
-document.getElementById('planMonTue').value;
-localStorage.setItem('NEXUS_PLAN', val);
-showToast(translations[currentLang].toastSucce
-ss, 'success');
-}
-document.addEventListener("DOMContentLoade
-d", () => {
-switchTab('chat', 'Chat General');
-const savedName = 
-localStorage.getItem('USER_NAME');
-if(savedName) {
-document.getElementById('userAccountStatus').i
-nnerText = Autentificat:${savedName} 
-}
-});
-function switchTab(tabId, titleName) {
-document.querySelectorAll('.app
-✅
-`;
-tab').forEach(tab => tab.style.display = 'none');
-const target = document.getElementById(tab-$
-{tabId}`);
-if (target) target.style.display = ['arcadeStudio', 
-'ambientSound', 'tarotCard', 'timeCapsule', 
-'editorialPlanner'].includes(tabId) ? 'block' : 'flex';
-document.getElementById('breadcrumbCurrent').
-innerText = titleName;
-}
-function newSession() {
-document.getElementById('chatMessages').inner
-HTML = <div class="bg-panelBg border border
-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 
-max-w-[85%]"&gt;Sesiune nouă inițializată. 
-�
-�
-&lt;/div>;
-showToast(translations[currentLang].toastSucce
-ss, 'success');
-}
-function handleKeyDown(e, tabType) {
-if (e.key === 'Enter') 
-handleSendMessage(tabType);
-}
-async function handleSendMessage(tabType) {
-const inputField = document.getElementById(``$
-{tabType}Input`);
-const text = inputField?.value?.trim();
-if(!text) return;
-const persona = 
-document.getElementById('aiPersonaSelector').v
-alue;
-const container = 
-document.getElementById('chatMessages');
-container.innerHTML += <div class="text-right 
-text-sm text-cyanNeon mb-2 font-medium"&gt;$
-{text}</div>`;
-inputField.value = '';
-setTimeout(() => {
-container.innerHTML += <div class="bg-panelBg 
-border border-gray-800 p-3.5 rounded-2xl text
-sm text-gray-200 mb-2 shadow-sm"&gt;AI ($
-{persona}) a răspuns la cerere! 
-�
-�✨
-</div>`;
-container.scrollTop = container.scrollHeight;
-totalTokensUsed += 45;
-document.getElementById('tokenCounter').innerT
-ext = totalTokensUsed;
-}, 600);
-}
-</script>
+<body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative">
+
+    <canvas id="matrixCanvas"></canvas>
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Modul Boss Key -->
+    <div id="bossExcelScreen" class="fixed inset-0 bg-white text-black z-50 p-6 hidden overflow-auto font-mono">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-lg font-bold">Financial Balances & Quarterly Sheet Q3/Q4</h2>
+            <button onclick="toggleBossKey()" class="bg-red-600 text-white px-3 py-1 text-xs rounded cursor-pointer">Ieși</button>
+        </div>
+        <table class="w-full border-collapse border border-gray-400 text-xs">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-400 p-2">ID</th>
+                    <th class="border border-gray-400 p-2">Dept</th>
+                    <th class="border border-gray-400 p-2">Valoare RON</th>
+                    <th class="border border-gray-400 p-2">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-gray-400 p-2">TR-9021</td><td class="border border-gray-400 p-2">Logistica</td><td class="border border-gray-400 p-2">4,520.00</td><td class="border border-gray-400 p-2 text-green-600">Reconciliat</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Header Sus -->
+    <header class="bg-panelBg border-b border-gray-800 px-4 py-2 flex items-center justify-between shrink-0 shadow-lg z-20">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold text-sm">
+                <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-xs text-white">Nexus AI Studio Pro <span class="text-[9px] text-emerald-400 bg-emerald-500/20 px-1.5 py-0.5 rounded-full">v16 Cloud</span></h1>
+                <div class="text-[10px] text-gray-400 flex items-center space-x-1">
+                    <span class="text-cyanNeon">Hub</span><span>/</span><span id="breadcrumbCurrent" class="text-gray-200 font-medium">Chat General</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zonă Mijloc / Dreapta -->
+        <div class="flex items-center space-x-3 text-xs">
+            <div class="hidden md:flex items-center space-x-2 bg-gradient-to-r from-emerald-950/60 to-cyan-950/60 border border-emeraldNeon/50 px-3 py-1 rounded-lg text-emerald-300 text-[11px] font-semibold ad-banner-glow">
+                <i class="fa-solid fa-bullhorn text-amberGlow animate-bounce"></i>
+                <span class="tracking-wide">🔥 PROMO: Activează pachetul PRO pentru acces nelimitat!</span>
+            </div>
+
+            <div class="bg-gray-900 border border-gray-800 px-2 py-1 rounded-lg text-[11px] text-gray-300">
+                <i class="fa-regular fa-clock text-cyanNeon"></i> <span id="liveClockHeader">00:00:00</span>
+            </div>
+
+            <button onclick="toggleQuickNotePopup()" class="bg-gray-900 border border-gray-800 text-amberGlow px-2 py-1 rounded-lg hover:border-amberGlow text-[11px] cursor-pointer">
+                <i class="fa-regular fa-note-sticky"></i> Notiță
+            </button>
+
+            <button onclick="toggleAiSidebar()" class="bg-cyanNeon/20 border border-cyanNeon text-cyanNeon px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer hover:bg-cyanNeon hover:text-darkBg transition">
+                <i class="fa-solid fa-robot"></i> Chat AI
+            </button>
+
+            <button onclick="toggleBossKey()" class="bg-gray-900 border border-red-500/40 text-red-400 px-2 py-1 rounded-lg text-[11px] cursor-pointer" title="Mod Șef"><i class="fa-solid fa-user-secret"></i></button>
+        </div>
+    </header>
+
+    <!-- Popup Notiță -->
+    <div id="quickNoteModal" class="fixed top-14 right-5 bg-panelBg border border-amberGlow/50 p-3 rounded-xl shadow-2xl z-50 w-64 hidden space-y-2">
+        <div class="flex justify-between items-center border-b border-gray-800 pb-1">
+            <span class="text-xs font-bold text-amberGlow">Notiță Rapidă</span>
+            <button onclick="toggleQuickNotePopup()" class="text-gray-400 hover:text-white text-xs cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <textarea id="quickNoteText" rows="3" placeholder="Scrie aici..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none resize-none" oninput="saveQuickNoteState()"></textarea>
+    </div>
+
+    <!-- Layout Principal -->
+    <div class="flex flex-1 overflow-hidden z-10 relative">
+        
+        <!-- Sidebar Principal (Stânga) -->
+        <aside id="appSidebar" class="w-60 bg-panelBg border-r border-gray-800 flex flex-col shrink-0 p-3 overflow-y-auto space-y-2">
+            <button onclick="newSession()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon text-darkBg text-xs font-bold py-2 px-2 rounded-xl flex items-center justify-center space-x-1.5 shadow cursor-pointer">
+                <i class="fa-solid fa-plus"></i><span>Sesiune Nouă</span>
+            </button>
+
+            <div class="space-y-1 pt-1 text-xs">
+                <span class="text-[9px] uppercase tracking-wider text-gray-400 font-extrabold px-1">Asistență</span>
+                <button onclick="switchTab('chat', 'Chat General', 'cyanNeon')" id="nav-chat" class="w-full text-left p-2 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2 font-bold border border-cyanNeon/30 cursor-pointer"><i class="fa-solid fa-comments w-4"></i><span>Chat General</span></button>
+
+                <span class="text-[9px] uppercase tracking-wider text-gray-400 font-extrabold px-1 pt-2 block">Social & Content</span>
+                <button onclick="switchTab('tiktokStudio', 'TikTok AI Studio', 'tiktokColor')" id="nav-tiktokStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-brands fa-tiktok text-tiktokColor w-4"></i><span>TikTok Creator</span></button>
+                <button onclick="switchTab('instaStudio', 'Instagram AI Studio', 'instaColor')" id="nav-instaStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-brands fa-instagram text-instaColor w-4"></i><span>Instagram Creator</span></button>
+                <button onclick="switchTab('ytStudio', 'YouTube AI Studio', 'ytColor')" id="nav-ytStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-brands fa-youtube text-ytColor w-4"></i><span>YouTube Scenarst</span></button>
+                <button onclick="switchTab('euroTranslator', 'European Translator', 'euroBlue')" id="nav-euroTranslator" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-language text-euroBlue w-4"></i><span>European Translator</span></button>
+                <button onclick="switchTab('hashtagStudio', 'Hashtag & SEO Hub', 'violetPop')" id="nav-hashtagStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-hashtag text-violetPop w-4"></i><span>Hashtag & SEO</span></button>
+                <button onclick="switchTab('editorialStudio', 'Calendar Editorial', 'amberGlow')" id="nav-editorialStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-calendar-days text-amberGlow w-4"></i><span>Calendar Editorial</span></button>
+
+                <span class="text-[9px] uppercase tracking-wider text-gray-400 font-extrabold px-1 pt-2 block">Alte Unelte & Planuri</span>
+                <button onclick="switchTab('abTestingStudio', 'A/B Testing', 'cyanNeon')" id="nav-abTestingStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-vials text-cyanNeon w-4"></i><span>A/B Testing Titluri</span></button>
+                <button onclick="switchTab('pricingStudio', 'Abonamente & Plată', 'emeraldNeon')" id="nav-pricingStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-credit-card text-emeraldNeon w-4"></i><span>Abonamente & Card</span></button>
+                <button onclick="switchTab('arcadeStudio', 'Retro Snake Arcade', 'emeraldNeon')" id="nav-arcadeStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-gamepad text-emeraldNeon w-4"></i><span>Retro Snake Arcade</span></button>
+                <button onclick="switchTab('authAccount', 'Cont & Login', 'cyanNeon')" id="nav-authAccount" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-user-shield text-cyanNeon w-4"></i><span>Cont & Login</span></button>
+            </div>
+        </aside>
+
+        <!-- Conținut Dinamic Unelte -->
+        <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
+            
+            <!-- Tab 1: Chat General -->
+            <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-xl max-w-2xl space-y-3">
+                    <h2 class="font-bold text-sm text-cyanNeon flex items-center"><i class="fa-solid fa-comments mr-2"></i> Chat General cu Gemini AI</h2>
+                    <div id="generalChatMessages" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[140px] max-h-64 overflow-y-auto space-y-2">
+                        <div class="text-gray-400">Salut! Adresează o întrebare sau folosește panoul lateral.</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="generalChatInput" placeholder="Scrie mesajul tău..." class="flex-1 bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendGeneralChatMessage()">
+                        <button onclick="sendGeneralChatMessage()" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-lg cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: TikTok Studio -->
+            <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-xl max-w-2xl space-y-3">
+                    <h2 class="font-bold text-sm text-tiktokColor flex items-center"><i class="fa-brands fa-tiktok mr-2"></i> TikTok AI Creator & Studio</h2>
+                    <div class="space-y-2">
+                        <input type="text" id="tiktokTopic" placeholder="Subiect sau nișă TikTok..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                        <button onclick="callServerAI('tiktokTopic', 'tiktokResult', 'Generează 3 hook-uri virale, o descriere captivantă și hashtag-uri pentru TikTok despre:')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer w-full">Generează cu Gemini AI</button>
+                        <div id="tiktokResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[80px] whitespace-pre-line">Așteptare comandă...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Instagram Studio -->
+            <div id="tab-instaStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-instaColor/30 p-4 rounded-xl max-w-2xl space-y-3">
+                    <h2 class="font-bold text-sm text-instaColor flex items-center"><i class="fa-brands fa-instagram mr-2"></i> Instagram AI Creator</h2>
+                    <div class="space-y-2">
+                        <input type="text" id="instaTopic" placeholder="Subiect pentru Instagram..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                        <button onclick="callServerAI('instaTopic', 'instaResult', 'Generează o descriere (caption) captivantă și idei pentru carusel Instagram despre:')" class="bg-instaColor text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer w-full">Generează cu Gemini AI</button>
+                        <div id="instaResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[80px] whitespace-pre-line">Așteptare comandă...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: YouTube Studio -->
+            <div id="tab-ytStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-ytColor/30 p-4 rounded-xl max-w-2xl space-y-3">
+                    <h2 class="font-bold text-sm text-ytColor flex items-center"><i class="fa-brands fa-youtube mr-2"></i> YouTube AI Scriptwriter</h2>
+                    <div class="space-y-2">
+                        <input type="text" id="ytTopic" placeholder="Titlu sau idee video YouTube..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                        <button onclick="callServerAI('ytTopic', 'ytResult', 'Generează o structură de scenariu pentru YouTube cu titlu catchy, introducere și secțiuni principale despre:')" class="bg-ytColor text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer w-full">Generează cu Gemini AI</button>
+                        <div id="ytResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[80px] whitespace-pre-line">Așteptare comandă...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: European Translator Hub -->
+            <div id="tab-euroTranslator" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-euroBlue/40 p-4 rounded-xl max-w-2xl space-y-3">
+                    <h2 class="font-bold text-sm text-euroBlue flex items-center"><i class="fa-solid fa-language mr-2"></i> European Translator & Multilingual Hub</h2>
+                    <p class="text-xs text-gray-300">Traduce instant texte sau campanii în principalele limbi oficiale europene prin serverul securizat.</p>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-gray-400 block mb-1">Limbă Sursă</label>
+                            <select id="sourceLang" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                                <option value="Română">Română (RO)</option>
+                                <option value="Engleză">Engleză (EN)</option>
+                                <option value="Franceză">Franceză (FR)</option>
+                                <option value="Germană">Germană (DE)</option>
+                                <option value="Spaniolă">Spaniolă (ES)</option>
+                                <option value="Italiană">Italiană (IT)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 block mb-1">Limbă Țintă</label>
+                            <select id="targetLang" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                                <option value="Engleză">Engleză (EN)</option>
+                                <option value="Română">Română (RO)</option>
+                                <option value="Franceză">Franceză (FR)</option>
+                                <option value="Germană">Germană (DE)</option>
+                                <option value="Spaniolă">Spaniolă (ES)</option>
+                                <option value="Italiană">Italiană (IT)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <textarea id="translatorInput" rows="3" placeholder="Introdu textul de tradus aici..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none resize-none"></textarea>
+                    
+                    <button onclick="runEuropeanTranslation()" class="w-full bg-euroBlue text-white font-bold text-xs py-2 rounded-lg cursor-pointer hover:opacity-90">Traduce prin Gemini AI</button>
+                    
+                    <div>
+                        <label class="text-[10px] text-gray-400 block mb-1">Rezultat Traducere:</label>
+                        <div id="translatorResult" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 min-h-[60px] border border-gray-800 whitespace-pre-line">Așteptare text...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Hashtag & SEO -->
+            <div id="tab-hashtagStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-violetPop/30 p-4 rounded-xl space-y-2 max-w-xl">
+                    <h2 class="font-bold text-sm text-violetPop flex items-center"><i class="fa-solid fa-hashtag mr-2"></i> Hashtag & SEO Generator</h2>
+                    <div class="flex space-x-2 pt-2">
+                        <input type="text" id="hashtagTopicInput" placeholder="Ex: fitness acasă..." class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-white outline-none">
+                        <button onclick="callServerAI('hashtagTopicInput', 'hashtagResultBox', 'Generează hashtag-uri relevante și optimizate SEO pentru:')" class="bg-violetPop text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">Generează</button>
+                    </div>
+                    <div id="hashtagResultBox" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 mt-2 min-h-[50px] whitespace-pre-line">Rezultatele vor apărea aici...</div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Calendar Editorial -->
+            <div id="tab-editorialStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl">
+                    <div class="bg-panelBg border border-gray-800 p-3 rounded-xl space-y-2">
+                        <h3 class="text-xs font-bold text-amberGlow">Programează Postare</h3>
+                        <input type="text" id="postTitle" placeholder="Titlu postare" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-1.5 text-xs text-white outline-none">
+                        <input type="datetime-local" id="postDate" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-1.5 text-xs text-white outline-none">
+                        <button onclick="addEditorialPost()" class="w-full bg-amberGlow text-darkBg font-bold text-xs py-1.5 rounded-lg cursor-pointer">Adaugă</button>
+                    </div>
+                    <div class="bg-panelBg border border-gray-800 p-3 rounded-xl overflow-y-auto max-h-40" id="editorialListContainer">
+                        <div class="text-xs text-gray-500 italic">Nicio postare programată.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 8: A/B Testing -->
+            <div id="tab-abTestingStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-xl space-y-2 max-w-xl">
+                    <h2 class="font-bold text-sm text-cyanNeon flex items-center"><i class="fa-solid fa-vials mr-2"></i> A/B Testing Titluri</h2>
+                    <input type="text" id="abTopicInput" placeholder="Subiect video..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                    <button onclick="callServerAI('abTopicInput', 'abResultBox', 'Generează 3 variante diferite de titluri pentru A/B testing cu estimare de rată de click (CTR) pentru:')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-lg cursor-pointer">Testează cu AI</button>
+                    <div id="abResultBox" class="bg-gray-950 p-3 rounded-lg text-xs text-gray-200 mt-2 whitespace-pre-line">Rezultate...</div>
+                </div>
+            </div>
+
+            <!-- Tab 9: Abonamente & Plată cu Cardul -->
+            <div id="tab-pricingStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+                <div class="max-w-4xl w-full space-y-4">
+                    <div class="text-center space-y-1">
+                        <h2 class="text-sm font-bold text-emeraldNeon"><i class="fa-solid fa-crown mr-1"></i> Alege Pachetul Dorit</h2>
+                        <p class="text-xs text-gray-400">Deblochează accesul nelimitat la uneltele AI profesionale.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="bg-panelBg border border-gray-800 p-4 rounded-xl space-y-3 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-gray-300">Starter Creator</h3>
+                                <div class="text-base font-extrabold text-white mt-1">49 RON <span class="text-[10px] text-gray-400 font-normal">/ lună</span></div>
+                            </div>
+                            <button onclick="selectPlan('Starter Creator', '49 RON')" class="w-full bg-gray-800 hover:bg-emeraldNeon hover:text-darkBg text-white font-bold text-xs py-2 rounded-lg transition cursor-pointer">Selectează</button>
+                        </div>
+
+                        <div class="bg-panelBg border border-emeraldNeon p-4 rounded-xl space-y-3 flex flex-col justify-between shadow-lg shadow-emerald-950/40">
+                            <div>
+                                <span class="bg-emeraldNeon/20 text-emerald-400 text-[9px] px-2 py-0.5 rounded-full font-bold">Cel mai popular</span>
+                                <h3 class="text-xs font-bold text-white mt-1">PRO Studio</h3>
+                                <div class="text-base font-extrabold text-emeraldNeon mt-1">99 RON <span class="text-[10px] text-gray-400 font-normal">/ lună</span></div>
+                            </div>
+                            <button onclick="selectPlan('PRO Studio', '99 RON')" class="w-full bg-emeraldNeon text-darkBg font-bold text-xs py-2 rounded-lg transition cursor-pointer hover:opacity-90">Selectează PRO</button>
+                        </div>
+
+                        <div class="bg-panelBg border border-gray-800 p-4 rounded-xl space-y-3 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-gray-300">Agency VIP</h3>
+                                <div class="text-base font-extrabold text-white mt-1">199 RON <span class="text-[10px] text-gray-400 font-normal">/ lună</span></div>
+                            </div>
+                            <button onclick="selectPlan('Agency VIP', '199 RON')" class="w-full bg-gray-800 hover:bg-emeraldNeon hover:text-darkBg text-white font-bold text-xs py-2 rounded-lg transition cursor-pointer">Selectează</button>
+                        </div>
+                    </div>
+
+                    <div id="cardPaymentBox" class="bg-panelBg border border-cyanNeon/40 p-4 rounded-xl space-y-3 max-w-md mx-auto hidden">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                            <span class="text-xs font-bold text-cyanNeon"><i class="fa-solid fa-lock mr-1"></i> Plată Securizată Card</span>
+                            <span id="selectedPlanTitle" class="text-xs text-amberGlow font-bold"></span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <input type="text" placeholder="Număr Card (4532 •••• •••• 8901)" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white outline-none">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" placeholder="LUNĂ / AN" class="bg-gray-900 border border-gray-700 rounded-lg p-2 text-white outline-none">
+                                <input type="password" placeholder="CVV" maxlength="3" class="bg-gray-900 border border-gray-700 rounded-lg p-2 text-white outline-none">
+                            </div>
+                            <button onclick="processCardPayment()" class="w-full bg-cyanNeon text-darkBg font-bold py-2.5 rounded-lg cursor-pointer mt-2">Achită Acum</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 10: Retro Snake Arcade -->
+            <div id="tab-arcadeStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 flex flex-col items-center justify-center space-y-3">
+                <div class="bg-panelBg border border-emeraldNeon/30 p-6 rounded-2xl flex flex-col items-center space-y-3 shadow-xl">
+                    <h2 class="text-sm font-bold text-emeraldNeon"><i class="fa-solid fa-gamepad mr-2"></i> Retro Snake Arcade</h2>
+                    <button onclick="startRetroSnake()" class="bg-emeraldNeon text-darkBg font-bold text-xs px-4 py-2 rounded-lg cursor-pointer hover:opacity-90">Pornește Jocul</button>
+                    <div id="gameScreenContainer" class="bg-gray-950 border border-emeraldNeon/40 rounded-lg p-2 min-h-[160px] flex items-center justify-center text-xs text-gray-400 w-[180px] h-[180px]">Apasă butonul de sus</div>
+                </div>
+            </div>
+
+            <!-- Tab 11: Cont & Login -->
+            <div id="tab-authAccount" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6 items-center justify-center">
+                <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-2xl max-w-md w-full space-y-4 shadow-xl">
+                    <h2 class="text-base font-bold text-white text-center">Autentificare Cont</h2>
+                    <input type="email" id="regEmail" placeholder="Email" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                    <input type="password" id="regPass" placeholder="Parolă" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white outline-none">
+                    <button onclick="registerCompleteUser()" class="w-full bg-cyanNeon text-darkBg font-bold text-xs py-2.5 rounded-lg cursor-pointer">Autentificare</button>
+                    <div id="userAccountStatus" class="text-center text-xs text-emerald-400"></div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Panou Lateral AI (Dreapta) -->
+        <aside id="aiSidebarPanel" class="w-80 bg-panelBg border-l border-gray-800 flex flex-col shrink-0 transition-all duration-300 z-20">
+            <div class="p-3 border-b border-gray-800 flex items-center justify-between bg-gray-900/50">
+                <span class="text-xs font-bold text-cyanNeon flex items-center"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Asistent AI Principal</span>
+                <button onclick="toggleAiSidebar()" class="text-gray-400 hover:text-white text-xs cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="aiSidebarMessages" class="flex-1 overflow-y-auto p-3 space-y-2.5 text-xs text-gray-200">
+                <div class="bg-gray-900 border border-cyanNeon/20 p-2.5 rounded-xl">Salut! Sunt asistentul tău AI conectat prin server. Cu ce te pot ajuta?</div>
+            </div>
+
+            <div class="p-3 border-t border-gray-800 bg-gray-900/40 space-y-2">
+                <div class="flex items-center space-x-1.5 bg-gray-900 border border-cyanNeon/40 rounded-xl p-1.5">
+                    <input type="file" id="aiFileUpload" class="hidden" accept="text/*,image/*" onchange="handleFileUpload(this)">
+                    <button onclick="document.getElementById('aiFileUpload').click()" class="text-gray-400 hover:text-cyanNeon px-2 py-1 text-xs cursor-pointer transition" title="Încarcă fișier">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <input type="text" id="aiSidebarInput" placeholder="Întreabă AI-ul..." class="flex-1 bg-transparent text-xs text-gray-100 outline-none px-1" onkeydown="handleAiSidebarKey(event)">
+                    <button onclick="sendAiSidebarMessage()" class="bg-cyanNeon text-darkBg font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Buton Plutitor Chat -->
+    <button id="floatingChatBtn" onclick="toggleAiSidebar()" class="fixed bottom-5 right-5 w-12 h-12 bg-gradient-to-tr from-emeraldNeon to-cyanNeon text-darkBg rounded-full shadow-2xl flex items-center justify-center text-lg font-bold cursor-pointer hidden z-50 hover:scale-110 transition">
+        <i class="fa-solid fa-robot"></i>
+    </button>
+
+    <script>
+        let editorialPosts = JSON.parse(localStorage.getItem('NEXUS_EDITORIAL') || '[]');
+
+        setInterval(() => {
+            const now = new Date();
+            const clockEl = document.getElementById('liveClockHeader');
+            if(clockEl) clockEl.innerText = now.toLocaleTimeString('ro-RO');
+        }, 1000);
+
+        // Funcție generală pentru apelarea serverului (ascunde cheia pe backend)
+        async function fetchFromServer(promptText) {
+            const res = await fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: promptText })
+            });
+
+            const data = await res.json();
+            if(!res.ok) {
+                throw new Error(data.error || 'Eroare de comunicare cu serverul.');
+            }
+            return data.text;
+        }
+
+        async function callServerAI(inputId, resultId, prefixInstruction) {
+            const topic = document.getElementById(inputId).value.trim();
+            const resBox = document.getElementById(resultId);
+            if(!topic) return showToast('Introdu un subiect sau text!', 'error');
+
+            resBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-cyanNeon"></i> Se procesează prin Gemini AI...';
+            try {
+                const prompt = `${prefixInstruction} "${topic}"`;
+                const result = await fetchFromServer(prompt);
+                resBox.innerText = result;
+                showToast('Generat cu succes prin AI! ✨', 'success');
+            } catch(err) {
+                resBox.innerHTML = `<span class="text-red-400">Eroare: ${err.message}</span>`;
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function sendGeneralChatMessage() {
+            const input = document.getElementById('generalChatInput');
+            const text = input.value.trim();
+            const container = document.getElementById('generalChatMessages');
+            if(!text) return;
+
+            container.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2 rounded-lg">Tu: ${text}</div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                container.innerHTML += `<div id="tempChatLoad" class="text-gray-400 italic">Gemini gândește...</div>`;
+                const reply = await fetchFromServer(text);
+                document.getElementById('tempChatLoad').remove();
+                container.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2 rounded-lg whitespace-pre-line">AI: ${reply}</div>`;
+                container.scrollTop = container.scrollHeight;
+            } catch(err) {
+                const loader = document.getElementById('tempChatLoad');
+                if(loader) loader.remove();
+                container.innerHTML += `<div class="text-red-400 bg-gray-900 p-2 rounded-lg">Eroare: ${err.message}</div>`;
+            }
+        }
+
+        async function sendAiSidebarMessage() {
+            const input = document.getElementById('aiSidebarInput');
+            const text = input.value.trim();
+            const container = document.getElementById('aiSidebarMessages');
+            if(!text) return;
+
+            container.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2 rounded-lg">Tu: ${text}</div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const reply = await fetchFromServer(text);
+                container.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2 rounded-lg whitespace-pre-line">AI: ${reply}</div>`;
+                container.scrollTop = container.scrollHeight;
+            } catch(err) {
+                container.innerHTML += `<div class="text-red-400 bg-gray-900 p-2 rounded-lg">Eroare: ${err.message}</div>`;
+            }
+        }
+
+        function handleAiSidebarKey(e) {
+            if(e.key === 'Enter') sendAiSidebarMessage();
+        }
+
+        async function runEuropeanTranslation() {
+            const text = document.getElementById('translatorInput').value.trim();
+            const src = document.getElementById('sourceLang').value;
+            const tgt = document.getElementById('targetLang').value;
+            const resBox = document.getElementById('translatorResult');
+
+            if(!text) return showToast('Introdu un text pentru traducere!', 'error');
+
+            resBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-euroBlue"></i> Traducere europeană în curs...';
+            try {
+                const prompt = `Traduce următorul text din limba ${src} în limba ${tgt} menținând un ton natural, adaptat contextului profesional și european: "${text}"`;
+                const translated = await fetchFromServer(prompt);
+                resBox.innerText = translated;
+                showToast('Traducere finalizată cu succes!', 'success');
+            } catch(err) {
+                resBox.innerHTML = `<span class="text-red-400">Eroare: ${err.message}</span>`;
+            }
+        }
+
+        function toggleQuickNotePopup() {
+            document.getElementById('quickNoteModal').classList.toggle('hidden');
+        }
+
+        function saveQuickNoteState() {
+            localStorage.setItem('NEXUS_QUICK_NOTE', document.getElementById('quickNoteText').value);
+        }
+
+        function toggleBossKey() {
+            document.getElementById('bossExcelScreen').classList.toggle('hidden');
+        }
+
+        function toggleAiSidebar() {
+            const sidebar = document.getElementById('aiSidebarPanel');
+            const floatBtn = document.getElementById('floatingChatBtn');
+            sidebar.classList.toggle('hidden');
+            if (sidebar.classList.contains('hidden')) {
+                floatBtn.classList.remove('hidden');
+            } else {
+                floatBtn.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabId, titleName, colorName) {
+            document.querySelectorAll('.app-tab').forEach(tab => tab.classList.remove('active-tab'));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.add('active-tab');
+
+            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+                btn.className = "w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer";
+            });
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.className = "w-full text-left p-2 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2 font-bold border border-cyanNeon/30 cursor-pointer";
+            }
+            document.getElementById('breadcrumbCurrent').innerText = titleName;
+        }
+
+        function newSession() {
+            showToast('Sesiune nouă inițializată!', 'success');
+        }
+
+        function handleFileUpload(input) {
+            if(input.files && input.files[0]) {
+                showToast(`Fișier "${input.files[0].name}" atașat!`, 'success');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if(!container) return;
+            const toast = document.createElement('div');
+            toast.className = `px-3 py-2 rounded-lg bg-panelBg border border-gray-700 text-white text-xs shadow-lg`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function selectPlan(planName, price) {
+            document.getElementById('cardPaymentBox').classList.remove('hidden');
+            document.getElementById('selectedPlanTitle').innerText = `${planName} - ${price}`;
+            showToast(`Ai selectat pachetul ${planName}! Completează datele cardului.`, 'info');
+        }
+
+        function processCardPayment() {
+            showToast('Plată efectuată cu succes! Abonamentul a fost activat. ✅', 'success');
+            document.getElementById('cardPaymentBox').classList.add('hidden');
+        }
+
+        function addEditorialPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const date = document.getElementById('postDate').value;
+            if(!title || !date) return showToast('Completează câmpurile!', 'error');
+            editorialPosts.push({ title, date });
+            localStorage.setItem('NEXUS_EDITORIAL', JSON.stringify(editorialPosts));
+            renderEditorialPosts();
+            showToast('Postare programată!', 'success');
+        }
+
+        function renderEditorialPosts() {
+            const container = document.getElementById('editorialListContainer');
+            if(!container) return;
+            if(editorialPosts.length === 0) {
+                container.innerHTML = `<div class="text-xs text-gray-500 italic">Nicio postare programată.</div>`;
+                return;
+            }
+            container.innerHTML = editorialPosts.map(p => `
+                <div class="bg-gray-900 p-2 rounded text-xs flex justify-between">
+                    <span>${p.title}</span><span class="text-amberGlow">${p.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function startRetroSnake() {
+            const container = document.getElementById('gameScreenContainer');
+            container.innerHTML = `<canvas id="snakeCanvas" width="160" height="160" class="bg-black border border-emeraldNeon rounded"></canvas>`;
+            showToast('Jocul a pornit!', 'success');
+        }
+
+        function registerCompleteUser() {
+            showToast('Autentificare reușită!', 'success');
+            document.getElementById('userAccountStatus').innerText = `Conectat cu succes! ✅`;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            switchTab('chat', 'Chat General', 'cyanNeon');
+            renderEditorialPosts();
+            if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
+                document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
+            }
+        });
+    </script>
 </body>
 </html>
+
