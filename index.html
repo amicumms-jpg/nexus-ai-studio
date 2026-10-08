@@ -1053,6 +1053,29 @@ async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKe
         msgBox.innerHTML += `<div class="text-red-400">Eroare: ${err.message}</div>`;
     }
 }
+        // Funcția care trimite promptul către serverul tău backend sau direct către Gemini API
+async function fetchFromServer(promptText) {
+    // Dacă ai un endpoint pe server (de ex: /api/generate)
+    try {
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: promptText })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Eroare server: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.response || data.text || "Răspuns gol primit de la server.";
+    } catch (err) {
+        console.error("Eroare la comunicarea cu serverul:", err);
+        throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
+    }
+}
     </script>
 </body>
 </html>
