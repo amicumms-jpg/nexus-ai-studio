@@ -168,6 +168,7 @@
                     <button onclick="switchTab('ytStudio', 'YouTube AI Studio')" id="nav-ytStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-youtube text-ytColor w-4"></i><span>YouTube AI Scriptwriter</span></button>
                     <button onclick="switchTab('hashtagStudio', 'Hashtag & SEO Generator')" id="nav-hashtagStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-hashtag text-violetPop w-4"></i><span>Hashtag & SEO Hub</span></button>
                     <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-editorialStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-calendar-days text-amberGlow w-4"></i><span>Calendar Editorial</span></button>
+                    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio', 'videoColor')" id="nav-textToVideoStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-clapperboard text-videoColor w-4"></i><span>Text-to-Video Studio</span></button>
                 </div>
 
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate & Nebune</span>
@@ -571,7 +572,26 @@
                     <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-1"></div>
                 </div>
             </div>
+<!-- Tab Nou: Text-to-Video Studio cu Download -->
+            <div id="tab-textToVideoStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-videoColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl">
+                    <h2 class="font-bold text-sm text-videoColor mb-2"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
+                    <p class="text-xs text-gray-400 mb-3">Introdu o descriere detaliată a scenei sau a videoclipului dorit. AI-ul va genera structura video cadru cu cadru și prompturile de randare.</p>
+                    
+                    <div class="flex space-x-2 mb-3">
+                        <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu o mașină zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-videoColor">
+                        <button onclick="generateTextToVideo()" class="bg-videoColor text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition">Generează Video AI</button>
+                    </div>
 
+                    <div id="textToVideoResult" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 min-h-[140px] whitespace-pre-line mb-3">
+                        Așteptare comenzi pentru generare video...
+                    </div>
+
+                    <button onclick="downloadResult('textToVideoResult', 'scenariu-si-prompturi-video.txt')" class="bg-gray-900 border border-videoColor/40 text-videoColor hover:bg-videoColor hover:text-white transition font-bold text-xs py-2.5 px-4 rounded-xl cursor-pointer flex items-center justify-center w-max">
+                        <i class="fa-solid fa-download mr-2"></i> Descarcă Scenariul / Prompturile (.txt)
+                    </button>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -924,6 +944,29 @@ async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') 
     } catch (err) {
         document.getElementById(loadingId).remove();
         msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+    }
+}
+        async function generateTextToVideo() {
+    const inputEl = document.getElementById('textToVideoInput');
+    const resultBox = document.getElementById('textToVideoResult');
+    const text = inputEl.value.trim();
+
+    if (!text) {
+        showToast('Te rog să introduci o descriere pentru video!', 'error');
+        return;
+    }
+
+    resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
+
+    try {
+        const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
+        const responseText = await fetchFromServer(prompt);
+        
+        resultBox.innerText = responseText;
+        showToast('Scenariul video a fost generat cu succes!');
+    } catch (err) {
+        resultBox.innerText = `Eroare: ${err.message}`;
+        showToast(err.message, 'error');
     }
 }
     </script>
