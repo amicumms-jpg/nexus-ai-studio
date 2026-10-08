@@ -204,12 +204,31 @@
                     <div id="chatMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
                     </div>
-                    <div class="flex space-x-2">
-                        <input type="text" id="chatInput" placeholder="Scrie mesajul tău pentru Chat General..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('chatMessages', 'chatInput')">
-                        <button onclick="sendChatMessage('chatMessages', 'chatInput')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                    <!-- Zona de input cu agrafă pentru fișiere -->
+                    <div class="flex flex-col space-y-2 mt-2">
+                        <!-- Numele fișierului atașat (ascuns până când alegi un fișier) -->
+                        <div id="chatAttachmentPreview-chat" class="hidden items-center space-x-2 bg-gray-900 border border-gray-700 px-3 py-1.5 rounded-lg text-xs w-max">
+                            <i class="fa-solid fa-paperclip text-cyanNeon"></i>
+                            <span id="chatAttachmentName-chat" class="text-gray-200"></span>
+                            <button onclick="removeAttachment('chat')" class="text-red-400 hover:text-red-300 ml-2 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        
+                        <div class="flex space-x-2 items-center">
+                            <!-- Input ascuns pentru fișiere (declanșat de agrafă) -->
+                            <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
+                            
+                            <!-- Butonul cu agrafă -->
+                            <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition" title="Atașează fișier">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </button>
+
+                            <!-- Câmpul de text -->
+                            <input type="text" id="chatInput" placeholder="Scrie mesajul tău sau atașează un fișier..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')">
+                            
+                            <!-- Buton trimitere -->
+                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
                     </div>
-                </div>
-            </div>
 
             <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
@@ -967,6 +986,71 @@ async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') 
     } catch (err) {
         resultBox.innerText = `Eroare: ${err.message}`;
         showToast(err.message, 'error');
+    }
+}
+        let attachedFiles = {};
+
+function handleFileSelect(tabKey) {
+    const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+    const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+    const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+
+    if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        attachedFiles[tabKey] = file;
+        nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        previewBox.classList.remove('hidden');
+        previewBox.classList.add('flex');
+    }
+}
+
+function removeAttachment(tabKey) {
+    const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+    const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+    fileInput.value = '';
+    delete attachedFiles[tabKey];
+    previewBox.classList.remove('flex');
+    previewBox.classList.add('hidden');
+}
+
+async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+    const inputEl = document.getElementById(inputId);
+    const msgBox = document.getElementById(messagesContainerId);
+    const text = inputEl.value.trim();
+    const file = attachedFiles[tabKey];
+
+    if (!text && !file) return;
+
+    let displayHtml = '';
+    if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+    if (text) displayHtml += `<div>${text}</div>`;
+
+    msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
+    inputEl.value = '';
+    msgBox.scrollTop = msgBox.scrollHeight;
+    removeAttachment(tabKey);
+
+    const loadingId = 'load-' + Date.now();
+    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează...</div>`;
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    try {
+        let promptContent = text;
+        if (file) {
+            if (file.type.includes('text') || file.name.endsWith('.txt')) {
+                const fileText = await file.text();
+                promptContent += `\n\n[Conținut fișier ${file.name}]:\n${fileText}`;
+            } else {
+                promptContent += `\n\n[Atașat multimedia: ${file.name}]`;
+            }
+        }
+        const responseText = await fetchFromServer(promptContent);
+        document.getElementById(loadingId).remove();
+        msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI:</b> ${responseText}</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+    } catch (err) {
+        document.getElementById(loadingId).remove();
+        msgBox.innerHTML += `<div class="text-red-400">Eroare: ${err.message}</div>`;
     }
 }
     </script>
