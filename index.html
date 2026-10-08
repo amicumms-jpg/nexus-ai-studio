@@ -1028,29 +1028,49 @@ async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKe
     msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
     inputEl.value = '';
     msgBox.scrollTop = msgBox.scrollHeight;
+
+    // Pregătim datele pentru fișier (conversie în Base64 dacă există)
+    let fileDataPayload = null;
+    if (file) {
+        const base64String = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.readAsDataURL(file);
+        });
+        fileDataPayload = {
+            base64: base64String,
+            mimeType: file.type || 'text/plain'
+        };
+    }
+
+    // Curățăm atașamentul din interfață
     removeAttachment(tabKey);
 
     const loadingId = 'load-' + Date.now();
-    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează...</div>`;
+    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
     msgBox.scrollTop = msgBox.scrollHeight;
 
     try {
-        let promptContent = text;
-        if (file) {
-            if (file.type.includes('text') || file.name.endsWith('.txt')) {
-                const fileText = await file.text();
-                promptContent += `\n\n[Conținut fișier ${file.name}]:\n${fileText}`;
-            } else {
-                promptContent += `\n\n[Atașat multimedia: ${file.name}]`;
-            }
-        }
-        const responseText = await fetchFromServer(promptContent);
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt: text || "Analizează acest fișier:",
+                tabId: tabKey,
+                fileData: fileDataPayload
+            })
+        });
+
+        const data = await res.json();
         document.getElementById(loadingId).remove();
-        msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI:</b> ${responseText}</div>`;
+
+        if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
+
+        msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.response}</div>`;
         msgBox.scrollTop = msgBox.scrollHeight;
     } catch (err) {
         document.getElementById(loadingId).remove();
-        msgBox.innerHTML += `<div class="text-red-400">Eroare: ${err.message}</div>`;
+        msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
     }
 }
         // Funcția care trimite promptul către serverul tău backend sau direct către Gemini API
