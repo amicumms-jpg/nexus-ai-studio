@@ -978,8 +978,18 @@ async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') 
     msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
     msgBox.scrollTop = msgBox.scrollHeight;
 
-    try {
-        const finalPrompt = customPrefix ? `${customPrefix} "${textWithTone}"` : textWithTone;
+  try {
+        // Extragem un scurt context din ultimele mesaje vizibile pentru memorie conversațională
+        const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
+        let recentContext = "";
+        const lastFew = Array.from(messageElements).slice(-4);
+        lastFew.forEach(el => {
+            recentContext += el.innerText + "\n";
+        });
+
+        const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
+        const finalPrompt = customPrefix ? `${customPrefix} ${promptWithContext}` : promptWithContext;
+        
         const responseText = await fetchFromServer(finalPrompt);
         
         // Înlocuiește loaderul cu răspunsul de la AI
