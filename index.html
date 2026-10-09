@@ -221,7 +221,18 @@
                             <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition" title="Atașează fișier">
                                 <i class="fa-solid fa-paperclip"></i>
                             </button>
-
+<!-- Selector Ton de Voce -->
+<div class="flex items-center space-x-2 px-2 py-1.5 text-xs text-gray-400">
+    <span>Ton:</span>
+    <select id="toneSelector" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-gray-300 focus:outline-none focus:border-cyan-400">
+        <option value="">Standard (Normal)</option>
+        <option value="Răspunde într-un ton profesional, corporatist și extrem de clar: ">Profesional</option>
+        <option value="Răspunde într-un ton prietenos, cald și apropiat, ca un bun prieten: ">Prietenos</option>
+        <option value="Răspunde într-un ton persuasiv, axat pe marketing și vânzări: ">Persuasiv / Marketing</option>
+        <option value="Răspunde într-un ton tehnic, detaliat și riguros: ">Tehnic</option>
+        <option value="Răspunde într-un ton amuzant și plin de umor: ">Amuzant</option>
+    </select>
+</div>
                             <!-- Câmpul de text -->
                             <input type="text" id="chatInput" placeholder="Scrie mesajul tău sau atașează un fișier..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')">
                             
@@ -945,21 +956,30 @@ async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') 
     const msgBox = document.getElementById(messagesContainerId);
     if (!inputEl || !msgBox) return;
     
-    const text = inputEl.value.trim();
+   const text = inputEl.value.trim();
     if (!text) return;
+
+    const toneEl = document.getElementById('toneSelector');
+    const tonePrefix = toneEl ? toneEl.value : '';
+    
+    // Combinăm tonul ales cu textul introdus
+    const textWithTone = tonePrefix ? tonePrefix + text : text;
 
     // Afișează mesajul tău în fereastra curentă
     msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
     inputEl.value = '';
     msgBox.scrollTop = msgBox.scrollHeight;
+    
+    // Salvăm istoricul actualizat
+    localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
 
     // Indicator de încărcare
     const loadingId = 'load-' + Date.now();
-    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se generează răspunsul prin Gemini AI...</div>`;
+    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
     msgBox.scrollTop = msgBox.scrollHeight;
 
     try {
-        const finalPrompt = customPrefix ? `${customPrefix} "${text}"` : text;
+        const finalPrompt = customPrefix ? `${customPrefix} "${textWithTone}"` : textWithTone;
         const responseText = await fetchFromServer(finalPrompt);
         
         // Înlocuiește loaderul cu răspunsul de la AI
