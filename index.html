@@ -124,6 +124,11 @@
     <i class="fa-solid fa-file-arrow-down text-cyan-400"></i>
     <span class="hidden lg:inline">Export Sesiune</span>
 </button>
+            <!-- Buton Matrix Neural Pulse -->
+<button onclick="toggleNeuralPulse()" id="neuralPulseBtn" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-3 py-1.5 rounded-xl text-xs transition">
+    <i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i>
+    <span class="hidden lg:inline">Neural Pulse: OFF</span>
+</button>
             <!-- Selector Multilingual -->
 <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2.5 py-1.5 rounded-xl text-xs transition outline-none cursor-pointer">
     <option value="ro">🇷🇴 Română</option>
@@ -989,16 +994,28 @@ async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') 
     msgBox.scrollTop = msgBox.scrollHeight;
 
   try {
-        // Extragem un scurt context din ultimele mesaje vizibile pentru memorie conversațională
+      // Extragem un scurt context din ultimele mesaje vizibile pentru memorie conversațională
         const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
         let recentContext = "";
         const lastFew = Array.from(messageElements).slice(-4);
         lastFew.forEach(el => {
             recentContext += el.innerText + "\n";
         });
+// Verificăm dacă Neural Pulse este activat
+        const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
+            ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
+            : "";
+
+        // Detectăm limba aleasă din meniul de sus
+        const currentLang = localStorage.getItem('nexus_lang') || 'ro';
+        const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
+        const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
 
         const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
-        const finalPrompt = customPrefix ? `${customPrefix} ${promptWithContext}` : promptWithContext;
+        const contentToSend = neuralModifier + promptWithContext;
+        
+        // Construim promptul final cu limba și prefixul personalizat
+        const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
         
         const responseText = await fetchFromServer(finalPrompt);
         
@@ -1217,44 +1234,78 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
-        const translations = {
+    const translations = {
     ro: {
         newSession: "Sesiune Nouă AI",
-        chatGeneral: "Chat General",
         exportBtn: "Export Sesiune",
-        placeholder: "Scrie mesajul tău sau atașează un fișier...",
-        toneLabel: "Ton:",
-        quickNote: "Notiță"
+        quickNote: "Notiță",
+        chatGeneral: "Chat General"
     },
     en: {
         newSession: "New AI Session",
-        chatGeneral: "General Chat",
         exportBtn: "Export Session",
-        placeholder: "Type your message or attach a file...",
-        toneLabel: "Tone:",
-        quickNote: "Quick Note"
+        quickNote: "Quick Note",
+        chatGeneral: "General Chat"
     },
     fr: {
         newSession: "Nouvelle Session AI",
-        chatGeneral: "Chat Général",
         exportBtn: "Exporter la Session",
-        placeholder: "Écrivez votre message ou joignez un fichier...",
-        toneLabel: "Ton:",
-        quickNote: "Note Rapide"
+        quickNote: "Note Rapide",
+        chatGeneral: "Chat Général"
     },
     de: {
         newSession: "Neue KI-Sitzung",
-        chatGeneral: "Allgemeiner Chat",
         exportBtn: "Sitzung Exportieren",
-        placeholder: "Schreiben Sie Ihre Nachricht...",
-        toneLabel: "Ton:",
-        quickNote: "Notiz"
+        quickNote: "Notiz",
+        chatGeneral: "Allgemeiner Chat"
     }
 };
 
 function changeLanguage(lang) {
     localStorage.setItem('nexus_lang', lang);
+    const t = translations[lang] || translations.ro;
+
+    // Actualizăm elementele din interfață dacă există pe pagină
+    const newSessionBtn = document.querySelector('aside button span');
+    if (newSessionBtn) newSessionBtn.innerText = t.newSession;
+
+    const exportBtnSpan = document.querySelector('button[onclick="exportFullSession()"] span');
+    if (exportBtnSpan) exportBtnSpan.innerText = t.exportBtn;
+
+    const quickNoteSpan = document.querySelector('button[onclick="toggleQuickNotePopup()"] span');
+    if (quickNoteSpan) quickNoteSpan.innerText = t.quickNote;
+}
+
+// Apelăm o dată la încărcare pentru a păstra limba selectată
+window.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('nexus_lang') || 'ro';
+    const selectEl = document.getElementById('languageSelect');
+    if (selectEl) selectEl.value = savedLang;
+    changeLanguage(savedLang);
+});
+
+function changeLanguage(lang) {
+    localStorage.setItem('nexus_lang', lang);
     console.log("Limba schimbată în:", lang);
+}
+        let neuralPulseActive = false;
+
+function toggleNeuralPulse() {
+    neuralPulseActive = !neuralPulseActive;
+    const btn = document.getElementById('neuralPulseBtn');
+    if (neuralPulseActive) {
+        btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+        btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
+    } else {
+        btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+        btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
+    }
+}
+
+// Când este activ, injectăm un pre-prompt de analiză cognitivă profundă
+function getNeuralPulseModifier() {
+    if (!neuralPulseActive) return "";
+    return "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] ";
 }
     </script>
 </body>
