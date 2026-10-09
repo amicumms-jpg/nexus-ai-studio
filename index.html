@@ -124,6 +124,13 @@
     <i class="fa-solid fa-file-arrow-down text-cyan-400"></i>
     <span class="hidden lg:inline">Export Sesiune</span>
 </button>
+            <!-- Selector Multilingual -->
+<select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2.5 py-1.5 rounded-xl text-xs transition outline-none cursor-pointer">
+    <option value="ro">🇷🇴 Română</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="de">🇩🇪 Deutsch</option>
+</select>
             <div class="flex items-center space-x-1.5">
                 <button onclick="switchTab('billingCard', 'Plată Abonament Card')" class="bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[11px] px-2.5 py-1 rounded-xl transition cursor-pointer flex items-center space-x-1 shadow">
                     <i class="fa-solid fa-credit-card"></i> <span>PRO</span>
@@ -1210,6 +1217,45 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
+        const translations = {
+    ro: {
+        newSession: "Sesiune Nouă AI",
+        chatGeneral: "Chat General",
+        exportBtn: "Export Sesiune",
+        placeholder: "Scrie mesajul tău sau atașează un fișier...",
+        toneLabel: "Ton:",
+        quickNote: "Notiță"
+    },
+    en: {
+        newSession: "New AI Session",
+        chatGeneral: "General Chat",
+        exportBtn: "Export Session",
+        placeholder: "Type your message or attach a file...",
+        toneLabel: "Tone:",
+        quickNote: "Quick Note"
+    },
+    fr: {
+        newSession: "Nouvelle Session AI",
+        chatGeneral: "Chat Général",
+        exportBtn: "Exporter la Session",
+        placeholder: "Écrivez votre message ou joignez un fichier...",
+        toneLabel: "Ton:",
+        quickNote: "Note Rapide"
+    },
+    de: {
+        newSession: "Neue KI-Sitzung",
+        chatGeneral: "Allgemeiner Chat",
+        exportBtn: "Sitzung Exportieren",
+        placeholder: "Schreiben Sie Ihre Nachricht...",
+        toneLabel: "Ton:",
+        quickNote: "Notiz"
+    }
+};
+
+function changeLanguage(lang) {
+    localStorage.setItem('nexus_lang', lang);
+    console.log("Limba schimbată în:", lang);
+}
     </script>
 </body>
 </html>
