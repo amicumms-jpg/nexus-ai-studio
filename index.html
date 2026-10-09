@@ -120,7 +120,10 @@
             <button onclick="toggleQuickNotePopup()" class="bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2.5 py-1 rounded-xl transition cursor-pointer flex items-center space-x-1 text-[11px]">
                 <i class="fa-regular fa-note-sticky"></i> <span class="hidden lg:inline">Notiță</span>
             </button>
-
+<button onclick="exportFullSession()" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-3 py-1.5 rounded-xl text-xs transition">
+    <i class="fa-solid fa-file-arrow-down text-cyan-400"></i>
+    <span class="hidden lg:inline">Export Sesiune</span>
+</button>
             <div class="flex items-center space-x-1.5">
                 <button onclick="switchTab('billingCard', 'Plată Abonament Card')" class="bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[11px] px-2.5 py-1 rounded-xl transition cursor-pointer flex items-center space-x-1 shadow">
                     <i class="fa-solid fa-credit-card"></i> <span>PRO</span>
@@ -1182,6 +1185,31 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+       function exportFullSession() {
+    const msgBox = document.getElementById('messagesContainer');
+    if (!msgBox) {
+        alert('Nu există mesaje de exportat momentan!');
+        return;
+    }
+
+    // Preluăm textul curat din mesaje
+    const textContent = msgBox.innerText;
+    
+    // Creăm un fișier virtual de tip text/markdown
+    const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    
+    // Generăm un link temporar de descărcare
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Curățăm elementul după descărcare
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+} 
     </script>
 </body>
 </html>
