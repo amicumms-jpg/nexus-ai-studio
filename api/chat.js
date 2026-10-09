@@ -21,7 +21,6 @@ export default async function handler(req, res) {
 
         let contentsParts = [prompt || "Analizează acest fișier:"];
 
-        // Dacă există un fișier trimis în baza64, îl adăugăm în structura multimodală
         if (fileData && fileData.base64 && fileData.mimeType) {
             contentsParts.push({
                 inlineData: {
@@ -31,26 +30,14 @@ export default async function handler(req, res) {
             });
         }
 
-       let result;
-        let retries = 3;
-        let delay = 1000;
-
-        while (retries > 0) {
-            try {
-                result = await model.generateContent(contentsParts);
-                break;
-            } catch (apiError) {
-                if (apiError.message && (apiError.message.includes("503") || apiError.message.includes("high demand")) && retries > 1) {
-                    retries--;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                } else {
-                    throw apiError;
-                }
-            }
-        }
-
+        const result = await model.generateContent(contentsParts);
         const response = await result.response;
         const responseText = response.text();
 
         return res.status(200).json({ text: responseText });
+
+    } catch (error) {
+        console.error("Eroare server API chat:", error);
+        return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
+    }
+}
