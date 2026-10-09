@@ -925,14 +925,20 @@
                 snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
             }, 120);
         }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            switchTab('chat', 'Chat General');
-            renderEditorialPosts();
-            if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
-                document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
-            }
-        });
+document.addEventListener("DOMContentLoaded", () => {
+    switchTab('chat', 'Chat General');
+    renderEditorialPosts();
+    if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
+        document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
+    }
+    
+    // Încărcăm istoricul salvat pentru chat-ul general dacă există
+    const savedHistory = localStorage.getItem('nexus_chat_history');
+    const defaultMsgBox = document.getElementById('chatMessages');
+    if (savedHistory && defaultMsgBox) {
+        defaultMsgBox.innerHTML = savedHistory;
+    }
+});
         // Funcția unificată pentru chat-urile independente din taburi
 async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
     const inputEl = document.getElementById(inputId);
@@ -958,8 +964,26 @@ async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') 
         
         // Înlocuiește loaderul cu răspunsul de la AI
         document.getElementById(loadingId).remove();
-        msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${responseText}</div>`;
-        msgBox.scrollTop = msgBox.scrollHeight;
+       const msgId = 'ai-msg-' + Date.now();
+msgBox.innerHTML += `
+    <div class="flex flex-col space-y-2 my-3">
+        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+            <b>AI Studio:</b><br>${marked.parse ? marked.parse(responseText) : responseText}
+        </div>
+        <div class="flex items-center space-x-3 text-xs pl-2">
+            <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                <span>Copiază</span>
+            </button>
+            <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>Descarcă .txt</span>
+            </button>
+        </div>
+    </div>
+`;
+        localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
+msgBox.scrollTop = msgBox.scrollHeight;
     } catch (err) {
         document.getElementById(loadingId).remove();
         msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
@@ -1099,6 +1123,34 @@ async function fetchFromServer(promptText) {
         console.error("Eroare la comunicarea cu serverul:", err);
         throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
     }
+}
+        function copyMsgText(msgId) {
+    const el = document.getElementById(msgId);
+    const textToCopy = el.innerText.replace('AI Studio:', '').trim();
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        event.currentTarget.querySelector('span').innerText = 'Copiat! ✓';
+        setTimeout(() => {
+            event.currentTarget.querySelector('span').innerText = 'Copiază';
+        }, 2000);
+    }).catch(err => {
+        console.error('Eroare la copiere:', err);
+    });
+}
+
+function downloadMsgText(msgId) {
+    const el = document.getElementById(msgId);
+    const textToDownload = el.innerText.replace('AI Studio:', '').trim();
+    
+    const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
     </script>
 </body>
