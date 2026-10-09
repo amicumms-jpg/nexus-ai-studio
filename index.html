@@ -1069,7 +1069,7 @@ async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKe
 
         if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
 
-        msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.response}</div>`;
+      msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
         msgBox.scrollTop = msgBox.scrollHeight;
     } catch (err) {
         const loadEl = document.getElementById(loadingId);
