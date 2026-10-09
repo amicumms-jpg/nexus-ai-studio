@@ -6,23 +6,22 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, tabId, fileData } = req.body;
-        if (!prompt) {
-            return res.status(400).json({ error: 'Prompt lipsa' });
+        const { prompt, fileData } = req.body;
+        if (!prompt && !fileData) {
+            return res.status(400).json({ error: 'Prompt sau fișier lipsă.' });
         }
 
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
-            return res.status(500).json({ error: 'Eroare: GEMINI_API_KEY nu este configurata in Vercel!' });
+            return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este configurată în Vercel!' });
         }
 
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro-latest });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro-latest" });
 
-        // Construim matricea multimodală de conținut conform specificațiilor oficiale Google
-        let contentsParts = [];
+        let contentsParts = [prompt || "Analizează acest fișier:"];
 
-        // Dacă utilizatorul a atașat o poză, un document sau un video de la frontend
+        // Dacă există un fișier trimis în baza64, îl adăugăm în structura multimodală
         if (fileData && fileData.base64 && fileData.mimeType) {
             contentsParts.push({
                 inlineData: {
@@ -32,32 +31,14 @@ export default async function handler(req, res) {
             });
         }
 
-        // Adăugăm textul utilizatorului
-        contentsParts.push({ text: prompt });
+        const result = await model.generateContent(contentsParts);
+        const response = await result.response;
+        const responseText = response.text();
 
-        let retries = 3;
-        let delay = 1000;
-        let result;
-
-        while (retries > 0) {
-            try {
-                result = await model.generateContent({ contents: [{ parts: contentsParts }] });
-                break;
-            } catch (apiError) {
-                if (apiError.message && apiError.message.includes("503") && retries > 1) {
-                    retries--;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                } else {
-                    throw apiError;
-                }
-            }
-        }
-
-        const responseText = result.response.text();
         return res.status(200).json({ text: responseText });
 
     } catch (error) {
-        console.error("Gemini Multimodal Error:", error);
-        return res.status(500).json({ error: error.message || 'Eroare interna server.' });
+        console.error("Eroare server API chat:", error);
+        return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
     }
 }
