@@ -1234,7 +1234,7 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
-    const translations = {
+  const translations = {
     ro: {
         newSession: "Sesiune Nouă AI",
         exportBtn: "Export Sesiune",
@@ -1265,10 +1265,6 @@ function changeLanguage(lang) {
     localStorage.setItem('nexus_lang', lang);
     const t = translations[lang] || translations.ro;
 
-    // Actualizăm elementele din interfață dacă există pe pagină
-    const newSessionBtn = document.querySelector('aside button span');
-    if (newSessionBtn) newSessionBtn.innerText = t.newSession;
-
     const exportBtnSpan = document.querySelector('button[onclick="exportFullSession()"] span');
     if (exportBtnSpan) exportBtnSpan.innerText = t.exportBtn;
 
@@ -1276,7 +1272,6 @@ function changeLanguage(lang) {
     if (quickNoteSpan) quickNoteSpan.innerText = t.quickNote;
 }
 
-// Apelăm o dată la încărcare pentru a păstra limba selectată
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('nexus_lang') || 'ro';
     const selectEl = document.getElementById('languageSelect');
