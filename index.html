@@ -1304,76 +1304,17 @@ if (typeof translations !== 'undefined') {
 function changeLanguage(lang) {
     console.log("Limba selectată:", lang);
     localStorage.setItem('nexus_lang', lang);
-    
+
     if (typeof translations === 'undefined') return;
     const t = translations[lang] || translations.en;
 
-    localStorage.setItem('nexus_tokens', '99999');
-    const tokenElement = document.getElementById('tokenCount') || document.querySelector('.Token');
-    if (tokenElement) tokenElement.innerText = 'Token: 99999';
+    // Traducem direct după ID-urile clare de pe butoane
+    const exportSpan = document.getElementById('exportText');
+    const noteSpan = document.getElementById('noteText');
 
-    // 1. Traducerea butoanelor de sus
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(btn => {
-        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('exportFullSession')) {
-            const span = btn.querySelector('span');
-            if (span) span.innerText = t.exportBtn;
-        }
-        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleQuickNotePopup')) {
-            const span = btn.querySelector('span');
-            if (span) span.innerText = t.quickNote;
-        }
-    });
-
-    // 2. Traducere inteligentă prin scanarea nodurilor de text directe (evită problemele de spațiere din HTML)
-    const sidebarLinks = document.querySelectorAll('aside a, .sidebar a, nav a, div.flex.direction-column a, aside button, .sidebar button');
-    sidebarLinks.forEach(el => {
-        // Căutăm nodul de text din interiorul elementului pentru a nu distruge iconițele/emoji-urile
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-        let textNode;
-        while (textNode = walker.nextNode()) {
-            const rawText = textNode.nodeValue.trim().toLowerCase();
-            if (!rawText) continue;
-
-            if (rawText.includes("chat general") || rawText.includes("general chat") || rawText.includes("chat général") || rawText.includes("allgemeiner chat")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(Chat General|General Chat|Chat Général|Allgemeiner Chat).*/i, t.nav_chat);
-            }
-            else if (rawText.includes("tiktok")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(TikTok AI Creator|Créateur AI TikTok).*/i, t.nav_tiktok);
-            }
-            else if (rawText.includes("instagram")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(Instagram AI Creator|Créateur AI Instagram).*/i, t.nav_instagram);
-            }
-            else if (rawText.includes("youtube")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(YouTube AI Scriptwriter|Scénariste AI YouTube).*/i, t.nav_youtube);
-            }
-            else if (rawText.includes("hashtag") || rawText.includes("seo")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(Hashtag & SEO Hub|Hub Hashtags & SEO).*/i, t.nav_hashtag);
-            }
-            else if (rawText.includes("calendar") || rawText.includes("calendrier") || rawText.includes("redaktionskalender")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(Calendar Editorial|Editorial Calendar|Calendrier Éditorial|Redaktionskalender).*/i, t.nav_calendar);
-            }
-            else if (rawText.includes("video") || rawText.includes("vidéo")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(Text-to-Video Studio|Studio Texte-en-Vidéo|Text-zu-Video Studio).*/i, t.nav_video);
-            }
-            else if (rawText.includes("testing") || rawText.includes("titluri") || rawText.includes("titres") || rawText.includes("überschriften")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(A\/B Testing Titluri|A\/B Title Testing|Tests A\/B de Titres|A\/B Überschriften-Test).*/i, t.nav_ab);
-            }
-            else if (rawText.includes("podcast")) {
-                textNode.nodeValue = textNode.nodeValue.replace(/.*(Podcast Script & Q&A|Script Podcast & Q&A|Podcast-Skript & Q&A).*/i, t.nav_podcast);
-            }
-            else if (rawText.includes("roast")) {
-                textNode.nodeValue = t.nav_roast;
-            }
-            else if (rawText.includes("snake") || rawText.includes("arcade")) {
-                textNode.nodeValue = t.nav_arcade;
-            }
-        }
-    });
+    if (exportSpan) exportSpan.innerText = t.exportBtn;
+    if (noteSpan) noteSpan.innerText = t.quickNote;
 }
-
-
-
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('nexus_lang') || 'ro';
     const selectEl = document.getElementById('languagesSelect') || document.querySelector('select');
