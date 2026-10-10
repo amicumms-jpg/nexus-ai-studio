@@ -68,8 +68,8 @@ function googleTranslateElementInit() {
     .goog-tooltip { display: none !important; }
     .goog-tooltip:hover { display: none !important; }
 </style>
-          <style>
-    /* Reguli stricte pentru Mobil și Tablete (max-width: 768px) */
+           <style>
+    /* Reguli pentru Mobil și Tablete (max-width: 768px) */
     @media (max-width: 768px) {
       body, html {
         overflow-x: hidden !important;
@@ -78,22 +78,21 @@ function googleTranslateElementInit() {
         max-width: 100vw !important;
       }
       
-      /* 1. Resetăm complet containerul părinte restricționat din inspector */
-      main class, 
+      /* Resetăm containerul părinte de desktop */
       div.flex.flex-1.overflow-hidden.z-10,
       .flex.flex-1.overflow-hidden {
-        display: block !important; /* Distruge alinierea pe linie (orizontală) de desktop */
+        display: block !important;
         width: 100% !important;
         max-width: 100vw !important;
         margin: 0 !important;
         padding: 0 !important;
       }
       
-      /* 2. Repararea Sidebar-ului (Meniului) */
+      /* Sidebar / Meniu */
       aside, .w-64 {
         position: fixed !important;
         top: 0 !important;
-        left: -100% !important; /* Îl scoate complet din spațiul vizual și structural al ecranului */
+        left: -100% !important;
         width: 280px !important;
         min-width: 280px !important;
         max-width: 280px !important;
@@ -101,7 +100,7 @@ function googleTranslateElementInit() {
         z-index: 99999 !important;
         transition: left 0.3s ease-in-out !important;
         box-shadow: 5px 0 25px rgba(0,0,0,0.8) !important;
-        overflow-y: auto !important; /* Activează scroll-ul în meniu */
+        overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         display: flex !important;
         flex-direction: column !important;
@@ -111,8 +110,8 @@ function googleTranslateElementInit() {
         left: 0 !important;
       }
       
-      /* 3. Forțăm TOATE taburile (inclusiv chat-ul și ferestrele noi) să ocupe 100% din ecran */
-      main, .app-tab, #tab-chat, #tab-tiktokStudio, #tab-instaStudio, [id^="tab-"] {
+      /* Alinierea tuturor paginilor de la zero (colțul stânga sus) */
+      main, .app-tab, div[id^="tab-"] {
         width: 100% !important;
         max-width: 100vw !important;
         margin: 0 !important;
@@ -124,20 +123,26 @@ function googleTranslateElementInit() {
       }
       
       main {
-        padding-top: 65px !important; /* Spațiu sus pentru a nu acoperi butoanele cu meniul mobil */
+        padding-top: 65px !important;
         min-height: 100vh !important;
         position: relative !important;
       }
 
-      /* 4. Soluția pentru ascunderea taburilor inactive */
-      /* Când scriptul tău ascunde un tab (adaugă clasa hidden sau scoate clasa active), o forțăm să dispară */
-      .app-tab:not(.active), 
-      div[id^="tab-"]:not(.active),
-      div[style*="display: none"] {
+      /* ASCUNDEREA CHIRURGICALĂ A TABURILOR INACTIVE */
+      /* Folosim exact clasa ".active-tab" pe care am văzut-o în inspectorul tău pe linia roșie */
+      .app-tab:not(.active-tab), 
+      div[id^="tab-"]:not(.active-tab) {
         display: none !important;
       }
+      
+      /* Forțăm afișarea DOAR a tabului care conține clasa salvată de scriptul tău */
+      .app-tab.active-tab,
+      div[id^="tab-"].active-tab {
+        display: flex !important;
+        flex-direction: column !important;
+      }
 
-      /* 5. Repararea bazei containerului de scris de jos (Input zone) */
+      /* Zona de input de jos */
       .flex.items-center.space-x-2, 
       main div.flex.items-center,
       div[class*="border-border-gray-800"] {
@@ -153,7 +158,7 @@ function googleTranslateElementInit() {
         min-width: 120px !important;
       }
 
-      /* Butonul fix plutitor de Meniu din colț */
+      /* Butonul de Meniu mobil */
       #mobileMenuBtn {
         display: flex !important;
         align-items: center;
@@ -179,6 +184,7 @@ function googleTranslateElementInit() {
       }
     }
   </style>
+
 
 
 
