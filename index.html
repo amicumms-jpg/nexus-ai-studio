@@ -69,6 +69,7 @@ function googleTranslateElementInit() {
     .goog-tooltip:hover { display: none !important; }
 </style>
         <style>
+    /* Stiluri dedicate exclusiv pentru Mobil și Tablete */
     @media (max-width: 768px) {
       body, html {
         overflow-x: hidden !important;
@@ -77,14 +78,14 @@ function googleTranslateElementInit() {
         max-width: 100vw !important;
       }
       
-      /* Forțăm containerul mare care ține meniul și chat-ul să se așeze pe verticală, nu pe linie */
+      /* Resetăm containerul mare - eliminăm efectul de împingere pe orizontală */
       div.flex.flex-1.overflow-hidden.z-10 {
-        flex-direction: column !important;
+        display: block !important; /* Dezactivăm flex-ul de desktop care aliniază greșit */
         width: 100% !important;
         height: 100vh !important;
       }
       
-      /* Meniul lateral retras perfect în afara ecranului */
+      /* Meniul lateral se ascunde complet în stânga ecranului */
       aside#appSidebar, .w-64 {
         position: fixed !important;
         top: 0 !important;
@@ -102,21 +103,47 @@ function googleTranslateElementInit() {
         left: 0 !important;
       }
       
-      /* Chat-ul (main) ocupă acum 100% din ecran și se extinde din colțul din stânga! */
+      /* Containerul principal de chat ocupă ACUM 100% din ecran, din marginea stângă! */
       main, .flex-1, .app-tab, #tab-chat {
         width: 100% !important;
         max-width: 100vw !important;
-        margin-left: 0 !important;
-        left: 0 !important;
-        flex-basis: 100% !important;
+        margin: 0 !important;
+        padding: 8px !important;
+        box-sizing: border-box !important;
       }
       
-      /* Lăsăm loc în partea de sus a chat-ului pentru butonul plutitor */
       main {
-        padding-top: 65px !important;
+        padding-top: 65px !important; /* Lasă loc sus pentru butonul de meniu */
       }
 
-      /* Butonul de meniu plutitor */
+      /* REPARARE INTELIGENTĂ PENTRU ZONA DE SCRIS (Agrafă, Emojis, Font) */
+      /* Identificăm zona de input și o forțăm să nu se mai lărească în afara ecranului */
+      .flex.items-center.space-x-2, 
+      main div.flex.items-center, 
+      div[class*="border-border-gray-800"] {
+        max-width: 100% !important;
+        width: 100% !important;
+        flex-wrap: wrap !important; /* Permite butoanelor să treacă dedesubt dacă nu au loc */
+        gap: 6px !important;
+        padding: 6px !important;
+      }
+
+      /* Zona efectivă unde tastezi textul se va lărgi la maxim */
+      textarea, input[type="text"] {
+        flex: 1 1 auto !important;
+        min-width: 150px !important;
+        font-size: 14px !important;
+      }
+
+      /* Micșorăm discret butoanele (agrafa, emoticoanele, fontul) pe mobil ca să încapă elegant */
+      main button svg, 
+      main button i,
+      main .flex.items-center button {
+        padding: 6px !important;
+        font-size: 14px !important;
+      }
+
+      /* Butonul plutitor din colțul stânga-sus (Meniu) */
       #mobileMenuBtn {
         display: flex !important;
         align-items: center;
@@ -130,7 +157,6 @@ function googleTranslateElementInit() {
         color: #ffffff !important;
         padding: 8px 16px !important;
         border-radius: 8px !important;
-        cursor: pointer !important;
         font-size: 14px !important;
         font-weight: bold !important;
         box-shadow: 0 4px 15px rgba(0,243,255,0.3);
@@ -143,6 +169,7 @@ function googleTranslateElementInit() {
       }
     }
   </style>
+
 
 
 
