@@ -1382,13 +1382,11 @@ function toggleEmojiPicker() {
 
 // Funcție pentru a adăuga emoji-ul selectat în caseta de text a mesajului
 function addEmoji(emoji) {
-    // Înlocuiește 'messageInput' cu ID-ul real al casetei tale de text unde scrii mesajul în chat
-    const input = document.getElementById('messageInput') || document.querySelector('textarea');
+    const input = document.getElementById('chatInput');
     if (input) {
         input.value += emoji;
         input.focus();
     }
-    // Ascundem panoul după ce a fost selectat emoji-ul
     const picker = document.getElementById('emojiPicker');
     if (picker) {
         picker.classList.add('hidden');
