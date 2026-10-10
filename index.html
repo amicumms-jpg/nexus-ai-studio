@@ -68,8 +68,8 @@ function googleTranslateElementInit() {
     .goog-tooltip { display: none !important; }
     .goog-tooltip:hover { display: none !important; }
 </style>
-        <style>
-    /* Stiluri dedicate exclusiv pentru Mobil și Tablete */
+          <style>
+    /* Reguli stricte pentru Mobil și Tablete (max-width: 768px) */
     @media (max-width: 768px) {
       body, html {
         overflow-x: hidden !important;
@@ -78,18 +78,22 @@ function googleTranslateElementInit() {
         max-width: 100vw !important;
       }
       
-      /* Resetăm containerul mare - eliminăm efectul de împingere pe orizontală */
-      div.flex.flex-1.overflow-hidden.z-10 {
-        display: block !important; /* Dezactivăm flex-ul de desktop care aliniază greșit */
+      /* 1. Resetăm complet containerul părinte restricționat din inspector */
+      main class, 
+      div.flex.flex-1.overflow-hidden.z-10,
+      .flex.flex-1.overflow-hidden {
+        display: block !important; /* Distruge alinierea pe linie (orizontală) de desktop */
         width: 100% !important;
-        height: 100vh !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       
-      /* Meniul lateral se ascunde complet în stânga ecranului */
-           aside, .w-64 {
+      /* 2. Repararea Sidebar-ului (Meniului) */
+      aside, .w-64 {
         position: fixed !important;
         top: 0 !important;
-        left: -100% !important;
+        left: -100% !important; /* Îl scoate complet din spațiul vizual și structural al ecranului */
         width: 280px !important;
         min-width: 280px !important;
         max-width: 280px !important;
@@ -97,55 +101,59 @@ function googleTranslateElementInit() {
         z-index: 99999 !important;
         transition: left 0.3s ease-in-out !important;
         box-shadow: 5px 0 25px rgba(0,0,0,0.8) !important;
-        overflow-y: auto !important;
+        overflow-y: auto !important; /* Activează scroll-ul în meniu */
         -webkit-overflow-scrolling: touch !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
+      
       aside.mobile-open, .w-64.mobile-open {
         left: 0 !important;
       }
-
       
-      /* Containerul principal de chat ocupă ACUM 100% din ecran, din marginea stângă! */
-      main, .flex-1, .app-tab, #tab-chat {
+      /* 3. Forțăm TOATE taburile (inclusiv chat-ul și ferestrele noi) să ocupe 100% din ecran */
+      main, .app-tab, #tab-chat, #tab-tiktokStudio, #tab-instaStudio, [id^="tab-"] {
         width: 100% !important;
         max-width: 100vw !important;
         margin: 0 !important;
-        padding: 8px !important;
+        padding: 12px !important;
         box-sizing: border-box !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
       }
       
       main {
-        padding-top: 65px !important; /* Lasă loc sus pentru butonul de meniu */
+        padding-top: 65px !important; /* Spațiu sus pentru a nu acoperi butoanele cu meniul mobil */
+        min-height: 100vh !important;
+        position: relative !important;
       }
 
-      /* REPARARE INTELIGENTĂ PENTRU ZONA DE SCRIS (Agrafă, Emojis, Font) */
-      /* Identificăm zona de input și o forțăm să nu se mai lărească în afara ecranului */
+      /* 4. Soluția pentru ascunderea taburilor inactive */
+      /* Când scriptul tău ascunde un tab (adaugă clasa hidden sau scoate clasa active), o forțăm să dispară */
+      .app-tab:not(.active), 
+      div[id^="tab-"]:not(.active),
+      div[style*="display: none"] {
+        display: none !important;
+      }
+
+      /* 5. Repararea bazei containerului de scris de jos (Input zone) */
       .flex.items-center.space-x-2, 
-      main div.flex.items-center, 
+      main div.flex.items-center,
       div[class*="border-border-gray-800"] {
         max-width: 100% !important;
         width: 100% !important;
-        flex-wrap: wrap !important; /* Permite butoanelor să treacă dedesubt dacă nu au loc */
+        flex-wrap: wrap !important;
         gap: 6px !important;
         padding: 6px !important;
       }
-
-      /* Zona efectivă unde tastezi textul se va lărgi la maxim */
+      
       textarea, input[type="text"] {
         flex: 1 1 auto !important;
-        min-width: 150px !important;
-        font-size: 14px !important;
+        min-width: 120px !important;
       }
 
-      /* Micșorăm discret butoanele (agrafa, emoticoanele, fontul) pe mobil ca să încapă elegant */
-      main button svg, 
-      main button i,
-      main .flex.items-center button {
-        padding: 6px !important;
-        font-size: 14px !important;
-      }
-
-      /* Butonul plutitor din colțul stânga-sus (Meniu) */
+      /* Butonul fix plutitor de Meniu din colț */
       #mobileMenuBtn {
         display: flex !important;
         align-items: center;
@@ -171,6 +179,7 @@ function googleTranslateElementInit() {
       }
     }
   </style>
+
 
 
 
