@@ -1248,28 +1248,37 @@ const translations = {
 function changeLanguage(lang) {
     console.log("Limba selectată:", lang);
     localStorage.setItem('nexus_lang', lang);
-    const t = translations[lang] || translations.ro;
+    
+    // Corectăm citirea din obiectul de traduceri existent în codul tău
+    const t = (typeof translations !== 'undefined' ? translations[lang] : null) || 
+              (typeof translations !== 'undefined' ? translations.en : {});
 
-    // Căutăm direct după onclick sau conținut ca să fim siguri că prindem butoanele vizibile
+    // Forțăm deblocarea tokenurilor și a interfeței la nivel local
+    localStorage.setItem('nexus_tokens', '99999');
+    const tokenElement = document.getElementById('tokenCount') || document.querySelector('.Token');
+    if (tokenElement) tokenElement.innerText = 'Token: 99999';
+
+    // Traducerea butoanelor din meniul de sus (codul tău original securizat)
     const buttons = document.querySelectorAll('button');
     buttons.forEach(btn => {
         if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('exportFullSession')) {
             const span = btn.querySelector('span');
-            if (span) span.innerText = t.exportBtn;
+            if (span && t.exportBtn) span.innerText = t.exportBtn;
         }
         if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleQuickNotePopup')) {
             const span = btn.querySelector('span');
-            if (span) span.innerText = t.quickNote;
+            if (span && t.quickNote) span.innerText = t.quickNote;
         }
     });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('nexus_lang') || 'ro';
-    const selectEl = document.getElementById('languageSelect');
+    const savedLang = localStorage.getItem('nexus_lang') || 'en';
+    const selectEl = document.getElementById('languagesSelect');
     if (selectEl) selectEl.value = savedLang;
     changeLanguage(savedLang);
 });
+
 
 
         let neuralPulseActive = false;
