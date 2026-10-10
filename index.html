@@ -86,7 +86,7 @@ function googleTranslateElementInit() {
       }
       
       /* Meniul lateral se ascunde complet în stânga ecranului */
-      aside#appSidebar, .w-64 {
+           aside, .w-64 {
         position: fixed !important;
         top: 0 !important;
         left: -100% !important;
@@ -97,12 +97,13 @@ function googleTranslateElementInit() {
         z-index: 99999 !important;
         transition: left 0.3s ease-in-out !important;
         box-shadow: 5px 0 25px rgba(0,0,0,0.8) !important;
-         overflow-y: auto !important; 
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
       }
-      
-      aside#appSidebar.mobile-open, .w-64.mobile-open {
+      aside.mobile-open, .w-64.mobile-open {
         left: 0 !important;
       }
+
       
       /* Containerul principal de chat ocupă ACUM 100% din ecran, din marginea stângă! */
       main, .flex-1, .app-tab, #tab-chat {
