@@ -68,64 +68,69 @@ function googleTranslateElementInit() {
     .goog-tooltip { display: none !important; }
     .goog-tooltip:hover { display: none !important; }
 </style>
-     <style>
-    /* Corecție strictă pentru ecrane de mobil și tablete (max-width: 768px) */
+       <style>
+    /* Forțăm regulile pe baza structurii exacte din inspector */
     @media (max-width: 768px) {
       body, html {
         overflow-x: hidden !important;
         position: relative !important;
+        width: 100% !important;
+        max-width: 100vw !important;
       }
       
-      /* Ascundem complet meniul și îi anulăm comportamentul de tip flex-shrink-0 */
-      aside#appSidebar {
+      /* Anulăm complet lățimea nativă w-64 de la Tailwind pe mobil */
+      aside#appSidebar, .w-64 {
         position: fixed !important;
         top: 0 !important;
-        left: -100% !important; /* Îl scoatem complet în stânga */
+        left: -100% !important; /* Îl trimitem complet în afara ecranului */
         width: 280px !important;
         min-width: 280px !important;
+        max-width: 280px !important;
         height: 100vh !important;
-        flex-shrink: unset !important; /* Îi tăiem legătura cu structura flex a desktop-ului */
-        z-index: 99999 !important; /* Îl aducem deasupra absolut tuturor elementelor */
+        z-index: 99999 !important;
         transition: left 0.3s ease-in-out !important;
-        box-shadow: 5px 0 25px rgba(0,0,0,0.7) !important;
-        display: flex !important; /* Ne asigurăm că rămâne vizibil doar când îi dăm clasa mobile-open */
+        box-shadow: 5px 0 25px rgba(0,0,0,0.8) !important;
       }
       
-      /* Clasa activată la click din JavaScript */
-      aside#appSidebar.mobile-open {
+      /* Când clasa este activată de JavaScript, meniul alunecă pe ecran */
+      aside#appSidebar.mobile-open, .w-64.mobile-open {
         left: 0 !important;
       }
       
-      /* Forțăm zona principală să se lărească complet fără margini stânga */
-      main, div.flex.flex-1.overflow-hidden {
+      /* Forțăm containerul principal și paginile de chat să ocupe tot spațiul mobilului */
+      main, .flex-1, .app-tab, #tab-chat {
         width: 100% !important;
         max-width: 100vw !important;
         margin-left: 0 !important;
-        padding-top: 55px !important; /* Lăsăm loc în partea de sus pentru butonul plutitor */
+        flex-basis: 100% !important;
+      }
+      
+      /* Lăsăm un spațiu în partea de sus a chat-ului pentru a nu acoperi titlurile cu butonul */
+      main {
+        padding-top: 60px !important;
       }
 
-      /* Stil optimizat pentru butonul plutitor */
+      /* Re-poziționăm butonul de meniu să stea FIX în colțul stânga-sus peste orice element */
       #mobileMenuBtn {
         display: flex !important;
         align-items: center;
         justify-content: center;
         position: fixed !important;
-        top: 10px !important;
-        left: 10px !important;
-        z-index: 99998 !important; /* Stă chiar sub meniu, dar deasupra chat-ului */
-        background-color: #0d1527 !important; /* Culoare închisă asortată cu fundalul tău */
-        border: 1px solid #1ed760 !important; /* Bordură verde/cyan neon discretă ca design-ul tău */
+        top: 15px !important;
+        left: 15px !important;
+        z-index: 999999 !important; /* Îl punem deasupra absolut la tot */
+        background-color: #0d1527 !important;
+        border: 2px solid #00f3ff !important; /* Bordură Cyan Neon asortată cu interfața ta */
         color: #ffffff !important;
         padding: 8px 16px !important;
         border-radius: 8px !important;
         cursor: pointer !important;
         font-size: 14px !important;
         font-weight: bold !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        box-shadow: 0 4px 15px rgba(0,243,255,0.3);
       }
     }
 
-    /* Ascundere completă pe desktop */
     @media (min-width: 769px) {
       #mobileMenuBtn {
         display: none !important;
@@ -133,8 +138,10 @@ function googleTranslateElementInit() {
     }
   </style>
 
+
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative">
+<button id="mobileMenuBtn" onclick="toggleMobileMenu()">☰ Meniu</button>
 
     <!-- Canvas Matrix -->
     <canvas id="matrixCanvas"></canvas>
@@ -263,7 +270,7 @@ function googleTranslateElementInit() {
 
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
-     <button id="mobileMenuBtn" onclick="toggleMobileMenu()">☰ Meniu</button>
+    
    
         <!-- Sidebar -->
         <aside id="appSidebar" class="w-64 bg-panelBg border-r border-gray-800 flex flex-col shrink-0 p-3 z-10 overflow-y-auto space-y-3">
