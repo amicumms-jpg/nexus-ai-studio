@@ -1245,32 +1245,120 @@ const translations = {
     de: { exportBtn: "Sitzung Exportieren", quickNote: "Notiz" }
 };
 
+const translations = {
+  ro: { 
+    exportBtn: "Export Sesiune", 
+    quickNote: "Notiță",
+    nav_chat: "Chat General",
+    nav_tiktok: "TikTok AI Creator",
+    nav_instagram: "Instagram AI Creator",
+    nav_youtube: "YouTube AI Scriptwriter",
+    nav_hashtag: "Hashtag & SEO Hub",
+    nav_calendar: "Calendar Editorial",
+    nav_video: "Text-to-Video Studio",
+    nav_ab: "A/B Testing Titluri",
+    nav_podcast: "Podcast Script & Q&A",
+    nav_roast: "AI Roast My Content",
+    nav_arcade: "Retro Snake Arcade"
+  },
+  en: { 
+    exportBtn: "Export Session", 
+    quickNote: "Quick Note",
+    nav_chat: "General Chat",
+    nav_tiktok: "TikTok AI Creator",
+    nav_instagram: "Instagram AI Creator",
+    nav_youtube: "YouTube AI Scriptwriter",
+    nav_hashtag: "Hashtag & SEO Hub",
+    nav_calendar: "Editorial Calendar",
+    nav_video: "Text-to-Video Studio",
+    nav_ab: "A/B Title Testing",
+    nav_podcast: "Podcast Script & Q&A",
+    nav_roast: "AI Roast My Content",
+    nav_arcade: "Retro Snake Arcade"
+  },
+  fr: { 
+    exportBtn: "Exporter la Session", 
+    quickNote: "Note Rapide",
+    nav_chat: "Chat Général",
+    nav_tiktok: "Créateur AI TikTok",
+    nav_instagram: "Créateur AI Instagram",
+    nav_youtube: "Scénariste AI YouTube",
+    nav_hashtag: "Hub Hashtags & SEO",
+    nav_calendar: "Calendrier Éditorial",
+    nav_video: "Studio Texte-en-Vidéo",
+    nav_ab: "Tests A/B de Titres",
+    nav_podcast: "Script Podcast & Q&A",
+    nav_roast: "AI Roast My Content",
+    nav_arcade: "Retro Snake Arcade"
+  },
+  de: { 
+    exportBtn: "Sitzung Exportieren", 
+    quickNote: "Notiz",
+    nav_chat: "Allgemeiner Chat",
+    nav_tiktok: "TikTok AI Creator",
+    nav_instagram: "Instagram AI Creator",
+    nav_youtube: "YouTube AI Scriptwriter",
+    nav_hashtag: "Hashtag & SEO Hub",
+    nav_calendar: "Redaktionskalender",
+    nav_video: "Text-zu-Video Studio",
+    nav_ab: "A/B Überschriften-Test",
+    nav_podcast: "Podcast-Skript & Q&A",
+    nav_roast: "AI Roast My Content",
+    nav_arcade: "Retro Snake Arcade"
+  }
+};
+
 function changeLanguage(lang) {
     console.log("Limba selectată:", lang);
     localStorage.setItem('nexus_lang', lang);
     
-    // Corectăm citirea din obiectul de traduceri existent în codul tău
-    const t = (typeof translations !== 'undefined' ? translations[lang] : null) || 
-              (typeof translations !== 'undefined' ? translations.en : {});
+    const t = translations[lang] || translations.en;
 
-    // Forțăm deblocarea tokenurilor și a interfeței la nivel local
+    // Forțăm deblocarea tokenurilor și a interfeței local
     localStorage.setItem('nexus_tokens', '99999');
     const tokenElement = document.getElementById('tokenCount') || document.querySelector('.Token');
     if (tokenElement) tokenElement.innerText = 'Token: 99999';
 
-    // Traducerea butoanelor din meniul de sus (codul tău original securizat)
+    // 1. Traducerea butoanelor din meniul de sus
     const buttons = document.querySelectorAll('button');
     buttons.forEach(btn => {
         if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('exportFullSession')) {
             const span = btn.querySelector('span');
-            if (span && t.exportBtn) span.innerText = t.exportBtn;
+            if (span) span.innerText = t.exportBtn;
         }
         if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleQuickNotePopup')) {
             const span = btn.querySelector('span');
-            if (span && t.quickNote) span.innerText = t.quickNote;
+            if (span) span.innerText = t.quickNote;
         }
     });
+
+    // 2. Scanare și traducere automată pentru taburile din meniul din stânga
+    const sidebarLinks = document.querySelectorAll('aside a, .sidebar a, nav a, div.flex.direction-column a, button');
+    sidebarLinks.forEach(el => {
+        const text = el.innerText.trim();
+        
+        // Mapăm textul românesc fix de pe ecran către cheia sa din dicționar
+        if (text.includes("Chat General")) el.innerHTML = el.innerHTML.replace("Chat General", t.nav_chat);
+        if (text.includes("TikTok AI Creator")) el.innerHTML = el.innerHTML.replace("TikTok AI Creator", t.nav_tiktok);
+        if (text.includes("Instagram AI Creator")) el.innerHTML = el.innerHTML.replace("Instagram AI Creator", t.nav_instagram);
+        if (text.includes("YouTube AI Scriptwriter")) el.innerHTML = el.innerHTML.replace("YouTube AI Scriptwriter", t.nav_youtube);
+        if (text.includes("Hashtag & SEO Hub")) el.innerHTML = el.innerHTML.replace("Hashtag & SEO Hub", t.nav_hashtag);
+        if (text.includes("Calendar Editorial")) el.innerHTML = el.innerHTML.replace("Calendar Editorial", t.nav_calendar);
+        if (text.includes("Text-to-Video Studio")) el.innerHTML = el.innerHTML.replace("Text-to-Video Studio", t.nav_video);
+        if (text.includes("A/B Testing Titluri")) el.innerHTML = el.innerHTML.replace("A/B Testing Titluri", t.nav_ab);
+        if (text.includes("Podcast Script & Q&A")) el.innerHTML = el.innerHTML.replace("Podcast Script & Q&A", t.nav_podcast);
+        if (text.includes("AI Roast My Content")) el.innerHTML = el.innerHTML.replace("AI Roast My Content", t.nav_roast);
+        if (text.includes("Retro Snake Arcade")) el.innerHTML = el.innerHTML.replace("Retro Snake Arcade", t.nav_arcade);
+    });
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('nexus_lang') || 'ro';
+    const selectEl = document.getElementById('languagesSelect') || document.querySelector('select');
+    if (selectEl) selectEl.value = savedLang;
+    changeLanguage(savedLang);
+});
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('nexus_lang') || 'en';
