@@ -1238,7 +1238,7 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
- const translations = {
+const translations = {
     ro: { exportBtn: "Export Sesiune", quickNote: "Notiță" },
     en: { exportBtn: "Export Session", quickNote: "Quick Note" },
     fr: { exportBtn: "Exporter la Session", quickNote: "Note Rapide" },
@@ -1250,18 +1250,18 @@ function changeLanguage(lang) {
     localStorage.setItem('nexus_lang', lang);
     const t = translations[lang] || translations.ro;
 
-    const exportSpan = document.getElementById('exportText');
-    const noteSpan = document.getElementById('noteText');
-
-    console.log("Am găsit exportSpan?", exportSpan);
-    console.log("Am găsit noteSpan?", noteSpan);
-
-    if (exportSpan) {
-        exportSpan.innerText = t.exportBtn;
-    }
-    if (noteSpan) {
-        noteSpan.innerText = t.quickNote;
-    }
+    // Căutăm direct după onclick sau conținut ca să fim siguri că prindem butoanele vizibile
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('exportFullSession')) {
+            const span = btn.querySelector('span');
+            if (span) span.innerText = t.exportBtn;
+        }
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('toggleQuickNotePopup')) {
+            const span = btn.querySelector('span');
+            if (span) span.innerText = t.quickNote;
+        }
+    });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
