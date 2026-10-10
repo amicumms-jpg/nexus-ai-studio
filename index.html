@@ -187,19 +187,10 @@ function googleTranslateElementInit() {
         </div>
         <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
     </div>
-<!-- Buton Meniu Mobil (Hamburger) cu toggle corect -->
+<!-- Buton Meniu Mobil (Hamburger) simplificat și stabil -->
 <div class="md:hidden flex items-center justify-between px-4 py-3 bg-panelBg border-b border-gray-800 z-30">
   <div class="flex items-center space-x-3">
-    <button onclick="
-      const sb = document.getElementById('appSidebar');
-      if (sb.classList.contains('hidden')) {
-        sb.classList.remove('hidden');
-        sb.classList.add('absolute', 'inset-y-0', 'left-0', 'z-50', 'w-64');
-      } else {
-        sb.classList.add('hidden');
-        sb.classList.remove('absolute', 'inset-y-0', 'left-0', 'z-50', 'w-64');
-      }
-    " class="text-cyanNeon hover:text-white p-1 focus:outline-none">
+    <button onclick="document.getElementById('appSidebar').classList.toggle('hidden')" class="text-cyanNeon hover:text-white p-1 focus:outline-none">
       <i class="fa-solid fa-bars text-xl"></i>
     </button>
     <span class="font-bold text-sm text-white tracking-wide">Nexus AI Studio Pro</span>
