@@ -46,6 +46,26 @@
             display: flex !important;
         }
     </style>
+    <!-- Google Translate Script -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'ro',
+        includedLanguages: 'ro,en,fr,de',
+        autoDisplay: false
+    }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
+    /* Ascundem bara inestetică de sus a Google-ului */
+    .goog-te-banner-frame.skiptranslate { display: none !important; }
+    body { top: 0px !important; }
+    #goog-te-spinner { display: none !important; }
+    .goog-te-gadget { font-size: 0px; color: transparent; }
+    .goog-te-gadget span { display: none; }
+</style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative">
 
@@ -133,13 +153,16 @@
     <i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i>
     <span class="hidden lg:inline">Neural Pulse: OFF</span>
 </button>
-            <!-- Selector Multilingual -->
-<select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2.5 py-1.5 rounded-xl text-xs transition outline-none cursor-pointer">
+           <!-- Selector Multilingual -->
+<select id="languageSelect" onchange="changeWebsiteLanguage(this.value)" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2.5 py-1.5 rounded-xl text-xs transition outline-none cursor-pointer">
     <option value="ro">🇷🇴 Română</option>
     <option value="en">🇬🇧 English</option>
     <option value="fr">🇫🇷 Français</option>
     <option value="de">🇩🇪 Deutsch</option>
 </select>
+
+<!-- Container ascuns obligatoriu pentru Google -->
+<div id="google_translate_element" style="display:none;"></div>
             <div class="flex items-center space-x-1.5">
                 <button onclick="switchTab('billingCard', 'Plată Abonament Card')" class="bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[11px] px-2.5 py-1 rounded-xl transition cursor-pointer flex items-center space-x-1 shadow">
                     <i class="fa-solid fa-credit-card"></i> <span>PRO</span>
@@ -1301,34 +1324,23 @@ if (typeof translations !== 'undefined') {
   };
 }
 
-function changeLanguage(lang) {
-    console.log("Limba selectată:", lang);
+function changeWebsiteLanguage(lang) {
     localStorage.setItem('nexus_lang', lang);
-
-    if (typeof translations === 'undefined') return;
-    const t = translations[lang] || translations.en;
-
-    // Traducem direct după ID-urile clare de pe butoane
-    const exportSpan = document.getElementById('exportText');
-    const noteSpan = document.getElementById('noteText');
-
-    if (exportSpan) exportSpan.innerText = t.exportBtn;
-    if (noteSpan) noteSpan.innerText = t.quickNote;
+    var selectField = document.querySelector(".goog-te-combo");
+    if (selectField) {
+        selectField.value = lang;
+        selectField.dispatchEvent(new Event('change'));
+    }
 }
+
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('nexus_lang') || 'ro';
-    const selectEl = document.getElementById('languagesSelect') || document.querySelector('select');
+    const selectEl = document.getElementById('languageSelect');
     if (selectEl) selectEl.value = savedLang;
-    changeLanguage(savedLang);
-});
-
-
-
-window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('nexus_lang') || 'en';
-    const selectEl = document.getElementById('languagesSelect');
-    if (selectEl) selectEl.value = savedLang;
-    changeLanguage(savedLang);
+    
+    setTimeout(() => {
+        changeWebsiteLanguage(savedLang);
+    }, 1200);
 });
 
 
