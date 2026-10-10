@@ -104,9 +104,9 @@ function googleTranslateElementInit() {
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2.5 flex flex-col md:flex-row items-center justify-between shrink-0 shadow-lg z-20 space-y-2 md:space-y-0">
         <div class="flex items-center space-x-4 w-full md:w-auto justify-between md:justify-start">
             <div class="flex items-center space-x-3">
-               <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg shadow-xl">
-  <i class="fa-solid fa-bolt-lightning animate-spin" style="animation-duration: 6s;"></i>
-</div>
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-base">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
                 <div>
                     <div class="flex items-center space-x-2">
                         <h1 class="font-bold text-xs text-white tracking-wide">Nexus AI Studio Pro</h1>
@@ -187,25 +187,12 @@ function googleTranslateElementInit() {
         </div>
         <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
     </div>
-<!-- Buton Meniu Mobil (Hamburger) simplificat și stabil -->
-<div class="md:hidden flex items-center justify-between px-4 py-3 bg-panelBg border-b border-gray-800 z-30">
-  <div class="flex items-center space-x-3">
-    <button onclick="document.getElementById('appSidebar').classList.toggle('hidden')" class="text-cyanNeon hover:text-white p-1 focus:outline-none">
-      <i class="fa-solid fa-bars text-xl"></i>
-    </button>
-    <span class="font-bold text-sm text-white tracking-wide">Nexus AI Studio Pro</span>
-  </div>
-  <div class="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon p-0.5 shadow-md shadow-cyanNeon/20 animate-pulse">
-    <div class="w-full h-full bg-darkBg rounded-[10px] flex items-center justify-center overflow-hidden">
-      <i class="fa-solid fa-robot text-cyanNeon text-xs animate-spin" style="animation-duration: 8s;"></i>
-    </div>
-  </div>
-</div>
+
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         
         <!-- Sidebar -->
-       <aside id="appSidebar" class="w-64 bg-panelBg border-r border-gray-800 hidden md:flex flex-col shrink-0 p-3 z-10 overflow-y-auto space-y-3">
+        <aside id="appSidebar" class="w-64 bg-panelBg border-r border-gray-800 flex flex-col shrink-0 p-3 z-10 overflow-y-auto space-y-3">
             <button onclick="newSession()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-lg shadow-cyan-500/10 transition cursor-pointer">
                 <i class="fa-solid fa-plus font-bold"></i>
                 <span>Sesiune Nouă AI</span>
@@ -318,24 +305,14 @@ function googleTranslateElementInit() {
         <option value="Răspunde într-un ton amuzant și plin de umor: ">Amuzant</option>
     </select>
 </div>
-  <!-- Container complet pentru caseta de chat și input -->
-    <div class="bg-panelBg border border-cyanNeon/30 p-3 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
-      <h2 class="font-bold text-sm text-cyanNeon mb-2">Nexus Neural Assistant - Chat General</h2>
-      <div id="chatMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
-        <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
-      </div>
-      
-      <!-- Bara de scriere corectată pentru mobil -->
-      <div class="flex items-center space-x-2 pt-2 border-t border-gray-800/60 w-full mt-auto">
-        <button class="text-gray-400 hover:text-white p-2 shrink-0">
-          <i class="fa-solid fa-paperclip"></i>
-        </button>
-        <input type="text" id="chatInput" placeholder="Scrie mesajul tău sau atașează un fișier..." class="flex-1 min-w-0 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyanNeon">
-        <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg px-3.5 py-2 rounded-lg shrink-0 font-medium hover:opacity-90 flex items-center justify-center">
-          <i class="fa-solid fa-paper-plane text-xs"></i>
-        </button>
-      </div>
-    </div>
+                            <!-- Câmpul de text -->
+                            <input type="text" id="chatInput" placeholder="Scrie mesajul tău sau atașează un fișier..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')">
+                            
+                            <!-- Buton trimitere -->
+                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
             <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <h2 class="font-bold text-sm text-tiktokColor mb-2"><i class="fa-brands fa-tiktok mr-2"></i> TikTok Viral AI Chat & Studio</h2>
@@ -1448,4 +1425,3 @@ function getNeuralPulseModifier() {
     </script>
 </body>
 </html>
-
