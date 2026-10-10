@@ -104,9 +104,9 @@ function googleTranslateElementInit() {
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2.5 flex flex-col md:flex-row items-center justify-between shrink-0 shadow-lg z-20 space-y-2 md:space-y-0">
         <div class="flex items-center space-x-4 w-full md:w-auto justify-between md:justify-start">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-base">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
+               <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg shadow-xl">
+  <i class="fa-solid fa-bolt-lightning animate-spin" style="animation-duration: 6s;"></i>
+</div>
                 <div>
                     <div class="flex items-center space-x-2">
                         <h1 class="font-bold text-xs text-white tracking-wide">Nexus AI Studio Pro</h1>
@@ -187,7 +187,13 @@ function googleTranslateElementInit() {
         </div>
         <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
     </div>
-
+<!-- Buton Meniu Mobil (Hamburger) -->
+<div class="md:hidden flex items-center p-3 bg-panelBg border-b border-gray-800">
+  <button onclick="const sb = document.getElementById('appSidebar'); sb.classList.toggle('hidden'); sb.classList.toggle('absolute'); sb.classList.toggle('z-50'); sb.classList.toggle('inset-y-0'); sb.classList.toggle('left-0');" class="text-cyanNeon hover:text-white p-2">
+    <i class="fa-solid fa-bars text-lg"></i>
+  </button>
+  <span class="ml-3 font-bold text-sm text-white">Nexus AI Studio Pro</span>
+</div>
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         
