@@ -187,12 +187,26 @@ function googleTranslateElementInit() {
         </div>
         <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
     </div>
-<!-- Buton Meniu Mobil (Hamburger) -->
-<div class="md:hidden flex items-center p-3 bg-panelBg border-b border-gray-800">
-  <button onclick="const sb = document.getElementById('appSidebar'); sb.classList.toggle('hidden'); sb.classList.toggle('absolute'); sb.classList.toggle('z-50'); sb.classList.toggle('inset-y-0'); sb.classList.toggle('left-0');" class="text-cyanNeon hover:text-white p-2">
-    <i class="fa-solid fa-bars text-lg"></i>
-  </button>
-  <span class="ml-3 font-bold text-sm text-white">Nexus AI Studio Pro</span>
+<!-- Buton Meniu Mobil (Hamburger) cu toggle corect -->
+<div class="md:hidden flex items-center justify-between px-4 py-3 bg-panelBg border-b border-gray-800 z-30">
+  <div class="flex items-center space-x-3">
+    <button onclick="
+      const sb = document.getElementById('appSidebar');
+      if (sb.classList.contains('hidden')) {
+        sb.classList.remove('hidden');
+        sb.classList.add('absolute', 'inset-y-0', 'left-0', 'z-50', 'w-64');
+      } else {
+        sb.classList.add('hidden');
+        sb.classList.remove('absolute', 'inset-y-0', 'left-0', 'z-50', 'w-64');
+      }
+    " class="text-cyanNeon hover:text-white p-1 focus:outline-none">
+      <i class="fa-solid fa-bars text-xl"></i>
+    </button>
+    <span class="font-bold text-sm text-white tracking-wide">Nexus AI Studio Pro</span>
+  </div>
+  <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg shadow-md">
+    <i class="fa-solid fa-bolt-lightning text-xs animate-spin" style="animation-duration: 6s;"></i>
+  </div>
 </div>
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
