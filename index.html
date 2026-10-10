@@ -68,6 +68,64 @@ function googleTranslateElementInit() {
     .goog-tooltip { display: none !important; }
     .goog-tooltip:hover { display: none !important; }
 </style>
+    <style>
+  /* Reguli stricte pentru ecrane mai mici de 768px (Mobil și Tablete) */
+  @media (max-width: 768px) {
+    /* Forțăm corpul paginii să nu permită scroll pe orizontală */
+    body, html {
+      overflow-x: hidden !important;
+      position: relative;
+    }
+
+    /* Ascundem meniul în mod implicit pe mobil și îl transformăm în modul "plutitor" */
+    aside#appSidebar {
+      position: fixed !important;
+      top: 0;
+      left: -100% !important; /* Îl scoatem complet în afara ecranului în stânga */
+      width: 280px !important;
+      height: 100vh !important;
+      z-index: 9999 !important;
+      transition: left 0.3s ease-in-out !important;
+      box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* Clasa care va fi adăugată din JavaScript când deschidem meniul */
+    aside#appSidebar.mobile-open {
+      left: 0 !important; /* Aduce meniul la vedere pe ecran */
+    }
+
+    /* Zona principală (chat-ul și uneltele) va ocupa ACUM 100% din ecranul mobilului */
+    main {
+      width: 100% !important;
+      max-width: 100vw !important;
+      margin-left: 0 !important;
+      padding: 10px !important;
+    }
+
+    /* Adăugăm un buton plutitor discret în colțul stânga-sus pentru a deschide meniul */
+    #mobileMenuBtn {
+      display: flex !important;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 9998;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  }
+
+  /* Pe desktop ascundem complet butonul de meniu mobil */
+  @media (min-width: 769px) {
+    #mobileMenuBtn {
+      display: none !important;
+    }
+  }
+</style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative">
 
@@ -198,7 +256,8 @@ function googleTranslateElementInit() {
 
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
-        
+     <button id="mobileMenuBtn" onclick="toggleMobileMenu()">☰ Meniu</button>
+   
         <!-- Sidebar -->
         <aside id="appSidebar" class="w-64 bg-panelBg border-r border-gray-800 flex flex-col shrink-0 p-3 z-10 overflow-y-auto space-y-3">
             <button onclick="newSession()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-lg shadow-cyan-500/10 transition cursor-pointer">
@@ -1430,6 +1489,30 @@ function getNeuralPulseModifier() {
     if (!neuralPulseActive) return "";
     return "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] ";
 }
+       function toggleMobileMenu() {
+    const sidebar = document.getElementById('appSidebar');
+    if (!sidebar) return;
+    
+    // Schimbă starea meniului (închide/deschide)
+    sidebar.classList.toggle('mobile-open');
+    
+    // Schimbă textul butonului din motive de estetică
+    const btn = document.getElementById('mobileMenuBtn');
+    if (btn) {
+        btn.innerText = sidebar.classList.contains('mobile-open') ? '✕ Închide' : '☰ Meniu';
+    }
+}
+
+// Închidem automat meniul pe mobil atunci când utilizatorul dă click pe oricare dintre taburi
+document.querySelectorAll('aside#appSidebar a, aside#appSidebar button').forEach(el => {
+    el.addEventListener('click', () => {
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar && sidebar.classList.contains('mobile-open')) {
+            toggleMobileMenu();
+        }
+    });
+});
+ 
     </script>
 </body>
 </html>
