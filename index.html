@@ -265,6 +265,34 @@ function googleTranslateElementInit() {
                             <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition" title="Atașează fișier">
                                 <i class="fa-solid fa-paperclip"></i>
                             </button>
+                            <!-- Butonul de Emoji -->
+<div class="relative inline-block">
+    <button type="button" onclick="toggleEmojiPicker()" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 p-2 rounded-xl text-xs transition outline-none cursor-pointer">
+        😊
+    </button>
+    
+    <!-- Meniul plutitor cu emoji-uri -->
+    <div id="emojiPicker" class="hidden absolute bottom-12 left-0 bg-gray-900 border border-gray-800 rounded-2xl p-3 shadow-2xl grid grid-cols-6 gap-2 w-64 z-50">
+        <span onclick="addEmoji('😀')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">😀</span>
+        <span onclick="addEmoji('😂')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">😂</span>
+        <span onclick="addEmoji('😊')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">😊</span>
+        <span onclick="addEmoji('😍')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">😍</span>
+        <span onclick="addEmoji('🤔')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🤔</span>
+        <span onclick="addEmoji('😎')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">😎</span>
+        <span onclick="addEmoji('🥳')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🥳</span>
+        <span onclick="addEmoji('🔥')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🔥</span>
+        <span onclick="addEmoji('👍')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">👍</span>
+        <span onclick="addEmoji('🚀')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🚀</span>
+        <span onclick="addEmoji('💡')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">💡</span>
+        <span onclick="addEmoji('✨')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">✨</span>
+        <span onclick="addEmoji('❤️')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">❤️</span>
+        <span onclick="addEmoji('🎉')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🎉</span>
+        <span onclick="addEmoji('👏')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">👏</span>
+        <span onclick="addEmoji('🙌')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🙌</span>
+        <span onclick="addEmoji('💻')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">💻</span>
+        <span onclick="addEmoji('🤖')" class="cursor-pointer text-xl text-center hover:bg-gray-800 rounded p-1">🤖</span>
+    </div>
+</div>
 <!-- Selector Ton de Voce -->
 <div class="flex items-center space-x-2 px-2 py-1.5 text-xs text-gray-400">
     <span>Ton:</span>
@@ -1344,7 +1372,37 @@ window.addEventListener('DOMContentLoaded', () => {
         changeWebsiteLanguage(savedLang);
     }, 1200);
 });
+// Funcție pentru a afișa sau ascunde panoul de emoji-uri
+function toggleEmojiPicker() {
+    const picker = document.getElementById('emojiPicker');
+    if (picker) {
+        picker.classList.toggle('hidden');
+    }
+}
 
+// Funcție pentru a adăuga emoji-ul selectat în caseta de text a mesajului
+function addEmoji(emoji) {
+    // Înlocuiește 'messageInput' cu ID-ul real al casetei tale de text unde scrii mesajul în chat
+    const input = document.getElementById('messageInput') || document.querySelector('textarea');
+    if (input) {
+        input.value += emoji;
+        input.focus();
+    }
+    // Ascundem panoul după ce a fost selectat emoji-ul
+    const picker = document.getElementById('emojiPicker');
+    if (picker) {
+        picker.classList.add('hidden');
+    }
+}
+
+// Ascunde panoul dacă apeși în afara lui
+window.addEventListener('click', function(e) {
+    const picker = document.getElementById('emojiPicker');
+    const btn = document.querySelector('button[onclick="toggleEmojiPicker()"]');
+    if (picker && btn && !picker.contains(e.target) && !btn.contains(e.target)) {
+        picker.classList.add('hidden');
+    }
+});
 
 
         let neuralPulseActive = false;
