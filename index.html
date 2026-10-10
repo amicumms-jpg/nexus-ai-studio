@@ -117,12 +117,16 @@
                 <button onclick="setWorkspaceMode('full')" class="px-2 py-0.5 rounded-lg text-[10px] font-semibold text-cyanNeon bg-gray-800 transition cursor-pointer">Full</button>
             </div>
 
-            <button onclick="toggleQuickNotePopup()" class="bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2.5 py-1 rounded-xl transition cursor-pointer flex items-center space-x-1 text-[11px]">
-                <i class="fa-regular fa-note-sticky"></i> <span class="hidden lg:inline">Notiță</span>
-            </button>
-<button onclick="exportFullSession()" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-3 py-1.5 rounded-xl text-xs transition">
+           <!-- Buton Notiță -->
+<button onclick="toggleQuickNotePopup()" class="bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2.5 py-1 rounded-xl text-xs transition">
+    <i class="fa-regular fa-note-sticky"></i>
+    <span id="noteText" class="hidden lg:inline">Notiță</span>
+</button>
+
+<!-- Buton Export Sesiune -->
+<button onclick="exportFullSession()" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2.5 py-1 rounded-xl text-xs transition">
     <i class="fa-solid fa-file-arrow-down text-cyan-400"></i>
-    <span class="hidden lg:inline">Export Sesiune</span>
+    <span id="exportText" class="hidden lg:inline">Export Sesiune</span>
 </button>
             <!-- Buton Matrix Neural Pulse -->
 <button onclick="toggleNeuralPulse()" id="neuralPulseBtn" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-3 py-1.5 rounded-xl text-xs transition">
@@ -1235,41 +1239,22 @@ function downloadMsgText(msgId) {
     URL.revokeObjectURL(url);
 } 
   const translations = {
-    ro: {
-        newSession: "Sesiune Nouă AI",
-        exportBtn: "Export Sesiune",
-        quickNote: "Notiță",
-        chatGeneral: "Chat General"
-    },
-    en: {
-        newSession: "New AI Session",
-        exportBtn: "Export Session",
-        quickNote: "Quick Note",
-        chatGeneral: "General Chat"
-    },
-    fr: {
-        newSession: "Nouvelle Session AI",
-        exportBtn: "Exporter la Session",
-        quickNote: "Note Rapide",
-        chatGeneral: "Chat Général"
-    },
-    de: {
-        newSession: "Neue KI-Sitzung",
-        exportBtn: "Sitzung Exportieren",
-        quickNote: "Notiz",
-        chatGeneral: "Allgemeiner Chat"
-    }
+    ro: { exportBtn: "Export Sesiune", quickNote: "Notiță" },
+    en: { exportBtn: "Export Session", quickNote: "Quick Note" },
+    fr: { exportBtn: "Exporter la Session", quickNote: "Note Rapide" },
+    de: { exportBtn: "Sitzung Exportieren", quickNote: "Notiz" }
 };
 
 function changeLanguage(lang) {
+    console.log("Limba selectată:", lang);
     localStorage.setItem('nexus_lang', lang);
     const t = translations[lang] || translations.ro;
 
-    const exportBtnSpan = document.querySelector('button[onclick="exportFullSession()"] span');
-    if (exportBtnSpan) exportBtnSpan.innerText = t.exportBtn;
+    const exportSpan = document.getElementById('exportText');
+    const noteSpan = document.getElementById('noteText');
 
-    const quickNoteSpan = document.querySelector('button[onclick="toggleQuickNotePopup()"] span');
-    if (quickNoteSpan) quickNoteSpan.innerText = t.quickNote;
+    if (exportSpan) exportSpan.innerText = t.exportBtn;
+    if (noteSpan) noteSpan.innerText = t.quickNote;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
