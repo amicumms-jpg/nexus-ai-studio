@@ -12,6 +12,10 @@
   ],
   "routes": [
     {
+      "src": "/api/generate",
+      "dest": "/api/chat.js"
+    },
+    {
       "src": "/api/chat",
       "dest": "/api/chat.js"
     },
