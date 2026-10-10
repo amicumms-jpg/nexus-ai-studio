@@ -929,15 +929,25 @@ function googleTranslateElementInit() {
             }
         }
 
-        function switchTab(tabId, titleName) {
+      function switchTab(tabId, titleName) {
     // 1. Ascunde absolut toate tab-urile existente
     document.querySelectorAll('.app-tab').forEach(tab => {
         tab.classList.add('hidden');
         tab.classList.remove('active-tab');
     });
 
-    // 2. Afișează doar tab-ul selectat
-    const target = document.getElementById(`tab-${tabId}`);
+    // 2. Încearcă să găsească tab-ul după ID-ul exact sau cu prefixul "tab-"
+    let target = document.getElementById(tabId) || document.getElementById(`tab-${tabId}`);
+    
+    // Fallback inteligent bazat pe numele tab-ului dacă nu îl găsește din prima
+    if (!target) {
+        const possibleIds = [tabId, `tab-${tabId}`, `tab-${tabId.toLowerCase()}`];
+        for (let id of possibleIds) {
+            target = document.getElementById(id);
+            if (target) break;
+        }
+    }
+
     if (target) {
         target.classList.remove('hidden');
         target.classList.add('active-tab');
@@ -947,7 +957,7 @@ function googleTranslateElementInit() {
     document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
         btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
     });
-    const activeNav = document.getElementById(`nav-${tabId}`);
+    const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
     if (activeNav) {
         activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors";
     }
