@@ -1238,7 +1238,6 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
-// NU mai folosim "const" pentru a nu bloca browserul!
 if (typeof translations !== 'undefined') {
   translations.ro = { 
     exportBtn: "Export Sesiune", 
@@ -1329,19 +1328,43 @@ function changeLanguage(lang) {
     sidebarLinks.forEach(el => {
         const text = el.innerText.trim();
         
-        if (text.includes("Chat General") || text.includes("General Chat") || text.includes("Chat Général") || text.includes("Allgemeiner Chat")) el.innerHTML = el.innerHTML.replace(/Chat General|General Chat|Chat Général|Allgemeiner Chat/, t.nav_chat);
-        if (text.includes("TikTok AI Creator") || text.includes("Créateur AI TikTok")) el.innerHTML = el.innerHTML.replace(/TikTok AI Creator|Créateur AI TikTok/, t.nav_tiktok);
-        if (text.includes("Instagram AI Creator") || text.includes("Créateur AI Instagram")) el.innerHTML = el.innerHTML.replace(/Instagram AI Creator|Créateur AI Instagram/, t.nav_instagram);
-        if (text.includes("YouTube AI Scriptwriter") || text.includes("Scénariste AI YouTube")) el.innerHTML = el.innerHTML.replace(/YouTube AI Scriptwriter|Scénariste AI YouTube/, t.nav_youtube);
-        if (text.includes("Hashtag & SEO Hub") || text.includes("Hub Hashtags & SEO")) el.innerHTML = el.innerHTML.replace(/Hashtag & SEO Hub|Hub Hashtags & SEO/, t.nav_hashtag);
-        if (text.includes("Calendar Editorial") || text.includes("Editorial Calendar") || text.includes("Calendrier Éditorial") || text.includes("Redaktionskalender")) el.innerHTML = el.innerHTML.replace(/Calendar Editorial|Editorial Calendar|Calendrier Éditorial|Redaktionskalender/, t.nav_calendar);
-        if (text.includes("Text-to-Video Studio") || text.includes("Studio Texte-en-Vidéo") || text.includes("Text-zu-Video Studio")) el.innerHTML = el.innerHTML.replace(/Text-to-Video Studio|Studio Texte-en-Vidéo|Text-zu-Video Studio/, t.nav_video);
-        if (text.includes("A/B Testing Titluri") || text.includes("A/B Title Testing") || text.includes("Tests A/B de Titres") || text.includes("A/B Überschriften-Test")) el.innerHTML = el.innerHTML.replace(/A/B Testing Titluri|A/B Title Testing|Tests A/B de Titres|A/B Überschriften-Test/, t.nav_ab);
-        if (text.includes("Podcast Script & Q&A") || text.includes("Script Podcast & Q&A") || text.includes("Podcast-Skript & Q&A")) el.innerHTML = el.innerHTML.replace(/Podcast Script & Q&A|Script Podcast & Q&A|Podcast-Skript & Q&A/, t.nav_podcast);
-        if (text.includes("AI Roast My Content")) el.innerHTML = el.innerHTML.replace("AI Roast My Content", t.nav_roast);
-        if (text.includes("Retro Snake Arcade")) el.innerHTML = el.innerHTML.replace("Retro Snake Arcade", t.nav_arcade);
+        // Înlocuire 100% sigură bazată pe text curat (fără expresii regulate)
+        if (text.includes("Chat General") || text.includes("General Chat") || text.includes("Chat Général") || text.includes("Allgemeiner Chat")) {
+            el.innerHTML = el.innerHTML.replaceAll("Chat General", t.nav_chat).replaceAll("General Chat", t.nav_chat).replaceAll("Chat Général", t.nav_chat).replaceAll("Allgemeiner Chat", t.nav_chat);
+        }
+        if (text.includes("TikTok AI Creator") || text.includes("Créateur AI TikTok")) {
+            el.innerHTML = el.innerHTML.replaceAll("TikTok AI Creator", t.nav_tiktok).replaceAll("Créateur AI TikTok", t.nav_tiktok);
+        }
+        if (text.includes("Instagram AI Creator") || text.includes("Créateur AI Instagram")) {
+            el.innerHTML = el.innerHTML.replaceAll("Instagram AI Creator", t.nav_instagram).replaceAll("Créateur AI Instagram", t.nav_instagram);
+        }
+        if (text.includes("YouTube AI Scriptwriter") || text.includes("Scénariste AI YouTube")) {
+            el.innerHTML = el.innerHTML.replaceAll("YouTube AI Scriptwriter", t.nav_youtube).replaceAll("Scénariste AI YouTube", t.nav_youtube);
+        }
+        if (text.includes("Hashtag & SEO Hub") || text.includes("Hub Hashtags & SEO")) {
+            el.innerHTML = el.innerHTML.replaceAll("Hashtag & SEO Hub", t.nav_hashtag).replaceAll("Hub Hashtags & SEO", t.nav_hashtag);
+        }
+        if (text.includes("Calendar Editorial") || text.includes("Editorial Calendar") || text.includes("Calendrier Éditorial") || text.includes("Redaktionskalender")) {
+            el.innerHTML = el.innerHTML.replaceAll("Calendar Editorial", t.nav_calendar).replaceAll("Editorial Calendar", t.nav_calendar).replaceAll("Calendrier Éditorial", t.nav_calendar).replaceAll("Redaktionskalender", t.nav_calendar);
+        }
+        if (text.includes("Text-to-Video Studio") || text.includes("Studio Texte-en-Vidéo") || text.includes("Text-zu-Video Studio")) {
+            el.innerHTML = el.innerHTML.replaceAll("Text-to-Video Studio", t.nav_video).replaceAll("Studio Texte-en-Vidéo", t.nav_video).replaceAll("Text-zu-Video Studio", t.nav_video);
+        }
+        if (text.includes("A/B Testing Titluri") || text.includes("A/B Title Testing") || text.includes("Tests A/B de Titres") || text.includes("A/B Überschriften-Test")) {
+            el.innerHTML = el.innerHTML.replaceAll("A/B Testing Titluri", t.nav_ab).replaceAll("A/B Title Testing", t.nav_ab).replaceAll("Tests A/B de Titres", t.nav_ab).replaceAll("A/B Überschriften-Test", t.nav_ab);
+        }
+        if (text.includes("Podcast Script & Q&A") || text.includes("Script Podcast & Q&A") || text.includes("Podcast-Skript & Q&A")) {
+            el.innerHTML = el.innerHTML.replaceAll("Podcast Script & Q&A", t.nav_podcast).replaceAll("Script Podcast & Q&A", t.nav_podcast).replaceAll("Podcast-Skript & Q&A", t.nav_podcast);
+        }
+        if (text.includes("AI Roast My Content")) {
+            el.innerHTML = el.innerHTML.replaceAll("AI Roast My Content", t.nav_roast);
+        }
+        if (text.includes("Retro Snake Arcade")) {
+            el.innerHTML = el.innerHTML.replaceAll("Retro Snake Arcade", t.nav_arcade);
+        }
     });
 }
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('nexus_lang') || 'ro';
