@@ -1238,15 +1238,9 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
-const translations = {
-    ro: { exportBtn: "Export Sesiune", quickNote: "Notiță" },
-    en: { exportBtn: "Export Session", quickNote: "Quick Note" },
-    fr: { exportBtn: "Exporter la Session", quickNote: "Note Rapide" },
-    de: { exportBtn: "Sitzung Exportieren", quickNote: "Notiz" }
-};
-
-const translations = {
-  ro: { 
+// NU mai folosim "const" pentru a nu bloca browserul!
+if (typeof translations !== 'undefined') {
+  translations.ro = { 
     exportBtn: "Export Sesiune", 
     quickNote: "Notiță",
     nav_chat: "Chat General",
@@ -1260,8 +1254,8 @@ const translations = {
     nav_podcast: "Podcast Script & Q&A",
     nav_roast: "AI Roast My Content",
     nav_arcade: "Retro Snake Arcade"
-  },
-  en: { 
+  };
+  translations.en = { 
     exportBtn: "Export Session", 
     quickNote: "Quick Note",
     nav_chat: "General Chat",
@@ -1275,8 +1269,8 @@ const translations = {
     nav_podcast: "Podcast Script & Q&A",
     nav_roast: "AI Roast My Content",
     nav_arcade: "Retro Snake Arcade"
-  },
-  fr: { 
+  };
+  translations.fr = { 
     exportBtn: "Exporter la Session", 
     quickNote: "Note Rapide",
     nav_chat: "Chat Général",
@@ -1290,8 +1284,8 @@ const translations = {
     nav_podcast: "Script Podcast & Q&A",
     nav_roast: "AI Roast My Content",
     nav_arcade: "Retro Snake Arcade"
-  },
-  de: { 
+  };
+  translations.de = { 
     exportBtn: "Sitzung Exportieren", 
     quickNote: "Notiz",
     nav_chat: "Allgemeiner Chat",
@@ -1305,21 +1299,20 @@ const translations = {
     nav_podcast: "Podcast-Skript & Q&A",
     nav_roast: "AI Roast My Content",
     nav_arcade: "Retro Snake Arcade"
-  }
-};
+  };
+}
 
 function changeLanguage(lang) {
     console.log("Limba selectată:", lang);
     localStorage.setItem('nexus_lang', lang);
     
+    if (typeof translations === 'undefined') return;
     const t = translations[lang] || translations.en;
 
-    // Forțăm deblocarea tokenurilor și a interfeței local
     localStorage.setItem('nexus_tokens', '99999');
     const tokenElement = document.getElementById('tokenCount') || document.querySelector('.Token');
     if (tokenElement) tokenElement.innerText = 'Token: 99999';
 
-    // 1. Traducerea butoanelor din meniul de sus
     const buttons = document.querySelectorAll('button');
     buttons.forEach(btn => {
         if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('exportFullSession')) {
@@ -1332,21 +1325,19 @@ function changeLanguage(lang) {
         }
     });
 
-    // 2. Scanare și traducere automată pentru taburile din meniul din stânga
     const sidebarLinks = document.querySelectorAll('aside a, .sidebar a, nav a, div.flex.direction-column a, button');
     sidebarLinks.forEach(el => {
         const text = el.innerText.trim();
         
-        // Mapăm textul românesc fix de pe ecran către cheia sa din dicționar
-        if (text.includes("Chat General")) el.innerHTML = el.innerHTML.replace("Chat General", t.nav_chat);
-        if (text.includes("TikTok AI Creator")) el.innerHTML = el.innerHTML.replace("TikTok AI Creator", t.nav_tiktok);
-        if (text.includes("Instagram AI Creator")) el.innerHTML = el.innerHTML.replace("Instagram AI Creator", t.nav_instagram);
-        if (text.includes("YouTube AI Scriptwriter")) el.innerHTML = el.innerHTML.replace("YouTube AI Scriptwriter", t.nav_youtube);
-        if (text.includes("Hashtag & SEO Hub")) el.innerHTML = el.innerHTML.replace("Hashtag & SEO Hub", t.nav_hashtag);
-        if (text.includes("Calendar Editorial")) el.innerHTML = el.innerHTML.replace("Calendar Editorial", t.nav_calendar);
-        if (text.includes("Text-to-Video Studio")) el.innerHTML = el.innerHTML.replace("Text-to-Video Studio", t.nav_video);
-        if (text.includes("A/B Testing Titluri")) el.innerHTML = el.innerHTML.replace("A/B Testing Titluri", t.nav_ab);
-        if (text.includes("Podcast Script & Q&A")) el.innerHTML = el.innerHTML.replace("Podcast Script & Q&A", t.nav_podcast);
+        if (text.includes("Chat General") || text.includes("General Chat") || text.includes("Chat Général") || text.includes("Allgemeiner Chat")) el.innerHTML = el.innerHTML.replace(/Chat General|General Chat|Chat Général|Allgemeiner Chat/, t.nav_chat);
+        if (text.includes("TikTok AI Creator") || text.includes("Créateur AI TikTok")) el.innerHTML = el.innerHTML.replace(/TikTok AI Creator|Créateur AI TikTok/, t.nav_tiktok);
+        if (text.includes("Instagram AI Creator") || text.includes("Créateur AI Instagram")) el.innerHTML = el.innerHTML.replace(/Instagram AI Creator|Créateur AI Instagram/, t.nav_instagram);
+        if (text.includes("YouTube AI Scriptwriter") || text.includes("Scénariste AI YouTube")) el.innerHTML = el.innerHTML.replace(/YouTube AI Scriptwriter|Scénariste AI YouTube/, t.nav_youtube);
+        if (text.includes("Hashtag & SEO Hub") || text.includes("Hub Hashtags & SEO")) el.innerHTML = el.innerHTML.replace(/Hashtag & SEO Hub|Hub Hashtags & SEO/, t.nav_hashtag);
+        if (text.includes("Calendar Editorial") || text.includes("Editorial Calendar") || text.includes("Calendrier Éditorial") || text.includes("Redaktionskalender")) el.innerHTML = el.innerHTML.replace(/Calendar Editorial|Editorial Calendar|Calendrier Éditorial|Redaktionskalender/, t.nav_calendar);
+        if (text.includes("Text-to-Video Studio") || text.includes("Studio Texte-en-Vidéo") || text.includes("Text-zu-Video Studio")) el.innerHTML = el.innerHTML.replace(/Text-to-Video Studio|Studio Texte-en-Vidéo|Text-zu-Video Studio/, t.nav_video);
+        if (text.includes("A/B Testing Titluri") || text.includes("A/B Title Testing") || text.includes("Tests A/B de Titres") || text.includes("A/B Überschriften-Test")) el.innerHTML = el.innerHTML.replace(/A/B Testing Titluri|A/B Title Testing|Tests A/B de Titres|A/B Überschriften-Test/, t.nav_ab);
+        if (text.includes("Podcast Script & Q&A") || text.includes("Script Podcast & Q&A") || text.includes("Podcast-Skript & Q&A")) el.innerHTML = el.innerHTML.replace(/Podcast Script & Q&A|Script Podcast & Q&A|Podcast-Skript & Q&A/, t.nav_podcast);
         if (text.includes("AI Roast My Content")) el.innerHTML = el.innerHTML.replace("AI Roast My Content", t.nav_roast);
         if (text.includes("Retro Snake Arcade")) el.innerHTML = el.innerHTML.replace("Retro Snake Arcade", t.nav_arcade);
     });
@@ -1358,6 +1349,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (selectEl) selectEl.value = savedLang;
     changeLanguage(savedLang);
 });
+
 
 
 window.addEventListener('DOMContentLoaded', () => {
