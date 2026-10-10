@@ -910,24 +910,57 @@ function googleTranslateElementInit() {
             }
         }
 
-      function switchTab(tabId, titleName) {
-    // 1. Ascunde absolut toate tab-urile existente
-    document.querySelectorAll('.app-tab').forEach(tab => {
+    function switchTab(tabId, titleName) {
+    // 1. Ascunde absolut toate tab-urile de pe pagină
+    document.querySelectorAll('.app-tab, main > div[id^="tab-"]').forEach(tab => {
         tab.classList.add('hidden');
         tab.classList.remove('active-tab');
+        tab.style.display = 'none';
     });
 
-    // 2. Încearcă să găsească tab-ul după ID-ul exact sau cu prefixul "tab-"
-    let target = document.getElementById(tabId) || document.getElementById(`tab-${tabId}`);
-    
-    // Fallback inteligent bazat pe numele tab-ului dacă nu îl găsește din prima
+    // 2. Căutare inteligentă a tab-ului după multiple variante de ID
+    let target = document.getElementById(tabId) || 
+                 document.getElementById(`tab-${tabId}`) || 
+                 document.getElementById(`${tabId}-tab`) ||
+                 document.getElementById(`tab-${tabId.toLowerCase()}`);
+
+    // Dacă tot nu l-a găsit după ID, căutăm după orice element care conține textul respectiv în ID
     if (!target) {
-        const possibleIds = [tabId, `tab-${tabId}`, `tab-${tabId.toLowerCase()}`];
-        for (let id of possibleIds) {
-            target = document.getElementById(id);
-            if (target) break;
+        const allDivs = document.querySelectorAll('main div');
+        for (let div of allDivs) {
+            if (div.id && div.id.toLowerCase().includes(tabId.toLowerCase())) {
+                target = div;
+                break;
+            }
         }
     }
+
+    // 3. Dacă l-am găsit, îl afișăm forțat
+    if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('active-tab');
+        target.style.display = 'flex';
+    } else {
+        console.warn("Nu s-a găsit tab-ul pentru:", tabId);
+    }
+
+    // 4. Actualizează stilul butoanelor din meniul lateral
+    document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+        btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+    });
+    
+    // Încearcă să evidențieze butonul activ din meniu
+    const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
+    if (activeNav) {
+        activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors";
+    }
+
+    // 5. Actualizează titlul din antet (breadcrumb)
+    const breadcrumb = document.getElementById('breadcrumbCurrent');
+    if (breadcrumb && titleName) {
+        breadcrumb.innerText = titleName;
+    }
+}
 
     if (target) {
         target.classList.remove('hidden');
