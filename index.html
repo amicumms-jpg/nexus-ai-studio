@@ -269,7 +269,7 @@ function googleTranslateElementInit() {
             </div>
 
             <!-- Tab 2: TikTok AI Studio -->
-            <div id="tab-tiktokStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-4">
+            <div id="tab-tiktokStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-tiktokColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-tiktokColor/30 mb-3">
                         <div>
@@ -289,7 +289,7 @@ function googleTranslateElementInit() {
             </div>
 
             <!-- Tab 3: Instagram AI Studio -->
-            <div id="tab-instaStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-4">
+            <div id="tab-instaStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-instaColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-instaColor/30 mb-3">
                         <div>
@@ -309,7 +309,7 @@ function googleTranslateElementInit() {
             </div>
 
             <!-- Tab 4: YouTube AI Studio -->
-            <div id="tab-ytStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-4">
+            <div id="tab-ytStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-ytColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-ytColor/30 mb-3">
                         <div>
@@ -329,7 +329,7 @@ function googleTranslateElementInit() {
             </div>
 
             <!-- Tab 5: Hashtag & SEO -->
-            <div id="tab-hashtagStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+            <div id="tab-hashtagStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-violetPop/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-violetPop/30 mb-3">
                         <div>
@@ -338,7 +338,7 @@ function googleTranslateElementInit() {
                         </div>
                         <button onclick="clearTabChat('hashtag')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-2.5 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
-                    <div id="hashtagMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3 min-h-[160px]">
+                    <div id="hashtagMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Introdu nișa sau tema ta pentru a genera hashtag-uri optimizate și tag-uri SEO.</div>
                     </div>
                     <div class="flex space-x-2 items-center">
@@ -389,7 +389,7 @@ function googleTranslateElementInit() {
             </div>
 
             <!-- Tab 7: A/B Testing -->
-            <div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+            <div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-cyanNeon/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-cyanNeon/30 mb-3">
                         <div>
@@ -398,18 +398,18 @@ function googleTranslateElementInit() {
                         </div>
                         <button onclick="clearTabChat('ab')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-2.5 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
-                    <div id="abMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3 min-h-[160px]">
+                    <div id="abMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Scrie ideea sau tema videoclipului pentru a genera variante A/B de titluri.</div>
                     </div>
                     <div class="flex space-x-2 items-center">
-                        <input type="text" id="abInput" placeholder="Ex: Generează 3 variante A/B de titlu pentru un video despre economisit bani..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
+                        <input type="text" id="abInput" placeholder="Ex: Generează 3 variante A/B de titlu pentru un video..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
                         <button onclick="sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
 
             <!-- Tab 8: Podcast Script -->
-            <div id="tab-podcastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+            <div id="tab-podcastStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-amberGlow/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-amberGlow/30 mb-3">
                         <div>
@@ -418,7 +418,7 @@ function googleTranslateElementInit() {
                         </div>
                         <button onclick="clearTabChat('podcast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-2.5 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
-                    <div id="podcastMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3 min-h-[160px]">
+                    <div id="podcastMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Introdu tema podcastului și numele invitatului pentru a genera un scenariu de dialog.</div>
                     </div>
                     <div class="flex space-x-2 items-center">
@@ -429,7 +429,7 @@ function googleTranslateElementInit() {
             </div>
 
             <!-- Tab 9: AI Roast -->
-            <div id="tab-roastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+            <div id="tab-roastStudio" class="app-tab hidden flex-1 flex flex-col h-full overflow-hidden p-4">
                 <div class="bg-panelBg border border-tiktokColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <div class="flex items-center justify-between pb-3 border-b border-tiktokColor/30 mb-3">
                         <div>
@@ -438,7 +438,7 @@ function googleTranslateElementInit() {
                         </div>
                         <button onclick="clearTabChat('roast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-2.5 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
-                    <div id="roastMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3 min-h-[160px]">
+                    <div id="roastMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Lipește textul postării sau ideea ta, iar AI-ul o va analiza și roasta direct!</div>
                     </div>
                     <div class="flex space-x-2 items-center">
