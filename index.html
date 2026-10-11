@@ -795,20 +795,61 @@ function googleTranslateElementInit() {
             }
         }
 
-        function switchTab(tabId, titleName) {
-            document.querySelectorAll('.app-tab').forEach(tab => tab.classList.remove('active-tab'));
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) target.classList.add('active-tab');
+      function switchTab(tabId, titleName) {
+    // 1. Ascunde ABSOLUT TOATE elementele și tab-urile din interiorul lui main
+    document.querySelectorAll('main > div').forEach(tab => {
+        tab.classList.add('hidden');
+        tab.classList.remove('active-tab');
+        tab.style.display = 'none';
+    });
 
-            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
-                btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium";
-            });
-            const activeNav = document.getElementById(`nav-${tabId}`);
-            if(activeNav) {
-                activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition cursor-pointer font-bold border border-cyanNeon/30";
-            }
-            document.getElementById('breadcrumbCurrent').innerText = titleName;
-        }
+    // 2. Conectează corect ID-urile primite de butoane cu ID-urile reale din HTML
+    let targetId = tabId;
+    if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
+    else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
+    else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
+    else if (tabId === 'videoStudio') targetId = 'tab-videoStudio';
+    else if (tabId === 'hashtagStudio') targetId = 'tab-hashtagStudio';
+    else if (tabId === 'editorialStudio') targetId = 'tab-editorialStudio';
+    else if (tabId === 'abTestingStudio') targetId = 'tab-abTestingStudio';
+    else if (tabId === 'podcastStudio') targetId = 'tab-podcastStudio';
+    else if (tabId === 'roastStudio') targetId = 'tab-roastStudio';
+    else if (tabId === 'billingCard') targetId = 'tab-billingCard';
+    else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
+    else if (tabId === 'authAccount') targetId = 'tab-authAccount';
+    else if (!targetId.startsWith('tab-')) targetId = `tab-${tabId}`;
+
+    // 3. Găsește elementul țintă în pagină
+    let target = document.getElementById(targetId) || document.getElementById(tabId);
+
+    // 4. Afișează EXCLUSIV tab-ul selectat ca un workspace complet independent
+    if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('active-tab');
+        target.style.display = 'flex';
+        target.style.flexDirection = 'column';
+        target.style.width = '100%';
+        target.style.height = '100%';
+    } else {
+        console.warn("Nu s-a găsit tab-ul pentru ID-ul:", targetId);
+    }
+
+    // 5. Actualizează stilul vizual al butoanelor din meniul lateral (sidebar)
+    document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+        btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+    });
+    
+    const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
+    if (activeNav) {
+        activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors";
+    }
+
+    // 6. Actualizează titlul din antet (breadcrumb)
+    const breadcrumb = document.getElementById('breadcrumbCurrent');
+    if (breadcrumb && titleName) {
+        breadcrumb.innerText = titleName;
+    }
+}
 
         function newSession() {
             document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
