@@ -795,15 +795,15 @@ function googleTranslateElementInit() {
             }
         }
 
-      function switchTab(tabId, titleName) {
-    // 1. Ascunde ABSOLUT TOATE elementele și tab-urile din interiorul lui main
-    document.querySelectorAll('main > div').forEach(tab => {
+     function switchTab(tabId, titleName) {
+    // 1. Ascunde absolut TOATE tab-urile care dețin clasa .app-tab
+    document.querySelectorAll('.app-tab').forEach(tab => {
         tab.classList.add('hidden');
         tab.classList.remove('active-tab');
-        tab.style.display = 'none';
+        tab.style.setProperty('display', 'none', 'important');
     });
 
-    // 2. Conectează corect ID-urile primite de butoane cu ID-urile reale din HTML
+    // 2. Identifică ID-ul corect al tab-ului dorit
     let targetId = tabId;
     if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
     else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
@@ -817,24 +817,25 @@ function googleTranslateElementInit() {
     else if (tabId === 'billingCard') targetId = 'tab-billingCard';
     else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
     else if (tabId === 'authAccount') targetId = 'tab-authAccount';
+    else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
     else if (!targetId.startsWith('tab-')) targetId = `tab-${tabId}`;
 
-    // 3. Găsește elementul țintă în pagină
+    // 3. Găsește elementul în pagină
     let target = document.getElementById(targetId) || document.getElementById(tabId);
 
-    // 4. Afișează EXCLUSIV tab-ul selectat ca un workspace complet independent
+    // 4. Afișează STRICT tab-ul selectat
     if (target) {
         target.classList.remove('hidden');
         target.classList.add('active-tab');
-        target.style.display = 'flex';
+        target.style.setProperty('display', 'flex', 'important');
         target.style.flexDirection = 'column';
         target.style.width = '100%';
         target.style.height = '100%';
     } else {
-        console.warn("Nu s-a găsit tab-ul pentru ID-ul:", targetId);
+        console.warn("Nu s-a găsit tab-ul pentru:", targetId);
     }
 
-    // 5. Actualizează stilul vizual al butoanelor din meniul lateral (sidebar)
+    // 5. Actualizează stilul butoanelor din meniul lateral (sidebar)
     document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
         btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
     });
