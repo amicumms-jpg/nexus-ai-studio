@@ -212,7 +212,7 @@ function googleTranslateElementInit() {
                     <button onclick="switchTab('ytStudio', 'YouTube AI Studio')" id="nav-ytStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-youtube text-ytColor w-4"></i><span>YouTube AI Scriptwriter</span></button>
                     <button onclick="switchTab('hashtagStudio', 'Hashtag & SEO Generator')" id="nav-hashtagStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-hashtag text-violetPop w-4"></i><span>Hashtag & SEO Hub</span></button>
                     <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-editorialStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-calendar-days text-amberGlow w-4"></i><span>Calendar Editorial</span></button>
-                    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio', 'videoColor')" id="nav-textToVideoStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-clapperboard text-videoColor w-4"></i><span>Text-to-Video Studio</span></button>
+                    <button onclick="switchTab('videoStudio', 'Text-to-Video Studio')" id="nav-videoStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-clapperboard text-videoColor w-4"></i><span>Text-to-Video Studio</span></button>
                 </div>
 
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate & Nebune</span>
@@ -312,6 +312,8 @@ function googleTranslateElementInit() {
                             <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                         </div>
                     </div>
+                </div>
+            </div>
 
             <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
@@ -367,7 +369,39 @@ function googleTranslateElementInit() {
 
         </main>
 
-            <!-- Tab 2: TikTok AI Studio (Tiktok Pink/Red) -->
+          <!-- Dynamic Content Container -->
+        <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
+            
+            <!-- Tab 1: Chat General -->
+            <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-y-auto p-4 space-y-3">
+                <div class="bg-panelBg border border-cyanNeon/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
+                    <h2 class="font-bold text-sm text-cyanNeon mb-2"><i class="fa-solid fa-comments mr-2"></i> Nexus Neural Assistant - Chat General</h2>
+                    <div id="chatMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
+                        <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
+                    </div>
+                    <div class="flex flex-col space-y-2 mt-2">
+                        <div id="chatAttachmentPreview-chat" class="hidden items-center space-x-2 bg-gray-900 border border-gray-700 px-3 py-1.5 rounded-lg text-xs w-max">
+                            <i class="fa-solid fa-paperclip text-cyanNeon"></i>
+                            <span id="chatAttachmentName-chat" class="text-gray-200"></span>
+                            <button onclick="removeAttachment('chat')" class="text-red-400 hover:text-red-300 ml-2 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        
+                        <div class="flex space-x-2 items-center">
+                            <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
+                            <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition" title="Atașează fișier">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </button>
+                            <div class="relative inline-block">
+                                <button type="button" onclick="toggleEmojiPicker()" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 p-2 rounded-xl text-xs transition outline-none cursor-pointer">😊</button>
+                            </div>
+                            <input type="text" id="chatInput" placeholder="Scrie mesajul tău sau atașează un fișier..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')">
+                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: TikTok AI Studio -->
             <div id="tab-tiktokStudio" class="app-tab flex-1 flex-col h-full overflow-hidden">
                 <div class="px-6 py-3 border-b border-tiktokColor/30 bg-rose-950/30 flex items-center justify-between shrink-0">
                     <div>
@@ -389,7 +423,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 3: Instagram AI Studio (Instagram Pink) -->
+            <!-- Tab 3: Instagram AI Studio -->
             <div id="tab-instaStudio" class="app-tab flex-1 flex-col h-full overflow-hidden">
                 <div class="px-6 py-3 border-b border-instaColor/30 bg-pink-950/30 flex items-center justify-between shrink-0">
                     <div>
@@ -411,7 +445,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 4: YouTube AI Studio (YouTube Red) -->
+            <!-- Tab 4: YouTube AI Studio -->
             <div id="tab-ytStudio" class="app-tab flex-1 flex-col h-full overflow-hidden">
                 <div class="px-6 py-3 border-b border-ytColor/30 bg-red-950/30 flex items-center justify-between shrink-0">
                     <div>
@@ -433,7 +467,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 5: Hashtag & SEO (Violet) -->
+            <!-- Tab 5: Hashtag & SEO -->
             <div id="tab-hashtagStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6">
                 <div class="max-w-3xl mx-auto w-full space-y-6">
                     <div class="p-3 bg-violet-950/30 border border-violetPop/30 rounded-2xl">
@@ -455,7 +489,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 6: Calendar Editorial (Amber) -->
+            <!-- Tab 6: Calendar Editorial -->
             <div id="tab-editorialStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6">
                 <div class="max-w-4xl mx-auto w-full space-y-6">
                     <div class="p-3 bg-amber-950/30 border border-amberGlow/30 rounded-2xl">
@@ -495,7 +529,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 7: A/B Testing (Cyan) -->
+            <!-- Tab 7: A/B Testing -->
             <div id="tab-abTestingStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6">
                 <div class="max-w-3xl mx-auto w-full space-y-6">
                     <div class="p-3 bg-cyan-950/30 border border-cyanNeon/30 rounded-2xl">
@@ -517,7 +551,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 8: Podcast Script (Amber) -->
+            <!-- Tab 8: Podcast Script -->
             <div id="tab-podcastStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6">
                 <div class="max-w-3xl mx-auto w-full space-y-6">
                     <div class="p-3 bg-amber-950/30 border border-amberGlow/30 rounded-2xl">
@@ -539,7 +573,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 9: AI Roast (TikTok Pink) -->
+            <!-- Tab 9: AI Roast -->
             <div id="tab-roastStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6">
                 <div class="max-w-3xl mx-auto w-full space-y-6">
                     <div class="p-3 bg-rose-950/30 border border-tiktokColor/30 rounded-2xl">
@@ -561,7 +595,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 10: Plată Card (Amber) -->
+            <!-- Tab 10: Plată Card -->
             <div id="tab-billingCard" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6 items-center justify-center">
                 <div class="bg-panelBg border border-amberGlow/40 p-8 rounded-3xl max-w-lg w-full space-y-6 shadow-2xl">
                     <div class="text-center space-y-2">
@@ -605,7 +639,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 11: Retro Snake Arcade (Emerald) -->
+            <!-- Tab 11: Retro Snake Arcade -->
             <div id="tab-arcadeStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6">
                 <div class="max-w-3xl mx-auto w-full space-y-6">
                     <div class="p-3 bg-emerald-950/30 border border-emeraldNeon/30 rounded-2xl">
@@ -623,7 +657,7 @@ function googleTranslateElementInit() {
                 </div>
             </div>
 
-            <!-- Tab 12: Cont & Google Login (Cyan) -->
+            <!-- Tab 12: Cont & Google Login -->
             <div id="tab-authAccount" class="app-tab flex-1 flex-col h-full overflow-y-auto p-6 items-center justify-center">
                 <div class="bg-panelBg border border-cyanNeon/30 p-8 rounded-3xl max-w-lg w-full space-y-5 shadow-2xl mx-auto my-auto">
                     <div class="text-center space-y-2">
@@ -674,7 +708,8 @@ function googleTranslateElementInit() {
                     <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-1"></div>
                 </div>
             </div>
-<!-- Tab Nou: Text-to-Video Studio cu Download -->
+
+            <!-- Tab 13: Text-to-Video Studio -->
             <div id="tab-textToVideoStudio" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-videoColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl">
                     <h2 class="font-bold text-sm text-videoColor mb-2"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
@@ -694,6 +729,7 @@ function googleTranslateElementInit() {
                     </button>
                 </div>
             </div>
+
         </main>
     </div>
 
@@ -795,62 +831,63 @@ function googleTranslateElementInit() {
             }
         }
 
-     function switchTab(tabId, titleName) {
-    // 1. Ascunde absolut TOATE tab-urile care dețin clasa .app-tab
-    document.querySelectorAll('.app-tab').forEach(tab => {
-        tab.classList.add('hidden');
-        tab.classList.remove('active-tab');
-        tab.style.setProperty('display', 'none', 'important');
-    });
+        function switchTab(tabId, titleName) {
+            // 1. Ascunde absolut TOATE tab-urile care dețin clasa .app-tab
+            document.querySelectorAll('.app-tab').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('active-tab');
+                tab.style.setProperty('display', 'none', 'important');
+            });
 
-    // 2. Identifică ID-ul corect al tab-ului dorit
-    let targetId = tabId;
-    if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
-    else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
-    else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
-    else if (tabId === 'videoStudio') targetId = 'tab-videoStudio';
-    else if (tabId === 'hashtagStudio') targetId = 'tab-hashtagStudio';
-    else if (tabId === 'editorialStudio') targetId = 'tab-editorialStudio';
-    else if (tabId === 'abTestingStudio') targetId = 'tab-abTestingStudio';
-    else if (tabId === 'podcastStudio') targetId = 'tab-podcastStudio';
-    else if (tabId === 'roastStudio') targetId = 'tab-roastStudio';
-    else if (tabId === 'billingCard') targetId = 'tab-billingCard';
-    else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
-    else if (tabId === 'authAccount') targetId = 'tab-authAccount';
-    else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
-    else if (!targetId.startsWith('tab-')) targetId = `tab-${tabId}`;
+            // 2. Identifică ID-ul corect al tab-ului dorit
+            let targetId = tabId;
+            if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
+            else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
+            else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
+            else if (tabId === 'videoStudio') targetId = 'tab-videoStudio';
+            else if (tabId === 'hashtagStudio') targetId = 'tab-hashtagStudio';
+            else if (tabId === 'editorialStudio') targetId = 'tab-editorialStudio';
+            else if (tabId === 'abTestingStudio') targetId = 'tab-abTestingStudio';
+            else if (tabId === 'podcastStudio') targetId = 'tab-podcastStudio';
+            else if (tabId === 'roastStudio') targetId = 'tab-roastStudio';
+            else if (tabId === 'billingCard') targetId = 'tab-billingCard';
+            else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
+            else if (tabId === 'authAccount') targetId = 'tab-authAccount';
+            else if (tabId === 'textToVideoStudio') targetId = 'tab-textToVideoStudio';
+            else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
+            else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
 
-    // 3. Găsește elementul în pagină
-    let target = document.getElementById(targetId) || document.getElementById(tabId);
+            // 3. Găsește elementul în pagină
+            let target = document.getElementById(targetId) || document.getElementById(tabId);
 
-    // 4. Afișează STRICT tab-ul selectat
-    if (target) {
-        target.classList.remove('hidden');
-        target.classList.add('active-tab');
-        target.style.setProperty('display', 'flex', 'important');
-        target.style.flexDirection = 'column';
-        target.style.width = '100%';
-        target.style.height = '100%';
-    } else {
-        console.warn("Nu s-a găsit tab-ul pentru:", targetId);
-    }
+            // 4. Afișează STRICT tab-ul selectat
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('active-tab');
+                target.style.setProperty('display', 'flex', 'important');
+                target.style.flexDirection = 'column';
+                target.style.width = '100%';
+                target.style.height = '100%';
+            } else {
+                console.warn("Nu s-a găsit tab-ul pentru:", targetId);
+            }
 
-    // 5. Actualizează stilul butoanelor din meniul lateral (sidebar)
-    document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
-        btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
-    });
-    
-    const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
-    if (activeNav) {
-        activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors";
-    }
+            // 5. Actualizează stilul butoanelor din meniul lateral (sidebar)
+            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+                btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+            });
+            
+            const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
+            if (activeNav) {
+                activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
+            }
 
-    // 6. Actualizează titlul din antet (breadcrumb)
-    const breadcrumb = document.getElementById('breadcrumbCurrent');
-    if (breadcrumb && titleName) {
-        breadcrumb.innerText = titleName;
-    }
-}
+            // 6. Actualizează titlul din antet (breadcrumb)
+            const breadcrumb = document.getElementById('breadcrumbCurrent');
+            if (breadcrumb && titleName) {
+                breadcrumb.innerText = titleName;
+            }
+        }
 
         function newSession() {
             document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
@@ -862,6 +899,263 @@ function googleTranslateElementInit() {
         }
 
         // Gestionare Independentă Trimis Mesaj per Tab
+        async function handleSendMessage(tabType) {
+            const inputField = document.getElementById(`${tabType}Input`);
+            const text = inputField?.value?.trim();
+            if(!text) return;
+
+            const container = document.getElementById(`${tabType}Messages`);
+            
+            container.innerHTML += `<div class="text-right text-sm text-cyanNeon mb-2 font-medium">${text}</div>`;
+            inputField.value = '';
+
+            setTimeout(() => {
+                let aiResponseText = `Răspuns AI dedicat pentru [${tabType.toUpperCase()}] la cererea: "${text}". Generat cu succes! 💡`;
+                
+                const responseHtml = `
+                    <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm space-y-2">
+                        <div class="ai-text-content">${aiResponseText}</div>
+                        <div class="flex items-center space-x-2 pt-2 border-t border-gray-800/80 text-[11px]">
+                            <button onclick="copyToClipboard(this)" class="bg-gray-800 hover:bg-gray-700 text-cyanNeon px-2.5 py-1 rounded transition cursor-pointer"><i class="fa-regular fa-copy"></i> Copiază</button>
+                            <button onclick="speakText(this)" class="bg-gray-800 hover:bg-gray-700 text-emeraldNeon px-2.5 py-1 rounded transition cursor-pointer"><i class="fa-solid fa-volume-high"></i> Ascultă</button>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += responseHtml;
+                container.scrollTop = container.scrollHeight;
+                totalTokensUsed += 50;
+                document.getElementById('topTokenDisplay').innerText = totalTokensUsed;
+            }, 500);
+        }
+
+        function clearTabChat(tabType) {
+            const container = document.getElementById(`${tabType}Messages`);
+            container.innerHTML = `<div class="bg-panelBg border border-gray-800 p-4 rounded-2xl text-sm text-gray-200">Chatul a fost resetat. Cu ce începem?</div>`;
+            showToast(`Chatul pentru ${tabType} a fost curățat.`, 'info');
+        }
+
+        function speakText(btn) {
+            const content = btn.parentElement.previousElementSibling.innerText;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(content);
+                utterance.lang = 'ro-RO';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function copyToClipboard(btn) {
+            navigator.clipboard.writeText(btn.parentElement.previousElementSibling.innerText);
+            showToast('Text copiat!', 'success');
+        }
+
+        function generateHashtagsSEO() {
+            const topic = document.getElementById('hashtagTopicInput').value.trim();
+            const box = document.getElementById('hashtagResultBox');
+            if(!topic) return showToast('Introdu un subiect!', 'error');
+            box.innerHTML = `Se generează hashtag-uri pentru "${topic}"...`;
+            setTimeout(() => {
+                box.innerHTML = `<strong>Hashtag-uri:</strong> #${topic.replace(/\s+/g,'')} #viral #trending #foryou`;
+                showToast('Generat cu succes!', 'success');
+            }, 500);
+        }
+
+        function addEditorialPost() {
+            const platform = document.getElementById('postPlatform').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const date = document.getElementById('postDate').value;
+            if(!title || !date) return showToast('Completează toate câmpurile!', 'error');
+            editorialPosts.push({ platform, title, date });
+            localStorage.setItem('NEXUS_EDITORIAL', JSON.stringify(editorialPosts));
+            renderEditorialPosts();
+            showToast('Postare programată!', 'success');
+        }
+
+        function renderEditorialPosts() {
+            const container = document.getElementById('editorialListContainer');
+            if(!container) return;
+            if(editorialPosts.length === 0) {
+                container.innerHTML = `<div class="text-xs text-gray-500 italic">Nicio postare programată.</div>`;
+                return;
+            }
+            container.innerHTML = editorialPosts.map((p, idx) => `
+                <div class="bg-gray-900 border border-gray-800 p-2.5 rounded-xl flex items-center justify-between text-xs">
+                    <div><span class="font-bold text-amberGlow">[${p.platform}]</span> ${p.title}</div>
+                    <button onclick="editorialPosts.splice(${idx},1);renderEditorialPosts();" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function runABTesting() {
+            const topic = document.getElementById('abTopicInput').value.trim();
+            const box = document.getElementById('abResultBox');
+            if(!topic) return showToast('Introdu un subiect!', 'error');
+            box.innerHTML = `Se calculează...`;
+            setTimeout(() => {
+                box.innerHTML = `<strong>Varianta A:</strong> "Cum să reușești cu ${topic}" (Scor: 92/100 🔥)`;
+                showToast('Test A/B gata!', 'success');
+            }, 500);
+        }
+
+       <!-- JavaScript Logică Independentă pe Tab-uri -->
+    <script>
+        let isMatrixActive = false;
+        let matrixInterval = null;
+        let totalTokensUsed = 0;
+        let bossModeActive = false;
+        let activeGameInterval = null;
+        let snakeDir = 'RIGHT';
+        let savedSessions = JSON.parse(localStorage.getItem('NEXUS_SESSIONS') || '[]');
+        let editorialPosts = JSON.parse(localStorage.getItem('NEXUS_EDITORIAL') || '[]');
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if(!container) return;
+            const toast = document.createElement('div');
+            let bgClass = 'bg-panelBg border-gray-700 text-white';
+            if (type === 'success') bgClass = 'bg-emerald-500/20 border-emerald-500 text-emerald-400';
+            if (type === 'error') bgClass = 'bg-red-500/20 border-red-500 text-red-400';
+
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl border ${bgClass} shadow-xl text-xs flex items-center space-x-2 transition transform translate-y-2 opacity-0 duration-300`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        setInterval(() => {
+            const now = new Date();
+            const clockEl = document.getElementById('liveClockHeader');
+            if(clockEl) clockEl.innerText = now.toLocaleTimeString('ro-RO');
+        }, 1000);
+
+        function setWorkspaceMode(mode) {
+            const sidebar = document.getElementById('appSidebar');
+            if(mode === 'zen') {
+                sidebar.style.display = 'none';
+                showToast('Mod Zen activat', 'success');
+            } else if(mode === 'creator') {
+                sidebar.style.display = 'flex';
+                switchTab('tiktokStudio', 'TikTok AI Studio');
+                showToast('Mod Creator activat', 'success');
+            } else {
+                sidebar.style.display = 'flex';
+                switchTab('chat', 'Chat General');
+                showToast('Mod Full Workspace activat', 'success');
+            }
+        }
+
+        function toggleQuickNotePopup() {
+            document.getElementById('quickNoteModal').classList.toggle('hidden');
+        }
+
+        function saveQuickNoteState() {
+            localStorage.setItem('NEXUS_QUICK_NOTE', document.getElementById('quickNoteText').value);
+        }
+
+        function toggleBossKey() {
+            bossModeActive = !bossModeActive;
+            const screen = document.getElementById('bossExcelScreen');
+            if(bossModeActive) screen.classList.remove('hidden');
+            else screen.classList.add('hidden');
+        }
+
+        function toggleMatrixRain() {
+            isMatrixActive = !isMatrixActive;
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            if (isMatrixActive) {
+                canvas.style.display = 'block';
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                const chars = "01010101NEXUSAI@#$%&STARS";
+                const fontSize = 14;
+                const columns = canvas.width / fontSize;
+                const drops = Array(Math.floor(columns)).fill(1);
+
+                matrixInterval = setInterval(() => {
+                    ctx.fillStyle = 'rgba(9, 13, 22, 0.05)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#06b6d4';
+                    ctx.font = fontSize + 'px monospace';
+                    for (let i = 0; i < drops.length; i++) {
+                        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                        drops[i]++;
+                    }
+                }, 33);
+            } else {
+                canvas.style.display = 'none';
+                clearInterval(matrixInterval);
+            }
+        }
+
+        function switchTab(tabId, titleName) {
+            document.querySelectorAll('.app-tab').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('active-tab');
+                tab.style.setProperty('display', 'none', 'important');
+            });
+
+            let targetId = tabId;
+            if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
+            else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
+            else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
+            else if (tabId === 'videoStudio') targetId = 'tab-videoStudio';
+            else if (tabId === 'hashtagStudio') targetId = 'tab-hashtagStudio';
+            else if (tabId === 'editorialStudio') targetId = 'tab-editorialStudio';
+            else if (tabId === 'abTestingStudio') targetId = 'tab-abTestingStudio';
+            else if (tabId === 'podcastStudio') targetId = 'tab-podcastStudio';
+            else if (tabId === 'roastStudio') targetId = 'tab-roastStudio';
+            else if (tabId === 'billingCard') targetId = 'tab-billingCard';
+            else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
+            else if (tabId === 'authAccount') targetId = 'tab-authAccount';
+            else if (tabId === 'textToVideoStudio') targetId = 'tab-textToVideoStudio';
+            else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
+            else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
+
+            let target = document.getElementById(targetId) || document.getElementById(tabId);
+
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('active-tab');
+                target.style.setProperty('display', 'flex', 'important');
+                target.style.flexDirection = 'column';
+                target.style.width = '100%';
+                target.style.height = '100%';
+            } else {
+                console.warn("Nu s-a găsit tab-ul pentru:", targetId);
+            }
+
+            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+                btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+            });
+            
+            const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
+            if (activeNav) {
+                activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
+            }
+
+            const breadcrumb = document.getElementById('breadcrumbCurrent');
+            if (breadcrumb && titleName) {
+                breadcrumb.innerText = titleName;
+            }
+        }
+
+        function newSession() {
+            document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
+            showToast('Sesiune nouă creată!', 'success');
+        }
+
+        function handleKeyDown(e, tabType) {
+            if (e.key === 'Enter') handleSendMessage(tabType);
+        }
+
         async function handleSendMessage(tabType) {
             const inputField = document.getElementById(`${tabType}Input`);
             const text = inputField?.value?.trim();
@@ -1050,420 +1344,317 @@ function googleTranslateElementInit() {
                 snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
             }, 120);
         }
-document.addEventListener("DOMContentLoaded", () => {
-    switchTab('chat', 'Chat General');
-    renderEditorialPosts();
-    if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
-        document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
-    }
-    
-    // Încărcăm istoricul salvat pentru chat-ul general dacă există
-    const savedHistory = localStorage.getItem('nexus_chat_history');
-    const defaultMsgBox = document.getElementById('chatMessages');
-    if (savedHistory && defaultMsgBox) {
-        defaultMsgBox.innerHTML = savedHistory;
-    }
-});
-        // Funcția unificată pentru chat-urile independente din taburi
-async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
-    const inputEl = document.getElementById(inputId);
-    const msgBox = document.getElementById(messagesContainerId);
-    if (!inputEl || !msgBox) return;
-    
-   const text = inputEl.value.trim();
-    if (!text) return;
 
-    const toneEl = document.getElementById('toneSelector');
-    const tonePrefix = toneEl ? toneEl.value : '';
-    
-    // Combinăm tonul ales cu textul introdus
-    const textWithTone = tonePrefix ? tonePrefix + text : text;
-
-    // Afișează mesajul tău în fereastra curentă
-    msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
-    inputEl.value = '';
-    msgBox.scrollTop = msgBox.scrollHeight;
-    
-    // Salvăm istoricul actualizat
-    localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
-
-    // Indicator de încărcare
-    const loadingId = 'load-' + Date.now();
-    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-  try {
-      // Extragem un scurt context din ultimele mesaje vizibile pentru memorie conversațională
-        const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
-        let recentContext = "";
-        const lastFew = Array.from(messageElements).slice(-4);
-        lastFew.forEach(el => {
-            recentContext += el.innerText + "\n";
-        });
-// Verificăm dacă Neural Pulse este activat
-        const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
-            ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
-            : "";
-
-        // Detectăm limba aleasă din meniul de sus
-        const currentLang = localStorage.getItem('nexus_lang') || 'ro';
-        const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
-        const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
-
-        const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
-        const contentToSend = neuralModifier + promptWithContext;
-        
-        // Construim promptul final cu limba și prefixul personalizat
-        const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
-        
-        const responseText = await fetchFromServer(finalPrompt);
-        
-        // Înlocuiește loaderul cu răspunsul de la AI
-        document.getElementById(loadingId).remove();
-       const msgId = 'ai-msg-' + Date.now();
-msgBox.innerHTML += `
-    <div class="flex flex-col space-y-2 my-3">
-        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
-            <b>AI Studio:</b><br>${marked.parse ? marked.parse(responseText) : responseText}
-        </div>
-        <div class="flex items-center space-x-3 text-xs pl-2">
-            <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                <span>Copiază</span>
-            </button>
-            <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                <span>Descarcă .txt</span>
-            </button>
-        </div>
-    </div>
-`;
-        localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
-msgBox.scrollTop = msgBox.scrollHeight;
-    } catch (err) {
-        document.getElementById(loadingId).remove();
-        msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
-    }
-}
-        async function generateTextToVideo() {
-    const inputEl = document.getElementById('textToVideoInput');
-    const resultBox = document.getElementById('textToVideoResult');
-    const text = inputEl.value.trim();
-
-    if (!text) {
-        showToast('Te rog să introduci o descriere pentru video!', 'error');
-        return;
-    }
-
-    resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
-
-    try {
-        const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
-        const responseText = await fetchFromServer(prompt);
-        
-        resultBox.innerText = responseText;
-        showToast('Scenariul video a fost generat cu succes!');
-    } catch (err) {
-        resultBox.innerText = `Eroare: ${err.message}`;
-        showToast(err.message, 'error');
-    }
-}
-        let attachedFiles = {};
-
-function handleFileSelect(tabKey) {
-    const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-    const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-    const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
-
-    if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        attachedFiles[tabKey] = file;
-        nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-        previewBox.classList.remove('hidden');
-        previewBox.classList.add('flex');
-    }
-}
-
-function removeAttachment(tabKey) {
-    const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-    const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-    fileInput.value = '';
-    delete attachedFiles[tabKey];
-    previewBox.classList.remove('flex');
-    previewBox.classList.add('hidden');
-}
-
-async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
-    const inputEl = document.getElementById(inputId);
-    const msgBox = document.getElementById(messagesContainerId);
-    if (!inputEl || !msgBox) return;
-
-    const text = inputEl.value.trim();
-    const file = attachedFiles ? attachedFiles[tabKey] : null;
-
-    if (!text && !file) return;
-
-    let displayHtml = '';
-    if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
-    if (text) displayHtml += `<div>${text}</div>`;
-
-    msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
-    inputEl.value = '';
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-    // Pregătim datele pentru fișier (dacă există)
-    let fileDataPayload = null;
-    if (file) {
-        const base64String = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.readAsDataURL(file);
-        });
-        fileDataPayload = {
-            base64: base64String,
-            mimeType: file.type || 'text/plain'
-        };
-    }
-
-    // Curățăm atașamentul în siguranță
-    removeAttachment(tabKey);
-
-    const loadingId = 'load-' + Date.now();
-    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-    try {
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: text || "Analizează acest fișier:",
-                tabId: tabKey,
-                fileData: fileDataPayload
-            })
+        document.addEventListener("DOMContentLoaded", () => {
+            switchTab('chat', 'Chat General');
+            renderEditorialPosts();
+            if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
+                document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
+            }
+            
+            const savedHistory = localStorage.getItem('nexus_chat_history');
+            const defaultMsgBox = document.getElementById('chatMessages');
+            if (savedHistory && defaultMsgBox) {
+                defaultMsgBox.innerHTML = savedHistory;
+            }
         });
 
-        const data = await res.json();
-        const loadEl = document.getElementById(loadingId);
-        if (loadEl) loadEl.remove();
+        async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
+            const inputEl = document.getElementById(inputId);
+            const msgBox = document.getElementById(messagesContainerId);
+            if (!inputEl || !msgBox) return;
+            
+            const text = inputEl.value.trim();
+            if (!text) return;
 
-        if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
+            const toneEl = document.getElementById('toneSelector');
+            const tonePrefix = toneEl ? toneEl.value : '';
+            const textWithTone = tonePrefix ? tonePrefix + text : text;
 
-      msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
-        msgBox.scrollTop = msgBox.scrollHeight;
-    } catch (err) {
-        const loadEl = document.getElementById(loadingId);
-        if (loadEl) loadEl.remove();
-        msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
-    }
-}
-        // Funcția care trimite promptul către serverul tău backend sau direct către Gemini API
-async function fetchFromServer(promptText) {
-    // Dacă ai un endpoint pe server (de ex: /api/generate)
-    try {
-        const response = await fetch('/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ prompt: promptText })
-        });
+            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
+            inputEl.value = '';
+            msgBox.scrollTop = msgBox.scrollHeight;
+            
+            localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
 
-        if (!response.ok) {
-            throw new Error(`Eroare server: ${response.status}`);
+            const loadingId = 'load-' + Date.now();
+            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
+                let recentContext = "";
+                const lastFew = Array.from(messageElements).slice(-4);
+                lastFew.forEach(el => {
+                    recentContext += el.innerText + "\n";
+                });
+
+                const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
+                    ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
+                    : "";
+
+                const currentLang = localStorage.getItem('nexus_lang') || 'ro';
+                const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
+                const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
+
+                const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
+                const contentToSend = neuralModifier + promptWithContext;
+                const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
+                
+                const responseText = await fetchFromServer(finalPrompt);
+                
+                document.getElementById(loadingId).remove();
+                const msgId = 'ai-msg-' + Date.now();
+                msgBox.innerHTML += `
+                    <div class="flex flex-col space-y-2 my-3">
+                        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+                            <b>AI Studio:</b><br>${window.marked && marked.parse ? marked.parse(responseText) : responseText}
+                        </div>
+                        <div class="flex items-center space-x-3 text-xs pl-2">
+                            <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                                <span>Copiază</span>
+                            </button>
+                            <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                                <span>Descarcă .txt</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
+                msgBox.scrollTop = msgBox.scrollHeight;
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+            }
         }
 
-        const data = await response.json();
-        return data.response || data.text || "Răspuns gol primit de la server.";
-    } catch (err) {
-        console.error("Eroare la comunicarea cu serverul:", err);
-        throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
-    }
-}
+        async function generateTextToVideo() {
+            const inputEl = document.getElementById('textToVideoInput');
+            const resultBox = document.getElementById('textToVideoResult');
+            const text = inputEl.value.trim();
+
+            if (!text) {
+                showToast('Te rog să introduci o descriere pentru video!', 'error');
+                return;
+            }
+
+            resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
+
+            try {
+                const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
+                const responseText = await fetchFromServer(prompt);
+                resultBox.innerText = responseText;
+                showToast('Scenariul video a fost generat cu succes!');
+            } catch (err) {
+                resultBox.innerText = `Eroare: ${err.message}`;
+                showToast(err.message, 'error');
+            }
+        }
+
+        let attachedFiles = {};
+
+        function handleFileSelect(tabKey) {
+            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+            const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                attachedFiles[tabKey] = file;
+                nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                previewBox.classList.remove('hidden');
+                previewBox.classList.add('flex');
+            }
+        }
+
+        function removeAttachment(tabKey) {
+            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+            fileInput.value = '';
+            delete attachedFiles[tabKey];
+            previewBox.classList.remove('flex');
+            previewBox.classList.add('hidden');
+        }
+
+        async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+            const inputEl = document.getElementById(inputId);
+            const msgBox = document.getElementById(messagesContainerId);
+            if (!inputEl || !msgBox) return;
+
+            const text = inputEl.value.trim();
+            const file = attachedFiles ? attachedFiles[tabKey] : null;
+
+            if (!text && !file) return;
+
+            let displayHtml = '';
+            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+            if (text) displayHtml += `<div>${text}</div>`;
+
+            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
+            inputEl.value = '';
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            let fileDataPayload = null;
+            if (file) {
+                const base64String = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(file);
+                });
+                fileDataPayload = {
+                    base64: base64String,
+                    mimeType: file.type || 'text/plain'
+                };
+            }
+
+            removeAttachment(tabKey);
+
+            const loadingId = 'load-' + Date.now();
+            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: text || "Analizează acest fișier:",
+                        tabId: tabKey,
+                        fileData: fileDataPayload
+                    })
+                });
+
+                const data = await res.json();
+                const loadEl = document.getElementById(loadingId);
+                if (loadEl) loadEl.remove();
+
+                if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
+
+                msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+            } catch (err) {
+                const loadEl = document.getElementById(loadingId);
+                if (loadEl) loadEl.remove();
+                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+            }
+        }
+
+        async function fetchFromServer(promptText) {
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptText })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Eroare server: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.response || data.text || "Răspuns gol primit de la server.";
+            } catch (err) {
+                console.error("Eroare la comunicarea cu serverul:", err);
+                throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
+            }
+        }
+
         function copyMsgText(msgId) {
-    const el = document.getElementById(msgId);
-    const textToCopy = el.innerText.replace('AI Studio:', '').trim();
-    
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        event.currentTarget.querySelector('span').innerText = 'Copiat! ✓';
-        setTimeout(() => {
-            event.currentTarget.querySelector('span').innerText = 'Copiază';
-        }, 2000);
-    }).catch(err => {
-        console.error('Eroare la copiere:', err);
-    });
-}
+            const el = document.getElementById(msgId);
+            const textToCopy = el.innerText.replace('AI Studio:', '').trim();
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Text copiat!', 'success');
+            });
+        }
 
-function downloadMsgText(msgId) {
-    const el = document.getElementById(msgId);
-    const textToDownload = el.innerText.replace('AI Studio:', '').trim();
-    
-    const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-       function exportFullSession() {
-    const msgBox = document.getElementById('messagesContainer');
-    if (!msgBox) {
-        alert('Nu există mesaje de exportat momentan!');
-        return;
-    }
+        function downloadMsgText(msgId) {
+            const el = document.getElementById(msgId);
+            const textToDownload = el.innerText.replace('AI Studio:', '').trim();
+            const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
 
-    // Preluăm textul curat din mesaje
-    const textContent = msgBox.innerText;
-    
-    // Creăm un fișier virtual de tip text/markdown
-    const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    
-    // Generăm un link temporar de descărcare
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
-    document.body.appendChild(a);
-    a.click();
-    
-    // Curățăm elementul după descărcare
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-} 
-if (typeof translations !== 'undefined') {
-  translations.ro = { 
-    exportBtn: "Export Sesiune", 
-    quickNote: "Notiță",
-    nav_chat: "Chat General",
-    nav_tiktok: "TikTok AI Creator",
-    nav_instagram: "Instagram AI Creator",
-    nav_youtube: "YouTube AI Scriptwriter",
-    nav_hashtag: "Hashtag & SEO Hub",
-    nav_calendar: "Calendar Editorial",
-    nav_video: "Text-to-Video Studio",
-    nav_ab: "A/B Testing Titluri",
-    nav_podcast: "Podcast Script & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-  translations.en = { 
-    exportBtn: "Export Session", 
-    quickNote: "Quick Note",
-    nav_chat: "General Chat",
-    nav_tiktok: "TikTok AI Creator",
-    nav_instagram: "Instagram AI Creator",
-    nav_youtube: "YouTube AI Scriptwriter",
-    nav_hashtag: "Hashtag & SEO Hub",
-    nav_calendar: "Editorial Calendar",
-    nav_video: "Text-to-Video Studio",
-    nav_ab: "A/B Title Testing",
-    nav_podcast: "Podcast Script & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-  translations.fr = { 
-    exportBtn: "Exporter la Session", 
-    quickNote: "Note Rapide",
-    nav_chat: "Chat Général",
-    nav_tiktok: "Créateur AI TikTok",
-    nav_instagram: "Créateur AI Instagram",
-    nav_youtube: "Scénariste AI YouTube",
-    nav_hashtag: "Hub Hashtags & SEO",
-    nav_calendar: "Calendrier Éditorial",
-    nav_video: "Studio Texte-en-Vidéo",
-    nav_ab: "Tests A/B de Titres",
-    nav_podcast: "Script Podcast & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-  translations.de = { 
-    exportBtn: "Sitzung Exportieren", 
-    quickNote: "Notiz",
-    nav_chat: "Allgemeiner Chat",
-    nav_tiktok: "TikTok AI Creator",
-    nav_instagram: "Instagram AI Creator",
-    nav_youtube: "YouTube AI Scriptwriter",
-    nav_hashtag: "Hashtag & SEO Hub",
-    nav_calendar: "Redaktionskalender",
-    nav_video: "Text-zu-Video Studio",
-    nav_ab: "A/B Überschriften-Test",
-    nav_podcast: "Podcast-Skript & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-}
+        function exportFullSession() {
+            const msgBox = document.getElementById('chatMessages');
+            if (!msgBox) {
+                showToast('Nu există mesaje de exportat momentan!', 'error');
+                return;
+            }
+            const textContent = msgBox.innerText;
+            const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Sesiune exportată cu succes!', 'success');
+        }
 
-function changeWebsiteLanguage(lang) {
-    localStorage.setItem('nexus_lang', lang);
-    var selectField = document.querySelector(".goog-te-combo");
-    if (selectField) {
-        selectField.value = lang;
-        selectField.dispatchEvent(new Event('change'));
-    }
-}
+        function changeWebsiteLanguage(lang) {
+            localStorage.setItem('nexus_lang', lang);
+            var selectField = document.querySelector(".goog-te-combo");
+            if (selectField) {
+                selectField.value = lang;
+                selectField.dispatchEvent(new Event('change'));
+            }
+        }
 
-window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('nexus_lang') || 'ro';
-    const selectEl = document.getElementById('languageSelect');
-    if (selectEl) selectEl.value = savedLang;
-    
-    setTimeout(() => {
-        changeWebsiteLanguage(savedLang);
-    }, 1200);
-});
-// Funcție pentru a afișa sau ascunde panoul de emoji-uri
-function toggleEmojiPicker() {
-    const picker = document.getElementById('emojiPicker');
-    if (picker) {
-        picker.classList.toggle('hidden');
-    }
-}
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('nexus_lang') || 'ro';
+            const selectEl = document.getElementById('languageSelect');
+            if (selectEl) selectEl.value = savedLang;
+            
+            setTimeout(() => {
+                changeWebsiteLanguage(savedLang);
+            }, 1200);
+        });
 
-// Funcție pentru a adăuga emoji-ul selectat în caseta de text a mesajului
-function addEmoji(emoji) {
-    const input = document.getElementById('chatInput');
-    if (input) {
-        input.value += emoji;
-        input.focus();
-    }
-    const picker = document.getElementById('emojiPicker');
-    if (picker) {
-        picker.classList.add('hidden');
-    }
-}
+        function toggleEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            if (picker) picker.classList.toggle('hidden');
+        }
 
-// Ascunde panoul dacă apeși în afara lui
-window.addEventListener('click', function(e) {
-    const picker = document.getElementById('emojiPicker');
-    const btn = document.querySelector('button[onclick="toggleEmojiPicker()"]');
-    if (picker && btn && !picker.contains(e.target) && !btn.contains(e.target)) {
-        picker.classList.add('hidden');
-    }
-});
+        function addEmoji(emoji) {
+            const input = document.getElementById('chatInput');
+            if (input) {
+                input.value += emoji;
+                input.focus();
+            }
+            const picker = document.getElementById('emojiPicker');
+            if (picker) picker.classList.add('hidden');
+        }
 
+        window.addEventListener('click', function(e) {
+            const picker = document.getElementById('emojiPicker');
+            const btn = document.querySelector('button[onclick="toggleEmojiPicker()"]');
+            if (picker && btn && !picker.contains(e.target) && !btn.contains(e.target)) {
+                picker.classList.add('hidden');
+            }
+        });
 
         let neuralPulseActive = false;
 
-function toggleNeuralPulse() {
-    neuralPulseActive = !neuralPulseActive;
-    const btn = document.getElementById('neuralPulseBtn');
-    if (neuralPulseActive) {
-        btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
-        btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
-    } else {
-        btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
-        btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
-    }
-}
-
-// Când este activ, injectăm un pre-prompt de analiză cognitivă profundă
-function getNeuralPulseModifier() {
-    if (!neuralPulseActive) return "";
-    return "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] ";
-}
+        function toggleNeuralPulse() {
+            neuralPulseActive = !neuralPulseActive;
+            const btn = document.getElementById('neuralPulseBtn');
+            if (neuralPulseActive) {
+                btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+                btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
+            } else {
+                btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+                btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
+            }
+        }
     </script>
 </body>
 </html>
