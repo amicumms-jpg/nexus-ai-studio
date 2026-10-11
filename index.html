@@ -999,662 +999,663 @@ function googleTranslateElementInit() {
 
        <!-- JavaScript Logică Independentă pe Tab-uri -->
     <script>
-        let isMatrixActive = false;
-        let matrixInterval = null;
-        let totalTokensUsed = 0;
-        let bossModeActive = false;
-        let activeGameInterval = null;
-        let snakeDir = 'RIGHT';
-        let savedSessions = JSON.parse(localStorage.getItem('NEXUS_SESSIONS') || '[]');
-        let editorialPosts = JSON.parse(localStorage.getItem('NEXUS_EDITORIAL') || '[]');
+        <script>
+    let isMatrixActive = false;
+    let matrixInterval = null;
+    let totalTokensUsed = 0;
+    let bossModeActive = false;
+    let activeGameInterval = null;
+    let snakeDir = 'RIGHT';
+    let savedSessions = JSON.parse(localStorage.getItem('NEXUS_SESSIONS') || '[]');
+    let editorialPosts = JSON.parse(localStorage.getItem('NEXUS_EDITORIAL') || '[]');
 
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            if(!container) return;
-            const toast = document.createElement('div');
-            let bgClass = 'bg-panelBg border-gray-700 text-white';
-            if (type === 'success') bgClass = 'bg-emerald-500/20 border-emerald-500 text-emerald-400';
-            if (type === 'error') bgClass = 'bg-red-500/20 border-red-500 text-red-400';
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if(!container) return;
+        const toast = document.createElement('div');
+        let bgClass = 'bg-panelBg border-gray-700 text-white';
+        if (type === 'success') bgClass = 'bg-emerald-500/20 border-emerald-500 text-emerald-400';
+        if (type === 'error') bgClass = 'bg-red-500/20 border-red-500 text-red-400';
 
-            toast.className = `pointer-events-auto px-4 py-3 rounded-xl border ${bgClass} shadow-xl text-xs flex items-center space-x-2 transition transform translate-y-2 opacity-0 duration-300`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${message}</span>`;
-            container.appendChild(toast);
+        toast.className = `pointer-events-auto px-4 py-3 rounded-xl border ${bgClass} shadow-xl text-xs flex items-center space-x-2 transition transform translate-y-2 opacity-0 duration-300`;
+        toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${message}</span>`;
+        container.appendChild(toast);
 
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+        setTimeout(() => {
+            toast.classList.add('translate-y-2', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    setInterval(() => {
+        const now = new Date();
+        const clockEl = document.getElementById('liveClockHeader');
+        if(clockEl) clockEl.innerText = now.toLocaleTimeString('ro-RO');
+    }, 1000);
+
+    function setWorkspaceMode(mode) {
+        const sidebar = document.getElementById('appSidebar');
+        if(mode === 'zen') {
+            sidebar.style.display = 'none';
+            showToast('Mod Zen activat', 'success');
+        } else if(mode === 'creator') {
+            sidebar.style.display = 'flex';
+            switchTab('tiktokStudio', 'TikTok AI Studio');
+            showToast('Mod Creator activat', 'success');
+        } else {
+            sidebar.style.display = 'flex';
+            switchTab('chat', 'Chat General');
+            showToast('Mod Full Workspace activat', 'success');
+        }
+    }
+
+    function toggleQuickNotePopup() {
+        document.getElementById('quickNoteModal').classList.toggle('hidden');
+    }
+
+    function saveQuickNoteState() {
+        localStorage.setItem('NEXUS_QUICK_NOTE', document.getElementById('quickNoteText').value);
+    }
+
+    function toggleBossKey() {
+        bossModeActive = !bossModeActive;
+        const screen = document.getElementById('bossExcelScreen');
+        if(bossModeActive) screen.classList.remove('hidden');
+        else screen.classList.add('hidden');
+    }
+
+    function toggleMatrixRain() {
+        isMatrixActive = !isMatrixActive;
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        if (isMatrixActive) {
+            canvas.style.display = 'block';
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const chars = "01010101NEXUSAI@#$%&STARS";
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            matrixInterval = setInterval(() => {
+                ctx.fillStyle = 'rgba(9, 13, 22, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#06b6d4';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }, 33);
+        } else {
+            canvas.style.display = 'none';
+            clearInterval(matrixInterval);
+        }
+    }
+
+    function switchTab(tabId, titleName) {
+        document.querySelectorAll('.app-tab').forEach(tab => {
+            tab.classList.add('hidden');
+            tab.classList.remove('active-tab');
+            tab.style.setProperty('display', 'none', 'important');
+        });
+
+        let targetId = tabId;
+        if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
+        else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
+        else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
+        else if (tabId === 'videoStudio') targetId = 'tab-videoStudio';
+        else if (tabId === 'hashtagStudio') targetId = 'tab-hashtagStudio';
+        else if (tabId === 'editorialStudio') targetId = 'tab-editorialStudio';
+        else if (tabId === 'abTestingStudio') targetId = 'tab-abTestingStudio';
+        else if (tabId === 'podcastStudio') targetId = 'tab-podcastStudio';
+        else if (tabId === 'roastStudio') targetId = 'tab-roastStudio';
+        else if (tabId === 'billingCard') targetId = 'tab-billingCard';
+        else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
+        else if (tabId === 'authAccount') targetId = 'tab-authAccount';
+        else if (tabId === 'textToVideoStudio') targetId = 'tab-textToVideoStudio';
+        else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
+        else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
+
+        let target = document.getElementById(targetId) || document.getElementById(tabId);
+
+        if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('active-tab');
+            target.style.setProperty('display', 'flex', 'important');
+            target.style.flexDirection = 'column';
+            target.style.width = '100%';
+            target.style.height = '100%';
+        } else {
+            console.warn("Nu s-a găsit tab-ul pentru:", targetId);
         }
 
-        setInterval(() => {
-            const now = new Date();
-            const clockEl = document.getElementById('liveClockHeader');
-            if(clockEl) clockEl.innerText = now.toLocaleTimeString('ro-RO');
-        }, 1000);
-
-        function setWorkspaceMode(mode) {
-            const sidebar = document.getElementById('appSidebar');
-            if(mode === 'zen') {
-                sidebar.style.display = 'none';
-                showToast('Mod Zen activat', 'success');
-            } else if(mode === 'creator') {
-                sidebar.style.display = 'flex';
-                switchTab('tiktokStudio', 'TikTok AI Studio');
-                showToast('Mod Creator activat', 'success');
-            } else {
-                sidebar.style.display = 'flex';
-                switchTab('chat', 'Chat General');
-                showToast('Mod Full Workspace activat', 'success');
-            }
+        document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+            btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+        });
+        
+        const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
+        if (activeNav) {
+            activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
         }
 
-        function toggleQuickNotePopup() {
-            document.getElementById('quickNoteModal').classList.toggle('hidden');
+        const breadcrumb = document.getElementById('breadcrumbCurrent');
+        if (breadcrumb && titleName) {
+            breadcrumb.innerText = titleName;
         }
+    }
 
-        function saveQuickNoteState() {
-            localStorage.setItem('NEXUS_QUICK_NOTE', document.getElementById('quickNoteText').value);
-        }
+    function newSession() {
+        document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
+        showToast('Sesiune nouă creată!', 'success');
+    }
 
-        function toggleBossKey() {
-            bossModeActive = !bossModeActive;
-            const screen = document.getElementById('bossExcelScreen');
-            if(bossModeActive) screen.classList.remove('hidden');
-            else screen.classList.add('hidden');
-        }
+    function handleKeyDown(e, tabType) {
+        if (e.key === 'Enter') handleSendMessage(tabType);
+    }
 
-        function toggleMatrixRain() {
-            isMatrixActive = !isMatrixActive;
-            const canvas = document.getElementById('matrixCanvas');
-            const ctx = canvas.getContext('2d');
-            if (isMatrixActive) {
-                canvas.style.display = 'block';
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                const chars = "01010101NEXUSAI@#$%&STARS";
-                const fontSize = 14;
-                const columns = canvas.width / fontSize;
-                const drops = Array(Math.floor(columns)).fill(1);
+    async function handleSendMessage(tabType) {
+        const inputField = document.getElementById(`${tabType}Input`);
+        const text = inputField?.value?.trim();
+        if(!text) return;
 
-                matrixInterval = setInterval(() => {
-                    ctx.fillStyle = 'rgba(9, 13, 22, 0.05)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = '#06b6d4';
-                    ctx.font = fontSize + 'px monospace';
-                    for (let i = 0; i < drops.length; i++) {
-                        const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                        drops[i]++;
-                    }
-                }, 33);
-            } else {
-                canvas.style.display = 'none';
-                clearInterval(matrixInterval);
-            }
-        }
+        const container = document.getElementById(`${tabType}Messages`);
+        
+        container.innerHTML += `<div class="text-right text-sm text-cyanNeon mb-2 font-medium">${text}</div>`;
+        inputField.value = '';
 
-        function switchTab(tabId, titleName) {
-            document.querySelectorAll('.app-tab').forEach(tab => {
-                tab.classList.add('hidden');
-                tab.classList.remove('active-tab');
-                tab.style.setProperty('display', 'none', 'important');
-            });
-
-            let targetId = tabId;
-            if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
-            else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
-            else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
-            else if (tabId === 'videoStudio') targetId = 'tab-videoStudio';
-            else if (tabId === 'hashtagStudio') targetId = 'tab-hashtagStudio';
-            else if (tabId === 'editorialStudio') targetId = 'tab-editorialStudio';
-            else if (tabId === 'abTestingStudio') targetId = 'tab-abTestingStudio';
-            else if (tabId === 'podcastStudio') targetId = 'tab-podcastStudio';
-            else if (tabId === 'roastStudio') targetId = 'tab-roastStudio';
-            else if (tabId === 'billingCard') targetId = 'tab-billingCard';
-            else if (tabId === 'arcadeStudio') targetId = 'tab-arcadeStudio';
-            else if (tabId === 'authAccount') targetId = 'tab-authAccount';
-            else if (tabId === 'textToVideoStudio') targetId = 'tab-textToVideoStudio';
-            else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
-            else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
-
-            let target = document.getElementById(targetId) || document.getElementById(tabId);
-
-            if (target) {
-                target.classList.remove('hidden');
-                target.classList.add('active-tab');
-                target.style.setProperty('display', 'flex', 'important');
-                target.style.flexDirection = 'column';
-                target.style.width = '100%';
-                target.style.height = '100%';
-            } else {
-                console.warn("Nu s-a găsit tab-ul pentru:", targetId);
-            }
-
-            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
-                btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
-            });
+        setTimeout(() => {
+            let aiResponseText = `Răspuns AI dedicat pentru [${tabType.toUpperCase()}] la cererea: "${text}". Generat cu succes! 💡`;
             
-            const activeNav = document.getElementById(`nav-${tabId}`) || document.getElementById(`nav-${tabId.toLowerCase()}`);
-            if (activeNav) {
-                activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
-            }
-
-            const breadcrumb = document.getElementById('breadcrumbCurrent');
-            if (breadcrumb && titleName) {
-                breadcrumb.innerText = titleName;
-            }
-        }
-
-        function newSession() {
-            document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
-            showToast('Sesiune nouă creată!', 'success');
-        }
-
-        function handleKeyDown(e, tabType) {
-            if (e.key === 'Enter') handleSendMessage(tabType);
-        }
-
-        async function handleSendMessage(tabType) {
-            const inputField = document.getElementById(`${tabType}Input`);
-            const text = inputField?.value?.trim();
-            if(!text) return;
-
-            const container = document.getElementById(`${tabType}Messages`);
-            
-            container.innerHTML += `<div class="text-right text-sm text-cyanNeon mb-2 font-medium">${text}</div>`;
-            inputField.value = '';
-
-            setTimeout(() => {
-                let aiResponseText = `Răspuns AI dedicat pentru [${tabType.toUpperCase()}] la cererea: "${text}". Generat cu succes! 💡`;
-                
-                const responseHtml = `
-                    <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm space-y-2">
-                        <div class="ai-text-content">${aiResponseText}</div>
-                        <div class="flex items-center space-x-2 pt-2 border-t border-gray-800/80 text-[11px]">
-                            <button onclick="copyToClipboard(this)" class="bg-gray-800 hover:bg-gray-700 text-cyanNeon px-2.5 py-1 rounded transition cursor-pointer"><i class="fa-regular fa-copy"></i> Copiază</button>
-                            <button onclick="speakText(this)" class="bg-gray-800 hover:bg-gray-700 text-emeraldNeon px-2.5 py-1 rounded transition cursor-pointer"><i class="fa-solid fa-volume-high"></i> Ascultă</button>
-                        </div>
-                    </div>
-                `;
-
-                container.innerHTML += responseHtml;
-                container.scrollTop = container.scrollHeight;
-                totalTokensUsed += 50;
-                document.getElementById('topTokenDisplay').innerText = totalTokensUsed;
-            }, 500);
-        }
-
-        function clearTabChat(tabType) {
-            const container = document.getElementById(`${tabType}Messages`);
-            container.innerHTML = `<div class="bg-panelBg border border-gray-800 p-4 rounded-2xl text-sm text-gray-200">Chatul a fost resetat. Cu ce începem?</div>`;
-            showToast(`Chatul pentru ${tabType} a fost curățat.`, 'info');
-        }
-
-        function speakText(btn) {
-            const content = btn.parentElement.previousElementSibling.innerText;
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(content);
-                utterance.lang = 'ro-RO';
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        function copyToClipboard(btn) {
-            navigator.clipboard.writeText(btn.parentElement.previousElementSibling.innerText);
-            showToast('Text copiat!', 'success');
-        }
-
-        function generateHashtagsSEO() {
-            const topic = document.getElementById('hashtagTopicInput').value.trim();
-            const box = document.getElementById('hashtagResultBox');
-            if(!topic) return showToast('Introdu un subiect!', 'error');
-            box.innerHTML = `Se generează hashtag-uri pentru "${topic}"...`;
-            setTimeout(() => {
-                box.innerHTML = `<strong>Hashtag-uri:</strong> #${topic.replace(/\s+/g,'')} #viral #trending #foryou`;
-                showToast('Generat cu succes!', 'success');
-            }, 500);
-        }
-
-        function addEditorialPost() {
-            const platform = document.getElementById('postPlatform').value;
-            const title = document.getElementById('postTitle').value.trim();
-            const date = document.getElementById('postDate').value;
-            if(!title || !date) return showToast('Completează toate câmpurile!', 'error');
-            editorialPosts.push({ platform, title, date });
-            localStorage.setItem('NEXUS_EDITORIAL', JSON.stringify(editorialPosts));
-            renderEditorialPosts();
-            showToast('Postare programată!', 'success');
-        }
-
-        function renderEditorialPosts() {
-            const container = document.getElementById('editorialListContainer');
-            if(!container) return;
-            if(editorialPosts.length === 0) {
-                container.innerHTML = `<div class="text-xs text-gray-500 italic">Nicio postare programată.</div>`;
-                return;
-            }
-            container.innerHTML = editorialPosts.map((p, idx) => `
-                <div class="bg-gray-900 border border-gray-800 p-2.5 rounded-xl flex items-center justify-between text-xs">
-                    <div><span class="font-bold text-amberGlow">[${p.platform}]</span> ${p.title}</div>
-                    <button onclick="editorialPosts.splice(${idx},1);renderEditorialPosts();" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-
-        function runABTesting() {
-            const topic = document.getElementById('abTopicInput').value.trim();
-            const box = document.getElementById('abResultBox');
-            if(!topic) return showToast('Introdu un subiect!', 'error');
-            box.innerHTML = `Se calculează...`;
-            setTimeout(() => {
-                box.innerHTML = `<strong>Varianta A:</strong> "Cum să reușești cu ${topic}" (Scor: 92/100 🔥)`;
-                showToast('Test A/B gata!', 'success');
-            }, 500);
-        }
-
-        function generatePodcastScript() {
-            const topic = document.getElementById('podcastTopicInput').value.trim();
-            const box = document.getElementById('podcastResultBox');
-            if(!topic) return showToast('Introdu tema!', 'error');
-            box.innerHTML = `🎙️ **PREZENTATOR:** Discutăm azi despre ${topic}.`;
-            showToast('Scenariu generat!', 'success');
-        }
-
-        function runAiRoast() {
-            const text = document.getElementById('roastTextInput').value.trim();
-            const box = document.getElementById('roastResultBox');
-            if(!text) return showToast('Introdu textul!', 'error');
-            box.innerHTML = `🔥 Frate, textul ăsta e prea plictisitor! Încearcă ceva mai dinamic.`;
-            showToast('Roast efectuat!', 'success');
-        }
-
-        function socialLogin(provider) {
-            showToast(`Conectat cu ${provider}!`, 'success');
-            document.getElementById('userAccountStatus').innerText = `Conectat prin ${provider} ✅`;
-        }
-
-        function registerCompleteUser() {
-            const name = document.getElementById('regFullName').value.trim();
-            if(!name) return showToast('Introdu numele!', 'error');
-            showToast('Cont creat cu succes!', 'success');
-            document.getElementById('userAccountStatus').innerText = `Cont creat pentru ${name} ✅`;
-        }
-
-        function processCardPayment() {
-            showToast('Plată reușită! PRO activat.', 'success');
-            document.getElementById('paymentStatus').innerText = `Plată procesată cu succes! 🎉`;
-        }
-
-        function startRetroSnake() {
-            if (activeGameInterval) clearInterval(activeGameInterval);
-            const container = document.getElementById('gameScreenContainer');
-            container.innerHTML = `
-                <div class="flex flex-col items-center space-y-2">
-                    <div class="text-xs text-emeraldNeon font-bold">Scor: <span id="snakeScore">0</span></div>
-                    <canvas id="snakeCanvas" width="200" height="200" class="bg-black border border-emeraldNeon/50 rounded"></canvas>
-                    <div class="flex space-x-2 mt-1">
-                        <button onclick="snakeDir='UP'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬆️</button>
-                        <button onclick="snakeDir='DOWN'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬇️</button>
-                        <button onclick="snakeDir='LEFT'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬅️</button>
-                        <button onclick="snakeDir='RIGHT'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">➡️</button>
+            const responseHtml = `
+                <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 mb-2 shadow-sm space-y-2">
+                    <div class="ai-text-content">${aiResponseText}</div>
+                    <div class="flex items-center space-x-2 pt-2 border-t border-gray-800/80 text-[11px]">
+                        <button onclick="copyToClipboard(this)" class="bg-gray-800 hover:bg-gray-700 text-cyanNeon px-2.5 py-1 rounded transition cursor-pointer"><i class="fa-regular fa-copy"></i> Copiază</button>
+                        <button onclick="speakText(this)" class="bg-gray-800 hover:bg-gray-700 text-emeraldNeon px-2.5 py-1 rounded transition cursor-pointer"><i class="fa-solid fa-volume-high"></i> Ascultă</button>
                     </div>
                 </div>
             `;
-            initSnakeGame();
+
+            container.innerHTML += responseHtml;
+            container.scrollTop = container.scrollHeight;
+            totalTokensUsed += 50;
+            document.getElementById('topTokenDisplay').innerText = totalTokensUsed;
+        }, 500);
+    }
+
+    function clearTabChat(tabType) {
+        const container = document.getElementById(`${tabType}Messages`);
+        container.innerHTML = `<div class="bg-panelBg border border-gray-800 p-4 rounded-2xl text-sm text-gray-200">Chatul a fost resetat. Cu ce începem?</div>`;
+        showToast(`Chatul pentru ${tabType} a fost curățat.`, 'info');
+    }
+
+    function speakText(btn) {
+        const content = btn.parentElement.previousElementSibling.innerText;
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(content);
+            utterance.lang = 'ro-RO';
+            window.speechSynthesis.speak(utterance);
         }
+    }
 
-        function initSnakeGame() {
-            const canvas = document.getElementById('snakeCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let snake = [{x: 10, y: 10}];
-            let food = {x: 5, y: 5};
-            let score = 0;
-            snakeDir = 'RIGHT';
+    function copyToClipboard(btn) {
+        navigator.clipboard.writeText(btn.parentElement.previousElementSibling.innerText);
+        showToast('Text copiat!', 'success');
+    }
 
-            activeGameInterval = setInterval(() => {
-                let head = {...snake[0]};
-                if(snakeDir === 'UP') head.y--;
-                if(snakeDir === 'DOWN') head.y++;
-                if(snakeDir === 'LEFT') head.x--;
-                if(snakeDir === 'RIGHT') head.x++;
+    function generateHashtagsSEO() {
+        const topic = document.getElementById('hashtagTopicInput').value.trim();
+        const box = document.getElementById('hashtagResultBox');
+        if(!topic) return showToast('Introdu un subiect!', 'error');
+        box.innerHTML = `Se generează hashtag-uri pentru "${topic}"...`;
+        setTimeout(() => {
+            box.innerHTML = `<strong>Hashtag-uri:</strong> #${topic.replace(/\s+/g,'')} #viral #trending #foryou`;
+            showToast('Generat cu succes!', 'success');
+        }, 500);
+    }
 
-                if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
-                    clearInterval(activeGameInterval);
-                    showToast('Game Over! Scor: ' + score, 'error');
-                    return;
-                }
+    function addEditorialPost() {
+        const platform = document.getElementById('postPlatform').value;
+        const title = document.getElementById('postTitle').value.trim();
+        const date = document.getElementById('postDate').value;
+        if(!title || !date) return showToast('Completează toate câmpurile!', 'error');
+        editorialPosts.push({ platform, title, date });
+        localStorage.setItem('NEXUS_EDITORIAL', JSON.stringify(editorialPosts));
+        renderEditorialPosts();
+        showToast('Postare programată!', 'success');
+    }
 
-                if(head.x === food.x && head.y === food.y) {
-                    score += 10;
-                    document.getElementById('snakeScore').innerText = score;
-                    food = {x: Math.floor(Math.random() * 18), y: Math.floor(Math.random() * 18)};
-                } else {
-                    snake.pop();
-                }
-                snake.unshift(head);
-
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#f59e0b';
-                ctx.fillRect(food.x * 10, food.y * 10, 10, 10);
-                ctx.fillStyle = '#10b981';
-                snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
-            }, 120);
+    function renderEditorialPosts() {
+        const container = document.getElementById('editorialListContainer');
+        if(!container) return;
+        if(editorialPosts.length === 0) {
+            container.innerHTML = `<div class="text-xs text-gray-500 italic">Nicio postare programată.</div>`;
+            return;
         }
+        container.innerHTML = editorialPosts.map((p, idx) => `
+            <div class="bg-gray-900 border border-gray-800 p-2.5 rounded-xl flex items-center justify-between text-xs">
+                <div><span class="font-bold text-amberGlow">[${p.platform}]</span> ${p.title}</div>
+                <button onclick="editorialPosts.splice(${idx},1);renderEditorialPosts();" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        `).join('');
+    }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            switchTab('chat', 'Chat General');
-            renderEditorialPosts();
-            if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
-                document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
-            }
-            
-            const savedHistory = localStorage.getItem('nexus_chat_history');
-            const defaultMsgBox = document.getElementById('chatMessages');
-            if (savedHistory && defaultMsgBox) {
-                defaultMsgBox.innerHTML = savedHistory;
-            }
-        });
+    function runABTesting() {
+        const topic = document.getElementById('abTopicInput').value.trim();
+        const box = document.getElementById('abResultBox');
+        if(!topic) return showToast('Introdu un subiect!', 'error');
+        box.innerHTML = `Se calculează...`;
+        setTimeout(() => {
+            box.innerHTML = `<strong>Varianta A:</strong> "Cum să reușești cu ${topic}" (Scor: 92/100 🔥)`;
+            showToast('Test A/B gata!', 'success');
+        }, 500);
+    }
 
-        async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
-            const inputEl = document.getElementById(inputId);
-            const msgBox = document.getElementById(messagesContainerId);
-            if (!inputEl || !msgBox) return;
-            
-            const text = inputEl.value.trim();
-            if (!text) return;
+    function generatePodcastScript() {
+        const topic = document.getElementById('podcastTopicInput').value.trim();
+        const box = document.getElementById('podcastResultBox');
+        if(!topic) return showToast('Introdu tema!', 'error');
+        box.innerHTML = `🎙️ **PREZENTATOR:** Discutăm azi despre ${topic}.`;
+        showToast('Scenariu generat!', 'success');
+    }
 
-            const toneEl = document.getElementById('toneSelector');
-            const tonePrefix = toneEl ? toneEl.value : '';
-            const textWithTone = tonePrefix ? tonePrefix + text : text;
+    function runAiRoast() {
+        const text = document.getElementById('roastTextInput').value.trim();
+        const box = document.getElementById('roastResultBox');
+        if(!text) return showToast('Introdu textul!', 'error');
+        box.innerHTML = `🔥 Frate, textul ăsta e prea plictisitor! Încearcă ceva mai dinamic.`;
+        showToast('Roast efectuat!', 'success');
+    }
 
-            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
-            inputEl.value = '';
-            msgBox.scrollTop = msgBox.scrollHeight;
-            
-            localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
+    function socialLogin(provider) {
+        showToast(`Conectat cu ${provider}!`, 'success');
+        document.getElementById('userAccountStatus').innerText = `Conectat prin ${provider} ✅`;
+    }
 
-            const loadingId = 'load-' + Date.now();
-            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
-            msgBox.scrollTop = msgBox.scrollHeight;
+    function registerCompleteUser() {
+        const name = document.getElementById('regFullName').value.trim();
+        if(!name) return showToast('Introdu numele!', 'error');
+        showToast('Cont creat cu succes!', 'success');
+        document.getElementById('userAccountStatus').innerText = `Cont creat pentru ${name} ✅`;
+    }
 
-            try {
-                const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
-                let recentContext = "";
-                const lastFew = Array.from(messageElements).slice(-4);
-                lastFew.forEach(el => {
-                    recentContext += el.innerText + "\n";
-                });
+    function processCardPayment() {
+        showToast('Plată reușită! PRO activat.', 'success');
+        document.getElementById('paymentStatus').innerText = `Plată procesată cu succes! 🎉`;
+    }
 
-                const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
-                    ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
-                    : "";
+    function startRetroSnake() {
+        if (activeGameInterval) clearInterval(activeGameInterval);
+        const container = document.getElementById('gameScreenContainer');
+        container.innerHTML = `
+            <div class="flex flex-col items-center space-y-2">
+                <div class="text-xs text-emeraldNeon font-bold">Scor: <span id="snakeScore">0</span></div>
+                <canvas id="snakeCanvas" width="200" height="200" class="bg-black border border-emeraldNeon/50 rounded"></canvas>
+                <div class="flex space-x-2 mt-1">
+                    <button onclick="snakeDir='UP'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬆️</button>
+                    <button onclick="snakeDir='DOWN'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬇️</button>
+                    <button onclick="snakeDir='LEFT'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬅️</button>
+                    <button onclick="snakeDir='RIGHT'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">➡️</button>
+                </div>
+            </div>
+        `;
+        initSnakeGame();
+    }
 
-                const currentLang = localStorage.getItem('nexus_lang') || 'ro';
-                const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
-                const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
+    function initSnakeGame() {
+        const canvas = document.getElementById('snakeCanvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let snake = [{x: 10, y: 10}];
+        let food = {x: 5, y: 5};
+        let score = 0;
+        snakeDir = 'RIGHT';
 
-                const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
-                const contentToSend = neuralModifier + promptWithContext;
-                const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
-                
-                const responseText = await fetchFromServer(finalPrompt);
-                
-                document.getElementById(loadingId).remove();
-                const msgId = 'ai-msg-' + Date.now();
-                msgBox.innerHTML += `
-                    <div class="flex flex-col space-y-2 my-3">
-                        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
-                            <b>AI Studio:</b><br>${window.marked && marked.parse ? marked.parse(responseText) : responseText}
-                        </div>
-                        <div class="flex items-center space-x-3 text-xs pl-2">
-                            <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
-                                <span>Copiază</span>
-                            </button>
-                            <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
-                                <span>Descarcă .txt</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
-                msgBox.scrollTop = msgBox.scrollHeight;
-            } catch (err) {
-                document.getElementById(loadingId).remove();
-                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
-            }
-        }
+        activeGameInterval = setInterval(() => {
+            let head = {...snake[0]};
+            if(snakeDir === 'UP') head.y--;
+            if(snakeDir === 'DOWN') head.y++;
+            if(snakeDir === 'LEFT') head.x--;
+            if(snakeDir === 'RIGHT') head.x++;
 
-        async function generateTextToVideo() {
-            const inputEl = document.getElementById('textToVideoInput');
-            const resultBox = document.getElementById('textToVideoResult');
-            const text = inputEl.value.trim();
-
-            if (!text) {
-                showToast('Te rog să introduci o descriere pentru video!', 'error');
+            if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+                clearInterval(activeGameInterval);
+                showToast('Game Over! Scor: ' + score, 'error');
                 return;
             }
 
-            resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
-
-            try {
-                const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
-                const responseText = await fetchFromServer(prompt);
-                resultBox.innerText = responseText;
-                showToast('Scenariul video a fost generat cu succes!');
-            } catch (err) {
-                resultBox.innerText = `Eroare: ${err.message}`;
-                showToast(err.message, 'error');
-            }
-        }
-
-        let attachedFiles = {};
-
-        function handleFileSelect(tabKey) {
-            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-            const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
-
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                attachedFiles[tabKey] = file;
-                nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                previewBox.classList.remove('hidden');
-                previewBox.classList.add('flex');
-            }
-        }
-
-        function removeAttachment(tabKey) {
-            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-            fileInput.value = '';
-            delete attachedFiles[tabKey];
-            previewBox.classList.remove('flex');
-            previewBox.classList.add('hidden');
-        }
-
-        async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
-            const inputEl = document.getElementById(inputId);
-            const msgBox = document.getElementById(messagesContainerId);
-            if (!inputEl || !msgBox) return;
-
-            const text = inputEl.value.trim();
-            const file = attachedFiles ? attachedFiles[tabKey] : null;
-
-            if (!text && !file) return;
-
-            let displayHtml = '';
-            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
-            if (text) displayHtml += `<div>${text}</div>`;
-
-            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
-            inputEl.value = '';
-            msgBox.scrollTop = msgBox.scrollHeight;
-
-            let fileDataPayload = null;
-            if (file) {
-                const base64String = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.readAsDataURL(file);
-                });
-                fileDataPayload = {
-                    base64: base64String,
-                    mimeType: file.type || 'text/plain'
-                };
-            }
-
-            removeAttachment(tabKey);
-
-            const loadingId = 'load-' + Date.now();
-            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
-            msgBox.scrollTop = msgBox.scrollHeight;
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        prompt: text || "Analizează acest fișier:",
-                        tabId: tabKey,
-                        fileData: fileDataPayload
-                    })
-                });
-
-                const data = await res.json();
-                const loadEl = document.getElementById(loadingId);
-                if (loadEl) loadEl.remove();
-
-                if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
-
-                msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
-                msgBox.scrollTop = msgBox.scrollHeight;
-            } catch (err) {
-                const loadEl = document.getElementById(loadingId);
-                if (loadEl) loadEl.remove();
-                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
-            }
-        }
-
-        async function fetchFromServer(promptText) {
-            try {
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: promptText })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Eroare server: ${response.status}`);
-                }
-
-                const data = await response.json();
-                return data.response || data.text || "Răspuns gol primit de la server.";
-            } catch (err) {
-                console.error("Eroare la comunicarea cu serverul:", err);
-                throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
-            }
-        }
-
-        function copyMsgText(msgId) {
-            const el = document.getElementById(msgId);
-            const textToCopy = el.innerText.replace('AI Studio:', '').trim();
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('Text copiat!', 'success');
-            });
-        }
-
-        function downloadMsgText(msgId) {
-            const el = document.getElementById(msgId);
-            const textToDownload = el.innerText.replace('AI Studio:', '').trim();
-            const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function exportFullSession() {
-            const msgBox = document.getElementById('chatMessages');
-            if (!msgBox) {
-                showToast('Nu există mesaje de exportat momentan!', 'error');
-                return;
-            }
-            const textContent = msgBox.innerText;
-            const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('Sesiune exportată cu succes!', 'success');
-        }
-
-        function changeWebsiteLanguage(lang) {
-            localStorage.setItem('nexus_lang', lang);
-            var selectField = document.querySelector(".goog-te-combo");
-            if (selectField) {
-                selectField.value = lang;
-                selectField.dispatchEvent(new Event('change'));
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('nexus_lang') || 'ro';
-            const selectEl = document.getElementById('languageSelect');
-            if (selectEl) selectEl.value = savedLang;
-            
-            setTimeout(() => {
-                changeWebsiteLanguage(savedLang);
-            }, 1200);
-        });
-
-        function toggleEmojiPicker() {
-            const picker = document.getElementById('emojiPicker');
-            if (picker) picker.classList.toggle('hidden');
-        }
-
-        function addEmoji(emoji) {
-            const input = document.getElementById('chatInput');
-            if (input) {
-                input.value += emoji;
-                input.focus();
-            }
-            const picker = document.getElementById('emojiPicker');
-            if (picker) picker.classList.add('hidden');
-        }
-
-        window.addEventListener('click', function(e) {
-            const picker = document.getElementById('emojiPicker');
-            const btn = document.querySelector('button[onclick="toggleEmojiPicker()"]');
-            if (picker && btn && !picker.contains(e.target) && !btn.contains(e.target)) {
-                picker.classList.add('hidden');
-            }
-        });
-
-        let neuralPulseActive = false;
-
-        function toggleNeuralPulse() {
-            neuralPulseActive = !neuralPulseActive;
-            const btn = document.getElementById('neuralPulseBtn');
-            if (neuralPulseActive) {
-                btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
-                btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
+            if(head.x === food.x && head.y === food.y) {
+                score += 10;
+                document.getElementById('snakeScore').innerText = score;
+                food = {x: Math.floor(Math.random() * 18), y: Math.floor(Math.random() * 18)};
             } else {
-                btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
-                btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
+                snake.pop();
             }
+            snake.unshift(head);
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(food.x * 10, food.y * 10, 10, 10);
+            ctx.fillStyle = '#10b981';
+            snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
+        }, 120);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        switchTab('chat', 'Chat General');
+        renderEditorialPosts();
+        if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
+            document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
         }
-    </script>
+        
+        const savedHistory = localStorage.getItem('nexus_chat_history');
+        const defaultMsgBox = document.getElementById('chatMessages');
+        if (savedHistory && defaultMsgBox) {
+            defaultMsgBox.innerHTML = savedHistory;
+        }
+    });
+
+    async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
+        const inputEl = document.getElementById(inputId);
+        const msgBox = document.getElementById(messagesContainerId);
+        if (!inputEl || !msgBox) return;
+        
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        const toneEl = document.getElementById('toneSelector');
+        const tonePrefix = toneEl ? toneEl.value : '';
+        const textWithTone = tonePrefix ? tonePrefix + text : text;
+
+        msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
+        inputEl.value = '';
+        msgBox.scrollTop = msgBox.scrollHeight;
+        
+        localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
+
+        const loadingId = 'load-' + Date.now();
+        msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        try {
+            const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
+            let recentContext = "";
+            const lastFew = Array.from(messageElements).slice(-4);
+            lastFew.forEach(el => {
+                recentContext += el.innerText + "\n";
+            });
+
+            const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
+                ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
+                : "";
+
+            const currentLang = localStorage.getItem('nexus_lang') || 'ro';
+            const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
+            const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
+
+            const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
+            const contentToSend = neuralModifier + promptWithContext;
+            const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
+            
+            const responseText = await fetchFromServer(finalPrompt);
+            
+            document.getElementById(loadingId).remove();
+            const msgId = 'ai-msg-' + Date.now();
+            msgBox.innerHTML += `
+                <div class="flex flex-col space-y-2 my-3">
+                    <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+                        <b>AI Studio:</b><br>${window.marked && marked.parse ? marked.parse(responseText) : responseText}
+                    </div>
+                    <div class="flex items-center space-x-3 text-xs pl-2">
+                        <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                            <span>Copiază</span>
+                        </button>
+                        <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                            <span>Descarcă .txt</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
+            msgBox.scrollTop = msgBox.scrollHeight;
+        } catch (err) {
+            document.getElementById(loadingId).remove();
+            msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+        }
+    }
+
+    async function generateTextToVideo() {
+        const inputEl = document.getElementById('textToVideoInput');
+        const resultBox = document.getElementById('textToVideoResult');
+        const text = inputEl.value.trim();
+
+        if (!text) {
+            showToast('Te rog să introduci o descriere pentru video!', 'error');
+            return;
+        }
+
+        resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
+
+        try {
+            const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
+            const responseText = await fetchFromServer(prompt);
+            resultBox.innerText = responseText;
+            showToast('Scenariul video a fost generat cu succes!');
+        } catch (err) {
+            resultBox.innerText = `Eroare: ${err.message}`;
+            showToast(err.message, 'error');
+        }
+    }
+
+    let attachedFiles = {};
+
+    function handleFileSelect(tabKey) {
+        const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+        const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+        const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            attachedFiles[tabKey] = file;
+            nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            previewBox.classList.remove('hidden');
+            previewBox.classList.add('flex');
+        }
+    }
+
+    function removeAttachment(tabKey) {
+        const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+        const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+        fileInput.value = '';
+        delete attachedFiles[tabKey];
+        previewBox.classList.remove('flex');
+        previewBox.classList.add('hidden');
+    }
+
+    async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+        const inputEl = document.getElementById(inputId);
+        const msgBox = document.getElementById(messagesContainerId);
+        if (!inputEl || !msgBox) return;
+
+        const text = inputEl.value.trim();
+        const file = attachedFiles ? attachedFiles[tabKey] : null;
+
+        if (!text && !file) return;
+
+        let displayHtml = '';
+        if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+        if (text) displayHtml += `<div>${text}</div>`;
+
+        msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
+        inputEl.value = '';
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        let fileDataPayload = null;
+        if (file) {
+            const base64String = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.readAsDataURL(file);
+            });
+            fileDataPayload = {
+                base64: base64String,
+                mimeType: file.type || 'text/plain'
+            };
+        }
+
+        removeAttachment(tabKey);
+
+        const loadingId = 'load-' + Date.now();
+        msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: text || "Analizează acest fișier:",
+                    tabId: tabKey,
+                    fileData: fileDataPayload
+                })
+            });
+
+            const data = await res.json();
+            const loadEl = document.getElementById(loadingId);
+            if (loadEl) loadEl.remove();
+
+            if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
+
+            msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+        } catch (err) {
+            const loadEl = document.getElementById(loadingId);
+            if (loadEl) loadEl.remove();
+            msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+        }
+    }
+
+    async function fetchFromServer(promptText) {
+        try {
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: promptText })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Eroare server: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.response || data.text || "Răspuns gol primit de la server.";
+        } catch (err) {
+            console.error("Eroare la comunicarea cu serverul:", err);
+            throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
+        }
+    }
+
+    function copyMsgText(msgId) {
+        const el = document.getElementById(msgId);
+        const textToCopy = el.innerText.replace('AI Studio:', '').trim();
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast('Text copiat!', 'success');
+        });
+    }
+
+    function downloadMsgText(msgId) {
+        const el = document.getElementById(msgId);
+        const textToDownload = el.innerText.replace('AI Studio:', '').trim();
+        const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function exportFullSession() {
+        const msgBox = document.getElementById('chatMessages');
+        if (!msgBox) {
+            showToast('Nu există mesaje de exportat momentan!', 'error');
+            return;
+        }
+        const textContent = msgBox.innerText;
+        const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('Sesiune exportată cu succes!', 'success');
+    }
+
+    function changeWebsiteLanguage(lang) {
+        localStorage.setItem('nexus_lang', lang);
+        var selectField = document.querySelector(".goog-te-combo");
+        if (selectField) {
+            selectField.value = lang;
+            selectField.dispatchEvent(new Event('change'));
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('nexus_lang') || 'ro';
+        const selectEl = document.getElementById('languageSelect');
+        if (selectEl) selectEl.value = savedLang;
+        
+        setTimeout(() => {
+            changeWebsiteLanguage(savedLang);
+        }, 1200);
+    });
+
+    function toggleEmojiPicker() {
+        const picker = document.getElementById('emojiPicker');
+        if (picker) picker.classList.toggle('hidden');
+    }
+
+    function addEmoji(emoji) {
+        const input = document.getElementById('chatInput');
+        if (input) {
+            input.value += emoji;
+            input.focus();
+        }
+        const picker = document.getElementById('emojiPicker');
+        if (picker) picker.classList.add('hidden');
+    }
+
+    window.addEventListener('click', function(e) {
+        const picker = document.getElementById('emojiPicker');
+        const btn = document.querySelector('button[onclick="toggleEmojiPicker()"]');
+        if (picker && btn && !picker.contains(e.target) && !btn.contains(e.target)) {
+            picker.classList.add('hidden');
+        }
+    });
+
+    let neuralPulseActive = false;
+
+    function toggleNeuralPulse() {
+        neuralPulseActive = !neuralPulseActive;
+        const btn = document.getElementById('neuralPulseBtn');
+        if (neuralPulseActive) {
+            btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+            btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
+        } else {
+            btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+            btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
+        }
+    }
+</script>
 </body>
 </html>
