@@ -699,19 +699,43 @@ function googleTranslateElementInit() {
         }
 
         function switchTab(tabId, titleName) {
-            document.querySelectorAll('.app-tab').forEach(tab => tab.classList.remove('active-tab'));
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) target.classList.add('active-tab');
+    // Ascunde toate tab-urile
+    document.querySelectorAll('.app-tab').forEach(tab => {
+        tab.classList.add('hidden');
+        tab.classList.remove('active-tab');
+        tab.style.setProperty('display', 'none', 'important');
+    });
 
-            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
-                btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium";
-            });
-            const activeNav = document.getElementById(`nav-${tabId}`);
-            if(activeNav) {
-                activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition cursor-pointer font-bold border border-cyanNeon/30";
-            }
-            document.getElementById('breadcrumbCurrent').innerText = titleName;
-        }
+    // Caută tab-ul corect
+    let targetId = tabId;
+    if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
+    else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
+    else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
+    else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
+    else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
+
+    let target = document.getElementById(targetId) || document.getElementById(tabId);
+
+    // Afișează DOAR tab-ul selectat
+    if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('active-tab');
+        target.style.setProperty('display', 'flex', 'important');
+    }
+
+    // Stilizează meniul din stânga
+    document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+        btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+    });
+    
+    const activeNav = document.getElementById(`nav-${tabId}`);
+    if (activeNav) {
+        activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
+    }
+
+    const breadcrumb = document.getElementById('breadcrumbCurrent');
+    if (breadcrumb && titleName) breadcrumb.innerText = titleName;
+}
 
         function newSession() {
             document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
