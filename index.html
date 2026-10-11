@@ -255,7 +255,19 @@ function googleTranslateElementInit() {
                             <span id="chatAttachmentName-chat" class="text-gray-200"></span>
                             <button onclick="removeAttachment('chat')" class="text-red-400 hover:text-red-300 ml-2 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                        
+                        <!-- Bara rapidă de emoticoane -->
+                <div class="flex flex-wrap gap-1.5 py-1 px-2 bg-gray-900/80 rounded-xl border border-gray-800 text-xs w-max">
+                    <span onclick="document.getElementById('chatInput').value += '🔥'" class="cursor-pointer hover:scale-125 transition px-1">🔥</span>
+                    <span onclick="document.getElementById('chatInput').value += '🚀'" class="cursor-pointer hover:scale-125 transition px-1">🚀</span>
+                    <span onclick="document.getElementById('chatInput').value += '✨'" class="cursor-pointer hover:scale-125 transition px-1">✨</span>
+                    <span onclick="document.getElementById('chatInput').value += '💻'" class="cursor-pointer hover:scale-125 transition px-1">💻</span>
+                    <span onclick="document.getElementById('chatInput').value += '🤖'" class="cursor-pointer hover:scale-125 transition px-1">🤖</span>
+                    <span onclick="document.getElementById('chatInput').value += '⚡'" class="cursor-pointer hover:scale-125 transition px-1">⚡</span>
+                    <span onclick="document.getElementById('chatInput').value += '💎'" class="cursor-pointer hover:scale-125 transition px-1">💎</span>
+                    <span onclick="document.getElementById('chatInput').value += '🎯'" class="cursor-pointer hover:scale-125 transition px-1">🎯</span>
+                    <span onclick="document.getElementById('chatInput').value += '📈'" class="cursor-pointer hover:scale-125 transition px-1">📈</span>
+                    <span onclick="document.getElementById('chatInput').value += '🎬'" class="cursor-pointer hover:scale-125 transition px-1">🎬</span>
+                </div>
                         <div class="flex space-x-2 items-center">
                             <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
                             <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition" title="Atașează fișier">
