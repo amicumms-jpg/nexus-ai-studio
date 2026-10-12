@@ -555,6 +555,16 @@ html {
                     <div id="paymentStatus" class="text-center text-xs text-emerald-400 font-medium"></div>
                 </div>
             </div>
+           <!-- Informații de Securitate & Link-uri Legale sub Carduri -->
+    <div class="text-center text-xs text-gray-500 space-y-2 pt-4">
+        <p><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Plăți securizate 100% prin <strong>Stripe</strong>. Datele cardului nu sunt stocate pe serverele noastre.</p>
+        <p>Abonamentul poate fi suspendat sau anulat oricând dorești din contul tău.</p>
+        <div class="pt-2 text-gray-400 space-x-4">
+            <button onclick="openModal('termsModal')" class="hover:underline hover:text-white transition"><i class="fa-solid fa-file-contract mr-1"></i> Termeni și Condiții</button>
+            <span>•</span>
+            <button onclick="openModal('privacyModal')" class="hover:underline hover:text-white transition"><i class="fa-solid fa-user-shield mr-1"></i> Politica de Confidențialitate (GDPR)</button>
+        </div>
+    </div>
 
             <!-- Tab 11: Retro Snake Arcade -->
             <div id="tab-arcadeStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-6">
@@ -1456,7 +1466,6 @@ function getNeuralPulseModifier() {
         text.textContent = 'Arată Unelte';
         icon.className = 'fa-solid fa-eye';
     }
-}
    function toggleSidebar() {
     const sidebar = document.getElementById('appSidebar');
     if (!sidebar) return;
@@ -1469,6 +1478,51 @@ function getNeuralPulseModifier() {
         sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
     }
 }
-    </script>
+      <!-- Modal Termeni si Conditii -->
+<div id="termsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-file-contract text-amberGlow mr-2"></i> Termeni și Condiții</h3>
+            <button onclick="closeModal('termsModal')" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
+        </div>
+        <div class="p-6 overflow-y-auto text-xs text-gray-300 space-y-4 leading-relaxed">
+            <p><strong>1. Introducere:</strong> Prin utilizarea aplicației Nexus AI Studio Pro, sunteți de acord cu acești termeni. Platforma oferă servicii de generare conținut bazate pe inteligență artificială.</p>
+            <p><strong>2. Abonamente și Plăți:</strong> Abonamentele se reînnoiesc automat lunar prin procesatorul nostru securizat de plăți (Stripe). Puteți anula abonamentul în orice moment fără costuri suplimentare.</p>
+            <p><strong>3. Utilizarea Serviciului:</strong> Utilizatorul este responsabil pentru conținutul generat și se obligă să nu utilizeze platforma în scopuri ilegale, ilegitime sau dăunătoare.</p>
+            <p><strong>4. Politica de Rambursare:</strong> Datorită naturii digitale a serviciilor noastre, rambursările se acordă conform legislației în vigoare în termen de 14 zile, doar dacă resursele digitale (token-urile) nu au fost consumate excesiv.</p>
+        </div>
+        <div class="p-4 border-t border-gray-800 text-right">
+            <button onclick="closeModal('termsModal')" class="px-4 py-2 bg-gray-800 text-white rounded-xl text-xs font-semibold hover:bg-gray-700">Închide</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Politica de Confidentialitate -->
+<div id="privacyModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-shield text-amberGlow mr-2"></i> Politica de Confidențialitate (GDPR)</h3>
+            <button onclick="closeModal('privacyModal')" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
+        </div>
+        <div class="p-6 overflow-y-auto text-xs text-gray-300 space-y-4 leading-relaxed">
+            <p><strong>1. Colectarea Datelor:</strong> Colectăm doar datele necesare funcționării aplicației: adresa de e-mail și preferințele de utilizare. Datele de card sunt procesate direct și exclusiv de Stripe.</p>
+            <p><strong>2. Securitatea Datelor:</strong> Implementăm măsuri stricte de securitate și criptare pentru a proteja informațiile personale împotriva accesului neautorizat.</p>
+            <p><strong>3. Drepturile GDPR:</strong> În calitate de utilizator din Uniunea Europeană, aveți dreptul de a solicita accesul, rectificarea sau ștergerea completă a datelor dvs. personale stocate pe platformă.</p>
+            <p><strong>4. Cookie-uri & Stocare Locală:</strong> Utilizăm `localStorage` strict pentru salvarea preferințelor de interfață (ex: limba selectată sau sesiunea activă).</p>
+        </div>
+        <div class="p-4 border-t border-gray-800 text-right">
+            <button onclick="closeModal('privacyModal')" class="px-4 py-2 bg-gray-800 text-white rounded-xl text-xs font-semibold hover:bg-gray-700">Închide</button>
+        </div>
+    </div>
+</div>
+function openModal(id) {
+    const m = document.getElementById(id);
+    if(m) m.classList.remove('hidden');
+}
+function closeModal(id) {
+    const m = document.getElementById(id);
+    if(m) m.classList.add('hidden');
+}
+</script>
 </body>
 </html>
