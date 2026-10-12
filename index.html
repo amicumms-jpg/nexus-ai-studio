@@ -246,6 +246,64 @@ function googleTranslateElementInit() {
             <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-y-auto p-4 space-y-3">
                 <div class="bg-panelBg border border-cyanNeon/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl">
                     <h2 class="font-bold text-sm text-cyanNeon mb-2"><i class="fa-solid fa-comments mr-2"></i> Nexus Neural Assistant - Chat General</h2>
+                    <!-- Panou Modern de Unelte Rapide (Tools Grid) -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-3 bg-gray-950/60 border border-cyanNeon/20 rounded-2xl mb-3">
+    
+    <!-- Tool 1: TikTok AI -->
+    <div onclick="switchTab('tiktokStudio', 'TikTok AI Studio')" class="bg-panelBg hover:border-tiktokColor border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-tiktokColor/10 text-tiktokColor flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+            <i class="fa-brands fa-tiktok"></i>
+        </div>
+        <span class="text-xs font-bold text-white">TikTok AI</span>
+        <span class="text-[10px] text-gray-400">Hooks & Virale</span>
+    </div>
+
+    <!-- Tool 2: Instagram AI -->
+    <div onclick="switchTab('instaStudio', 'Instagram AI Creator')" class="bg-panelBg hover:border-instaColor border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-instaColor/10 text-instaColor flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+            <i class="fa-brands fa-instagram"></i>
+        </div>
+        <span class="text-xs font-bold text-white">Instagram AI</span>
+        <span class="text-[10px] text-gray-400">Carusele & Reels</span>
+    </div>
+
+    <!-- Tool 3: YouTube Studio -->
+    <div onclick="switchTab('ytStudio', 'YouTube Scriptwriter')" class="bg-panelBg hover:border-ytColor border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-ytColor/10 text-ytColor flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+            <i class="fa-brands fa-youtube"></i>
+        </div>
+        <span class="text-xs font-bold text-white">YouTube AI</span>
+        <span class="text-[10px] text-gray-400">Scenarii & Titluri</span>
+    </div>
+
+    <!-- Tool 4: Search & SEO -->
+    <div onclick="switchTab('hashtagStudio', 'Hashtag & SEO Hub')" class="bg-panelBg hover:border-violetPop border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-violetPop/10 text-violetPop flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+            <i class="fa-solid fa-hashtag"></i>
+        </div>
+        <span class="text-xs font-bold text-white">Search & SEO</span>
+        <span class="text-[10px] text-gray-400">Hashtags & Keywords</span>
+    </div>
+
+    <!-- Tool 5: A/B Testing -->
+    <div onclick="switchTab('abTestingStudio', 'A/B Testing Titluri')" class="bg-panelBg hover:border-emeraldNeon border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-emeraldNeon/10 text-emeraldNeon flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+            <i class="fa-solid fa-vials"></i>
+        </div>
+        <span class="text-xs font-bold text-white">A/B Testing</span>
+        <span class="text-[10px] text-gray-400">Scor de viralitate</span>
+    </div>
+
+    <!-- Tool 6: Text-to-Video -->
+    <div onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" class="bg-panelBg hover:border-videoColor border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-videoColor/10 text-videoColor flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+            <i class="fa-solid fa-clapperboard"></i>
+        </div>
+        <span class="text-xs font-bold text-white">Text-to-Video</span>
+        <span class="text-[10px] text-gray-400">Generare Scenariu</span>
+    </div>
+
+</div>
                     <div id="chatMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
                     </div>
