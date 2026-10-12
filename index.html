@@ -512,88 +512,49 @@ html {
                 </div>
             </div>
 
-            <!-- Tab 10: Plată Card & Abonamente -->
-<div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 md:p-8 items-center justify-start space-y-6">
-    
-    <!-- Antet Secțiune -->
-    <div class="text-center max-w-xl space-y-2">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 text-white mb-2 shadow-lg">
-            <i class="fa-solid fa-gem text-xl"></i>
-        </div>
-        <h2 class="text-2xl font-extrabold text-white">Alege Planul Potrivit pentru Tine</h2>
-        <p class="text-xs md:text-sm text-gray-400">Deblochează puterea maximă AI pentru crearea de conținut, scripturi și automatizări.</p>
-    </div>
-
-    <!-- Container Carduri Abonament -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl pt-4">
-        
-        <!-- Plan 1: Free / Demo -->
-        <div class="bg-panelBg border border-gray-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-gray-700 transition shadow-xl">
-            <div class="space-y-4">
-                <div class="space-y-1">
-                    <span class="text-xs uppercase tracking-wider font-bold text-gray-400">Starter</span>
-                    <h3 class="text-xl font-bold text-white">Gratuit</h3>
-                    <div class="text-2xl font-black text-white pt-2">0 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
+            <!-- Tab 10: Plată Card -->
+            <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-6 items-center justify-center">
+                <div class="bg-panelBg border border-amberGlow/40 p-8 rounded-3xl max-w-lg w-full space-y-6 shadow-2xl">
+                    <div class="text-center space-y-2">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-2xl mx-auto shadow-lg">
+                            <i class="fa-solid fa-credit-card"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-white">Nexus AI Pro - Abonament Lunar</h2>
+                        <p class="text-xs text-gray-400">Deblochează acces nelimitat la toate uneltele.</p>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-4 rounded-2xl space-y-3">
+                        <div class="flex justify-between text-xs font-semibold text-gray-300">
+                            <span>Plan PRO Unlimited</span>
+                            <span class="text-amberGlow">49 RON / lună</span>
+                        </div>
+                        <hr class="border-gray-800">
+                        <div class="space-y-3 pt-1">
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase">Nume pe Card</label>
+                                <input type="text" id="cardName" placeholder="Ion Popescu" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase">Număr Card</label>
+                                <input type="text" id="cardNumber" placeholder="4000 1234 5678 9010" maxlength="19" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[10px] text-gray-400 font-bold uppercase">Expirare</label>
+                                    <input type="text" id="cardExp" placeholder="12/28" maxlength="5" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-gray-400 font-bold uppercase">CVV</label>
+                                    <input type="password" id="cardCvv" placeholder="123" maxlength="4" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="processCardPayment()" class="w-full bg-gradient-to-r from-amberGlow to-orange-500 hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer mt-3">
+                            Plătește 49 RON și Activează PRO
+                        </button>
+                    </div>
+                    <div id="paymentStatus" class="text-center text-xs text-emerald-400 font-medium"></div>
                 </div>
-                <hr class="border-gray-800">
-                <ul class="text-xs text-gray-300 space-y-2.5">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Acces la Chat General</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> 10.000 Token-uri lunare</li>
-                    <li class="flex items-center text-gray-500"><i class="fa-solid fa-xmark mr-2 text-gray-600"></i> Generare Video & Podcast</li>
-                    <li class="flex items-center text-gray-500"><i class="fa-solid fa-xmark mr-2 text-gray-600"></i> Viteza de procesare Standard</li>
-                </ul>
             </div>
-            <button class="w-full py-2.5 px-4 bg-gray-800 text-gray-300 font-semibold rounded-xl text-xs cursor-default">
-                Plan Activ În Prezent
-            </button>
-        </div>
-
-        <!-- Plan 2: Pro Unlimited (RECOMANDAT) -->
-        <div class="bg-panelBg border-2 border-amberGlow/80 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-2xl relative transform md:-translate-y-2">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amberGlow to-orange-500 text-white text-[10px] uppercase font-black px-3 py-1 rounded-full shadow-md">
-                Cel Mai Popular
-            </div>
-            <div class="space-y-4">
-                <div class="space-y-1">
-                    <span class="text-xs uppercase tracking-wider font-bold text-amberGlow">Pro Studio</span>
-                    <h3 class="text-xl font-bold text-white">PRO Unlimited</h3>
-                    <div class="text-3xl font-black text-amberGlow pt-2">49 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
-                </div>
-                <hr class="border-gray-800">
-                <ul class="text-xs text-gray-200 space-y-2.5">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Token-uri Nelimitate</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> TikTok, Instagram & YouTube AI</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Text-to-Video & Podcast Studio</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Viteză Maximă de Răspuns</li>
-                </ul>
-            </div>
-            <a href="https://buy.stripe.com/exemplu-pro" target="_blank" class="block w-full py-3 px-4 bg-gradient-to-r from-amberGlow to-orange-500 text-white font-bold text-xs rounded-xl shadow-lg hover:opacity-90 transition text-center">
-                <i class="fa-solid fa-lock mr-1.5"></i> Activează Pro (49 RON)
-            </a>
-        </div>
-
-        <!-- Plan 3: Business / Agenție -->
-        <div class="bg-panelBg border border-gray-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-gray-700 transition shadow-xl">
-            <div class="space-y-4">
-                <div class="space-y-1">
-                    <span class="text-xs uppercase tracking-wider font-bold text-purple-400">Enterprise</span>
-                    <h3 class="text-xl font-bold text-white">Business AI</h3>
-                    <div class="text-2xl font-black text-white pt-2">149 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
-                </div>
-                <hr class="border-gray-800">
-                <ul class="text-xs text-gray-300 space-y-2.5">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Tot ce include Planul Pro</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Unelte A/B Testing Titluri</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Suport Prioritar 24/7</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Acces API Dedicat</li>
-                </ul>
-            </div>
-            <a href="https://buy.stripe.com/exemplu-business" target="_blank" class="block w-full py-3 px-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold text-xs rounded-xl transition text-center border border-gray-700">
-                <i class="fa-solid fa-lock mr-1.5"></i> Cumpără Business (149 RON)
-            </a>
-        </div>
-
-    </div>
 
             <!-- Tab 11: Retro Snake Arcade -->
             <div id="tab-arcadeStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-6">
@@ -1508,8 +1469,6 @@ function getNeuralPulseModifier() {
         sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
     }
 }
-       }
-   
     </script>
 </body>
 </html>
