@@ -788,7 +788,13 @@ function googleTranslateElementInit() {
         target.classList.add('active-tab');
         target.style.setProperty('display', 'flex', 'important');
     }
-
+// Închide meniul pe mobil dacă este deschis
+    if (window.innerWidth < 768) {
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar && !sidebar.classList.contains('hidden')) {
+            toggleSidebar();
+        }
+    }
     // Stilizează meniul din stânga
     document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
         btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
@@ -1430,16 +1436,16 @@ function getNeuralPulseModifier() {
         icon.className = 'fa-solid fa-eye';
     }
 }
-        function toggleSidebar() {
+       function toggleSidebar() {
     const sidebar = document.getElementById('appSidebar');
     if (!sidebar) return;
     
     if (sidebar.classList.contains('hidden')) {
         sidebar.classList.remove('hidden');
-        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'shadow-2xl', 'bg-panelBg');
+        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'max-h-screen', 'overflow-y-auto', 'shadow-2xl', 'bg-panelBg');
     } else {
         sidebar.classList.add('hidden');
-        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'shadow-2xl', 'bg-panelBg');
+        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'max-h-screen', 'overflow-y-auto', 'shadow-2xl', 'bg-panelBg');
     }
 }
     </script>
