@@ -512,47 +512,58 @@ html {
                 </div>
             </div>
 
-            <!-- Tab 10: Plată Card -->
+            <!-- Tab 10: Plată Card & Abonamente -->
             <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-6 items-center justify-center">
-                <div class="bg-panelBg border border-amberGlow/40 p-8 rounded-3xl max-w-lg w-full space-y-6 shadow-2xl">
+                <div class="max-w-4xl w-full space-y-6 mx-auto">
                     <div class="text-center space-y-2">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-2xl mx-auto shadow-lg">
                             <i class="fa-solid fa-credit-card"></i>
                         </div>
-                        <h2 class="text-xl font-bold text-white">Nexus AI Pro - Abonament Lunar</h2>
-                        <p class="text-xs text-gray-400">Deblochează acces nelimitat la toate uneltele.</p>
+                        <h2 class="text-xl font-bold text-white">Alege Planul Potrivit pentru Nexus AI Studio Pro</h2>
+                        <p class="text-xs text-gray-400">Plăți securizate 100% prin Stripe. Anulezi oricând dorești.</p>
                     </div>
-                    <div class="bg-gray-950 border border-gray-800 p-4 rounded-2xl space-y-3">
-                        <div class="flex justify-between text-xs font-semibold text-gray-300">
-                            <span>Plan PRO Unlimited</span>
-                            <span class="text-amberGlow">49 RON / lună</span>
-                        </div>
-                        <hr class="border-gray-800">
-                        <div class="space-y-3 pt-1">
-                            <div>
-                                <label class="text-[10px] text-gray-400 font-bold uppercase">Nume pe Card</label>
-                                <input type="text" id="cardName" placeholder="Ion Popescu" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-gray-400 font-bold uppercase">Număr Card</label>
-                                <input type="text" id="cardNumber" placeholder="4000 1234 5678 9010" maxlength="19" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="text-[10px] text-gray-400 font-bold uppercase">Expirare</label>
-                                    <input type="text" id="cardExp" placeholder="12/28" maxlength="5" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Plan 1: Pro Studio -->
+                        <div class="bg-panelBg border border-amberGlow/40 p-6 rounded-3xl space-y-4 shadow-xl flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-base font-bold text-white">Nexus Pro Studio</h3>
+                                    <span class="text-xs bg-amberGlow/20 text-amberGlow px-2.5 py-1 rounded-full font-semibold">Popular</span>
                                 </div>
-                                <div>
-                                    <label class="text-[10px] text-gray-400 font-bold uppercase">CVV</label>
-                                    <input type="password" id="cardCvv" placeholder="123" maxlength="4" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amberGlow">
-                                </div>
+                                <div class="text-2xl font-extrabold text-amberGlow">49 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
+                                <p class="text-xs text-gray-300">Acces complet la toate uneltele avansate de creare conținut și chat-uri AI nelimitate.</p>
+                                <ul class="text-xs text-gray-400 space-y-1.5 pt-2">
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Toate studio-urile TikTok, Instagram, YouTube</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Asistență Neurală Avansată</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Suport prioritar</li>
+                                </ul>
                             </div>
+                            <a href="https://buy.stripe.com/test_4gM14mdAW8Iz71e59K4ko00" target="_blank" class="w-full block text-center bg-gradient-to-r from-amberGlow to-orange-500 hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
+                                Abonează-te Pro (49 RON)
+                            </a>
                         </div>
-                        <button onclick="processCardPayment()" class="w-full bg-gradient-to-r from-amberGlow to-orange-500 hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer mt-3">
-                            Plătește 49 RON și Activează PRO
-                        </button>
+
+                        <!-- Plan 2: Business -->
+                        <div class="bg-panelBg border border-cyanNeon/40 p-6 rounded-3xl space-y-4 shadow-xl flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-base font-bold text-white">Nexus Business</h3>
+                                    <span class="text-xs bg-cyanNeon/20 text-cyanNeon px-2.5 py-1 rounded-full font-semibold">Pentru Echipe</span>
+                                </div>
+                                <div class="text-2xl font-extrabold text-cyanNeon">149 RON <span class="text-xs font-normal text-gray-400">/ lună</span></div>
+                                <p class="text-xs text-gray-300">Putere maximă de procesare pentru agenții, freelanceri și echipe de marketing.</p>
+                                <ul class="text-xs text-gray-400 space-y-1.5 pt-2">
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Tot ce include pachetul Pro</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Acces nelimitat la Text-to-Video Studio</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Funcții extinse de export și API</li>
+                                </ul>
+                            </div>
+                            <a href="https://buy.stripe.com/test_6oUbJ0bsO3of2KYcCc4ko01" target="_blank" class="w-full block text-center bg-gradient-to-r from-cyanNeon to-emeraldNeon hover:opacity-90 text-darkBg font-bold text-xs py-3 rounded-xl transition shadow cursor-pointer">
+                                Abonează-te Business (149 RON)
+                            </a>
+                        </div>
                     </div>
-                    <div id="paymentStatus" class="text-center text-xs text-emerald-400 font-medium"></div>
                 </div>
             </div>
            <!-- Informații de Securitate & Link-uri Legale sub Carduri -->
