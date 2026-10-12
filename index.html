@@ -46,15 +46,6 @@
             display: flex !important;
         }
     </style>
-    <!-- Google Translate Script -->
-<script type="text/javascript">
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'ro',
-        includedLanguages: 'ro,en,fr,de',
-        autoDisplay: false
-    }, 'google_translate_element');
-}
 
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative">
@@ -148,15 +139,13 @@ function googleTranslateElementInit() {
     <span class="hidden lg:inline">Neural Pulse: OFF</span>
 </button>
            <!-- Selector Multilingual -->
-<select id="languageSelect" onchange="changeWebsiteLanguage(this.value)" class="bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2.5 py-1.5 rounded-xl text-xs transition outline-none cursor-pointer">
-    <option value="ro">🇷🇴 Română</option>
-    <option value="en">🇬🇧 English</option>
-    <option value="fr">🇫🇷 Français</option>
-    <option value="de">🇩🇪 Deutsch</option>
+<select id="languageSelect" onchange="changeWebsiteLanguage(this.value)" class="bg-panelBg text-textMuted border border-borderSubtle rounded-lg px-2 py-1 text-sm focus:outline-none">
+    <option value="ro">🇷🇴 RO</option>
+    <option value="en">🇬🇧 EN</option>
+    <option value="fr">🇫🇷 FR</option>
+    <option value="de">🇩🇪 DE</option>
 </select>
 
-<!-- Container ascuns obligatoriu pentru Google -->
-<div id="google_translate_element" style="display:none;"></div>
             <div class="flex items-center space-x-1.5">
                 <button onclick="switchTab('billingCard', 'Plată Abonament Card')" class="bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[11px] px-2.5 py-1 rounded-xl transition cursor-pointer flex items-center space-x-1 shadow">
                     <i class="fa-solid fa-credit-card"></i> <span>PRO</span>
