@@ -759,49 +759,49 @@ html {
         }
 
         function switchTab(tabId, titleName) {
-    // Ascunde toate tab-urile
-    document.querySelectorAll('.app-tab').forEach(tab => {
-        tab.classList.add('hidden');
-        tab.classList.remove('active-tab');
-        tab.style.setProperty('display', 'none', 'important');
-    });
+            // Ascunde toate tab-urile
+            document.querySelectorAll('.app-tab').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('active-tab');
+                tab.style.setProperty('display', 'none', 'important');
+            });
 
-    // Caută tab-ul corect
-    let targetId = tabId;
-    if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
-    else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
-    else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
-    else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
-    else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
+            // Caută tab-ul corect
+            let targetId = tabId;
+            if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
+            else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
+            else if (tabId === 'ytStudio' || tabId === 'youtube') targetId = 'tab-ytStudio';
+            else if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
+            else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
 
-    let target = document.getElementById(targetId) || document.getElementById(tabId);
+            let target = document.getElementById(targetId) || document.getElementById(tabId);
 
-    // Afișează DOAR tab-ul selectat
-    if (target) {
-        target.classList.remove('hidden');
-        target.classList.add('active-tab');
-        target.style.setProperty('display', 'flex', 'important');
-    }
-// Închide meniul pe mobil dacă este deschis
-    if (window.innerWidth < 768) {
-        const sidebar = document.getElementById('appSidebar');
-        if (sidebar && !sidebar.classList.contains('hidden')) {
-            toggleSidebar();
+            // Afișează DOAR tab-ul selectat
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('active-tab');
+                target.style.setProperty('display', 'flex', 'important');
+            }
+            // Închide meniul pe mobil dacă este deschis
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('appSidebar');
+                if (sidebar && !sidebar.classList.contains('hidden')) {
+                    toggleSidebar();
+                }
+            }
+            // Stilizează meniul din stânga
+            document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
+                btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
+            });
+            
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
+            }
+
+            const breadcrumb = document.getElementById('breadcrumbCurrent');
+            if (breadcrumb && titleName) breadcrumb.innerText = titleName;
         }
-    }
-    // Stilizează meniul din stânga
-    document.querySelectorAll('aside button[id^="nav-"]').forEach(btn => {
-        btn.className = "w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition-colors";
-    });
-    
-    const activeNav = document.getElementById(`nav-${tabId}`);
-    if (activeNav) {
-        activeNav.className = "w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition-colors font-bold border border-cyanNeon/30";
-    }
-
-    const breadcrumb = document.getElementById('breadcrumbCurrent');
-    if (breadcrumb && titleName) breadcrumb.innerText = titleName;
-}
 
         function newSession() {
             document.getElementById('chatMessages').innerHTML = `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center shrink-0 font-bold"><i class="fa-solid fa-robot"></i></div><div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl text-sm text-gray-200 max-w-[85%]">Sesiune nouă inițializată. 🚀</div></div>`;
@@ -1001,486 +1001,452 @@ html {
                 snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
             }, 120);
         }
-document.addEventListener("DOMContentLoaded", () => {
-    switchTab('chat', 'Chat General');
-    renderEditorialPosts();
-    if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
-        document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
-    }
-    
-    // Încărcăm istoricul salvat pentru chat-ul general dacă există
-    const savedHistory = localStorage.getItem('nexus_chat_history');
-    const defaultMsgBox = document.getElementById('chatMessages');
-    if (savedHistory && defaultMsgBox) {
-        defaultMsgBox.innerHTML = savedHistory;
-    }
-});
-        // Funcția unificată pentru chat-urile independente din taburi
-async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
-    const inputEl = document.getElementById(inputId);
-    const msgBox = document.getElementById(messagesContainerId);
-    if (!inputEl || !msgBox) return;
-    
-   const text = inputEl.value.trim();
-    if (!text) return;
 
-    const toneEl = document.getElementById('toneSelector');
-    const tonePrefix = toneEl ? toneEl.value : '';
-    
-    // Combinăm tonul ales cu textul introdus
-    const textWithTone = tonePrefix ? tonePrefix + text : text;
-
-    // Afișează mesajul tău în fereastra curentă
-    msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
-    inputEl.value = '';
-    msgBox.scrollTop = msgBox.scrollHeight;
-    
-    // Salvăm istoricul actualizat
-    localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
-
-    // Indicator de încărcare
-    const loadingId = 'load-' + Date.now();
-    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-  try {
-      // Extragem un scurt context din ultimele mesaje vizibile pentru memorie conversațională
-        const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
-        let recentContext = "";
-        const lastFew = Array.from(messageElements).slice(-4);
-        lastFew.forEach(el => {
-            recentContext += el.innerText + "\n";
-        });
-// Verificăm dacă Neural Pulse este activat
-        const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
-            ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
-            : "";
-
-        // Detectăm limba aleasă din meniul de sus
-        const currentLang = localStorage.getItem('nexus_lang') || 'ro';
-        const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
-        const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
-
-        const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
-        const contentToSend = neuralModifier + promptWithContext;
-        
-        // Construim promptul final cu limba și prefixul personalizat
-        const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
-        
-        const responseText = await fetchFromServer(finalPrompt);
-        
-        // Înlocuiește loaderul cu răspunsul de la AI
-        document.getElementById(loadingId).remove();
-       const msgId = 'ai-msg-' + Date.now();
-msgBox.innerHTML += `
-    <div class="flex flex-col space-y-2 my-3">
-        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
-            <b>AI Studio:</b><br>${marked.parse ? marked.parse(responseText) : responseText}
-        </div>
-        <div class="flex items-center space-x-3 text-xs pl-2">
-            <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                <span>Copiază</span>
-            </button>
-            <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                <span>Descarcă .txt</span>
-            </button>
-        </div>
-    </div>
-`;
-        localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
-msgBox.scrollTop = msgBox.scrollHeight;
-    } catch (err) {
-        document.getElementById(loadingId).remove();
-        msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
-    }
-}
-        async function generateTextToVideo() {
-    const inputEl = document.getElementById('textToVideoInput');
-    const resultBox = document.getElementById('textToVideoResult');
-    const text = inputEl.value.trim();
-
-    if (!text) {
-        showToast('Te rog să introduci o descriere pentru video!', 'error');
-        return;
-    }
-
-    resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
-
-    try {
-        const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
-        const responseText = await fetchFromServer(prompt);
-        
-        resultBox.innerText = responseText;
-        showToast('Scenariul video a fost generat cu succes!');
-    } catch (err) {
-        resultBox.innerText = `Eroare: ${err.message}`;
-        showToast(err.message, 'error');
-    }
-}
-        let attachedFiles = {};
-
-function handleFileSelect(tabKey) {
-    const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-    const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-    const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
-
-    if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        attachedFiles[tabKey] = file;
-        nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-        previewBox.classList.remove('hidden');
-        previewBox.classList.add('flex');
-    }
-}
-
-function removeAttachment(tabKey) {
-    const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-    const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-    fileInput.value = '';
-    delete attachedFiles[tabKey];
-    previewBox.classList.remove('flex');
-    previewBox.classList.add('hidden');
-}
-
-async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
-    const inputEl = document.getElementById(inputId);
-    const msgBox = document.getElementById(messagesContainerId);
-    if (!inputEl || !msgBox) return;
-
-    const text = inputEl.value.trim();
-    const file = attachedFiles ? attachedFiles[tabKey] : null;
-
-    if (!text && !file) return;
-
-    let displayHtml = '';
-    if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
-    if (text) displayHtml += `<div>${text}</div>`;
-
-    msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
-    inputEl.value = '';
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-    // Pregătim datele pentru fișier (dacă există)
-    let fileDataPayload = null;
-    if (file) {
-        const base64String = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.readAsDataURL(file);
-        });
-        fileDataPayload = {
-            base64: base64String,
-            mimeType: file.type || 'text/plain'
-        };
-    }
-
-    // Curățăm atașamentul în siguranță
-    removeAttachment(tabKey);
-
-    const loadingId = 'load-' + Date.now();
-    msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-    try {
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: text || "Analizează acest fișier:",
-                tabId: tabKey,
-                fileData: fileDataPayload
-            })
+        document.addEventListener("DOMContentLoaded", () => {
+            switchTab('chat', 'Chat General');
+            renderEditorialPosts();
+            if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
+                document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
+            }
+            
+            const savedHistory = localStorage.getItem('nexus_chat_history');
+            const defaultMsgBox = document.getElementById('chatMessages');
+            if (savedHistory && defaultMsgBox) {
+                defaultMsgBox.innerHTML = savedHistory;
+            }
         });
 
-        const data = await res.json();
-        const loadEl = document.getElementById(loadingId);
-        if (loadEl) loadEl.remove();
+        async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
+            const inputEl = document.getElementById(inputId);
+            const msgBox = document.getElementById(messagesContainerId);
+            if (!inputEl || !msgBox) return;
+            
+            const text = inputEl.value.trim();
+            if (!text) return;
 
-        if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
+            const toneEl = document.getElementById('toneSelector');
+            const tonePrefix = toneEl ? toneEl.value : '';
+            const textWithTone = tonePrefix ? tonePrefix + text : text;
 
-      msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
-        msgBox.scrollTop = msgBox.scrollHeight;
-    } catch (err) {
-        const loadEl = document.getElementById(loadingId);
-        if (loadEl) loadEl.remove();
-        msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
-    }
-}
-        // Funcția care trimite promptul către serverul tău backend sau direct către Gemini API
-async function fetchFromServer(promptText) {
-    // Dacă ai un endpoint pe server (de ex: /api/generate)
-    try {
-        const response = await fetch('/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ prompt: promptText })
-        });
+            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
+            inputEl.value = '';
+            msgBox.scrollTop = msgBox.scrollHeight;
+            
+            localStorage.setItem('nexus_chat_history', msgBox.innerHTML);
 
-        if (!response.ok) {
-            throw new Error(`Eroare server: ${response.status}`);
-        }
+            const loadingId = 'load-' + Date.now();
+            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
 
-        const data = await response.json();
-        return data.response || data.text || "Răspuns gol primit de la server.";
-    } catch (err) {
-        console.error("Eroare la comunicarea cu serverul:", err);
-        throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
-    }
-}
-        function copyMsgText(msgId) {
-    const el = document.getElementById(msgId);
-    const textToCopy = el.innerText.replace('AI Studio:', '').trim();
-    
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        event.currentTarget.querySelector('span').innerText = 'Copiat! ✓';
-        setTimeout(() => {
-            event.currentTarget.querySelector('span').innerText = 'Copiază';
-        }, 2000);
-    }).catch(err => {
-        console.error('Eroare la copiere:', err);
-    });
-}
+            try {
+                const messageElements = msgBox.querySelectorAll('div > div, .text-right, .text-gray-200');
+                let recentContext = "";
+                const lastFew = Array.from(messageElements).slice(-4);
+                lastFew.forEach(el => {
+                    recentContext += el.innerText + "\n";
+                });
 
-function downloadMsgText(msgId) {
-    const el = document.getElementById(msgId);
-    const textToDownload = el.innerText.replace('AI Studio:', '').trim();
-    
-    const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-       function exportFullSession() {
-    const msgBox = document.getElementById('messagesContainer');
-    if (!msgBox) {
-        alert('Nu există mesaje de exportat momentan!');
-        return;
-    }
+                const neuralModifier = (typeof neuralPulseActive !== 'undefined' && neuralPulseActive) 
+                    ? "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] " 
+                    : "";
 
-    // Preluăm textul curat din mesaje
-    const textContent = msgBox.innerText;
-    
-    // Creăm un fișier virtual de tip text/markdown
-    const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    
-    // Generăm un link temporar de descărcare
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
-    document.body.appendChild(a);
-    a.click();
-    
-    // Curățăm elementul după descărcare
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-} 
-const translations = {
-    ro: {
-        exportBtn: "Export Sesiune",
-        quickNote: "Notiță",
-        nav_chat: "Chat General",
-        nav_tiktok: "TikTok AI Creator",
-        nav_instagram: "Instagram AI Creator",
-        nav_youtube: "YouTube AI Scriptwriter",
-        nav_hashtag: "Hashtag & SEO Hub",
-        nav_calendar: "Calendar Editorial",
-        nav_video: "Text-to-Video Studio",
-        nav_ab: "A/B Testing Titluri",
-        nav_podcast: "Podcast Script & Q&A",
-        nav_roast: "AI Roast My Content",
-        nav_arcade: "Retro Snake Arcade"
-    },
-    en: {
-        exportBtn: "Export Session",
-        quickNote: "Quick Note",
-        nav_chat: "General Chat",
-        nav_tiktok: "TikTok AI Creator",
-        nav_instagram: "Instagram AI Creator",
-        nav_youtube: "YouTube AI Scriptwriter",
-        nav_hashtag: "Hashtag & SEO Hub",
-        nav_calendar: "Editorial Calendar",
-        nav_video: "Text-to-Video Studio",
-        nav_ab: "A/B Testing",
-        nav_podcast: "Podcast Script & Q&A",
-        nav_roast: "AI Roast My Content",
-        nav_arcade: "Retro Snake Arcade"
-    },
-    fr: {
-        exportBtn: "Exporter la Session",
-        quickNote: "Note Rapide",
-        nav_chat: "Chat Général",
-        nav_tiktok: "Créateur AI TikTok",
-        nav_instagram: "Créateur AI Instagram",
-        nav_youtube: "Scénariste AI YouTube",
-        nav_hashtag: "Hub Hashtags & SEO",
-        nav_calendar: "Calendrier Éditorial",
-        nav_video: "Studio Texte-en-Vidéo",
-        nav_ab: "Tests A/B de Titres",
-        nav_podcast: "Script Podcast & Q&A",
-        nav_roast: "AI Roast My Content",
-        nav_arcade: "Retro Snake Arcade"
-    },
-    de: {
-        exportBtn: "Sitzung Exportieren",
-        quickNote: "Notiz",
-        nav_chat: "Allgemeiner Chat",
-        nav_tiktok: "TikTok AI Creator",
-        nav_instagram: "Instagram AI Creator",
-        nav_youtube: "YouTube AI Scriptwriter",
-        nav_hashtag: "Hashtag & SEO Hub",
-        nav_calendar: "Redaktionskalender",
-        nav_video: "Text-zu-Video Studio",
-        nav_ab: "A/B Überschriften-Test",
-        nav_podcast: "Podcast-Skript & Q&A",
-        nav_roast: "AI Roast My Content",
-        nav_arcade: "Retro Snake Arcade"
-    }
-};
+                const currentLang = localStorage.getItem('nexus_lang') || 'ro';
+                const langNames = { ro: 'română', en: 'engleză', fr: 'franceză', de: 'germană' };
+                const langInstruction = `[Răspunde obligatoriu în limba ${langNames[currentLang] || 'română'}] `;
 
-function changeWebsiteLanguage(lang) {
-    localStorage.setItem('nexus_lang', lang);
-    
-    const trans = translations[lang];
-    if (!trans) return;
-
-    if (trans.exportBtn) {
-        const btn = document.querySelector("button[onclick*='export']");
-        if (btn) btn.innerText = trans.exportBtn;
-    }
-    
-    if (trans.quickNote) {
-        const noteBtn = document.querySelector("button[onclick*='Note']");
-        if (noteBtn) noteBtn.innerText = trans.quickNote;
-    }
-
-    const navMap = {
-        'nav-chat': trans.nav_chat,
-        'nav-tiktok': trans.nav_tiktok,
-        'nav-instagram': trans.nav_instagram,
-        'nav-youtube': trans.nav_youtube,
-        'nav-hashtag': trans.nav_hashtag,
-        'nav-calendar': trans.nav_calendar,
-        'nav-video': trans.nav_video,
-        'nav-ab': trans.nav_ab,
-        'nav-podcast': trans.nav_podcast,
-        'nav-roast': trans.nav_roast,
-        'nav-arcade': trans.nav_arcade
-    };
-
-    for (const [id, text] of Object.entries(navMap)) {
-        const el = document.getElementById(id);
-        if (el && text) {
-            const icon = el.querySelector('i, svg');
-            if (icon) {
-                el.innerHTML = '';
-                el.appendChild(icon);
-                el.appendChild(document.createTextNode(' ' + text));
-            } else {
-                el.innerText = text;
+                const promptWithContext = `Istoric recent:\n${recentContext}\nMesaj curent: "${textWithTone}"`;
+                const contentToSend = neuralModifier + promptWithContext;
+                const finalPrompt = langInstruction + (customPrefix ? `${customPrefix} ${contentToSend}` : contentToSend);
+                
+                const responseText = await fetchFromServer(finalPrompt);
+                
+                document.getElementById(loadingId).remove();
+                const msgId = 'ai-msg-' + Date.now();
+                msgBox.innerHTML += `
+                    <div class="flex flex-col space-y-2 my-3">
+                        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+                            <b>AI Studio:</b><br>${marked.parse ? marked.parse(responseText) : responseText}
+                        </div>
+                        <div class="flex items-center space-x-3 text-xs pl-2">
+                            <button onclick="copyMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                <span>Copiază</span>
+                            </button>
+                            <button onclick="downloadMsgText('${msgId}')" class="flex items-center space-x-1 text-gray-400 hover:text-cyan-400 transition bg-gray-800/60 px-2.5 py-1 rounded-lg border border-gray-700/50">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                <span>Descarcă .txt</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                localStorage.setItem('nexus_chat_history', msgBox.innerHTML); 
+                msgBox.scrollTop = msgBox.scrollHeight;
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
             }
         }
-    }
-}
 
-window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('nexus_lang') || 'ro';
-    const selectEl = document.getElementById('languageSelect');
-    if (selectEl) {
-        selectEl.value = savedLang;
-    }
-    changeWebsiteLanguage(savedLang);
-});
+        async function generateTextToVideo() {
+            const inputEl = document.getElementById('textToVideoInput');
+            const resultBox = document.getElementById('textToVideoResult');
+            const text = inputEl.value.trim();
 
+            if (!text) {
+                showToast('Te rog să introduci o descriere pentru video!', 'error');
+                return;
+            }
 
-// Funcție pentru a afișa sau ascunde panoul de emoji-uri
-function toggleEmojiPicker() {
-    const picker = document.getElementById('emojiPicker');
-    if (picker) {
-        picker.classList.toggle('hidden');
-    }
-}
+            resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
 
-// Funcție pentru a adăuga emoji-ul selectat în caseta de text a mesajului
-function addEmoji(emoji) {
-    const input = document.getElementById('chatInput');
-    if (input) {
-        input.value += emoji;
-        input.focus();
-    }
-    const picker = document.getElementById('emojiPicker');
-    if (picker) {
-        picker.classList.add('hidden');
-    }
-}
+            try {
+                const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
+                const responseText = await fetchFromServer(prompt);
+                
+                resultBox.innerText = responseText;
+                showToast('Scenariul video a fost generat cu succes!');
+            } catch (err) {
+                resultBox.innerText = `Eroare: ${err.message}`;
+                showToast(err.message, 'error');
+            }
+        }
 
-// Ascunde panoul dacă apeși în afara lui
-window.addEventListener('click', function(e) {
-    const picker = document.getElementById('emojiPicker');
-    const btn = document.querySelector('button[onclick="toggleEmojiPicker()"]');
-    if (picker && btn && !picker.contains(e.target) && !btn.contains(e.target)) {
-        picker.classList.add('hidden');
-    }
-});
+        let attachedFiles = {};
 
+        function handleFileSelect(tabKey) {
+            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+            const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                attachedFiles[tabKey] = file;
+                nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                previewBox.classList.remove('hidden');
+                previewBox.classList.add('flex');
+            }
+        }
+
+        function removeAttachment(tabKey) {
+            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+            fileInput.value = '';
+            delete attachedFiles[tabKey];
+            previewBox.classList.remove('flex');
+            previewBox.classList.add('hidden');
+        }
+
+        async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+            const inputEl = document.getElementById(inputId);
+            const msgBox = document.getElementById(messagesContainerId);
+            if (!inputEl || !msgBox) return;
+
+            const text = inputEl.value.trim();
+            const file = attachedFiles ? attachedFiles[tabKey] : null;
+
+            if (!text && !file) return;
+
+            let displayHtml = '';
+            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+            if (text) displayHtml += `<div>${text}</div>`;
+
+            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
+            inputEl.value = '';
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            let fileDataPayload = null;
+            if (file) {
+                const base64String = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(file);
+                });
+                fileDataPayload = {
+                    base64: base64String,
+                    mimeType: file.type || 'text/plain'
+                };
+            }
+
+            removeAttachment(tabKey);
+
+            const loadingId = 'load-' + Date.now();
+            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: text || "Analizează acest fișier:",
+                        tabId: tabKey,
+                        fileData: fileDataPayload
+                    })
+                });
+
+                const data = await res.json();
+                const loadEl = document.getElementById(loadingId);
+                if (loadEl) loadEl.remove();
+
+                if (!res.ok) throw new Error(data.error || 'Eroare necunoscută la server');
+
+                msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${data.text}</div>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+            } catch (err) {
+                const loadEl = document.getElementById(loadingId);
+                if (loadEl) loadEl.remove();
+                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+            }
+        }
+
+        async function fetchFromServer(promptText) {
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptText })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Eroare server: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.response || data.text || "Răspuns gol primit de la server.";
+            } catch (err) {
+                console.error("Eroare la comunicarea cu serverul:", err);
+                throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
+            }
+        }
+
+        function copyMsgText(msgId) {
+            const el = document.getElementById(msgId);
+            const textToCopy = el.innerText.replace('AI Studio:', '').trim();
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                event.currentTarget.querySelector('span').innerText = 'Copiat! ✓';
+                setTimeout(() => {
+                    event.currentTarget.querySelector('span').innerText = 'Copiază';
+                }, 2000);
+            }).catch(err => {
+                console.error('Eroare la copiere:', err);
+            });
+        }
+
+        function downloadMsgText(msgId) {
+            const el = document.getElementById(msgId);
+            const textToDownload = el.innerText.replace('AI Studio:', '').trim();
+            
+            const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NexusAI-Raspuns-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportFullSession() {
+            const msgBox = document.getElementById('messagesContainer');
+            if (!msgBox) {
+                alert('Nu există mesaje de exportat momentan!');
+                return;
+            }
+
+            const textContent = msgBox.innerText;
+            const blob = new Blob([textContent], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nexus-ai-session-' + new Date().toISOString().slice(0, 10) + '.md';
+            document.body.appendChild(a);
+            a.click();
+            
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        const translations = {
+            ro: {
+                exportBtn: "Export Sesiune",
+                quickNote: "Notiță",
+                nav_chat: "Chat General",
+                nav_tiktok: "TikTok AI Creator",
+                nav_instagram: "Instagram AI Creator",
+                nav_youtube: "YouTube AI Scriptwriter",
+                nav_hashtag: "Hashtag & SEO Hub",
+                nav_calendar: "Calendar Editorial",
+                nav_video: "Text-to-Video Studio",
+                nav_ab: "A/B Testing Titluri",
+                nav_podcast: "Podcast Script & Q&A",
+                nav_roast: "AI Roast My Content",
+                nav_arcade: "Retro Snake Arcade"
+            },
+            en: {
+                exportBtn: "Export Session",
+                quickNote: "Quick Note",
+                nav_chat: "General Chat",
+                nav_tiktok: "TikTok AI Creator",
+                nav_instagram: "Instagram AI Creator",
+                nav_youtube: "YouTube AI Scriptwriter",
+                nav_hashtag: "Hashtag & SEO Hub",
+                nav_calendar: "Editorial Calendar",
+                nav_video: "Text-to-Video Studio",
+                nav_ab: "A/B Testing",
+                nav_podcast: "Podcast Script & Q&A",
+                nav_roast: "AI Roast My Content",
+                nav_arcade: "Retro Snake Arcade"
+            },
+            fr: {
+                exportBtn: "Exporter la Session",
+                quickNote: "Note Rapide",
+                nav_chat: "Chat Général",
+                nav_tiktok: "Créateur AI TikTok",
+                nav_instagram: "Créateur AI Instagram",
+                nav_youtube: "Scénariste AI YouTube",
+                nav_hashtag: "Hub Hashtags & SEO",
+                nav_calendar: "Calendrier Éditorial",
+                nav_video: "Studio Texte-en-Vidéo",
+                nav_ab: "Tests A/B de Titres",
+                nav_podcast: "Script Podcast & Q&A",
+                nav_roast: "AI Roast My Content",
+                nav_arcade: "Retro Snake Arcade"
+            },
+            de: {
+                exportBtn: "Sitzung Exportieren",
+                quickNote: "Notiz",
+                nav_chat: "Allgemeiner Chat",
+                nav_tiktok: "TikTok AI Creator",
+                nav_instagram: "Instagram AI Creator",
+                nav_youtube: "YouTube AI Scriptwriter",
+                nav_hashtag: "Hashtag & SEO Hub",
+                nav_calendar: "Redaktionskalender",
+                nav_video: "Text-zu-Video Studio",
+                nav_ab: "A/B Überschriften-Test",
+                nav_podcast: "Podcast-Skript & Q&A",
+                nav_roast: "AI Roast My Content",
+                nav_arcade: "Retro Snake Arcade"
+            }
+        };
+
+        function changeWebsiteLanguage(lang) {
+            localStorage.setItem('nexus_lang', lang);
+            const trans = translations[lang];
+            if (!trans) return;
+
+            if (trans.exportBtn) {
+                const btn = document.querySelector("button[onclick*='export']");
+                if (btn) btn.innerText = trans.exportBtn;
+            }
+            
+            if (trans.quickNote) {
+                const noteBtn = document.querySelector("button[onclick*='Note']");
+                if (noteBtn) noteBtn.innerText = trans.quickNote;
+            }
+
+            const navMap = {
+                'nav-chat': trans.nav_chat,
+                'nav-tiktok': trans.nav_tiktok,
+                'nav-instagram': trans.nav_instagram,
+                'nav-youtube': trans.nav_youtube,
+                'nav-hashtag': trans.nav_hashtag,
+                'nav-calendar': trans.nav_calendar,
+                'nav-video': trans.nav_video,
+                'nav-ab': trans.nav_ab,
+                'nav-podcast': trans.nav_podcast,
+                'nav-roast': trans.nav_roast,
+                'nav-arcade': trans.nav_arcade
+            };
+
+            for (const [id, text] of Object.entries(navMap)) {
+                const el = document.getElementById(id);
+                if (el && text) {
+                    const icon = el.querySelector('i, svg');
+                    if (icon) {
+                        el.innerHTML = '';
+                        el.appendChild(icon);
+                        el.appendChild(document.createTextNode(' ' + text));
+                    } else {
+                        el.innerText = text;
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('nexus_lang') || 'ro';
+            const selectEl = document.getElementById('languageSelect');
+            if (selectEl) {
+                selectEl.value = savedLang;
+            }
+            changeWebsiteLanguage(savedLang);
+        });
 
         let neuralPulseActive = false;
 
-function toggleNeuralPulse() {
-    neuralPulseActive = !neuralPulseActive;
-    const btn = document.getElementById('neuralPulseBtn');
-    if (neuralPulseActive) {
-        btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
-        btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
-    } else {
-        btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
-        btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
-    }
-}
+        function toggleNeuralPulse() {
+            neuralPulseActive = !neuralPulseActive;
+            const btn = document.getElementById('neuralPulseBtn');
+            if (neuralPulseActive) {
+                btn.classList.add('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+                btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i><span class="hidden lg:inline">Neural Pulse: ON</span>`;
+            } else {
+                btn.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'text-cyan-300');
+                btn.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-pulse"></i><span class="hidden lg:inline">Neural Pulse: OFF</span>`;
+            }
+        }
 
-// Când este activ, injectăm un pre-prompt de analiză cognitivă profundă
-function getNeuralPulseModifier() {
-    if (!neuralPulseActive) return "";
-    return "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] ";
-}
+        function getNeuralPulseModifier() {
+            if (!neuralPulseActive) return "";
+            return "[Sistem Neural Activ: Analizează cererea în profunzime, descompune problema în pași logici riguroși și oferă un răspuns structurat de nivel expert] ";
+        }
+
         function toggleToolsGrid() {
-    const grid = document.getElementById('toolsGrid');
-    const text = document.getElementById('toggleToolsText');
-    const icon = document.getElementById('toggleToolsIcon');
+            const grid = document.getElementById('toolsGrid');
+            const text = document.getElementById('toggleToolsText');
+            const icon = document.getElementById('toggleToolsIcon');
 
-    if (grid.classList.contains('hidden')) {
-        grid.classList.remove('hidden');
-        text.textContent = 'Ascunde Unelte';
-        icon.className = 'fa-solid fa-eye-slash';
-    } else {
-        grid.classList.add('hidden');
-        text.textContent = 'Arată Unelte';
-        icon.className = 'fa-solid fa-eye';
-    }
-   function toggleSidebar() {
-    const sidebar = document.getElementById('appSidebar');
-    if (!sidebar) return;
-    
-    if (sidebar.classList.contains('hidden')) {
-        sidebar.classList.remove('hidden');
-        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
-    } else {
-        sidebar.classList.add('hidden');
-        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
-    }
-}
-      <!-- Modal Termeni si Conditii -->
-<div id="termsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
+            if (grid.classList.contains('hidden')) {
+                grid.classList.remove('hidden');
+                text.textContent = 'Ascunde Unelte';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                grid.classList.add('hidden');
+                text.textContent = 'Arată Unelte';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('appSidebar');
+            if (!sidebar) return;
+            
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
+            } else {
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
+            }
+        }
+
+        function openModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.remove('hidden');
+        }
+        
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.add('hidden');
+        }
+    </script>
+
+    <!-- Modal Termeni si Conditii -->
+    <div id="termsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2
         <div class="p-4 border-b border-gray-800 flex justify-between items-center">
             <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-file-contract text-amberGlow mr-2"></i> Termeni și Condiții</h3>
             <button onclick="closeModal('termsModal')" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
