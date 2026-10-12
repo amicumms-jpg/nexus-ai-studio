@@ -55,19 +55,7 @@ function googleTranslateElementInit() {
         autoDisplay: false
     }, 'google_translate_element');
 }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<style>
-    /* Ascundem complet bara de sus a Google Translate */
-    .goog-te-banner-frame.skiptranslate { display: none !important; }
-    body { top: 0px !important; position: static !important; }
-    #goog-te-spinner { display: none !important; }
-    .goog-te-gadget { font-size: 0px; color: transparent; }
-    .goog-te-gadget span { display: none; }
-    .goog-tooltip { display: none !important; }
-    .goog-tooltip:hover { display: none !important; }
-</style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative">
 
@@ -1290,82 +1278,61 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
-if (typeof translations !== 'undefined') {
-  translations.ro = { 
-    exportBtn: "Export Sesiune", 
-    quickNote: "Notiță",
-    nav_chat: "Chat General",
-    nav_tiktok: "TikTok AI Creator",
-    nav_instagram: "Instagram AI Creator",
-    nav_youtube: "YouTube AI Scriptwriter",
-    nav_hashtag: "Hashtag & SEO Hub",
-    nav_calendar: "Calendar Editorial",
-    nav_video: "Text-to-Video Studio",
-    nav_ab: "A/B Testing Titluri",
-    nav_podcast: "Podcast Script & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-  translations.en = { 
-    exportBtn: "Export Session", 
-    quickNote: "Quick Note",
-    nav_chat: "General Chat",
-    nav_tiktok: "TikTok AI Creator",
-    nav_instagram: "Instagram AI Creator",
-    nav_youtube: "YouTube AI Scriptwriter",
-    nav_hashtag: "Hashtag & SEO Hub",
-    nav_calendar: "Editorial Calendar",
-    nav_video: "Text-to-Video Studio",
-    nav_ab: "A/B Title Testing",
-    nav_podcast: "Podcast Script & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-  translations.fr = { 
-    exportBtn: "Exporter la Session", 
-    quickNote: "Note Rapide",
-    nav_chat: "Chat Général",
-    nav_tiktok: "Créateur AI TikTok",
-    nav_instagram: "Créateur AI Instagram",
-    nav_youtube: "Scénariste AI YouTube",
-    nav_hashtag: "Hub Hashtags & SEO",
-    nav_calendar: "Calendrier Éditorial",
-    nav_video: "Studio Texte-en-Vidéo",
-    nav_ab: "Tests A/B de Titres",
-    nav_podcast: "Script Podcast & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-  translations.de = { 
-    exportBtn: "Sitzung Exportieren", 
-    quickNote: "Notiz",
-    nav_chat: "Allgemeiner Chat",
-    nav_tiktok: "TikTok AI Creator",
-    nav_instagram: "Instagram AI Creator",
-    nav_youtube: "YouTube AI Scriptwriter",
-    nav_hashtag: "Hashtag & SEO Hub",
-    nav_calendar: "Redaktionskalender",
-    nav_video: "Text-zu-Video Studio",
-    nav_ab: "A/B Überschriften-Test",
-    nav_podcast: "Podcast-Skript & Q&A",
-    nav_roast: "AI Roast My Content",
-    nav_arcade: "Retro Snake Arcade"
-  };
-}
-
-function changewebsiteLanguage(lang) {
+function changeWebsiteLanguage(lang) {
     localStorage.setItem('nexus_lang', lang);
-    var selectField = document.querySelector(".goog-te-combo");
-    if (selectField) {
-        selectField.value = lang;
-        selectField.dispatchEvent(new Event('change'));
+    
+    const trans = translations[lang];
+    if (!trans) return;
+
+    if (trans.exportBtn) {
+        const btn = document.querySelector("button[onclick*='export']");
+        if (btn) btn.innerText = trans.exportBtn;
+    }
+    
+    if (trans.quickNote) {
+        const noteBtn = document.querySelector("button[onclick*='Note']");
+        if (noteBtn) noteBtn.innerText = trans.quickNote;
+    }
+
+    const navMap = {
+        'nav-chat': trans.nav_chat,
+        'nav-tiktok': trans.nav_tiktok,
+        'nav-instagram': trans.nav_instagram,
+        'nav-youtube': trans.nav_youtube,
+        'nav-hashtag': trans.nav_hashtag,
+        'nav-calendar': trans.nav_calendar,
+        'nav-video': trans.nav_video,
+        'nav-ab': trans.nav_ab,
+        'nav-podcast': trans.nav_podcast,
+        'nav-roast': trans.nav_roast,
+        'nav-arcade': trans.nav_arcade
+    };
+
+    for (const [id, text] of Object.entries(navMap)) {
+        const el = document.getElementById(id);
+        if (el && text) {
+            const icon = el.querySelector('i, svg');
+            if (icon) {
+                el.innerHTML = '';
+                el.appendChild(icon);
+                el.appendChild(document.createTextNode(' ' + text));
+            } else {
+                el.innerText = text;
+            }
+        }
     }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('nexus_lang') || 'ro';
     const selectEl = document.getElementById('languageSelect');
-    if (selectEl) selectEl.value = savedLang;
+    if (selectEl) {
+        selectEl.value = savedLang;
+    }
+    changeWebsiteLanguage(savedLang);
+});
+
+
     
     setTimeout(() => {
         changeWebsiteLanguage(savedLang);
