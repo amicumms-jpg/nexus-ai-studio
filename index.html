@@ -1430,6 +1430,18 @@ function getNeuralPulseModifier() {
         icon.className = 'fa-solid fa-eye';
     }
 }
+        function toggleSidebar() {
+    const sidebar = document.getElementById('appSidebar');
+    if (!sidebar) return;
+    
+    if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'shadow-2xl', 'bg-panelBg');
+    } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'shadow-2xl', 'bg-panelBg');
+    }
+}
     </script>
 </body>
 </html>
