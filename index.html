@@ -45,6 +45,13 @@
         .app-tab.active-tab {
             display: flex !important;
         }
+       body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+}
+html {
+    height: -webkit-fill-available;
+} 
     </style>
 
 </head>
@@ -1267,6 +1274,69 @@ function downloadMsgText(msgId) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 } 
+const translations = {
+    ro: {
+        exportBtn: "Export Sesiune",
+        quickNote: "Notiță",
+        nav_chat: "Chat General",
+        nav_tiktok: "TikTok AI Creator",
+        nav_instagram: "Instagram AI Creator",
+        nav_youtube: "YouTube AI Scriptwriter",
+        nav_hashtag: "Hashtag & SEO Hub",
+        nav_calendar: "Calendar Editorial",
+        nav_video: "Text-to-Video Studio",
+        nav_ab: "A/B Testing Titluri",
+        nav_podcast: "Podcast Script & Q&A",
+        nav_roast: "AI Roast My Content",
+        nav_arcade: "Retro Snake Arcade"
+    },
+    en: {
+        exportBtn: "Export Session",
+        quickNote: "Quick Note",
+        nav_chat: "General Chat",
+        nav_tiktok: "TikTok AI Creator",
+        nav_instagram: "Instagram AI Creator",
+        nav_youtube: "YouTube AI Scriptwriter",
+        nav_hashtag: "Hashtag & SEO Hub",
+        nav_calendar: "Editorial Calendar",
+        nav_video: "Text-to-Video Studio",
+        nav_ab: "A/B Testing",
+        nav_podcast: "Podcast Script & Q&A",
+        nav_roast: "AI Roast My Content",
+        nav_arcade: "Retro Snake Arcade"
+    },
+    fr: {
+        exportBtn: "Exporter la Session",
+        quickNote: "Note Rapide",
+        nav_chat: "Chat Général",
+        nav_tiktok: "Créateur AI TikTok",
+        nav_instagram: "Créateur AI Instagram",
+        nav_youtube: "Scénariste AI YouTube",
+        nav_hashtag: "Hub Hashtags & SEO",
+        nav_calendar: "Calendrier Éditorial",
+        nav_video: "Studio Texte-en-Vidéo",
+        nav_ab: "Tests A/B de Titres",
+        nav_podcast: "Script Podcast & Q&A",
+        nav_roast: "AI Roast My Content",
+        nav_arcade: "Retro Snake Arcade"
+    },
+    de: {
+        exportBtn: "Sitzung Exportieren",
+        quickNote: "Notiz",
+        nav_chat: "Allgemeiner Chat",
+        nav_tiktok: "TikTok AI Creator",
+        nav_instagram: "Instagram AI Creator",
+        nav_youtube: "YouTube AI Scriptwriter",
+        nav_hashtag: "Hashtag & SEO Hub",
+        nav_calendar: "Redaktionskalender",
+        nav_video: "Text-zu-Video Studio",
+        nav_ab: "A/B Überschriften-Test",
+        nav_podcast: "Podcast-Skript & Q&A",
+        nav_roast: "AI Roast My Content",
+        nav_arcade: "Retro Snake Arcade"
+    }
+};
+
 function changeWebsiteLanguage(lang) {
     localStorage.setItem('nexus_lang', lang);
     
