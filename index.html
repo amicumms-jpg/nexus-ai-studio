@@ -1515,14 +1515,18 @@ function getNeuralPulseModifier() {
         </div>
     </div>
 </div>
-function openModal(id) {
-    const m = document.getElementById(id);
-    if(m) m.classList.remove('hidden');
-}
-function closeModal(id) {
-    const m = document.getElementById(id);
-    if(m) m.classList.add('hidden');
-}
+
+<script>
+    function openModal(id) {
+        const m = document.getElementById(id);
+        if (m) m.classList.remove('hidden');
+    }
+    
+    function closeModal(id) {
+        const m = document.getElementById(id);
+        if (m) m.classList.add('hidden');
+    }
 </script>
+
 </body>
 </html>
