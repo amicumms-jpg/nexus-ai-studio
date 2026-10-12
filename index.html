@@ -1453,6 +1453,15 @@ html {
             const m = document.getElementById(id);
             if (m) m.classList.add('hidden');
         }
+        // Verificare parametru plată din Stripe
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        alert('🎉 Felicitări! Abonamentul tău Nexus AI Studio Pro a fost activat cu succes.');
+        // Opțional: curățăm URL-ul pentru a nu afișa mesajul la fiecare refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
     </script>
 
     <!-- Modal Termeni si Conditii -->
