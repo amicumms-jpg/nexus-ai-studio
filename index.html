@@ -1436,16 +1436,16 @@ function getNeuralPulseModifier() {
         icon.className = 'fa-solid fa-eye';
     }
 }
-       function toggleSidebar() {
+      function toggleSidebar() {
     const sidebar = document.getElementById('appSidebar');
     if (!sidebar) return;
     
     if (sidebar.classList.contains('hidden')) {
         sidebar.classList.remove('hidden');
-        sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'max-h-screen', 'overflow-y-auto', 'shadow-2xl', 'bg-panelBg');
+        sidebar.classList.add('fixed', 'top-0', 'left-0', 'z-50', 'w-64', 'h-full', 'overflow-y-auto', 'shadow-2xl', 'bg-panelBg');
     } else {
         sidebar.classList.add('hidden');
-        sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'max-h-screen', 'overflow-y-auto', 'shadow-2xl', 'bg-panelBg');
+        sidebar.classList.remove('fixed', 'top-0', 'left-0', 'z-50', 'w-64', 'h-full', 'overflow-y-auto', 'shadow-2xl', 'bg-panelBg');
     }
 }
     </script>
