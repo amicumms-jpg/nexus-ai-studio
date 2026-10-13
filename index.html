@@ -613,8 +613,7 @@
                         <p class="text-xs text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="socialLogin('Google')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 transition cursor-pointer">
-                            <i class="fa-brands fa-google text-googleRed"></i> <span>Login Google</span>
+                      <button onclick="loginWithGoogle()" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2">
                         </button>
                         <button onclick="socialLogin('GitHub')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center space-x-2 transition cursor-pointer">
                             <i class="fa-brands fa-github text-white"></i> <span>Login GitHub</span>
@@ -1581,6 +1580,89 @@ function loadChatHistory(containerId) {
         }
     }
 }
+    <!-- Firebase SDK Modular -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+
+  // Configuratia ta Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+    authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+    projectId: "nexus-ai-studio-8335f",
+    storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+    messagingSenderId: "645678013335",
+    appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+    measurementId: "G-W0PJNEF4S5"
+  };
+
+  // Initializare Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  // 1. Logare / Inregistrare cu Google
+  window.loginWithGoogle = async function() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const statusEl = document.getElementById("userAccountStatus");
+      if(statusEl) statusEl.innerText = `Conectat ca: ${user.displayName || user.email}`;
+      alert(`Te-ai autentificat cu succes! Bun venit, ${user.displayName || user.email}`);
+    } catch (error) {
+      console.error("Eroare autentificare Google:", error);
+      alert("Eroare la autentificare: " + error.message);
+    }
+  };
+
+  // 2. Înregistrare/Creare cont nou cu Email și Parolă
+  window.registerCompleteUser = async function() {
+    const email = document.getElementById("regEmail")?.value;
+    const password = document.getElementById("regPass")?.value;
+    const name = document.getElementById("regFullName")?.value;
+    const statusEl = document.getElementById("userAccountStatus");
+
+    if (!email || !password) {
+      alert("Te rugăm să introduci o adresă de e-mail și o parolă!");
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      if (statusEl) statusEl.innerText = `Cont creat cu succes pentru: ${user.email}`;
+      alert(`Contul a fost creat cu succes! Bun venit, ${name || user.email}`);
+    } catch (error) {
+      console.error("Eroare creare cont:", error);
+      if (error.code === 'auth/email-already-in-use') {
+        // Daca contul exista deja, incercam logarea
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          if (statusEl) statusEl.innerText = `Conectat ca: ${userCredential.user.email}`;
+          alert(`Te-ai autentificat cu succes!`);
+        } catch (loginError) {
+          alert("Eroare: " + loginError.message);
+        }
+      } else {
+        alert("Eroare la crearea contului: " + error.message);
+      }
+    }
+  };
+
+  // Monitorizare stare utilizator
+  onAuthStateChanged(auth, (user) => {
+    const statusEl = document.getElementById("userAccountStatus");
+    if (user && statusEl) {
+      statusEl.innerText = `Autentificat: ${user.email}`;
+    }
+  });
 </script>
     <footer class="w-full py-2 text-center text-[11px] text-gray-500 opacity-75 mt-auto">
   <p class="flex items-center justify-center gap-3 flex-wrap">
