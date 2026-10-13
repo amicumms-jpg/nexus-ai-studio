@@ -1512,6 +1512,21 @@ window.addEventListener('DOMContentLoaded', () => {
         const m = document.getElementById(id);
         if (m) m.classList.add('hidden');
     }
+    // Funcție pentru copiere text din răspunsurile AI
+function copyToClipboard(text, buttonElement) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = buttonElement.innerHTML;
+        buttonElement.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copiat!';
+        buttonElement.classList.add('bg-emerald-500/20');
+        
+        setTimeout(() => {
+            buttonElement.innerHTML = originalText;
+            buttonElement.classList.remove('bg-emerald-500/20');
+        }, 2000);
+    }).catch(err => {
+        console.error('Eroare la copiere: ', err);
+    });
+}
 </script>
 
 </body>
