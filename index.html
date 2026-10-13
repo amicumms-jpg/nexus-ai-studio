@@ -1581,7 +1581,7 @@ function loadChatHistory(containerId) {
         }
     }
 }
-    <!-- Firebase SDK Modular -->
+ <!-- Firebase SDK Modular -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
   import { 
@@ -1643,7 +1643,6 @@ function loadChatHistory(containerId) {
     } catch (error) {
       console.error("Eroare creare cont:", error);
       if (error.code === 'auth/email-already-in-use') {
-        // Daca contul exista deja, incercam logarea
         try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           if (statusEl) statusEl.innerText = `Conectat ca: ${userCredential.user.email}`;
@@ -1665,11 +1664,15 @@ function loadChatHistory(containerId) {
     }
   });
 </script>
-    <footer class="w-full py-2 text-center text-[11px] text-gray-500 opacity-75 mt-auto">
-  <p class="flex items-center justify-center gap-3 flex-wrap">
-    <span><a href="#" class="hover:underline">Termeni și Condiții</a> &bull; <a href="#" class="hover:underline">Politica de Confidențialitate (GDPR)</a></span>
-    <span>&bull; Creat de <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
+
+<!-- Footer compact și minimalist -->
+<footer class="w-full py-1 text-center text-[10px] text-gray-500 opacity-60 mt-auto">
+  <p class="flex items-center justify-center gap-2 flex-wrap m-0">
+    <a href="#" class="hover:underline">Termeni</a> &bull; 
+    <a href="#" class="hover:underline">Confidențialitate</a> &bull; 
+    <span>Creat de <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
   </p>
 </footer>
 </body>
-</html>
+
+</html> 
