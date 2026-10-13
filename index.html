@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus AI Studio Pro - Platformă All-in-One de Generare Conținut AI</title>
     <meta name="description" content="Creează conținut pentru TikTok, Instagram, YouTube și articole folosind puterea AI într-o singură platformă integrată.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nexusaistudio.ro">
     <meta property="og:title" content="Nexus AI Studio Pro">
     <meta property="og:description" content="Platformă completă de generare conținut AI pentru creatori și afaceri.">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -50,15 +56,14 @@
         .app-tab.active-tab {
             display: flex !important;
         }
-       body {
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-}
-html {
-    height: -webkit-fill-available;
-} 
+        body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        html {
+            height: -webkit-fill-available;
+        } 
     </style>
-
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-[100dvh] flex flex-col overflow-hidden ...">
 
@@ -205,7 +210,7 @@ html {
                     <button onclick="switchTab('ytStudio', 'YouTube AI Studio')" id="nav-ytStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-youtube text-ytColor w-4"></i><span>YouTube AI Scriptwriter</span></button>
                     <button onclick="switchTab('hashtagStudio', 'Hashtag & SEO Generator')" id="nav-hashtagStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-hashtag text-violetPop w-4"></i><span>Hashtag & SEO Hub</span></button>
                     <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-editorialStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-calendar-days text-amberGlow w-4"></i><span>Calendar Editorial</span></button>
-                    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio', 'videoColor')" id="nav-textToVideoStudio" class="w-full text-left p-2 rounded-xl hover:bg-gray-800 text-gray-200 flex items-center space-x-2 cursor-pointer"><i class="fa-solid fa-clapperboard text-videoColor w-4"></i><span>Text-to-Video Studio</span></button>
+                    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" id="nav-textToVideoStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-clapperboard text-cyanNeon w-4"></i><span>Text-to-Video Studio</span></button>
                 </div>
 
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate & Nebune</span>
@@ -293,15 +298,14 @@ html {
         <span class="text-[10px] text-gray-400">Scor de viralitate</span>
     </div>
 
-    <!-- Tool 6: Text-to-Video -->
-    <div onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" class="bg-panelBg hover:border-videoColor border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
-        <div class="w-9 h-9 rounded-xl bg-videoColor/10 text-videoColor flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
+   <!-- Tool 6: Text-to-Video -->
+    <div onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" class="bg-panelBg hover:border-cyanNeon border border-gray-800 p-3 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-1 shadow-md group">
+        <div class="w-9 h-9 rounded-xl bg-cyanNeon/10 text-cyanNeon flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition">
             <i class="fa-solid fa-clapperboard"></i>
         </div>
         <span class="text-xs font-bold text-white">Text-to-Video</span>
         <span class="text-[10px] text-gray-400">Generare Scenariu</span>
     </div>
-
 </div>
                     <div id="chatMessages" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-3">
                         <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
@@ -652,22 +656,22 @@ html {
                 </div>
             </div>
 
-            <!-- Tab 13: Text-to-Video Studio -->
+           <!-- Tab 13: Text-to-Video Studio -->
             <div id="tab-textToVideoStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
-                <div class="bg-panelBg border border-videoColor/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl">
-                    <h2 class="font-bold text-sm text-videoColor mb-2"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
+                <div class="bg-panelBg border border-cyanNeon/30 p-5 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl">
+                    <h2 class="font-bold text-sm text-cyanNeon mb-2"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
                     <p class="text-xs text-gray-400 mb-3">Introdu o descriere detaliată a scenei sau a videoclipului dorit. AI-ul va genera structura video cadru cu cadru și prompturile de randare.</p>
                     
                     <div class="flex space-x-2 mb-3">
-                        <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu o mașină zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-videoColor">
-                        <button onclick="generateTextToVideo()" class="bg-videoColor text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition">Generează Video AI</button>
+                        <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu o mașină zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon">
+                        <button onclick="generateTextToVideo()" class="bg-cyanNeon text-darkBg font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition">Generează Video AI</button>
                     </div>
 
                     <div id="textToVideoResult" class="bg-gray-950 p-3.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 min-h-[140px] whitespace-pre-line mb-3">
                         Așteptare comenzi pentru generare video...
                     </div>
 
-                    <button onclick="downloadResult('textToVideoResult', 'scenariu-si-prompturi-video.txt')" class="bg-gray-900 border border-videoColor/40 text-videoColor hover:bg-videoColor hover:text-white transition font-bold text-xs py-2.5 px-4 rounded-xl cursor-pointer flex items-center justify-center w-max">
+                    <button onclick="downloadResult('textToVideoResult', 'scenariu-si-prompturi-video.txt')" class="bg-gray-900 border border-cyanNeon/40 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg transition font-bold text-xs py-2.5 px-4 rounded-xl cursor-pointer flex items-center justify-center w-max">
                         <i class="fa-solid fa-download mr-2"></i> Descarcă Scenariul / Prompturile (.txt)
                     </button>
                 </div>
@@ -1141,7 +1145,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-videoColor mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
+            resultBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se generează structura video și prompturile de randare prin Gemini AI...';
 
             try {
                 const prompt = `Creează un scenariu video detaliat cadru cu cadru și prompturi tehnice de randare bazat pe următoarea descriere: "${text}". Include cadre, mișcări de cameră, iluminare și descriere vizuală.`;
@@ -1497,10 +1501,10 @@ window.addEventListener('DOMContentLoaded', () => {
 });
     </script>
 
-    <!-- Modal Termeni si Conditii -->
+   <!-- Modal Termeni si Conditii -->
     <div id="termsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2
-        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+        <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
+            <div class="p-4 border-b border-gray-800 flex justify-between items-center">
             <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-file-contract text-amberGlow mr-2"></i> Termeni și Condiții</h3>
             <button onclick="closeModal('termsModal')" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
         </div>
