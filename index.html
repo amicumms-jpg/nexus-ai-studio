@@ -950,10 +950,38 @@ html {
             document.getElementById('userAccountStatus').innerText = `Cont creat pentru ${name} ✅`;
         }
 
-        function processCardPayment() {
-            showToast('Plată reușită! PRO activat.', 'success');
-            document.getElementById('paymentStatus').innerText = `Plată procesată cu succes! 🎉`;
+       function processCardPayment() {
+    localStorage.setItem('nexus_pro_user', 'true');
+    const badge = document.getElementById('proBadge');
+    if (badge) {
+        badge.innerText = 'PRO ACTIV';
+        badge.className = 'text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold';
+    }
+    showToast('Plată reușită! PRO activat.', 'success');
+    if (document.getElementById('paymentStatus')) {
+        document.getElementById('paymentStatus').innerText = 'Plată procesată cu succes! 🎉';
+    }
+}
+
+// Verificare automată a statutului PRO la fiecare încărcare a paginii
+window.addEventListener('DOMContentLoaded', () => {
+    const badge = document.getElementById('proBadge');
+    if (localStorage.getItem('nexus_pro_user') === 'true' && badge) {
+        badge.innerText = 'PRO ACTIV';
+        badge.className = 'text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold';
+    }
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        localStorage.setItem('nexus_pro_user', 'true');
+        if (badge) {
+            badge.innerText = 'PRO ACTIV';
+            badge.className = 'text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold';
         }
+        showToast('🎉 Abonamentul Nexus AI Studio Pro a fost activat!', 'success');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 
         function startRetroSnake() {
             if (activeGameInterval) clearInterval(activeGameInterval);
