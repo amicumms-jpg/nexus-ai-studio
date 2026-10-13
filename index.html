@@ -1581,51 +1581,46 @@ function loadChatHistory(containerId) {
         }
     }
 }
- <!-- Firebase SDK Modular Corectat -->
+<!-- Firebase SDK Modular Curat -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
-    authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
-    projectId: "nexus-ai-studio-8335f",
-    storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
-    messagingSenderId: "645678013335",
-    appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-    measurementId: "G-W0PJNEF4S5"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  window.loginWithGoogle = async function() {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      alert("Autentificat cu succes: " + (result.user.displayName || result.user.email));
-    } catch (error) {
-      alert("Eroare la autentificare: " + error.message);
-    }
-  };
-
-  window.registerCompleteUser = async function() {
-    const email = document.getElementById("regEmail")?.value;
-    const password = document.getElementById("regPass")?.value;
-    if (!email || !password) {
-      alert("Introdu adresa de e-mail și parola!");
-      return;
-    }
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      alert("Cont creat cu succes pentru: " + res.user.email);
-    } catch (err) {
-      alert("Eroare: " + err.message);
-    }
-  };
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+  authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+  projectId: "nexus-ai-studio-8335f",
+  storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+  messagingSenderId: "645678013335",
+  appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+  measurementId: "G-W0PJNEF4S5"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+window.loginWithGoogle = async function() {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    alert("Autentificat cu succes: " + (result.user.displayName || result.user.email));
+  } catch (error) {
+    alert("Eroare la autentificare: " + error.message);
+  }
+};
+window.registerCompleteUser = async function() {
+  const email = document.getElementById("regEmail")?.value;
+  const password = document.getElementById("regPass")?.value;
+  if (!email || !password) {
+    alert("Introdu adresa de e-mail și parola!");
+    return;
+  }
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    alert("Cont creat cu succes pentru: " + res.user.email);
+  } catch (err) {
+    alert("Eroare: " + err.message);
+  }
+};
 </script>
 
-<!-- Footer Ultra-Compact și Minimalist -->
 <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 mt-auto flex items-center justify-center gap-2 flex-wrap">
   <span>Plăți Stripe</span> &bull; 
   <a href="#" class="hover:underline">Termeni</a> &bull; 
