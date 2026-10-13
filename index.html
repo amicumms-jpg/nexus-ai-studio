@@ -1527,6 +1527,23 @@ function copyToClipboard(text, buttonElement) {
         console.error('Eroare la copiere: ', err);
     });
 }
+    // Salvarea și încărcarea istoricuui de chat în localStorage
+function saveChatHistory(containerId) {
+    const chatContainer = document.getElementById(containerId);
+    if (chatContainer) {
+        localStorage.setItem('nexus_chat_' + containerId, chatContainer.innerHTML);
+    }
+}
+
+function loadChatHistory(containerId) {
+    const chatContainer = document.getElementById(containerId);
+    if (chatContainer) {
+        const saved = localStorage.getItem('nexus_chat_' + containerId);
+        if (saved) {
+            chatContainer.innerHTML = saved;
+        }
+    }
+}
 </script>
 
 </body>
