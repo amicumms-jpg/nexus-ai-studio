@@ -1557,10 +1557,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 </script>
 
-<!-- Firebase SDK Modular și Logica de Autentificare Corectată -->
+<!-- Firebase SDK Modular și Logica de Autentificare Corectă -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
@@ -1575,92 +1575,46 @@ window.addEventListener('DOMContentLoaded', () => {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
-    googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-    // Prinde automat rezultatul după ce utilizatorul se întoarce de la Google
-    getRedirectResult(auth)
-        .then((result) => {
-            if (result) {
+    // Funcția pentru Login Google prin Pop-up
+    window.socialLogin = async function(provider) {
+        if (provider === 'Google') {
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
                 const userName = result.user.displayName || result.user.email;
+                alert("Autentificat cu succes: " + userName);
                 const statusEl = document.getElementById('userAccountStatus');
                 if (statusEl) statusEl.innerText = `Conectat cu Google ca ${userName} ✅`;
+            } catch (error) {
+                console.error("Eroare Google Auth:", error);
+                alert("Eroare la autentificare: " + error.message);
             }
-        }).catch((error) => {
-            console.error("Eroare la preluarea rezultatului Google:", error);
-        });
-
-    // Logare Google prin Redirect (Evită blocajele COOP din browsere)
-    async function handleGoogleLogin() {
-        if (typeof showToast === 'function') showToast('Te redirecționăm către Google...', 'info');
-        try {
-            await signInWithRedirect(auth, googleProvider);
-        } catch (error) {
-            console.error(error);
-            alert("Eroare la logarea prin Google: " + error.message);
+        } else {
+            alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
         }
-    }
+    };
 
-    // Formularul de creare cont nou
-    async function handleFormRegister() {
+    // Funcția pentru Înregistrare cu E-mail și Parolă
+    window.registerCompleteUser = async function() {
         const email = document.getElementById("regEmail")?.value.trim();
         const password = document.getElementById("regPass")?.value.trim();
         const fullName = document.getElementById("regFullName")?.value.trim();
-        const phone = document.getElementById("regPhone")?.value.trim();
-        const city = document.getElementById("regCity")?.value.trim();
         const statusEl = document.getElementById('userAccountStatus');
 
-        if (!email || !password || !fullName || !phone || !city) {
-            alert("Te rugăm să completezi toate câmpurile: Nume, Telefon, Email, Parolă și Oraș!");
-            return;
-        }
-
-        if (password.length < 6) {
-            alert("Parola trebuie să aibă cel puțin 6 caractere în Firebase!");
+        if (!email || !password) {
+            alert("Introdu adresa de e-mail și parola!");
             return;
         }
 
         try {
             const res = await createUserWithEmailAndPassword(auth, email, password);
             alert("Cont creat cu succes pentru: " + res.user.email);
-            if (statusEl) statusEl.innerText = `Cont creat cu succes pentru ${fullName} ✅`;
+            if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
         } catch (err) {
-            console.error(err);
+            console.error("Eroare Firebase:", err);
             alert("Eroare la crearea contului: " + err.message);
         }
-    }
-
-    // Legarea automată a butoanelor la încărcarea paginii
-    document.addEventListener("DOMContentLoaded", () => {
-        const authBox = document.querySelector("#tab-authAccount > div");
-        if (authBox) {
-            authBox.classList.add("max-h-[580px]", "my-auto");
-        }
-
-        const googleBtn = document.querySelector("button[onclick*='Google']");
-        const registerBtn = document.querySelector("button[onclick*='registerCompleteUser']");
-
-        if (googleBtn) {
-            googleBtn.removeAttribute("onclick");
-            googleBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                handleGoogleLogin();
-            });
-        }
-
-        if (registerBtn) {
-            registerBtn.removeAttribute("onclick");
-            registerBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                handleFormRegister();
-            });
-        }
-    });
-
-    window.socialLogin = function(provider) {
-        if (provider === 'Google') handleGoogleLogin();
-        else alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
     };
-    window.registerCompleteUser = handleFormRegister;
 </script>
 
 <!-- Ceas dinamic Header -->
