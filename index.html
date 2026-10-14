@@ -1549,42 +1549,44 @@ window.addEventListener('DOMContentLoaded', () => {
         const m = document.getElementById(id);
         if (m) m.classList.add('hidden');
     }
-    // Funcție pentru copiere text din răspunsurile AI
-function copyToClipboard(text, buttonElement) {
-    navigator.clipboard.writeText(text).then(() => {
-        const originalText = buttonElement.innerHTML;
-        buttonElement.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copiat!';
-        buttonElement.classList.add('bg-emerald-500/20');
-        
-        setTimeout(() => {
-            buttonElement.innerHTML = originalText;
-            buttonElement.classList.remove('bg-emerald-500/20');
-        }, 2000);
-    }).catch(err => {
-        console.error('Eroare la copiere: ', err);
-    });
-}
-    // Salvarea și încărcarea istoricuui de chat în localStorage
-function saveChatHistory(containerId) {
-    const chatContainer = document.getElementById(containerId);
-    if (chatContainer) {
-        localStorage.setItem('nexus_chat_' + containerId, chatContainer.innerHTML);
-    }
-}
 
-function loadChatHistory(containerId) {
-    const chatContainer = document.getElementById(containerId);
-    if (chatContainer) {
-        const saved = localStorage.getItem('nexus_chat_' + containerId);
-        if (saved) {
-            chatContainer.innerHTML = saved;
+    function copyToClipboard(text, buttonElement) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copiat!';
+            buttonElement.classList.add('bg-emerald-500/20');
+            
+            setTimeout(() => {
+                buttonElement.innerHTML = originalText;
+                buttonElement.classList.remove('bg-emerald-500/20');
+            }, 2000);
+        }).catch(err => {
+            console.error('Eroare la copiere: ', err);
+        });
+    }
+
+    function saveChatHistory(containerId) {
+        const chatContainer = document.getElementById(containerId);
+        if (chatContainer) {
+            localStorage.setItem('nexus_chat_' + containerId, chatContainer.innerHTML);
         }
     }
-}
-<!-- Firebase SDK Modular și Logica de Autentificare -->
+
+    function loadChatHistory(containerId) {
+        const chatContainer = document.getElementById(containerId);
+        if (chatContainer) {
+            const saved = localStorage.getItem('nexus_chat_' + containerId);
+            if (saved) {
+                chatContainer.innerHTML = saved;
+            }
+        }
+    }
+</script>
+
+<!-- Firebase SDK Modular și Logica de Autentificare Inteligentă -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
@@ -1599,29 +1601,51 @@ function loadChatHistory(containerId) {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-    // Funcția apelată de butonul de Google din HTML
-    window.socialLogin = async function(provider) {
-        if (provider === 'Google') {
+    // Prinde automat rezultatul după ce utilizatorul se întoarce din redirect pe mobil
+    getRedirectResult(auth)
+        .then((result) => {
+            if (result) {
+                const userName = result.user.displayName || result.user.email;
+                const statusEl = document.getElementById('userAccountStatus');
+                if (statusEl) statusEl.innerText = `Conectat cu Google ca ${userName} ✅`;
+                if (typeof showToast === 'function') showToast(`Bun venit înapoi, ${userName}!`, 'success');
+            }
+        }).catch((error) => {
+            console.error("Eroare la întoarcerea din redirect Google:", error);
+        });
+
+    // Funcția hibridă pentru login Google
+    async function handleGoogleLogin() {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        const statusEl = document.getElementById('userAccountStatus');
+
+        if (isMobile) {
+            if (typeof showToast === 'function') showToast('Te redirecționăm către Google...', 'info');
+            try {
+                await signInWithRedirect(auth, googleProvider);
+            } catch (error) {
+                alert("Eroare la autentificarea pe mobil: " + error.message);
+            }
+        } else {
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 const userName = result.user.displayName || result.user.email;
                 alert("Autentificat cu succes: " + userName);
-                const statusEl = document.getElementById('userAccountStatus');
                 if (statusEl) statusEl.innerText = `Conectat cu Google ca ${userName} ✅`;
             } catch (error) {
                 alert("Eroare la autentificare: " + error.message);
             }
-        } else {
-            alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
         }
-    };
+    }
 
-    // Funcția apelată de formularul clasic de înregistrare
-    window.registerCompleteUser = async function() {
+    // Funcția pentru înregistrarea clasică
+    async function handleFormRegister() {
         const email = document.getElementById("regEmail")?.value;
         const password = document.getElementById("regPass")?.value;
         const fullName = document.getElementById("regFullName")?.value;
+        const statusEl = document.getElementById('userAccountStatus');
 
         if (!email || !password) {
             alert("Introdu adresa de e-mail și parola!");
@@ -1631,12 +1655,40 @@ function loadChatHistory(containerId) {
         try {
             const res = await createUserWithEmailAndPassword(auth, email, password);
             alert("Cont creat cu succes pentru: " + res.user.email);
-            const statusEl = document.getElementById('userAccountStatus');
             if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
         } catch (err) {
             alert("Eroare la crearea contului: " + err.message);
         }
+    }
+
+    // Legare directă la elementele DOM pentru a ocoli MutationObserver-ul din Tailwind CDN
+    document.addEventListener("DOMContentLoaded", () => {
+        const googleBtn = document.querySelector("button[onclick*='Google']");
+        const registerBtn = document.querySelector("button[onclick*='registerCompleteUser']");
+
+        if (googleBtn) {
+            googleBtn.removeAttribute("onclick");
+            googleBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                handleGoogleLogin();
+            });
+        }
+
+        if (registerBtn) {
+            registerBtn.removeAttribute("onclick");
+            registerBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                handleFormRegister();
+            });
+        }
+    });
+
+    // Fallback global în caz de latențe de rețea
+    window.socialLogin = function(provider) {
+        if (provider === 'Google') handleGoogleLogin();
+        else alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
     };
+    window.registerCompleteUser = handleFormRegister;
 </script>
 
 <!-- Footer Ultra-Compact -->
@@ -1648,3 +1700,4 @@ function loadChatHistory(containerId) {
 </footer>
 </body>
 </html>
+
