@@ -38,32 +38,6 @@
             }
         }
     </script>
-    <style>
-        #matrixCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            display: none;
-            opacity: 0.15;
-        }
-        .app-tab {
-            display: none;
-        }
-        .app-tab.active-tab {
-            display: flex !important;
-        }
-        body {
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-        }
-        html {
-            height: -webkit-fill-available;
-        } 
-    </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-[100dvh] flex flex-col overflow-hidden ...">
 
@@ -1583,14 +1557,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 </script>
 
-<!-- Firebase SDK Modular și Logica de Autentificare Completă (Sintaxă fixată COOP) -->
+<!-- Firebase SDK Modular și Logica de Autentificare Corectată -->
 <script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "https://gstatic.com";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
-        authDomain: "://firebaseapp.com",
+        authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
         projectId: "nexus-ai-studio-8335f",
         storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
         messagingSenderId: "645678013335",
@@ -1603,7 +1577,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-    // Prinde automat rezultatul după ce utilizatorul se întoarce din reîncărcarea securizată (Redirect)
+    // Prinde automat rezultatul după ce utilizatorul se întoarce de la Google
     getRedirectResult(auth)
         .then((result) => {
             if (result) {
@@ -1612,10 +1586,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (statusEl) statusEl.innerText = `Conectat cu Google ca ${userName} ✅`;
             }
         }).catch((error) => {
-            console.error("Eroare la preluarea rezultatului Google Redirect:", error);
+            console.error("Eroare la preluarea rezultatului Google:", error);
         });
 
-    // Logare Google - Rezolvă blocajul COOP prin forțarea Redirect-ului stabil pe toate platformele
+    // Logare Google prin Redirect (Evită blocajele COOP din browsere)
     async function handleGoogleLogin() {
         if (typeof showToast === 'function') showToast('Te redirecționăm către Google...', 'info');
         try {
@@ -1626,7 +1600,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Formularul clasic complet de creare cont nou (Păstrează toate câmpurile vizuale)
+    // Formularul de creare cont nou
     async function handleFormRegister() {
         const email = document.getElementById("regEmail")?.value.trim();
         const password = document.getElementById("regPass")?.value.trim();
@@ -1655,9 +1629,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Optimizări de design dinamice + Legarea butoanelor la încărcarea DOM-ului
+    // Legarea automată a butoanelor la încărcarea paginii
     document.addEventListener("DOMContentLoaded", () => {
-        // Corecție vizuală: Strângem caseta de înregistrare/login să nu mai fie prea lungă pe verticală
         const authBox = document.querySelector("#tab-authAccount > div");
         if (authBox) {
             authBox.classList.add("max-h-[580px]", "my-auto");
@@ -1690,7 +1663,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.registerCompleteUser = handleFormRegister;
 </script>
 
-<!-- Optimizat: Script global inline pentru calibrare înălțime chat (oprește lărgirea barei de jos) -->
+<!-- Ceas dinamic Header -->
 <script>
     setInterval(() => {
         const now = new Date();
@@ -1701,7 +1674,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 </script>
 
-<!-- Footer Ultra-Compact (Apropiat de marginea inferioară, stilizat strâns) -->
+<!-- Footer Ultra-Compact -->
 <footer class="w-full py-1.5 px-4 text-center text-[9px] text-gray-500 opacity-60 mt-auto border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap shrink-0">
     <span>Plăți Securizate Stripe</span> &bull; 
     <a href="#" onclick="openModal('privacyModal')" class="hover:underline text-cyanNeon/80">Politică Confidențialitate (GDPR)</a> &bull; 
@@ -1710,5 +1683,3 @@ window.addEventListener('DOMContentLoaded', () => {
 </footer>
 </body>
 </html>
-
-
