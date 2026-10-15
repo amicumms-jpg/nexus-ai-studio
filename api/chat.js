@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
         const genAI = new GoogleGenerativeAI(apiKey);
         // Folosim un model valid și suportat nativ de SDK
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
         let contentsParts = [prompt || "Analizează acest fișier:"];
 
