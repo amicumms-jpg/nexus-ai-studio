@@ -6,26 +6,38 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt } = req.body;
-        if (!prompt) {
-            return res.status(400).json({ error: 'Prompt lipsă.' });
+        const { prompt, fileData } = req.body;
+        if (!prompt && !fileData) {
+            return res.status(400).json({ error: 'Prompt sau fișier lipsă.' });
         }
 
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
-            return res.status(500).json({ error: 'Cheia API nu este setată.' });
+            return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+        // Folosim un model valid și suportat nativ de SDK
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
-        const result = await model.generateContent(prompt);
+        let contentsParts = [prompt || "Analizează acest fișier:"];
+
+        if (fileData && fileData.base64 && fileData.mimeType) {
+            contentsParts.push({
+                inlineData: {
+                    data: fileData.base64,
+                    mimeType: fileData.mimeType
+                }
+            });
+        }
+
+        const result = await model.generateContent(contentsParts);
         const response = await result.response;
         const text = response.text();
 
         return res.status(200).json({ text: text });
     } catch (error) {
-        console.error("Eroare server:", error);
-        return res.status(500).json({ error: error.message });
+        console.error("Eroare detaliată server API chat:", error);
+        return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
     }
 }
