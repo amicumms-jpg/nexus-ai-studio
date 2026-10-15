@@ -955,7 +955,7 @@ async function fileToBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-      async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-1.5-pro') {
+      async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
@@ -991,7 +991,7 @@ async function fileToBase64(file) {
 
             try {
                 const neuralMod = neuralPulseActive ? "[Sistem Neural Activ: Analizează în profunzime, descompune în pași logici] " : "";
-               const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-1.5-pro';
+              const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
     const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text), selectedModel);
                 document.getElementById(loadingId).remove();
                 const msgId = 'ai-msg-' + Date.now();
