@@ -927,7 +927,24 @@
                 snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
             }, 120);
         }
-
+async function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const result = reader.result;
+            const base64Index = result.indexOf(';base64,');
+            if (base64Index !== -1) {
+                const mimeType = result.substring(5, base64Index);
+                const base64 = result.substring(base64Index + 8);
+                resolve({ base64, mimeType });
+            } else {
+                reject(new Error("Format de fișier invalid."));
+            }
+        };
+        reader.onerror = error => reject(error);
+    });
+}
        async function fetchFromServer(promptText, fileData = null) {
     try {
         // Construim un corp curat pentru cerere
@@ -1045,7 +1062,17 @@
             msgBox.scrollTop = msgBox.scrollHeight;
 
             try {
-                const responseText = await fetchFromServer(text || "Analizează acest fișier;", file);
+              // Preluăm fișierul atașat corespunzător din starea ta curentă
+const currentFile = attachedFiles ? attachedFiles[tabKey] : null;
+let fileDataToSend = null;
+
+if (currentFile) {
+    // Dacă ai o funcție care convertește fișierul în Base64, o folosești aici
+    // sau trimiți obiectul pregătit anterior
+    fileDataToSend = await fileToBase64(currentFile); 
+}
+
+const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend);
                 document.getElementById(loadingId).remove();
                 msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${responseText}</div>`;
                 msgBox.scrollTop = msgBox.scrollHeight;
