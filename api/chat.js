@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ text: responseText });
 
     } catch (error) {
-        console.error("Eroare server API chat:", error);
+        console.error("Chat API server Eroare:", error);
         return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
     }
 }
