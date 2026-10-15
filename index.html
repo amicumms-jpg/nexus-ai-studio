@@ -759,18 +759,17 @@
             }
         }
 
-       function toggleSidebar() {
+      function toggleSidebar() {
     const sidebar = document.getElementById('appSidebar');
     if (!sidebar) return;
     if (sidebar.classList.contains('hidden')) {
         sidebar.classList.remove('hidden');
-        sidebar.classList.add('fixed', 'top-0', 'left-0', 'bottom-0', 'z-50', 'w-64', 'bg-panelBg', 'shadow-2xl', 'overflow-y-auto');
+        sidebar.classList.add('fixed', 'top-14', 'left-0', 'bottom-0', 'z-50', 'w-64', 'bg-panelBg', 'shadow-2xl', 'overflow-y-auto');
     } else {
         sidebar.classList.add('hidden');
-        sidebar.classList.remove('fixed', 'top-0', 'left-0', 'bottom-0', 'z-50', 'w-64', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
+        sidebar.classList.remove('fixed', 'top-14', 'left-0', 'bottom-0', 'z-50', 'w-64', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
     }
 }
-
         function openModal(id) {
             const m = document.getElementById(id);
             if (m) m.classList.remove('hidden');
