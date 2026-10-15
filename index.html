@@ -930,11 +930,11 @@
 
        async function fetchFromServer(promptText, fileData = null) {
     try {
-        // Construim corpul cererii în mod dinamic
+        // Construim un corp curat pentru cerere
         const requestBody = { prompt: promptText };
         
-        // Adăugăm fileData doar dacă acesta conține într-adevăr o imagine validă
-        if (fileData && fileData.base64) {
+        // Trimitem fileData doar dacă există cu adevărat o imagine validă în el
+        if (fileData && fileData.base64 && fileData.mimeType) {
             requestBody.fileData = fileData;
         }
 
@@ -949,13 +949,14 @@
         }
 
         const data = await response.json();
-        // Verificăm ambele variante de răspuns ca să nu crape interfața
+        // Returnează textul indiferent dacă backend-ul răspunde cu .text sau .response
         return data.text || data.response || "Răspuns gol primit de la server.";
     } catch (error) {
         console.error("Eroare la comunicarea cu serverul:", error);
         throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
     }
 }
+
 
 
         async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
@@ -1044,7 +1045,7 @@
             msgBox.scrollTop = msgBox.scrollHeight;
 
             try {
-                const responseText = await fetchFromServer(text || "Analizează acest fișier:");
+                const responseText = await fetchFromServer(text || "Analizează acest fișier;", file);
                 document.getElementById(loadingId).remove();
                 msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${responseText}</div>`;
                 msgBox.scrollTop = msgBox.scrollHeight;
