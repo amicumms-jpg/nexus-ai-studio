@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
     try {
         const { prompt, fileData, model } = req.body;
-        const selectedModel = model || 'gemini-1.5-pro';
+        const selectedModel = model || 'gemini-3.8-flash';
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
