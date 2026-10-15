@@ -22,20 +22,37 @@ export default async function handler(req, res) {
             });
         }
 
-        // Folosim modelul cerut direct de Google
-        const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: parts }] })
-        });
-
-        const rawText = await apiResponse.text();
-        
+        let apiResponse;
         let data;
-        try {
-            data = JSON.parse(rawText);
-        } catch (e) {
-            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        // Mecanism de retry în caz de suprasolicitare temporară (high demand)
+        while (attempts < maxAttempts) {
+            attempts++;
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: parts }] })
+            });
+
+            const rawText = await apiResponse.text();
+            
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
+            }
+
+            // Dacă cererea a reușit sau e altă eroare decât de trafic, ieșim din buclă
+            if (apiResponse.ok || !data.error?.message?.includes('high demand')) {
+                break;
+            }
+
+            // Dacă e eroare de high demand și mai avem încercări, așteptăm 1.5 secunde și reîncercăm
+            if (attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+            }
         }
 
         if (!apiResponse.ok) {
