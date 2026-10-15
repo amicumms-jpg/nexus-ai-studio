@@ -41,9 +41,8 @@
     </script>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
-    <!-- Canvas Matrix -->
-    <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 hidden"></canvas>
-
+    <!-- Canvas pentru efectul Matrix Rain Continuu -->
+<canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-20"></canvas>
     <!-- Notificări Toast Container -->
     <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
@@ -1240,6 +1239,47 @@ const responseText = await fetchFromServer(text || "Analizează acest fișier:",
                 alert("Eroare la crearea contului: " + err.message);
             }
         };
+        // Efectul Matrix Rain Continuu
+const canvas = document.getElementById('matrixCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeMatrixCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeMatrixCanvas();
+window.addEventListener('resize', resizeMatrixCanvas);
+
+// Caractere folosite pentru ploaie (japoneze katakana + cifre/litere)
+const chars = 'ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const fontSize = 16;
+let columns = canvas.width / fontSize;
+let drops = [];
+for (let x = 0; x < columns; x++) {
+    drops[x] = 1;
+}
+
+function drawMatrix() {
+    // Ușoară urmă de ștergere pentru efectul de trenă specific
+    ctx.fillStyle = 'rgba(11, 15, 25, 0.1)'; // Folosește culoarea de fundal a aplicației tale (darkBg)
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#00ff66'; // Verde fosforescent
+    ctx.font = fontSize + 'mspace monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+
+// Rulează animația continuu la ~30fps
+setInterval(drawMatrix, 33);
     </script>
 
     <!-- Footer Ultra-Compact -->
