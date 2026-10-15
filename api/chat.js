@@ -1,53 +1,53 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { prompt, fileData } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt-ul este obligatoriu.' });
     }
 
-    try {
-        const { prompt, fileData } = req.body;
-        const apiKey = process.env.GEMINI_API_KEY;
-
-        if (!apiKey) {
-            return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
-        }
-
-        let parts = [{ text: prompt || "Analizează acest fișier:" }];
-
-        if (fileData && fileData.base64 && fileData.mimeType) {
-            parts.push({
-                inlineData: {
-                    mimeType: fileData.mimeType,
-                    data: fileData.base64
-                }
-            });
-        }
-
-        // Folosim modelul gemini-pro care este suportat nativ și stabil pe v1beta
-        const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: parts }] })
-        });
-
-        const rawText = await apiResponse.text();
-        
-        let data;
-        try {
-            data = JSON.parse(rawText);
-        } catch (e) {
-            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
-        }
-
-        if (!apiResponse.ok) {
-            throw new Error(data.error?.message || 'Eroare de la serverul Google Gemini');
-        }
-
-        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
-
-        return res.status(200).json({ text: responseText });
-
-    } catch (error) {
-        console.error("Eroare server API chat:", error);
-        return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este configurată în Vercel!' });
     }
+
+    // Inițializăm SDK-ul Google cu cheia ta API
+    const genAI = new GoogleGenerativeAI(apiKey);
+    
+    // Forțăm utilizarea modelului stabil prin denumirea sa completă oficială
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    let contentsParts = [];
+
+    // Dacă utilizatorul trimite o imagine validă, o adăugăm în array
+    if (fileData && fileData.base64 && fileData.mimeType) {
+      contentsParts.push({
+        inlineData: {
+          data: fileData.base64,
+          mimeType: fileData.mimeType
+        }
+      });
+    }
+
+    // Adăugăm promptul text
+    contentsParts.push(prompt);
+
+    // Apelăm funcția din librăria oficială Google
+    const result = await model.generateContent(contentsParts);
+    const response = await result.response;
+    const responseText = response.text();
+
+    // Returnăm răspunsul în formatul așteptat de frontend ca proprietate .text
+    return res.status(200).json({ text: responseText });
+
+  } catch (error) {
+    console.error("Chat API error:", error);
+    return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
+  }
 }
