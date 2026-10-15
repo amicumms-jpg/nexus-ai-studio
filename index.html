@@ -945,31 +945,21 @@ async function fileToBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-       async function fetchFromServer(promptText, fileData = null) {
+     async function fetchFromServer(promptText) {
     try {
-        // Construim un corp curat pentru cerere
-        const requestBody = { prompt: promptText };
-        
-        // Trimitem fileData doar dacă există cu adevărat o imagine validă în el
-        if (fileData && fileData.base64 && fileData.mimeType) {
-            requestBody.fileData = fileData;
-        }
-
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({ prompt: promptText })
         });
 
-        if (!response.ok) {
-            throw new Error(`Eroare server: ${response.status}`);
-        }
-
         const data = await response.json();
-        // Returnează textul indiferent dacă backend-ul răspunde cu .text sau .response
-        return data.text || data.response || "Răspuns gol primit de la server.";
-    } catch (error) {
-        console.error("Eroare la comunicarea cu serverul:", error);
+        if (!response.ok) {
+            throw new Error(data.error || `Eroare server: ${response.status}`);
+        }
+        return data.text || "Răspuns gol primit de la server.";
+    } catch (err) {
+        console.error("Eroare la comunicarea cu serverul:", err);
         throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
     }
 }
