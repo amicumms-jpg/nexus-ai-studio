@@ -72,26 +72,26 @@
     <!-- Top Navigation Bar & Rich Utility Header -->
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2 flex flex-col md:flex-row items-center justify-between shrink-0 shadow-lg z-20 space-y-2 md:space-y-0">
         <div class="flex items-center space-x-4 w-full md:w-auto justify-between md:justify-start">
-          <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('chat', 'Chat General')">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-sm group-hover:scale-105 transition">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
-                    <!-- Buton Meniu Mobil (hamburger) -->
-                   onclick="event.stopPropagation(); toggleSidebar();" class="md:hidden text-cyanNeon p-1.5 hover:bg-gray-800 rounded-lg text-base focus:outline-none mr-1">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <div class="flex items-center space-x-2">
-                        <h1 class="font-bold text-xs text-white tracking-wide">Nexus AI Studio Pro</h1>
-                        <span id="proBadge" class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold">PRO ACTIV</span>
-                    </div>
-                    <div class="text-[10px] text-gray-400 flex items-center space-x-1 mt-0.5">
-                        <span class="text-cyanNeon"><i class="fa-solid fa-house text-[9px] mr-1"></i> Hub</span>
-                        <span class="text-gray-600">/</span>
-                        <span id="breadcrumbCurrent" class="text-gray-200 font-medium">Chat General</span>
-                    </div>
-                </div>
-            </div>
+         <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('chat', 'Chat General')">
+    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-sm group-hover:scale-105 transition">
+        <i class="fa-solid fa-bolt-lightning"></i>
+    </div>
+    <div>
+        <!-- Buton Meniu Mobil (hamburger) -->
+        <button onclick="event.stopPropagation(); toggleSidebar();" class="md:hidden text-cyanNeon p-1.5 hover:bg-gray-800 rounded-lg text-base focus:outline-none mr-1">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="flex items-center space-x-2">
+            <h1 class="font-bold text-xs text-white tracking-wide group-hover:text-cyanNeon transition">Nexus AI Studio Pro</h1>
+            <span id="proBadge" class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold">PRO ACTIV</span>
         </div>
+        <div class="text-[10px] text-gray-400 flex items-center space-x-1 mt-0.5">
+            <span class="text-cyanNeon"><i class="fa-solid fa-house text-[9px] mr-1"></i> Hub</span>
+            <span class="text-gray-600">/</span>
+            <span id="breadcrumbCurrent" class="text-gray-200 font-medium">Chat General</span>
+        </div>
+    </div>
+</div>
 
         <!-- Utilitare Sus -->
         <div class="flex flex-wrap items-center gap-2 text-xs">
