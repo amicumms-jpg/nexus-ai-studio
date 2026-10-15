@@ -928,25 +928,35 @@
             }, 120);
         }
 
-        async function fetchFromServer(promptText) {
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: promptText })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Eroare server: ${response.status}`);
-                }
-
-                const data = await response.json();
-                return data.response || data.text || "Răspuns gol primit de la server.";
-            } catch (err) {
-                console.error("Eroare la comunicarea cu serverul:", err);
-                throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
-            }
+       async function fetchFromServer(promptText, fileData = null) {
+    try {
+        // Construim corpul cererii în mod dinamic
+        const requestBody = { prompt: promptText };
+        
+        // Adăugăm fileData doar dacă acesta conține într-adevăr o imagine validă
+        if (fileData && fileData.base64) {
+            requestBody.fileData = fileData;
         }
+
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Eroare server: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Verificăm ambele variante de răspuns ca să nu crape interfața
+        return data.text || data.response || "Răspuns gol primit de la server.";
+    } catch (error) {
+        console.error("Eroare la comunicarea cu serverul:", error);
+        throw new Error("Nu s-a putut lua legătura cu serverul AI. Verifică conexiunea sau rutele API.");
+    }
+}
+
 
         async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
             const inputEl = document.getElementById(inputId);
