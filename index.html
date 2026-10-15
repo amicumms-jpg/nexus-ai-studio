@@ -165,14 +165,14 @@
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         <!-- Sidebar -->
-       <aside id="appSidebar" class="fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-panelBg border-r border-gray-800 shadow-xl transition-transform duration-300 md:relative md:translate-x-0 md:flex md:w-56 md:shadow-none h-full overflow-hidden">
+       <aside id="appSidebar" class="hidden md:flex flex-col w-64 bg-panelBg border-r border-gray-800 shrink-0 p-3 z-10 h-full overflow-hidden">
             <button onclick="newSession()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-lg shadow-cyan-500/10 transition cursor-pointer">
                 <i class="fa-solid fa-plus font-bold"></i>
                 <span>Sesiune Nouă AI</span>
             </button>
 
             <!-- Meniu Navigare -->
-     <div class="flex-1 space-y-1 overflow-y-auto pt-2 pb-20 pr-2" style="scrollbar-width: thin;">
+    <div class="flex-1 space-y-1 overflow-y-auto pr-1" style="scrollbar-width: thin;">
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Chat & Asistență</span>
                 <div class="mt-1 space-y-1 text-xs">
                     <button onclick="switchTab('chat', 'Chat General')" id="nav-chat" class="w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition cursor-pointer font-bold border border-cyanNeon/30"><i class="fa-solid fa-comments w-4"></i><span id="txt-nav_chat">Chat General</span></button>
@@ -759,17 +759,17 @@
             }
         }
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('appSidebar');
-            if (!sidebar) return;
-            if (sidebar.classList.contains('hidden')) {
-                sidebar.classList.remove('hidden');
-                sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
-            } else {
-                sidebar.classList.add('hidden');
-                sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-50', 'w-64', 'h-screen', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
-            }
-        }
+       function toggleSidebar() {
+    const sidebar = document.getElementById('appSidebar');
+    if (!sidebar) return;
+    if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('fixed', 'top-0', 'left-0', 'bottom-0', 'z-50', 'w-64', 'bg-panelBg', 'shadow-2xl', 'overflow-y-auto');
+    } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('fixed', 'top-0', 'left-0', 'bottom-0', 'z-50', 'w-64', 'overflow-y-auto', 'bg-panelBg', 'shadow-2xl');
+    }
+}
 
         function openModal(id) {
             const m = document.getElementById(id);
