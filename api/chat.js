@@ -4,7 +4,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, fileData } = req.body;
+        const { prompt, fileData, model } = req.body;
+        const selectedModel = model || 'gemini-1.5-pro';
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -30,14 +31,14 @@ export default async function handler(req, res) {
         // Mecanism de retry în caz de suprasolicitare temporară (high demand)
         while (attempts < maxAttempts) {
             attempts++;
-            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
             });
 
             const rawText = await apiResponse.text();
-            
+
             try {
                 data = JSON.parse(rawText);
             } catch (e) {
