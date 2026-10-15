@@ -11,13 +11,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
-        // Construim conținutul pentru API-ul Google Gemini v1beta
-        let parts = [];
-        if (prompt) {
-            parts.push({ text: prompt });
-        } else {
-            parts.push({ text: "Analizează acest fișier:" });
-        }
+        let parts = [{ text: prompt || "Analizează acest fișier:" }];
 
         if (fileData && fileData.base64 && fileData.mimeType) {
             parts.push({
@@ -28,15 +22,20 @@ export default async function handler(req, res) {
             });
         }
 
-        const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+        const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: parts }]
-            })
+            body: JSON.stringify({ contents: [{ parts: parts }] })
         });
 
-        const data = await apiResponse.json();
+        const rawText = await apiResponse.text();
+        
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
+        }
 
         if (!apiResponse.ok) {
             throw new Error(data.error?.message || 'Eroare de la serverul Google Gemini');
