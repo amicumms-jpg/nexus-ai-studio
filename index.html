@@ -822,13 +822,20 @@
             }
         }
 
-        function switchTab(tabId, titleName) {
-            document.querySelectorAll('.app-tab').forEach(tab => {
-                tab.classList.add('hidden');
-                tab.classList.remove('active-tab');
-                tab.style.setProperty('display', 'none', 'important');
-            });
+     function switchTab(tabId, titleName) {
+    // Închide meniul lateral pe mobil la click pe un tab
+    if (window.innerWidth < 768 && typeof toggleSidebar === 'function') {
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar && !sidebar.classList.contains('hidden')) {
+            toggleSidebar();
+        }
+    }
 
+    document.querySelectorAll('.app-tab').forEach(tab => {
+        tab.classList.add('hidden');
+        tab.classList.remove('active-tab');
+        tab.style.setProperty('display', 'none', 'important');
+    });
             let targetId = tabId;
             if (tabId === 'tiktokStudio' || tabId === 'tiktok') targetId = 'tab-tiktokStudio';
             else if (tabId === 'instaStudio' || tabId === 'instagram') targetId = 'tab-instaStudio';
