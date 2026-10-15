@@ -171,30 +171,76 @@
             <span>Sesiune Nouă AI</span>
         </button>
 
-            <!-- Meniu Navigare -->
-    <div class="flex-1 space-y-1 overflow-y-auto pr-1" style="scrollbar-width: thin;">
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Chat & Asistență</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('chat', 'Chat General')" id="nav-chat" class="w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition cursor-pointer font-bold border border-cyanNeon/30"><i class="fa-solid fa-comments w-4"></i><span id="txt-nav_chat">Chat General</span></button>
-                </div>
+           <!-- Meniu Navigare în format Slide Rulant pe Mobil / Vertical pe Desktop -->
+<div class="flex-1 space-y-4 overflow-y-auto pr-1" style="scrollbar-width: thin;">
+    
+    <!-- SECȚIUNEA 1: Chat & Asistență -->
+    <div>
+        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Chat & Asistență</span>
+        <div class="mt-1 flex overflow-x-auto snap-x snap-mandatory gap-2 pb-1 scrollbar-none md:block md:space-y-1 text-xs">
+            <button onclick="switchTab('chat', 'Chat General')" id="nav-chat" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition cursor-pointer font-bold border border-cyanNeon/30">
+                <i class="fa-solid fa-comments w-4"></i>
+                <span id="txt-nav_chat">Chat General</span>
+            </button>
+        </div>
+    </div>
 
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('tiktokStudio', 'TikTok AI Studio')" id="nav-tiktok" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-tiktok text-tiktokColor w-4"></i><span id="txt-nav_tiktok">TikTok AI Creator</span></button>
-                    <button onclick="switchTab('instaStudio', 'Instagram AI Studio')" id="nav-instagram" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-instagram text-instaColor w-4"></i><span id="txt-nav_instagram">Instagram AI Creator</span></button>
-                    <button onclick="switchTab('ytStudio', 'YouTube AI Studio')" id="nav-youtube" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-youtube text-ytColor w-4"></i><span id="txt-nav_youtube">YouTube AI Scriptwriter</span></button>
-                    <button onclick="switchTab('hashtagStudio', 'Hashtag & SEO Generator')" id="nav-hashtag" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-hashtag text-violetPop w-4"></i><span id="txt-nav_hashtag">Hashtag & SEO Hub</span></button>
-                    <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-calendar" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-calendar-days text-amberGlow w-4"></i><span id="txt-nav_calendar">Calendar Editorial</span></button>
-                    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" id="nav-video" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-clapperboard text-cyanNeon w-4"></i><span id="txt-nav_video">Text-to-Video Studio</span></button>
-                </div>
+    <!-- SECȚIUNEA 2: Generare Conținut & Social -->
+    <div>
+        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 block">Generare Conținut & Social</span>
+        <div class="mt-1 flex overflow-x-auto snap-x snap-mandatory gap-2 pb-1 scrollbar-none md:block md:space-y-1 text-xs">
+            <button onclick="switchTab('tiktokStudio', 'TikTok AI Studio')" id="nav-tiktok" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-brands fa-tiktok text-tiktokColor w-4"></i>
+                <span id="txt-nav_tiktok">TikTok Creator</span>
+            </button>
+            <button onclick="switchTab('instaStudio', 'Instagram AI Studio')" id="nav-instagram" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-brands fa-instagram text-instaColor w-4"></i>
+                <span id="txt-nav_instagram">Instagram Creator</span>
+            </button>
+            <button onclick="switchTab('ytStudio', 'YouTube AI Studio')" id="nav-youtube" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-brands fa-youtube text-ytColor w-4"></i>
+                <span id="txt-nav_youtube">YouTube Script</span>
+            </button>
+            <button onclick="switchTab('hashtagStudio', 'Hashtag & SEO Generator')" id="nav-hashtag" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-hashtag text-violetPop w-4"></i>
+                <span id="txt-nav_hashtag">SEO Hub</span>
+            </button>
+            <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-calendar" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-calendar-days text-amberGlow w-4"></i>
+                <span id="txt-nav_calendar">Calendar Edit.</span>
+            </button>
+            <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" id="nav-video" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-clapperboard text-cyanNeon w-4"></i>
+                <span id="txt-nav_video">Text-to-Video</span>
+            </button>
+        </div>
+    </div>
 
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate & Nebune</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('abTestingStudio', 'A/B Testing Hook-uri')" id="nav-ab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-vials text-cyanNeon w-4"></i><span id="txt-nav_ab">A/B Testing Titluri</span></button>
-                    <button onclick="switchTab('podcastStudio', 'Podcast & Q&A Studio')" id="nav-podcast" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-podcast text-amberGlow w-4"></i><span id="txt-nav_podcast">Podcast Script & Q&A</span></button>
-                    <button onclick="switchTab('roastStudio', 'AI Roast My Content')" id="nav-roast" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-fire text-tiktokColor w-4"></i><span id="txt-nav_roast">AI Roast My Content 🔥</span></button>
-                    <button onclick="switchTab('arcadeStudio', 'AI Mini-Game & Snake')" id="nav-arcade" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-gamepad text-emeraldNeon w-4"></i><span id="txt-nav_arcade">Retro Snake Arcade</span></button>
-                </div>
+    <!-- SECȚIUNEA 3: Unelte Avansate & Nebune -->
+    <div>
+        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 block">Unelte Avansate & Nebune</span>
+        <div class="mt-1 flex overflow-x-auto snap-x snap-mandatory gap-2 pb-1 scrollbar-none md:block md:space-y-1 text-xs">
+            <button onclick="switchTab('abTestingStudio', 'A/B Testing Hook-uri')" id="nav-ab" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-vials text-cyanNeon w-4"></i>
+                <span id="txt-nav_ab">A/B Testing</span>
+            </button>
+            <button onclick="switchTab('podcastStudio', 'Podcast & Q&A Studio')" id="nav-podcast" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-podcast text-amberGlow w-4"></i>
+                <span id="txt-nav_podcast">Podcast Script</span>
+            </button>
+            <button onclick="switchTab('roastStudio', 'AI Roast My Content')" id="nav-roast" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-fire text-tiktokColor w-4"></i>
+                <span id="txt-nav_roast">AI Roast 🔥</span>
+            </button>
+            <button onclick="switchTab('arcadeStudio', 'AI Mini-Game & Snake')" id="nav-arcade" class="flex-shrink-0 w-[150px] md:w-full snap-start text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+                <i class="fa-solid fa-gamepad text-emeraldNeon w-4"></i>
+                <span id="txt-nav_arcade">Retro Snake</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
 
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Setări & Cont</span>
                 <div class="mt-1 space-y-1 text-xs">
