@@ -165,14 +165,14 @@
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         <!-- Sidebar -->
-        <aside id="appSidebar" class="hidden md:flex flex-col w-64 bg-panelBg border-r border-gray-800 shrink-0 p-3 z-10 h-full overflow-y-auto space-y-3 transition-all duration-300">
+        <aside id="appSidebar" class="hidden md:flex flex-col w-56 bg-panelBg border-r border-gray-800 shrink-0 p-3 z-10 h-full overflow-y-auto space-y-3 transition-all duration-300">
             <button onclick="newSession()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center space-x-2 shadow-lg shadow-cyan-500/10 transition cursor-pointer">
                 <i class="fa-solid fa-plus font-bold"></i>
                 <span>Sesiune Nouă AI</span>
             </button>
 
             <!-- Meniu Navigare -->
-       <div class="space-y-1 pt-1 h-full md:h-auto overflow-y-auto max-h-[calc(100vh-80px)] pr-2" style="scrollbar-width: thin;">
+     <div class="space-y-1 h-full md:h-auto overflow-y-auto max-h-[calc(100vh-20px)] pr-2" style="scrollbar-width: thin;">
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Chat & Asistență</span>
                 <div class="mt-1 space-y-1 text-xs">
                     <button onclick="switchTab('chat', 'Chat General')" id="nav-chat" class="w-full text-left p-2.5 rounded-xl bg-gray-800 text-cyanNeon flex items-center space-x-2.5 transition cursor-pointer font-bold border border-cyanNeon/30"><i class="fa-solid fa-comments w-4"></i><span id="txt-nav_chat">Chat General</span></button>
