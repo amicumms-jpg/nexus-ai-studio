@@ -1162,10 +1162,10 @@ const responseText = await fetchFromServer(text || "Analizează acest fișier:",
         });
     </script>
 
-    <!-- Firebase SDK Modular și Logica de Autentificare -->
+   <!-- Firebase SDK Modular și Logica de Autentificare -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
@@ -1181,7 +1181,34 @@ const responseText = await fetchFromServer(text || "Analizează acest fișier:",
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
 
-       window.socialLogin = async function(provider) {
+        // Verifică automat dacă utilizatorul este deja logat când deschide sau dă refresh la pagină
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userName = user.displayName || user.email;
+                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+                const container = document.querySelector('#tab-authAccount .max-w-md');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center space-y-4 py-6">
+                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                            <p class="text-xs text-gray-400">${user.email}</p>
+                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                                Cont Conectat & Verificat ✅
+                            </div>
+                            <div class="pt-4">
+                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                    Deconectare / Schimbă Contul
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        window.socialLogin = async function(provider) {
             if (provider === 'Google') {
                 try {
                     const result = await signInWithPopup(auth, googleProvider);
@@ -1191,7 +1218,6 @@ const responseText = await fetchFromServer(text || "Analizează acest fișier:",
 
                     alert("Autentificat cu succes: " + userName);
 
-                    // Ascundem formularul de autentificare/înregistrare
                     const container = document.getElementById('tab-authAccount').querySelector('.max-w-md');
                     if (container) {
                         container.innerHTML = `
@@ -1203,7 +1229,7 @@ const responseText = await fetchFromServer(text || "Analizează acest fișier:",
                                     Cont Conectat & Verificat ✅
                                 </div>
                                 <div class="pt-4">
-                                    <button onclick="location.reload()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                    <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
                                         Deconectare / Schimbă Contul
                                     </button>
                                 </div>
@@ -1237,6 +1263,16 @@ const responseText = await fetchFromServer(text || "Analizează acest fișier:",
             } catch (err) {
                 console.error("Eroare Firebase:", err);
                 alert("Eroare la crearea contului: " + err.message);
+            }
+        };
+
+        // Funcția de deconectare curată
+        window.logoutUser = async function() {
+            try {
+                await signOut(auth);
+                location.reload();
+            } catch (error) {
+                console.error("Eroare la deconectare:", error);
             }
         };
         // Efectul Matrix Rain Continuu
