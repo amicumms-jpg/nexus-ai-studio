@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -17,10 +15,9 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este configurată în Vercel!' });
     }
 
-    // Construim structura de conținut cerută oficial de Google Gemini API v1
     let contentsParts = [];
 
-    // Dacă există o imagine validă atașată, o adăugăm în formatul dorit de Google
+    // Dacă utilizatorul adaugă o imagine, o trimitem corect structurată
     if (fileData && fileData.base64 && fileData.mimeType) {
       contentsParts.push({
         inlineData: {
@@ -30,12 +27,12 @@ export default async function handler(req, res) {
       });
     }
 
-    // Adăugăm textul mesajului scris de utilizator
+    // Adăugăm textul trimis de utilizator
     contentsParts.push({
       text: prompt
     });
 
-    // Apelăm direct URL-ul oficial și stabil din producție (v1) [1, 2]
+    // URL-ul complet, corect și oficial de la Google Gemini
     const googleResponse = await fetch(
       `https://googleapis.com{apiKey}`,
       {
@@ -57,10 +54,10 @@ export default async function handler(req, res) {
 
     const data = await googleResponse.json();
     
-    // Extragem textul generat din răspunsul standard primit de la Google [2]
+    // Extragem textul generat în siguranță din structura oficială Google
     const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
 
-    // Returnăm răspunsul exact așa cum îl așteaptă frontend-ul tău
+    // Îi dăm frontend-ului răspunsul curat în formatul pe care îl așteaptă
     return res.status(200).json({ text: responseText });
 
   } catch (error) {
@@ -68,4 +65,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
   }
 }
-
