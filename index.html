@@ -954,13 +954,13 @@ async function fileToBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-   async function fetchFromServer(promptText, fileData = null) {
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: promptText, fileData: fileData })
-        });
+      async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-1.5-pro') {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: promptText, fileData: fileData, model: modelName })
+            });
 
         const data = await response.json();
         if (!response.ok) {
@@ -990,7 +990,8 @@ async function fileToBase64(file) {
 
             try {
                 const neuralMod = neuralPulseActive ? "[Sistem Neural Activ: Analizează în profunzime, descompune în pași logici] " : "";
-                const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text));
+               const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-1.5-pro';
+    const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text), selectedModel);
                 document.getElementById(loadingId).remove();
                 const msgId = 'ai-msg-' + Date.now();
                 msgBox.innerHTML += `
