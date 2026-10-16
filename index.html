@@ -208,39 +208,62 @@
                         </button>
                     </div>
 
-                    <!-- Panou Modern de Unelte Rapide (Tools Grid) -->
-                    <div id="toolsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 p-2 bg-gray-950/60 border border-cyanNeon/20 rounded-2xl mb-2 shrink-0 transition-all duration-300">
-                        <div onclick="switchTab('tiktokStudio', 'TikTok AI Studio')" class="bg-panelBg hover:border-tiktokColor border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
-                            <div class="w-7 h-7 rounded-lg bg-tiktokColor/10 text-tiktokColor flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition"><i class="fa-brands fa-tiktok"></i></div>
-                            <span class="text-[10px] font-bold text-white">TikTok AI</span>
-                            <span class="text-[9px] text-gray-400">Virale</span>
-                        </div>
-                        <div onclick="switchTab('instaStudio', 'Instagram AI Creator')" class="bg-panelBg hover:border-instaColor border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
-                            <div class="w-7 h-7 rounded-lg bg-instaColor/10 text-instaColor flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition"><i class="fa-brands fa-instagram"></i></div>
-                            <span class="text-[10px] font-bold text-white">Instagram AI</span>
-                            <span class="text-[9px] text-gray-400">Reels</span>
-                        </div>
-                        <div onclick="switchTab('ytStudio', 'YouTube Scriptwriter')" class="bg-panelBg hover:border-ytColor border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
-                            <div class="w-7 h-7 rounded-lg bg-ytColor/10 text-ytColor flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition"><i class="fa-brands fa-youtube"></i></div>
-                            <span class="text-[10px] font-bold text-white">YouTube AI</span>
-                            <span class="text-[9px] text-gray-400">Scenarii</span>
-                        </div>
-                        <div onclick="switchTab('hashtagStudio', 'Hashtag & SEO Hub')" class="bg-panelBg hover:border-violetPop border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
-                            <div class="w-7 h-7 rounded-lg bg-violetPop/10 text-violetPop flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition"><i class="fa-solid fa-hashtag"></i></div>
-                            <span class="text-[10px] font-bold text-white">SEO Hub</span>
-                            <span class="text-[9px] text-gray-400">Hashtags</span>
-                        </div>
-                        <div onclick="switchTab('abTestingStudio', 'A/B Testing Titluri')" class="bg-panelBg hover:border-emeraldNeon border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
-                            <div class="w-7 h-7 rounded-lg bg-emeraldNeon/10 text-emeraldNeon flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition"><i class="fa-solid fa-vials"></i></div>
-                            <span class="text-[10px] font-bold text-white">A/B Testing</span>
-                            <span class="text-[9px] text-gray-400">Titluri</span>
-                        </div>
-                        <div onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" class="bg-panelBg hover:border-cyanNeon border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
-                            <div class="w-7 h-7 rounded-lg bg-cyanNeon/10 text-cyanNeon flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition"><i class="fa-solid fa-clapperboard"></i></div>
-                            <span class="text-[10px] font-bold text-white">Text-to-Video</span>
-                            <span class="text-[9px] text-gray-400">Scenariu</span>
-                        </div>
-                    </div>
+                   <!-- Panou Modern de Unelte Rapide (Tools Grid) -->
+<div id="toolsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 p-2 bg-gray-950/60 border border-cyanNeon/20 rounded-2xl mb-2 shrink-0 transition-all duration-300">
+    <!-- Uneltă 1: Prompt Enhancer -->
+    <div onclick="switchTab('promptEnhancer', 'Prompt Enhancer')" class="bg-panelBg hover:border-cyanNeon border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+        <div class="w-7 h-7 rounded-lg bg-cyanNeon/10 text-cyanNeon flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <span class="text-[10px] font-bold text-white">Prompt AI</span>
+        <span class="text-[9px] text-gray-400">Optimizare</span>
+    </div>
+
+    <!-- Uneltă 2: Web Search AI -->
+    <div onclick="switchTab('webSearch', 'Căutare & Web AI')" class="bg-panelBg hover:border-emeraldNeon border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+        <div class="w-7 h-7 rounded-lg bg-emeraldNeon/10 text-emeraldNeon flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+            <i class="fa-solid fa-globe"></i>
+        </div>
+        <span class="text-[10px] font-bold text-white">Web Search</span>
+        <span class="text-[9px] text-gray-400">Date Live</span>
+    </div>
+
+    <!-- Uneltă 3: AI Summarizer -->
+    <div onclick="switchTab('summarizer', 'AI Summarizer')" class="bg-panelBg hover:border-amberGlow border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+        <div class="w-7 h-7 rounded-lg bg-amberGlow/10 text-amberGlow flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+            <i class="fa-solid fa-file-contract"></i>
+        </div>
+        <span class="text-[10px] font-bold text-white">Summarizer</span>
+        <span class="text-[9px] text-gray-400">Rezumate</span>
+    </div>
+
+    <!-- Uneltă 4: Code Studio -->
+    <div onclick="switchTab('codeStudio', 'Code Studio')" class="bg-panelBg hover:border-purple-400 border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+        <div class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+            <i class="fa-solid fa-code"></i>
+        </div>
+        <span class="text-[10px] font-bold text-white">Code Studio</span>
+        <span class="text-[9px] text-gray-400">Generare/Debug</span>
+    </div>
+
+    <!-- Uneltă 5: PDF & Doc Analyzer -->
+    <div onclick="switchTab('docAnalyzer', 'PDF & Doc Analyzer')" class="bg-panelBg hover:border-red-400 border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+        <div class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+            <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <span class="text-[10px] font-bold text-white">PDF & Docs</span>
+        <span class="text-[9px] text-gray-400">Analiză Fișiere</span>
+    </div>
+
+    <!-- Uneltă 6: Email & Copywriting -->
+    <div onclick="switchTab('emailCopywriting', 'Email & Copywriting')" class="bg-panelBg hover:border-blue-400 border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+        <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+            <i class="fa-solid fa-envelope-open-text"></i>
+        </div>
+        <span class="text-[10px] font-bold text-white">Copywriting</span>
+        <span class="text-[9px] text-gray-400">Email & Reclame</span>
+    </div>
+</div>
 
                     <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
@@ -285,6 +308,125 @@
                     </div>
                 </div>
             </div>
+            <!-- Tab 1.1: Prompt Enhancer -->
+<div id="tab-promptEnhancer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-cyanNeon mr-1.5"></i>Prompt AI Enhancer</h2>
+                <p class="text-[10px] text-gray-400">Transformă prompt-uri simple în instrucțiuni AI detaliate și profesionale 🪄</p>
+            </div>
+            <button onclick="clearTabChat('promptEnhancer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
+        </div>
+        <div id="promptEnhancerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Salut! Introdu mai jos ideea ta simplă de prompt, iar eu o voi rescrie optimizat pentru Gemini/ChatGPT.</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="promptEnhancerInput" placeholder="Ex: Scrie o postare despre cafea..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none">
+            <button onclick="sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')" class="bg-cyanNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-paper-plane"></i> Mărește</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 1.2: Web Search AI -->
+<div id="tab-webSearch" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-emeraldNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-emeraldNeon/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-globe text-emeraldNeon mr-1.5"></i>Web Search AI</h2>
+                <p class="text-[10px] text-gray-400">Căutare de date live și sinteză de informații recente pe web 🌐</p>
+            </div>
+            <button onclick="clearTabChat('webSearch')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
+        </div>
+        <div id="webSearchMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Ce subiect dorești să cauți pe internet astăzi?</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="webSearchInput" placeholder="Ex: Ultimele știri despre tehnologie..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-emeraldNeon outline-none">
+            <button onclick="sendChatMessage('webSearchMessages', 'webSearchInput', '[Web Search]: ')" class="bg-emeraldNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-magnifying-glass"></i> Caută</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 1.3: AI Summarizer -->
+<div id="tab-summarizer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-amberGlow/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-contract text-amberGlow mr-1.5"></i>AI Summarizer</h2>
+                <p class="text-[10px] text-gray-400">Extractează ideile principale și concluziile din texte lungi 📝</p>
+            </div>
+            <button onclick="clearTabChat('summarizer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
+        </div>
+        <div id="summarizerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Lipește un articol sau un text lung pentru a genera un rezumat.</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="summarizerInput" placeholder="Lipește textul sau introduceți subiectul..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-amberGlow outline-none">
+            <button onclick="sendChatMessage('summarizerMessages', 'summarizerInput', '[Summarizer]: ')" class="bg-amberGlow hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-bolt"></i> Rezumă</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 1.4: Code Studio -->
+<div id="tab-codeStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-purple-500/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-purple-500/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-code text-purple-400 mr-1.5"></i>Code Studio</h2>
+                <p class="text-[10px] text-gray-400">Generare, refactorizare și rezolvare de erori în cod 💻</p>
+            </div>
+            <button onclick="clearTabChat('codeStudio')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
+        </div>
+        <div id="codeStudioMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2 font-mono">
+            <div class="text-gray-400">// Descrie ce cod dorești să generezi sau lipește eroarea primită...</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="codeStudioInput" placeholder="Ex: Scrie o funcție JS pentru..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-400 outline-none">
+            <button onclick="sendChatMessage('codeStudioMessages', 'codeStudioInput', '[Code Studio]: ')" class="bg-purple-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-terminal"></i> Generează</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 1.5: PDF & Doc Analyzer -->
+<div id="tab-docAnalyzer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-red-500/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-red-500/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-pdf text-red-400 mr-1.5"></i>PDF & Doc Analyzer</h2>
+                <p class="text-[10px] text-gray-400">Analiză de fișiere, extragere de informații și Q&A 📄</p>
+            </div>
+            <button onclick="clearTabChat('docAnalyzer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
+        </div>
+        <div id="docAnalyzerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Lipește conținutul fișierului/documentului pentru a pune întrebări pe baza lui.</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="docAnalyzerInput" placeholder="Apasă sau lipește conținutul..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-red-400 outline-none">
+            <button onclick="sendChatMessage('docAnalyzerMessages', 'docAnalyzerInput', '[Doc Analyzer]: ')" class="bg-red-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-magnifying-glass-doc"></i> Analizează</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 1.6: Email & Copywriting -->
+<div id="tab-emailCopywriting" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-blue-500/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-blue-500/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-envelope-open-text text-blue-400 mr-1.5"></i>Email & Copywriting Studio</h2>
+                <p class="text-[10px] text-gray-400">Generare de reclame, e-mailuri de vânzări și texte persuasive ✉️</p>
+            </div>
+            <button onclick="clearTabChat('emailCopywriting')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
+        </div>
+        <div id="emailCopywritingMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Descrie produsul, oferta sau e-mailul pe care vrei să îl redactezi.</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="emailCopywritingInput" placeholder="Ex: Email de promovare pentru o reducere de 20%..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-blue-400 outline-none">
+            <button onclick="sendChatMessage('emailCopywritingMessages', 'emailCopywritingInput', '[Copywriting]: ')" class="bg-blue-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-pen-nib"></i> Scrie</button>
+        </div>
+    </div>
+</div>
             <!-- Tab 2: TikTok AI Studio -->
             <div id="tab-tiktokStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
