@@ -1516,6 +1516,51 @@ setInterval(drawMatrix, 33);
         window.addEventListener('DOMContentLoaded', () => {
             autoDetectUserLocation();
         });
+        // Funcție pentru activarea cheii de licență din casetă
+function activateLicenseKey() {
+    const keyInput = document.getElementById('licenseKeyInput').value.trim();
+    const statusText = document.getElementById('licenseStatus');
+    const badge = document.getElementById('proBadge');
+
+    if (keyInput.startsWith("NEXUS-PRO-") && keyInput.length >= 15) {
+        statusText.innerHTML = "<span class='text-emerald-400 font-bold'>Licență activată cu succes! Acces PRO Nelimitat deblocat. ✅</span>";
+        if (badge) {
+            badge.innerText = "PRO VIP";
+            badge.className = "text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold";
+        }
+        localStorage.setItem('nexus_license_active', 'true');
+    } else {
+        statusText.innerHTML = "<span class='text-red-400 font-bold'>Cheie invalidă sau incorectă. ❌</span>";
+    }
+}
+
+// Funcție pentru limitarea gratuită la 10 mesaje pe zi
+function checkAndUseFreeMessage() {
+    if (localStorage.getItem('nexus_license_active') === 'true') {
+        return true; // Dacă e PRO, are acces nelimitat
+    }
+
+    const today = new Date().toDateString();
+    let lastDate = localStorage.getItem('nexus_free_date');
+    let freeCount = parseInt(localStorage.getItem('nexus_free_count') || '0');
+
+    if (lastDate !== today) {
+        localStorage.setItem('nexus_free_date', today);
+        localStorage.setItem('nexus_free_count', '0');
+        freeCount = 0;
+    }
+
+    const MAX_FREE_MESSAGES = 10;
+
+    if (freeCount >= MAX_FREE_MESSAGES) {
+        alert("Ai folosit cele 10 interacțiuni gratuite pentru astăzi! Activează o cheie PRO sau alege abonamentul pentru acces nelimitat.");
+        switchTab('billingCard', 'Plată Card & Abonament');
+        return false;
+    }
+
+    localStorage.setItem('nexus_free_count', freeCount + 1);
+    return true;
+}
     </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap">
