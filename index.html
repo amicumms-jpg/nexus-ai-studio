@@ -1551,6 +1551,7 @@ function updateFreeCountUI() {
 // Limita de mesaje gratuite (10 mesaje/zi)
 function checkAndUseFreeMessage() {
     if (localStorage.getItem('nexus_license_active') === 'true') {
+        updateFreeCountUI();
         return true; 
     }
 
