@@ -83,7 +83,7 @@
         </button>
         <div class="flex items-center space-x-2">
             <h1 class="font-bold text-xs text-white tracking-wide group-hover:text-cyanNeon transition">Nexus AI Studio Pro</h1>
-            <span id="proBadge" class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold">PRO ACTIV</span>
+            <span id="proBadge" class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold">FREE</span>
         </div>
         <div class="text-[10px] text-gray-400 flex items-center space-x-1 mt-0.5">
             <span class="text-cyanNeon"><i class="fa-solid fa-house text-[9px] mr-1"></i> Hub</span>
@@ -1623,6 +1623,10 @@ document.addEventListener('DOMContentLoaded', () => {
             statusText.innerHTML = "<span class='text-emerald-400 font-bold'>Licență activă pe acest dispozitiv! Acces PRO Nelimitat. ✅</span>";
         }
     }
+});
+        // Adaugă asta la sfârșitul fișierului tău JavaScript, în secțiunea de inițializare:
+document.addEventListener('DOMContentLoaded', () => {
+    updateFreeCountUI();
 });
     </script>
     <!-- Footer Ultra-Compact -->
