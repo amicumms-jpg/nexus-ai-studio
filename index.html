@@ -95,12 +95,18 @@
 
         <!-- Utilitare Sus -->
         <div class="flex flex-wrap items-center gap-2 text-xs">
-        
+            
+        <!-- 1. Badge Contor Mesaje Gratuite -->
+<div id="freeMessagesBadge" class="flex items-center gap-1.5 bg-gray-900 border border-cyanNeon/30 px-2.5 py-0.5 rounded-xl text-[10px] text-gray-300">
+    <i class="fa-solid fa-bolt text-cyanNeon"></i>
+    <span>Gratuit: <strong id="freeCountDisplay" class="text-white">10/10</strong></span>
+</div>
 
-            <div class="bg-gray-900 border border-gray-800 px-2 py-0.5 rounded-xl text-[10px] text-gray-300 hidden sm:flex items-center space-x-1.5">
-                <i class="fa-solid fa-microchip text-emeraldNeon"></i>
-                <span>Tokeni: <strong id="topTokenDisplay" class="text-cyanNeon">0</strong></span>
-            </div>
+<!-- 2. Banner Promoțional / Reclamă -->
+<a href="#tab-billingCard" onclick="switchTab('billingCard', 'Plată Card & Abonament')" class="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-purple-900/60 to-pink-900/60 border border-purple-500/40 hover:border-purple-400 px-2.5 py-0.5 rounded-xl text-[10px] text-white transition cursor-pointer">
+    <i class="fa-solid fa-rectangle-ad text-pink-400"></i>
+    <span class="font-semibold">Ofertă PRO -50%</span>
+</a>
 
             <!-- Buton Notiță -->
             <button onclick="toggleQuickNotePopup()" class="bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2 py-0.5 rounded-xl text-[10px] transition flex items-center space-x-1">
@@ -1516,28 +1522,35 @@ setInterval(drawMatrix, 33);
         window.addEventListener('DOMContentLoaded', () => {
             autoDetectUserLocation();
         });
-        // Funcție pentru activarea cheii de licență din casetă
-function activateLicenseKey() {
-    const keyInput = document.getElementById('licenseKeyInput').value.trim();
-    const statusText = document.getElementById('licenseStatus');
-    const badge = document.getElementById('proBadge');
+      // Actualizează afișajul vizual al mesajelor rămase pe pagină
+function updateFreeCountUI() {
+    const isPro = localStorage.getItem('nexus_license_active') === 'true';
+    const badge = document.getElementById('freeMessagesBadge');
+    const freeDisplay = document.getElementById('freeCountDisplay');
 
-    if (keyInput.startsWith("NEXUS-PRO-") && keyInput.length >= 15) {
-        statusText.innerHTML = "<span class='text-emerald-400 font-bold'>Licență activată cu succes! Acces PRO Nelimitat deblocat. ✅</span>";
-        if (badge) {
-            badge.innerText = "PRO VIP";
-            badge.className = "text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold";
-        }
-        localStorage.setItem('nexus_license_active', 'true');
-    } else {
-        statusText.innerHTML = "<span class='text-red-400 font-bold'>Cheie invalidă sau incorectă. ❌</span>";
+    if (isPro) {
+        if (badge) badge.style.display = 'none'; // Ascundem contorul pentru utilizatorii PRO Nelimitat
+        return;
+    }
+
+    const today = new Date().toDateString();
+    let lastDate = localStorage.getItem('nexus_free_date');
+    let freeCount = parseInt(localStorage.getItem('nexus_free_count') || '0');
+
+    if (lastDate !== today) {
+        freeCount = 0;
+    }
+
+    const remaining = Math.max(0, 10 - freeCount);
+    if (freeDisplay) {
+        freeDisplay.innerText = `${remaining}/10`;
     }
 }
 
-// Funcție pentru limitarea gratuită la 10 mesaje pe zi
+// Limita de mesaje gratuite (10 mesaje/zi)
 function checkAndUseFreeMessage() {
     if (localStorage.getItem('nexus_license_active') === 'true') {
-        return true; // Dacă e PRO, are acces nelimitat
+        return true; 
     }
 
     const today = new Date().toDateString();
@@ -1553,14 +1566,63 @@ function checkAndUseFreeMessage() {
     const MAX_FREE_MESSAGES = 10;
 
     if (freeCount >= MAX_FREE_MESSAGES) {
-        alert("Ai folosit cele 10 interacțiuni gratuite pentru astăzi! Activează o cheie PRO sau alege abonamentul pentru acces nelimitat.");
+        alert("Ai folosit cele 10 interacțiuni gratuite pentru astăzi! Activează o cheie PRO sau alege un abonament pentru acces nelimitat.");
         switchTab('billingCard', 'Plată Card & Abonament');
         return false;
     }
 
     localStorage.setItem('nexus_free_count', freeCount + 1);
+    updateFreeCountUI();
     return true;
 }
+
+// Activare cheie de licență + Blocare câmp după activare
+function activateLicenseKey() {
+    const keyInput = document.getElementById('licenseKeyInput');
+    const keyVal = keyInput ? keyInput.value.trim() : '';
+    const statusText = document.getElementById('licenseStatus');
+    const badge = document.getElementById('proBadge');
+
+    if (keyVal.startsWith("NEXUS-PRO-") && keyVal.length >= 15) {
+        statusText.innerHTML = "<span class='text-emerald-400 font-bold'>Licență activată cu succes! Acces PRO Nelimitat deblocat. ✅</span>";
+        if (badge) {
+            badge.innerText = "PRO VIP";
+            badge.className = "text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold";
+        }
+        localStorage.setItem('nexus_license_active', 'true');
+        
+        // Blocăm câmpul de introducere
+        if (keyInput) keyInput.disabled = true;
+        
+        // Actualizăm UI-ul pentru a ascunde contorul gratuit
+        updateFreeCountUI();
+    } else {
+        statusText.innerHTML = "<span class='text-red-400 font-bold'>Cheie invalidă sau incorectă. ❌</span>";
+    }
+}
+
+// Apelăm actualizarea automată la încărcarea paginii
+document.addEventListener('DOMContentLoaded', () => {
+    updateFreeCountUI();
+    
+    // Dacă licența e deja activă în localStorage, actualizăm interfața la redeschidere
+    if (localStorage.getItem('nexus_license_active') === 'true') {
+        const badge = document.getElementById('proBadge');
+        if (badge) {
+            badge.innerText = "PRO VIP";
+            badge.className = "text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold";
+        }
+        const keyInput = document.getElementById('licenseKeyInput');
+        if (keyInput) {
+            keyInput.value = "NEXUS-PRO-ACTIVATED";
+            keyInput.disabled = true;
+        }
+        const statusText = document.getElementById('licenseStatus');
+        if (statusText) {
+            statusText.innerHTML = "<span class='text-emerald-400 font-bold'>Licență activă pe acest dispozitiv! Acces PRO Nelimitat. ✅</span>";
+        }
+    }
+});
     </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap">
