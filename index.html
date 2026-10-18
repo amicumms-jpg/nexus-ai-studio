@@ -1184,7 +1184,7 @@ async function fileToBase64(file) {
             }
         }
 
-        async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+      async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
             const inputEl = document.getElementById(inputId);
             const msgBox = document.getElementById(messagesContainerId);
             if (!inputEl || !msgBox) return;
@@ -1192,6 +1192,9 @@ async function fileToBase64(file) {
             const text = inputEl.value.trim();
             const file = attachedFiles ? attachedFiles[tabKey] : null;
             if (!text && !file) return;
+
+            // Verifică limita gratuită și scade contorul sau blochează dacă s-a epuizat
+            if (!checkAndUseFreeMessage()) return;
 
             let displayHtml = '';
             if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
