@@ -1144,15 +1144,27 @@ async function fileToBase64(file) {
                 const neuralMod = neuralPulseActive ? "[Sistem Neural Activ: Analizează în profunzime, descompune în pași logici] " : "";
               const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
     const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text), selectedModel);
-                document.getElementById(loadingId).remove();
-                const msgId = 'ai-msg-' + Date.now();
-                msgBox.innerHTML += `
-                    <div class="flex flex-col space-y-2 my-3">
-                        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
-                            <b>AI Studio:</b><br>${typeof marked !== 'undefined' ? marked.parse(responseText) : responseText}
-                        </div>
-                    </div>
-                `;
+              document.getElementById(loadingId).remove();
+const msgId = 'ai-msg-' + Date.now();
+msgBox.innerHTML += `
+    <div class="flex flex-col space-y-2 my-3">
+        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+            <b>AI Studio:</b><br>${typeof marked !== 'undefined' ? marked.parse(responseText) : responseText}
+            
+            <!-- Butoane Copiază / Descarcă -->
+            <div class="flex items-center gap-2 mt-3 pt-2 border-t border-gray-800/80 text-[11px] text-gray-400">
+                <button onclick="copyMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-amber-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copiază</span>
+                </button>
+                <button onclick="downloadMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-cyan-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Descarcă TXT</span>
+                </button>
+            </div>
+        </div>
+    </div>
+`;
                 msgBox.scrollTop = msgBox.scrollHeight;
                 totalTokensUsed += 50;
                 document.getElementById('topTokenDisplay').innerText = totalTokensUsed;
@@ -1635,6 +1647,55 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     updateFreeCountUI();
 });
+        // Funcție pentru copierea textului curat din mesaj
+function copyMessageText(msgId, button) {
+    const el = document.getElementById(msgId);
+    if (!el) return;
+    
+    const clone = el.cloneNode(true);
+    const actions = clone.querySelector('div.border-t');
+    if (actions) actions.remove();
+    const bTag = clone.querySelector('b');
+    if (bTag) bTag.remove();
+    
+    const textToCopy = clone.innerText.trim();
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const span = button.querySelector('span');
+        const originalText = span.textContent;
+        span.textContent = 'Copiat!';
+        button.classList.add('text-green-400', 'border-green-500/50');
+        
+        setTimeout(() => {
+            span.textContent = originalText;
+            button.classList.remove('text-green-400', 'border-green-500/50');
+        }, 2000);
+    });
+}
+
+// Funcție pentru descărcarea mesajului sub formă de fișier .txt
+function downloadMessageText(msgId, button) {
+    const el = document.getElementById(msgId);
+    if (!el) return;
+
+    const clone = el.cloneNode(true);
+    const actions = clone.querySelector('div.border-t');
+    if (actions) actions.remove();
+    const bTag = clone.querySelector('b');
+    if (bTag) bTag.remove();
+
+    const textToDownload = clone.innerText.trim();
+
+    const blob = new Blob([textToDownload], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Nexus_AI_Raspuns_${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
     </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap">
