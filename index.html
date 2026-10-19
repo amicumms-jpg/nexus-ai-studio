@@ -616,7 +616,7 @@
                 </div>
             </div>
 
-           <!-- Tab 10: Plată Card & Abonamente (Actualizat cu Activare Cheie) -->
+          <!-- Tab 10: Plată Card & Abonamente (Actualizat cu Activare Cheie) -->
 <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
     <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
         <div class="text-center space-y-1">
@@ -1148,7 +1148,9 @@ async function fileToBase64(file) {
         try {
             const neuralMod = neuralPulseActive ? "[Sistem Neural Activ: Analizează în profunzime, descompune în pași logici] " : "";
             const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
-            const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text), selectedModel);
+          const customSystemPrompt = typeof getCustomSystemPrompt === 'function' ? getCustomSystemPrompt() : '';
+const promptWithContext = customSystemPrompt ? `[Instrucțiuni de Sistem: ${customSystemPrompt}]\n\n${text}` : text;
+const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${promptWithContext}` : promptWithContext), selectedModel);
             
             document.getElementById(loadingId).remove();
             const msgId = 'ai-msg-' + Date.now();
@@ -1775,6 +1777,45 @@ function startNewSession(containerId = 'chatMessages') {
 
 window.addEventListener('DOMContentLoaded', () => {
     loadChatHistory();
+});
+        // --- PASUL 4: SYSTEM PROMPT & PROFIL UTILIZATOR ---
+const SYSTEM_PROMPT_KEY = 'nexus_custom_system_prompt';
+
+// Salvează System Prompt-ul personalizat în localStorage
+function saveSystemPrompt() {
+    const promptInput = document.getElementById('customSystemPromptInput');
+    const statusEl = document.getElementById('systemPromptStatus');
+    if (!promptInput) return;
+
+    const val = promptInput.value.trim();
+    localStorage.setItem(SYSTEM_PROMPT_KEY, val);
+
+    if (statusEl) {
+        statusEl.innerText = '✅ Instrucțiunile de sistem au fost salvate cu succes!';
+        statusEl.className = 'text-[11px] text-emerald-400 font-semibold mt-2';
+        setTimeout(() => { statusEl.innerText = ''; }, 3000);
+    }
+}
+
+// Încarcă System Prompt-ul salvat la deschiderea paginii
+function loadSystemPrompt() {
+    const promptInput = document.getElementById('customSystemPromptInput');
+    if (!promptInput) return;
+
+    const savedPrompt = localStorage.getItem(SYSTEM_PROMPT_KEY);
+    if (savedPrompt) {
+        promptInput.value = savedPrompt;
+    }
+}
+
+// Funcție helper pentru a prelua prompt-ul curent când trimiți mesaje către API
+function getCustomSystemPrompt() {
+    return localStorage.getItem(SYSTEM_PROMPT_KEY) || '';
+}
+
+// Inițializare automată
+window.addEventListener('DOMContentLoaded', () => {
+    loadSystemPrompt();
 });
     </script>
     <!-- Footer Ultra-Compact -->
