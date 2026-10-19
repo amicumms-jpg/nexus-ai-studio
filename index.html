@@ -194,9 +194,8 @@
         <div class="flex-1 space-y-1 overflow-y-auto pr-1" style="scrollbar-width: thin;">
             <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Chat & Asistență</span>
             <div class="mt-1 space-y-1 text-xs">
-                <button onclick="switchTab('chat', 'Chat General'); newSession();" id="nav-chat" class="w-full text-left p-2.5 rounded-xl bg-gray-800 text-white flex items-center gap-2 cursor-pointer transition">
-            </div>
-
+              <button onclick="switchTab('chat', 'Chat General'); newSession();" id="nav-chat" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-2 cursor-pointer transition"><i class="fa-solid fa-comments text-cyanNeon"></i><span class="text-xs font-semibold">Chat General</span></button>
+                </div>
             <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
             <div class="mt-1 space-y-1 text-xs">
                 <button onclick="switchTab('tiktokStudio', 'TikTok AI Studio')" id="nav-tiktokStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-tiktok text-tiktokColor w-4"></i><span>TikTok AI Creator</span></button>
@@ -1494,9 +1493,10 @@ const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${custom
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            switchTab('chat', 'Chat General');
-            renderEditorialPosts();
+       window.addEventListener('DOMContentLoaded', () => {
+    switchTab('chat', 'Chat General');
+    newSession(); 
+    renderEditorialPosts();
             if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
                 document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
             }
