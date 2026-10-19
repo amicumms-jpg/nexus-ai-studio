@@ -1124,128 +1124,174 @@ async function fileToBase64(file) {
     }
 }
         async function sendChatMessage(messagesContainerId, inputId, customPrefix = '') {
-            const inputEl = document.getElementById(inputId);
-            const msgBox = document.getElementById(messagesContainerId);
-            if (!inputEl || !msgBox) return;
+        const inputEl = document.getElementById(inputId);
+        const msgBox = document.getElementById(messagesContainerId);
+        if (!inputEl || !msgBox) return;
+        
+        const text = inputEl.value.trim();
+        if (!text) return;
+        if (!checkAndUseFreeMessage()) return;
+
+        msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
+        inputEl.value = '';
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        // Salvează mesajul utilizatorului în istoric
+        if (typeof saveChatHistory === 'function') {
+            saveChatHistory(messagesContainerId);
+        }
+
+        const loadingId = 'load-' + Date.now();
+        msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        try {
+            const neuralMod = neuralPulseActive ? "[Sistem Neural Activ: Analizează în profunzime, descompune în pași logici] " : "";
+            const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
+            const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text), selectedModel);
             
-            const text = inputEl.value.trim();
-            if (!text) return;
-            if (!checkAndUseFreeMessage()) return;
-
-            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${text}</div>`;
-            inputEl.value = '';
+            document.getElementById(loadingId).remove();
+            const msgId = 'ai-msg-' + Date.now();
+            msgBox.innerHTML += `
+                <div class="flex flex-col space-y-2 my-3">
+                    <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+                        <b>AI Studio:</b><br>${typeof marked !== 'undefined' ? marked.parse(responseText) : responseText}
+                        
+                        <!-- Butoane Copiază / Descarcă -->
+                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-gray-800/80 text-[11px] text-gray-400">
+                            <button onclick="copyMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-amber-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copiază</span>
+                            </button>
+                            <button onclick="downloadMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-cyan-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Descarcă TXT</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
             msgBox.scrollTop = msgBox.scrollHeight;
-
-            const loadingId = 'load-' + Date.now();
-            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin"></i> AI Studio se gândește...</div>`;
-            msgBox.scrollTop = msgBox.scrollHeight;
-
-            try {
-                const neuralMod = neuralPulseActive ? "[Sistem Neural Activ: Analizează în profunzime, descompune în pași logici] " : "";
-              const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
-    const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${customPrefix} ${text}` : text), selectedModel);
-              document.getElementById(loadingId).remove();
-const msgId = 'ai-msg-' + Date.now();
-msgBox.innerHTML += `
-    <div class="flex flex-col space-y-2 my-3">
-        <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
-            <b>AI Studio:</b><br>${typeof marked !== 'undefined' ? marked.parse(responseText) : responseText}
-            
-            <!-- Butoane Copiază / Descarcă -->
-            <div class="flex items-center gap-2 mt-3 pt-2 border-t border-gray-800/80 text-[11px] text-gray-400">
-                <button onclick="copyMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-amber-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
-                    <i class="fa-regular fa-copy"></i>
-                    <span>Copiază</span>
-                </button>
-                <button onclick="downloadMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-cyan-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
-                    <i class="fa-solid fa-download"></i>
-                    <span>Descarcă TXT</span>
-                </button>
-            </div>
-        </div>
-    </div>
-`;
-                msgBox.scrollTop = msgBox.scrollHeight;
-                totalTokensUsed += 50;
+            totalTokensUsed += 50;
+            if (document.getElementById('topTokenDisplay')) {
                 document.getElementById('topTokenDisplay').innerText = totalTokensUsed;
-            } catch (err) {
-                document.getElementById(loadingId).remove();
-                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+            }
+
+            // Salvează răspunsul AI în istoric
+            if (typeof saveChatHistory === 'function') {
+                saveChatHistory(messagesContainerId);
+            }
+        } catch (err) {
+            document.getElementById(loadingId).remove();
+            msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+            if (typeof saveChatHistory === 'function') {
+                saveChatHistory(messagesContainerId);
             }
         }
+    }
 
-        function handleFileSelect(tabKey) {
-            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-            const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+    function handleFileSelect(tabKey) {
+        const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+        const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+        const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
 
-            if (fileInput && fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                attachedFiles[tabKey] = file;
-                nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                previewBox.classList.remove('hidden');
-                previewBox.classList.add('flex');
-            }
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            attachedFiles[tabKey] = file;
+            nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            previewBox.classList.remove('hidden');
+            previewBox.classList.add('flex');
+        }
+    }
+
+    function removeAttachment(tabKey) {
+        const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+        const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+        if(fileInput) fileInput.value = '';
+        delete attachedFiles[tabKey];
+        if(previewBox) {
+            previewBox.classList.remove('flex');
+            previewBox.classList.add('hidden');
+        }
+    }
+
+    async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+        const inputEl = document.getElementById(inputId);
+        const msgBox = document.getElementById(messagesContainerId);
+        if (!inputEl || !msgBox) return;
+
+        const text = inputEl.value.trim();
+        const file = attachedFiles ? attachedFiles[tabKey] : null;
+        if (!text && !file) return;
+
+        // Verifică limita gratuită
+        if (!checkAndUseFreeMessage()) return;
+
+        let displayHtml = '';
+        if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+        if (text) displayHtml += `<div>${text}</div>`;
+
+        msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
+        inputEl.value = '';
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        // Salvează istoricul utilizatorului
+        if (typeof saveChatHistory === 'function') {
+            saveChatHistory(messagesContainerId);
         }
 
-        function removeAttachment(tabKey) {
-            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-            if(fileInput) fileInput.value = '';
-            delete attachedFiles[tabKey];
-            if(previewBox) {
-                previewBox.classList.remove('flex');
-                previewBox.classList.add('hidden');
+        removeAttachment(tabKey);
+
+        const loadingId = 'load-' + Date.now();
+        msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        try {
+            const currentFile = attachedFiles ? attachedFiles[tabKey] : null;
+            let fileDataToSend = null;
+
+            if (currentFile) {
+                fileDataToSend = await fileToBase64(currentFile); 
             }
-        }
 
-      async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
-            const inputEl = document.getElementById(inputId);
-            const msgBox = document.getElementById(messagesContainerId);
-            if (!inputEl || !msgBox) return;
-
-            const text = inputEl.value.trim();
-            const file = attachedFiles ? attachedFiles[tabKey] : null;
-            if (!text && !file) return;
-
-            // Verifică limita gratuită și scade contorul sau blochează dacă s-a epuizat
-            if (!checkAndUseFreeMessage()) return;
-
-            let displayHtml = '';
-            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
-            if (text) displayHtml += `<div>${text}</div>`;
-
-            msgBox.innerHTML += `<div class="text-right text-cyanNeon bg-cyan-950/30 p-2.5 rounded-xl border border-cyanNeon/20"><b>Tu:</b> ${displayHtml}</div>`;
-            inputEl.value = '';
+            const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend);
+            document.getElementById(loadingId).remove();
+            
+            const msgId = 'ai-msg-' + Date.now();
+            msgBox.innerHTML += `
+                <div class="flex flex-col space-y-2 my-3">
+                    <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
+                        <b>AI Studio:</b><br>${typeof marked !== 'undefined' ? marked.parse(responseText) : responseText}
+                        
+                        <!-- Butoane Copiază / Descarcă -->
+                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-gray-800/80 text-[11px] text-gray-400">
+                            <button onclick="copyMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-amber-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
+                                <i class="fa-regular fa-copy"></i>
+                               <span>Copiază</span>
+                            </button>
+                            <button onclick="downloadMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-cyan-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Descarcă TXT</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
             msgBox.scrollTop = msgBox.scrollHeight;
+            
+            // Salvează istoricul complet cu răspunsul AI
+            if (typeof saveChatHistory === 'function') {
+                saveChatHistory(messagesContainerId);
+            }
 
-            removeAttachment(tabKey);
-
-            const loadingId = 'load-' + Date.now();
-            msgBox.innerHTML += `<div id="${loadingId}" class="text-gray-400 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><i class="fa-solid fa-spinner fa-spin text-cyanNeon mr-2"></i> Se procesează prin Gemini AI...</div>`;
-            msgBox.scrollTop = msgBox.scrollHeight;
-
-            try {
-              // Preluăm fișierul atașat corespunzător din starea ta curentă
-const currentFile = attachedFiles ? attachedFiles[tabKey] : null;
-let fileDataToSend = null;
-
-if (currentFile) {
-    // Dacă ai o funcție care convertește fișierul în Base64, o folosești aici
-    // sau trimiți obiectul pregătit anterior
-    fileDataToSend = await fileToBase64(currentFile); 
-}
-
-const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend);
-                document.getElementById(loadingId).remove();
-                msgBox.innerHTML += `<div class="text-gray-200 bg-gray-900 p-2.5 rounded-xl border border-gray-800"><b>AI Studio:</b> ${responseText}</div>`;
-                msgBox.scrollTop = msgBox.scrollHeight;
-            } catch (err) {
-                document.getElementById(loadingId).remove();
-                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+        } catch (err) {
+            document.getElementById(loadingId).remove();
+            msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30"><b>Eroare:</b> ${err.message}</div>`;
+            if (typeof saveChatHistory === 'function') {
+                saveChatHistory(messagesContainerId);
             }
         }
-
+    }
         function addEditorialPost() {
             const platform = document.getElementById('postPlatform').value;
             const title = document.getElementById('postTitle').value.trim();
@@ -1647,7 +1693,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     updateFreeCountUI();
 });
-        // Funcție pentru copierea textului curat din mesaj
+     // --- COPIERE ȘI DESCĂRCARE MESAJE ---
 function copyMessageText(msgId, button) {
     const el = document.getElementById(msgId);
     if (!el) return;
@@ -1673,7 +1719,6 @@ function copyMessageText(msgId, button) {
     });
 }
 
-// Funcție pentru descărcarea mesajului sub formă de fișier .txt
 function downloadMessageText(msgId, button) {
     const el = document.getElementById(msgId);
     if (!el) return;
@@ -1696,6 +1741,41 @@ function downloadMessageText(msgId, button) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+// --- ISTORIC & PERSISTENȚĂ CHAT ---
+const CHAT_STORAGE_KEY = 'nexus_ai_chat_history';
+
+function saveChatHistory(containerId = 'chatMessages') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    localStorage.setItem(CHAT_STORAGE_KEY, container.innerHTML);
+}
+
+function loadChatHistory(containerId = 'chatMessages') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const savedHistory = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (savedHistory) {
+        container.innerHTML = savedHistory;
+        container.scrollTop = container.scrollHeight;
+    }
+}
+
+function startNewSession(containerId = 'chatMessages') {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = `
+            <div class="text-gray-400 text-xs italic mb-2">
+                Ai început o sesiune nouă de chat. Pune o întrebare mai jos!
+            </div>
+        `;
+    }
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadChatHistory();
+});
     </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap">
