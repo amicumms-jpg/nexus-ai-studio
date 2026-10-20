@@ -1283,20 +1283,6 @@ const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${custom
                     <div id="${msgId}" class="text-gray-200 bg-gray-900 p-3.5 rounded-2xl border border-gray-800 shadow-md leading-relaxed">
                         <b>AI Studio:</b><br>${typeof marked !== 'undefined' ? marked.parse(responseText) : responseText}
                         
-                        <!-- Butoane Copiază / Descarcă -->
-                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-gray-800/80 text-[11px] text-gray-400">
-                            <button onclick="copyMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-amber-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
-                                <i class="fa-regular fa-copy"></i>
-                                <span>Copiază</span>
-                            </button>
-                            <button onclick="downloadMessageText('${msgId}', this)" class="flex items-center gap-1.5 hover:text-cyan-400 transition bg-gray-800/50 hover:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700/50 cursor-pointer">
-                                <i class="fa-solid fa-download"></i>
-                                <span>Descarcă TXT</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
             msgBox.scrollTop = msgBox.scrollHeight;
             totalTokensUsed += 50;
             if (document.getElementById('topTokenDisplay')) {
