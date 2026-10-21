@@ -28,10 +28,20 @@ export default async function handler(req, res) {
         let attempts = 0;
         const maxAttempts = 3;
 
-        // Mecanism de retry în caz de suprasolicitare temporară (high demand)
+        // Lista de modele bazată pe generația 3.8 din interfața ta, încercate în cascadă la nevoie
+        const modelsToTry = [
+            selectedModel, 
+            'gemini-3.8-flash', 
+            'gemini-3.8-pro', 
+            'gemini-3.8-flash-experimental'
+        ];
+        let currentModelIndex = 0;
+
         while (attempts < maxAttempts) {
             attempts++;
-            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+            const activeModel = modelsToTry[currentModelIndex] || 'gemini-3.8-flash';
+
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
@@ -45,12 +55,20 @@ export default async function handler(req, res) {
                 throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
             }
 
-            // Dacă cererea a reușit sau e altă eroare decât de trafic, ieșim din buclă
-            if (apiResponse.ok || !data.error?.message?.includes('high demand')) {
+            // Dacă cererea a reușit, oprim bucla
+            if (apiResponse.ok) {
                 break;
             }
 
-            // Dacă e eroare de high demand și mai avem încercări, așteptăm 1.5 secunde și reîncercăm
+            // Dacă modelul e suprasolicitat sau nu este găsit, trecem automat la următorul din listă
+            if (data.error?.message?.includes('high demand') || data.error?.message?.includes('not found') || data.error?.status === 'RESOURCE_EXHAUSTED') {
+                if (currentModelIndex < modelsToTry.length - 1) {
+                    currentModelIndex++;
+                    continue;
+                }
+            }
+
+            // Dacă mai avem încercări pe același model, așteptăm 1.5 secunde
             if (attempts < maxAttempts) {
                 await new Promise(resolve => setTimeout(resolve, 1500));
             }
