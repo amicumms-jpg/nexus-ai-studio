@@ -22,22 +22,9 @@ export default async function handler(req, res) {
             });
         }
 
-        // 1. Mai întâi obținem lista de modele valide pentru această cheie specifică
-        const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-        const listData = await listResponse.json();
-
-        let activeModel = 'gemini-1.5-flash'; // fallback sigur
-        if (listData.models) {
-            // Căutăm un model compatibil de generare conținut din lista returnată de cheia ta
-            const validModel = listData.models.find(m => m.supportedGenerationMethods?.includes('generateContent') && m.name.includes('flash'));
-            if (validModel) {
-                activeModel = validModel.name.replace('models/', '');
-            } else if (listData.models.length > 0) {
-                activeModel = listData.models[0].name.replace('models/', '');
-            }
-        }
-
-        // 2. Trimitem cererea folosind modelul descoperit automat de la cheia ta
+        // Folosim modelul cerut direct de Google API pentru cheia ta nouă
+        const activeModel = 'gemini-3.8-flash';
+        
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
