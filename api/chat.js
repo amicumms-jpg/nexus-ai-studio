@@ -22,8 +22,8 @@ export default async function handler(req, res) {
             });
         }
 
-        // Folosim denumirea standard compatibilă direct cu v1beta
-        const activeModel = 'gemini-pro';
+        // Folosim modelul cu sufixul -latest acceptat pe v1beta
+        const activeModel = 'gemini-1.5-flash-latest';
         let apiResponse;
         let data;
         let attempts = 0;
