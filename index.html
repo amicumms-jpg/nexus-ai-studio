@@ -216,7 +216,12 @@
 
             <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Setări & Cont</span>
             <div class="mt-1 space-y-1 text-xs">
-                <button onclick="switchTab('billingCard', 'Plată Card & Abonament')" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-credit-card text-amberGlow w-4"></i><span>Plată Card & PRO</span></button>
+             <button onclick="openProModal()" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl border border-transparent hover:bg-gray-800/60 transition flex items-center justify-between text-gray-300 hover:text-white cursor-pointer">
+    <div class="flex items-center gap-2">
+        <i class="fa-solid fa-crown text-amberGlow"></i>
+        <span class="text-xs font-semibold">Abonament & PRO</span>
+    </div>
+</button>
                 <button onclick="switchTab('authAccount', 'Cont, Google & Înregistrare')" id="nav-authAccount" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-user-shield text-cyanNeon w-4"></i><span>Cont, Google & Login</span></button>
 
                <button onclick="switchTab('supportTab', 'Suport & Asistență Clienți')" id="nav-supportTab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center justify-between transition cursor-pointer group">
@@ -652,79 +657,75 @@
                 </div>
             </div>
 
-          <!-- Tab 10: Plată Card & Abonamente (Actualizat cu Activare Cheie) -->
+          <!-- Tab 10: Acces PRO & Suport Proiect -->
 <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
     <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
+        
+        <!-- Header Secțiune -->
         <div class="text-center space-y-1">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg">
-                <i class="fa-solid fa-credit-card"></i>
+                <i class="fa-solid fa-crown"></i>
             </div>
-            <h2 class="text-lg font-bold text-white">Alege Planul Potrivit pentru Nexus AI Studio Pro</h2>
-            <p class="text-[10px] text-gray-400">Plăți securizate 100% prin Stripe. Anulezi oricând dorești.</p>
+            <h2 class="text-lg font-bold text-white">Acces Nexus AI Studio Pro</h2>
+            <p class="text-[10px] text-gray-400">Platforma este în faza de testare și dezvoltare (Early Access).</p>
         </div>
 
-        <!-- Câmp Activare Cheie Oficială (Nou) -->
+        <!-- Câmp Activare Cheie / Licență -->
         <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800 max-w-xl mx-auto shadow-md">
-            <label class="block text-xs font-semibold text-gray-300 mb-2">Ai primit o cheie oficială de activare?</label>
+            <label class="block text-xs font-semibold text-gray-300 mb-2">Ai primit un cod sau o cheie VIP de acces?</label>
             <div class="flex space-x-2">
                 <input type="text" id="licenseKeyInput" placeholder="NEXUS-PRO-XXXX-YYYY" class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none font-mono uppercase">
                 <button onclick="activateLicenseKey()" class="bg-cyanNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer">
                     <i class="fa-solid fa-check"></i> Activează
                 </button>
             </div>
-            <p id="licenseStatus" class="text-[10px] text-gray-400 mt-2">Introdu codul licenței pentru a debloca instant accesul complet.</p>
+            <p id="licenseStatus" class="text-[10px] text-gray-400 mt-2">Introdu codul primit pentru a debloca opțiuni suplimentare.</p>
         </div>
 
+        <!-- Carduri Informative și Suport -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Card 1: Acces Gratuit / Comunitate -->
             <div class="bg-panelBg border border-amberGlow/40 p-5 rounded-3xl space-y-3 shadow-xl flex flex-col justify-between">
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-white">Nexus Pro Studio</h3>
-                        <span class="text-[10px] bg-amberGlow/20 text-amberGlow px-2 py-0.5 rounded-full font-semibold">Popular</span>
+                        <h3 class="text-sm font-bold text-white">Versiunea Free & Early Access</h3>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">ACTIV</span>
                     </div>
-                    <div class="text-xl font-extrabold text-amberGlow">49 RON <span class="text-[10px] font-normal text-gray-400">/ lună</span></div>
-                    <p class="text-xs text-gray-300">Acces complet la toate uneltele avansate de creare conținut și chat-uri AI nelimitate.</p>
+                    <div class="text-xl font-extrabold text-amberGlow">0 RON <span class="text-[10px] font-normal text-gray-400">/ acces gratuit</span></div>
+                    <p class="text-xs text-gray-300">Bucură-te de asistentul AI și uneltele de generare conținut complet gratuit în faza de testare.</p>
                     <ul class="text-xs text-gray-400 space-y-1 pt-1">
-                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Toate studio-urile TikTok, Instagram, YouTube</li>
-                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Asistență Neurală Avansată</li>
-                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Suport prioritar</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Acces la modulul Chat General</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Unelte de optimizare și generare</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Istoric salvat pe dispozitiv</li>
                     </ul>
                 </div>
-                <a href="https://buy.stripe.com/test_4gM14mdAW8Iz71e59K4ko00" target="_blank" class="w-full block text-center bg-gradient-to-r from-amberGlow to-orange-500 hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer">
-                    Abonează-te Pro (49 RON)
-                </a>
+                <button onclick="switchTab('chatGeneral', 'Chat General')" class="w-full text-center bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs py-2.5 rounded-xl transition cursor-pointer">
+                    Mergi la Chat
+                </button>
             </div>
 
+            <!-- Card 2: Sustine Proiectul (Revolut / Contact) -->
             <div class="bg-panelBg border border-cyanNeon/40 p-5 rounded-3xl space-y-3 shadow-xl flex flex-col justify-between">
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-white">Nexus Business</h3>
-                        <span class="text-[10px] bg-cyanNeon/20 text-cyanNeon px-2 py-0.5 rounded-full font-semibold">Pentru Echipe</span>
+                        <h3 class="text-sm font-bold text-white">Susține Dezvoltarea Proiectului</h3>
+                        <span class="text-[10px] bg-cyanNeon/20 text-cyanNeon px-2 py-0.5 rounded-full font-semibold">Sponsorizează</span>
                     </div>
-                    <div class="text-xl font-extrabold text-cyanNeon">149 RON <span class="text-[10px] font-normal text-gray-400">/ lună</span></div>
-                    <p class="text-xs text-gray-300">Putere maximă de procesare pentru agenții, freelanceri și echipe de marketing.</p>
+                    <div class="text-xl font-extrabold text-cyanNeon">Donație <span class="text-[10px] font-normal text-gray-400">/ voluntar</span></div>
+                    <p class="text-xs text-gray-300">Poți ajuta la acoperirea costurilor de servere și de consum API prin susținere directă.</p>
                     <ul class="text-xs text-gray-400 space-y-1 pt-1">
-                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Tot ce include pachetul Pro</li>
-                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Acces nelimitat la Text-to-Video Studio</li>
-                        <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Funcții extinse de export și API</li>
+                        <li><i class="fa-solid fa-bolt text-amber-400 mr-2"></i> Susține resursele gratuite de API</li>
+                        <li><i class="fa-solid fa-heart text-red-400 mr-2"></i> Ajută la adăugarea de noi funcții</li>
+                        <li><i class="fa-solid fa-star text-cyanNeon mr-2"></i> Primești cheie de acces prioritar</li>
                     </ul>
                 </div>
-                <a href="https://buy.stripe.com/test_6oUbJ0bsO3of2KYcCc4ko01" target="_blank" class="w-full block text-center bg-gradient-to-r from-cyanNeon to-emeraldNeon hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer">
-                    Abonează-te Business (149 RON)
+                <a href="https://revolut.me/valentihz6" target="_blank" class="w-full block text-center bg-gradient-to-r from-amberGlow to-orange-500 hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer">
+                    <i class="fa-solid fa-mug-hot mr-1"></i> Susține prin Revolut Me
                 </a>
             </div>
-        </div>
 
-        <div class="text-center text-[11px] text-gray-500 space-y-1 pt-2">
-            <p><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Plăți securizate 100% prin <strong>Stripe</strong>. Datele cardului nu sunt stocate pe serverele noastre.</p>
-            <div class="pt-1 text-gray-400 space-x-3">
-                <button onclick="openModal('termsModal')" class="hover:underline hover:text-white transition cursor-pointer"><i class="fa-solid fa-file-contract mr-1"></i> Termeni și Condiții</button>
-                <span>•</span>
-                <button onclick="openModal('privacyModal')" class="hover:underline hover:text-white transition cursor-pointer"><i class="fa-solid fa-user-shield mr-1"></i> Politica de Confidențialitate (GDPR)</button>
-            </div>
         </div>
-    </div>
-</div>
 
             <!-- Tab 11: Retro Snake Arcade -->
             <div id="tab-arcadeStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4">
@@ -1987,43 +1988,6 @@ function closeProModal() {
 }
         
     </script>
-    <!-- Modal Acces PRO / Susținere -->
-<div id="proModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-gray-200">
-        <!-- Buton Închidere -->
-        <button onclick="closeProModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer">
-            <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-
-        <div class="text-center">
-            <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto mb-3 text-amber-400 text-xl">
-                <i class="fa-solid fa-crown"></i>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-1">Acces Nelimitat Nexus PRO</h3>
-            <p class="text-xs text-gray-400 mb-4">Aplicația este în faza de Early Access. Susține dezvoltarea proiectului sau înscrie-te pe lista prioritara!</p>
-        </div>
-
-        <div class="space-y-3 mb-5">
-            <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
-                <i class="fa-solid fa-bolt text-amber-400"></i>
-                <span class="text-xs">Viteză maximă de generare & Generare fără limite</span>
-            </div>
-            <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
-                <i class="fa-solid fa-brain text-cyan-400"></i>
-                <span class="text-xs">Acces la toate modelele avansate de AI</span>
-            </div>
-        </div>
-
-        <!-- Opțiune Revolut / Donație sau Contact -->
-        <a href="https://revolut.me/valentihz6" target="_blank" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-xs py-2.5 rounded-xl shadow mb-3 hover:opacity-90 transition">
-            <i class="fa-solid fa-coffee"></i> Susține Proiectul (Sponsorizează Tokenii)
-        </a>
-
-        <button onclick="closeProModal()" class="w-full text-center text-xs text-gray-400 hover:text-gray-200 transition">
-            Închide și continuă varianta gratuită
-        </button>
-    </div>
-</div>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap">
         <span>Plăți Securizate Stripe</span> &bull; 
