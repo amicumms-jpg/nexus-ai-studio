@@ -1986,6 +1986,57 @@ function downloadFullConversation() {
 function closeProModal() {
     document.getElementById('proModal').classList.add('hidden');
 }
+        // Lista ta de coduri VIP valabile (poți adăuga câte vrei aici)
+const validLicenseKeys = [
+    "NEXUS-VIP-2026",
+    "NEXUS-PRIETEN-01",
+    "NEXUS-PRO-EARLY",
+    "TEST-ACCESS-100"
+];
+
+function activateLicenseKey() {
+    const inputField = document.getElementById('licenseKeyInput');
+    const statusText = document.getElementById('licenseStatus');
+    const userKey = inputField.value.trim().toUpperCase();
+
+    if (!userKey) {
+        statusText.innerText = "Te rugăm să introduci un cod valid.";
+        statusText.className = "text-[10px] text-amber-400 mt-2";
+        return;
+    }
+
+    // Verificăm dacă codul introdus există în lista noastră
+    if (validLicenseKeys.includes(userKey)) {
+        // Salvăm statutul PRO în memoria browserului (LocalStorage)
+        localStorage.setItem('nexus_pro_activated', 'true');
+        localStorage.setItem('nexus_license_key', userKey);
+
+        statusText.innerText = "Felicitări! Ai activat accesul PRO Nelimitat!";
+        statusText.className = "text-[10px] text-emerald-400 font-bold mt-2";
+
+        // Actualizăm badge-ul vizual din aplicație
+        const topBadge = document.querySelector('.bg-amberGlow\\/20');
+        if (topBadge) {
+            topBadge.innerText = "PRO ACTIV";
+            topBadge.className = "text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold";
+        }
+        
+        alert("Licență activată cu succes! Ai acces complet Nexus PRO.");
+    } else {
+        statusText.innerText = "Codul introdus este invalid sau a expirat.";
+        statusText.className = "text-[10px] text-red-400 mt-2";
+    }
+}
+        // Verificare automată la încărcarea paginii
+    document.addEventListener("DOMContentLoaded", function() {
+        if (localStorage.getItem('nexus_pro_activated') === 'true') {
+            const statusText = document.getElementById('licenseStatus');
+            if (statusText) {
+                statusText.innerText = "Licență PRO Activă (" + (localStorage.getItem('nexus_license_key') || 'VIP') + ")";
+                statusText.className = "text-[10px] text-emerald-400 font-bold mt-2";
+            }
+        }
+    });
         
     </script>
     <!-- Footer Ultra-Compact -->
