@@ -489,6 +489,13 @@
                     <div id="tiktokMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400">Salut! Scrie subiectul și generăm idei sau scripturi TikTok virale aici.</div>
                     </div>
+                    <!-- Butoane rapide de ton/stil pentru TikTok -->
+<div class="flex items-center gap-1.5 px-1 py-1 overflow-x-auto text-[11px] shrink-0">
+    <span class="text-gray-400 font-medium">Stil:</span>
+    <button onclick="document.getElementById('tiktokInput').value += ' [Stil: Viral & Hook Puternic]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">🔥 Viral</button>
+    <button onclick="document.getElementById('tiktokInput').value += ' [Stil: Educativ & Tutorial]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">💡 Educativ</button>
+    <button onclick="document.getElementById('tiktokInput').value += ' [Stil: Comedie & Sarcastic]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">😂 Amuzant</button>
+</div>
                     <div class="flex space-x-2 items-center shrink-0">
                         <input type="text" id="tiktokInput" placeholder="Ex: Idei de video viral de 30 secunde..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-tiktokColor" onkeydown="if(event.key==='Enter') sendChatMessage('tiktokMessages', 'tiktokInput', '[TikTok AI Specialist]: ')">
                         <button onclick="sendChatMessage('tiktokMessages', 'tiktokInput', '[TikTok AI Specialist]: ')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
@@ -509,6 +516,15 @@
                     <div id="instaMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400">Bun venit! Ce descriere sau carusel Instagram pregătim astăzi?</div>
                     </div>
+                    
+                    <!-- Butoane rapide de ton/stil pentru Instagram -->
+                    <div class="flex items-center gap-1.5 px-1 py-1 overflow-x-auto text-[11px] shrink-0 mb-2">
+                        <span class="text-gray-400 font-medium">Stil:</span>
+                        <button onclick="document.getElementById('instaInput').value += ' [Stil: Estetic & Minimalist]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">✨ Estetic</button>
+                        <button onclick="document.getElementById('instaInput').value += ' [Stil: Engagement & Întrebări]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">💬 Engagement</button>
+                        <button onclick="document.getElementById('instaInput').value += ' [Stil: Storytelling & Personal]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">📖 Storytelling</button>
+                    </div>
+
                     <div class="flex space-x-2 items-center shrink-0">
                         <input type="text" id="instaInput" placeholder="Ex: Caption atragător pentru carusel..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-instaColor" onkeydown="if(event.key==='Enter') sendChatMessage('instaMessages', 'instaInput', '[Instagram Creator AI]: ')">
                         <button onclick="sendChatMessage('instaMessages', 'instaInput', '[Instagram Creator AI]: ')" class="bg-instaColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
@@ -516,7 +532,7 @@
                 </div>
             </div>
 
-            <!-- Tab 4: YouTube AI Studio -->
+          <!-- Tab 4: YouTube AI Studio -->
             <div id="tab-ytStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-ytColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                     <div class="flex items-center justify-between pb-2 border-b border-ytColor/30 mb-2 shrink-0">
@@ -529,13 +545,21 @@
                     <div id="ytMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400">Salut creatorule! Despre ce subiect facem scenariul de YouTube?</div>
                     </div>
+                    
+                    <!-- Butoane rapide de ton/stil pentru YouTube -->
+                    <div class="flex items-center gap-1.5 px-1 py-1 overflow-x-auto text-[11px] shrink-0 mb-2">
+                        <span class="text-gray-400 font-medium">Stil:</span>
+                        <button onclick="document.getElementById('ytInput').value += ' [Stil: Informativ & Detaliat]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">📚 Informativ</button>
+                        <button onclick="document.getElementById('ytInput').value += ' [Stil: Review & Test Produs]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">⭐ Review</button>
+                        <button onclick="document.getElementById('ytInput').value += ' [Stil: Vlogs & Casual]'" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700 transition cursor-pointer">☕ Vlog Casual</button>
+                    </div>
+
                     <div class="flex space-x-2 items-center shrink-0">
                         <input type="text" id="ytInput" placeholder="Ex: Structură video recenzie gadget..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-ytColor" onkeydown="if(event.key==='Enter') sendChatMessage('ytMessages', 'ytInput', '[YouTube Scriptwriter AI]: ')">
                         <button onclick="sendChatMessage('ytMessages', 'ytInput', '[YouTube Scriptwriter AI]: ')" class="bg-ytColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
-
             <!-- Tab 5: Hashtag & SEO -->
             <div id="tab-hashtagStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-violetPop/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
@@ -1476,22 +1500,22 @@ const responseText = await fetchFromServer(neuralMod + (customPrefix ? `${custom
             document.body.removeChild(a);
         }
 
-        const translations = {
-            ro: { exportBtn: "Export Sesiune", quickNote: "Notiță", nav_chat: "Chat General", nav_tiktok: "TikTok AI Creator", nav_instagram: "Instagram AI Creator", nav_youtube: "YouTube AI Scriptwriter", nav_hashtag: "Hashtag & SEO Hub", nav_calendar: "Calendar Editorial", nav_video: "Text-to-Video Studio", nav_ab: "A/B Testing Titluri", nav_podcast: "Podcast Script & Q&A", nav_roast: "AI Roast My Content", nav_arcade: "Retro Snake Arcade" },
-            en: { exportBtn: "Export Session", quickNote: "Quick Note", nav_chat: "General Chat", nav_tiktok: "TikTok AI Creator", nav_instagram: "Instagram AI Creator", nav_youtube: "YouTube AI Scriptwriter", nav_hashtag: "Hashtag & SEO Hub", nav_calendar: "Editorial Calendar", nav_video: "Text-to-Video Studio", nav_ab: "A/B Testing", nav_podcast: "Podcast Script & Q&A", nav_roast: "AI Roast My Content", nav_arcade: "Retro Snake Arcade" },
-            fr: { exportBtn: "Exporter Session", quickNote: "Note Rapide", nav_chat: "Chat Général", nav_tiktok: "Créateur AI TikTok", nav_instagram: "Créateur AI Instagram", nav_youtube: "Scénariste AI YouTube", nav_hashtag: "Hub Hashtags & SEO", nav_calendar: "Calendrier Éditorial", nav_video: "Studio Texte-en-Vidéo", nav_ab: "Tests A/B", nav_podcast: "Script Podcast & Q&A", nav_roast: "AI Roast My Content", nav_arcade: "Retro Snake Arcade" },
-            de: { exportBtn: "Exportieren", quickNote: "Notiz", nav_chat: "Allgemeiner Chat", nav_tiktok: "TikTok AI Creator", nav_instagram: "Instagram AI Creator", nav_youtube: "YouTube AI Scriptwriter", nav_hashtag: "Hashtag & SEO Hub", nav_calendar: "Redaktionskalender", nav_video: "Text-zu-Video Studio", nav_ab: "A/B Test", nav_podcast: "Podcast-Skript & Q&A", nav_roast: "AI Roast My Content", nav_arcade: "Retro Snake Arcade" }
-        };
-
-        function changeWebsiteLanguage(lang) {
-            localStorage.setItem('nexus_lang', lang);
-            const trans = translations[lang];
-            if (!trans) return;
-            for (const [key, text] of Object.entries(trans)) {
-                const el = document.getElementById(`txt-${key}`);
-                if (el) el.innerText = text;
-            }
-        }
+   // Funcție universală pentru copiere text în clipboard
+function copyToClipboard(textToCopy, buttonElement) {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalHTML = buttonElement.innerHTML;
+        buttonElement.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copiat!';
+        buttonElement.classList.add('bg-emerald-500/20', 'border-emerald-500');
+        
+        setTimeout(() => {
+            buttonElement.innerHTML = originalHTML;
+            buttonElement.classList.remove('bg-emerald-500/20', 'border-emerald-500');
+        }, 2000);
+    }).catch(err => {
+        console.error('Eroare la copiere: ', err);
+        alert('Nu s-a putut copia textul.');
+    });
+}
 
        window.addEventListener('DOMContentLoaded', () => {
     switchTab('chat', 'Chat General');
