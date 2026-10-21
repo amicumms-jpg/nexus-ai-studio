@@ -1524,6 +1524,14 @@ function copyToClipboard(textToCopy, buttonElement) {
             if(localStorage.getItem('NEXUS_QUICK_NOTE')) {
                 document.getElementById('quickNoteText').value = localStorage.getItem('NEXUS_QUICK_NOTE');
             }
+          // Funcția pentru schimbarea limbii site-ului
+function changeWebsiteLanguage(lang) {
+    localStorage.setItem('nexus_lang', lang);
+    
+    // Aici poți adăuga logica ta de traducere a elementelor din pagină
+    // Exemplu orientativ:
+    console.log("Limba a fost setată la:", lang);
+} 
             const savedLang = localStorage.getItem('nexus_lang') || 'ro';
             const selectEl = document.getElementById('languageSelect');
             if (selectEl) selectEl.value = savedLang;
