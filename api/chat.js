@@ -4,16 +4,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, fileData, model } = req.body;
-        
-        // Mapăm ce vine din interfață pe modelele oficiale suportate de Google API
-        let targetModel = 'gemini-1.5-flash';
-        if (model && model.includes('pro')) {
-            targetModel = 'gemini-1.5-pro';
-        } else if (model && model.includes('experimental')) {
-            targetModel = 'gemini-1.5-flash';
-        }
-
+        const { prompt, fileData } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -31,18 +22,15 @@ export default async function handler(req, res) {
             });
         }
 
+        // Folosim direct modelul oficial stabil, fără erori de rutare
+        const activeModel = 'gemini-1.5-flash';
         let apiResponse;
         let data;
         let attempts = 0;
         const maxAttempts = 3;
 
-        // Încercăm modelul principal și avem fallback pe celălalt model oficial
-        const modelsToTry = [targetModel, 'gemini-1.5-flash', 'gemini-1.5-pro'];
-        let currentModelIndex = 0;
-
         while (attempts < maxAttempts) {
             attempts++;
-            const activeModel = modelsToTry[currentModelIndex] || 'gemini-1.5-flash';
 
             apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
@@ -58,20 +46,12 @@ export default async function handler(req, res) {
                 throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
             }
 
-            // Dacă cererea a reușit, oprim bucla
+            // Dacă cererea a reușit, ieșim din buclă
             if (apiResponse.ok) {
                 break;
             }
 
-            // Dacă modelul dă eroare de trafic sau nu e găsit, trecem la următorul
-            if (data.error?.message?.includes('high demand') || data.error?.message?.includes('not found') || data.error?.status === 'RESOURCE_EXHAUSTED') {
-                if (currentModelIndex < modelsToTry.length - 1) {
-                    currentModelIndex++;
-                    continue;
-                }
-            }
-
-            // Dacă mai avem încercări pe același model, așteptăm 1.5 secunde
+            // Dacă e o problemă temporară de trafic, mai încercăm
             if (attempts < maxAttempts) {
                 await new Promise(resolve => setTimeout(resolve, 1500));
             }
