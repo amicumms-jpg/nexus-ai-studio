@@ -22,8 +22,8 @@ export default async function handler(req, res) {
             });
         }
 
-        // Folosim direct modelul oficial stabil, fără erori de rutare
-        const activeModel = 'gemini-1.5-flash';
+        // Folosim denumirea standard compatibilă direct cu v1beta
+        const activeModel = 'gemini-pro';
         let apiResponse;
         let data;
         let attempts = 0;
@@ -46,12 +46,10 @@ export default async function handler(req, res) {
                 throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
             }
 
-            // Dacă cererea a reușit, ieșim din buclă
             if (apiResponse.ok) {
                 break;
             }
 
-            // Dacă e o problemă temporară de trafic, mai încercăm
             if (attempts < maxAttempts) {
                 await new Promise(resolve => setTimeout(resolve, 1500));
             }
