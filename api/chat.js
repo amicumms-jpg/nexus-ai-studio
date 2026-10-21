@@ -22,37 +22,35 @@ export default async function handler(req, res) {
             });
         }
 
-        // Folosim modelul cu sufixul -latest acceptat pe v1beta
-        const activeModel = 'gemini-1.5-flash-latest';
-        let apiResponse;
+        // 1. Mai întâi obținem lista de modele valide pentru această cheie specifică
+        const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        const listData = await listResponse.json();
+
+        let activeModel = 'gemini-1.5-flash'; // fallback sigur
+        if (listData.models) {
+            // Căutăm un model compatibil de generare conținut din lista returnată de cheia ta
+            const validModel = listData.models.find(m => m.supportedGenerationMethods?.includes('generateContent') && m.name.includes('flash'));
+            if (validModel) {
+                activeModel = validModel.name.replace('models/', '');
+            } else if (listData.models.length > 0) {
+                activeModel = listData.models[0].name.replace('models/', '');
+            }
+        }
+
+        // 2. Trimitem cererea folosind modelul descoperit automat de la cheia ta
+        let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: parts }] })
+        });
+
+        const rawText = await apiResponse.text();
         let data;
-        let attempts = 0;
-        const maxAttempts = 3;
 
-        while (attempts < maxAttempts) {
-            attempts++;
-
-            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: parts }] })
-            });
-
-            const rawText = await apiResponse.text();
-
-            try {
-                data = JSON.parse(rawText);
-            } catch (e) {
-                throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
-            }
-
-            if (apiResponse.ok) {
-                break;
-            }
-
-            if (attempts < maxAttempts) {
-                await new Promise(resolve => setTimeout(resolve, 1500));
-            }
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
         }
 
         if (!apiResponse.ok) {
