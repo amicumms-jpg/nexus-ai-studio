@@ -1,17 +1,39 @@
 export default async function handler(req, res) {
+    // Setează antetele CORS pentru a permite apeluri din orice browser/interfață
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Tratare preflight OPTIONS (trimisă automat de browsere înainte de POST)
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    // Permitem și verficarea simplă din browser (GET)
+    if (req.method === 'GET') {
+        return res.status(200).json({ status: 'Chat API endpoint is active.' });
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const { prompt, fileData } = req.body;
+        const { prompt, message, fileData } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
-        let parts = [{ text: prompt || "Analizează acest fișier:" }];
+        // Acceptă atât `prompt` cât și `message` (pentru compatibilitate cu diverse widget-uri)
+        const userPrompt = prompt || message || "Analizează acest fișier:";
+
+        let parts = [{ text: userPrompt }];
 
         if (fileData && fileData.base64 && fileData.mimeType) {
             parts.push({
@@ -22,7 +44,7 @@ export default async function handler(req, res) {
             });
         }
 
-        // Prompt de Sistem (Instructiuni pentru Asistentul Nexus AI Studio Pro)
+        // Prompt de Sistem (Instrucțiuni pentru Asistentul Nexus AI Studio Pro)
         const systemInstruction = {
             parts: [{
                 text: `Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).
@@ -34,12 +56,11 @@ REGULI ȘI GHIDAJ:
    - Pentru dezvoltare & cod: Code Studio.
    - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
 2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre erori de generare, funcționarea platformei și plăți securizate prin Stripe. Dacă ai întrebări generale de contact, menționează contact@nexusaistudio.ro.
-3. CONVERSIE PRO: Când utilizatorul întreabă despre limite, funcții avansate sau viteza de generare, explică-i beneficiile pachetului PRO și invită-l să deblocheze varianta PRO.
+3. CONVERSIE PRO: Când utilizatorul întreabă despre limite, funcții avansate sau viteza de generare, explică-i beneficiile pachetului PRO și invită-l să deblocheze varianta PRO (-50% reducere).
 4. TON DE COMUNICARE: Fii amabil, concis (răspunsuri scurte, max 2-4 propoziții), profesionist și direct la subiect.`
             }]
         };
 
-        // Folosim modelul cerut direct de Google API pentru cheia ta nouă
         const activeModel = 'gemini-3.8-flash';
         
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
@@ -66,6 +87,7 @@ REGULI ȘI GHIDAJ:
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
 
+        // Returnăm atât `text` cât și `reply` pentru a fi compatibil cu orice versiune de script din frontend
         return res.status(200).json({ text: responseText, reply: responseText });
 
     } catch (error) {
