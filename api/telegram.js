@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     try {
         const update = req.body;
         
-        // Verificăm dacă mesajul conține text de la un utilizator
+        // Verificăm dacă mesajul este valid
         if (!update || !update.message || !update.message.text) {
             return res.status(200).json({ ok: true });
         }
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Configurație incompletă pe server.' });
         }
 
-        // Prompt de Sistem pentru botul de Telegram
+        // Prompt de Sistem
         const systemInstruction = {
             parts: [{
                 text: `Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram.
@@ -44,7 +44,7 @@ Răspunde prietenos, direct și scurt (max 2-3 propoziții) direct în chatul de
         const data = await aiResponse.json();
         const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Salut! Sunt asistentul tău Nexus AI Studio Pro. Cu ce te pot ajuta astăzi?";
 
-        // Trimitem răspunsul înapoi utilizatorului pe Telegram
+        // Trimitem răspunsul pe Telegram
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
