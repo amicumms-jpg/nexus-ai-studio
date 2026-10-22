@@ -150,12 +150,12 @@
 
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
-        <!-- Sidebar -->
+      <!-- Sidebar -->
         <aside id="appSidebar" class="hidden md:flex fixed md:relative top-12 left-2 z-50 flex-col w-64 bg-panelBg border border-gray-800 rounded-2xl shrink-0 p-2 h-[82vh] max-h-[82vh] overflow-hidden shadow-2xl">
-            <!-- Butonul Sus -->
-            <button onclick="newSession()" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0">
-                <i class="fa-solid fa-plus font-bold"></i>
-                <span>Sesiune Nouă AI</span>
+            <!-- Buton Deschide Asistent Flotant -->
+            <button onclick="toggleNexusChat()" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer">
+                <i class="fa-solid fa-comments font-bold"></i>
+                <span>Deschide Chat AI</span>
             </button>
             
             <!-- Opțiuni Rapide (Vizibile doar pe mobil în meniul lateral) -->
@@ -185,12 +185,24 @@
                 </a>
             </div>
 
+          <!-- Sidebar -->
+        <aside id="appSidebar" class="hidden md:flex fixed md:relative top-12 left-2 z-50 flex-col w-64 bg-panelBg border border-gray-800 rounded-2xl shrink-0 p-2 h-[82vh] max-h-[82vh] overflow-hidden shadow-2xl">
+            <!-- Buton Principal / Deschide Chat Flotant -->
+            <button onclick="toggleNexusChat()" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow">
+                <i class="fa-solid fa-comments font-bold"></i>
+                <span>Asistent AI Flotant</span>
+            </button>
+            
             <!-- Zona cu scroll pentru meniul de navigare -->
             <div class="flex-1 space-y-1 overflow-y-auto pr-1" style="scrollbar-width: thin;">
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Chat & Asistență</span>
+                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2">Meniu Principal</span>
                 <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('chat', 'Chat General'); newSession();" id="nav-chat" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-2 cursor-pointer transition"><i class="fa-solid fa-comments text-cyanNeon"></i><span class="text-xs font-semibold">Chat General</span></button>
+                    <button onclick="switchTab('chat', 'Tools Hub')" id="nav-chat" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-2 cursor-pointer transition">
+                        <i class="fa-solid fa-house text-cyanNeon"></i>
+                        <span class="text-xs font-semibold">Nexus Tools Hub</span>
+                    </button>
                 </div>
+
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
                 <div class="mt-1 space-y-1 text-xs">
                     <button onclick="switchTab('tiktokStudio', 'TikTok AI Studio')" id="nav-tiktokStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-brands fa-tiktok text-tiktokColor w-4"></i><span>TikTok AI Creator</span></button>
