@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
 
-    // Tratare preflight OPTIONS (dacă se aplică)
+    // Tratare preflight OPTIONS
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
@@ -50,11 +50,17 @@ export default async function handler(req, res) {
                 });
 
                 const data = await aiResponse.json();
-                if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+
+                // Verificăm dacă API-ul a returnat o eroare
+                if (!aiResponse.ok) {
+                    console.error("Eroare Google Gemini API:", JSON.stringify(data));
+                    replyText = "Întâmpin o mică problemă tehnică în comunicarea cu serverul AI. Te rog să încerci din nou!";
+                } else if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
                     replyText = data.candidates[0].content.parts[0].text;
                 }
             } catch (apiErr) {
-                console.error("Eroare Gemini:", apiErr);
+                console.error("Eroare conexiune Gemini:", apiErr);
+                replyText = "A apărut o eroare de rețea la interogarea AI.";
             }
         }
 
