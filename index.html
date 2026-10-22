@@ -2119,22 +2119,64 @@ document.addEventListener("DOMContentLoaded", function() {
             win.classList.toggle('hidden');
         }
 
-        function sendNexusMessage() {
+        async function sendNexusMessage() {
             const input = document.getElementById('nexus-chat-input');
             const msgBox = document.getElementById('nexus-chat-messages');
             const text = input.value.trim();
             if (!text) return;
 
-            // Adaugă mesajul utilizatorului
-            msgBox.innerHTML += `<div class="bg-cyan-950/40 border border-cyan-800/40 p-3 rounded-xl max-w-[85%] ml-auto text-cyan-100"><b>Tu:</b> ${text}</div>`;
+            // 1. Afișează mesajul utilizatorului în chat
+            msgBox.innerHTML += `
+                <div class="bg-cyan-950/40 border border-cyan-800/40 p-3 rounded-xl max-w-[85%] ml-auto text-cyan-100">
+                    <b>Tu:</b> ${text}
+                </div>`;
             input.value = '';
             msgBox.scrollTop = msgBox.scrollHeight;
 
-            // Răspuns simulat / sau legat la API-ul tău existent
-            setTimeout(() => {
-                msgBox.innerHTML += `<div class="bg-slate-800/70 p-3 rounded-xl border border-slate-700/50 max-w-[85%]"><b>Nexus:</b> Am primit mesajul tău! Lucrez la cerere.</div>`;
-                msgBox.scrollTop = msgBox.scrollHeight;
-            }, 1000);
+            // 2. Indicator de încărcare
+            const loadingId = 'loading-' + Date.now();
+            msgBox.innerHTML += `
+                <div id="${loadingId}" class="bg-slate-800/70 p-3 rounded-xl border border-slate-700/50 max-w-[85%] text-slate-400 text-xs italic flex items-center gap-2">
+                    <i class="fa-solid fa-spinner animate-spin text-cyan-400"></i> Nexus se gândește...
+                </div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                // 3. Trimite cererea către backend
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: text })
+                });
+
+                const data = await response.json();
+                
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                if (data.error) {
+                    msgBox.innerHTML += `
+                        <div class="bg-red-950/40 border border-red-800/40 p-3 rounded-xl max-w-[85%] text-red-300">
+                            <b>Eroare:</b> ${data.error}
+                        </div>`;
+                } else {
+                    const aiResponse = data.reply || data.response || "Nu am primit un răspuns valid.";
+                    msgBox.innerHTML += `
+                        <div class="bg-slate-800/70 p-3 rounded-xl border border-slate-700/50 max-w-[85%] text-slate-200">
+                            <b>Nexus:</b> ${aiResponse}
+                        </div>`;
+                }
+            } catch (err) {
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                msgBox.innerHTML += `
+                    <div class="bg-red-950/40 border border-red-800/40 p-3 rounded-xl max-w-[85%] text-red-300">
+                        <b>Eroare conexiune:</b> Nu s-a putut conecta la server.
+                    </div>`;
+            }
+
+            msgBox.scrollTop = msgBox.scrollHeight;
         }
     </script>
     <!-- ============================================================= --> 
