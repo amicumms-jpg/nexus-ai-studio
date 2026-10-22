@@ -7,7 +7,7 @@ export default async function handler(req, res) {
         const update = req.body;
         
         // Verificăm dacă mesajul conține text de la un utilizator
-        if (!update.message || !update.message.text) {
+        if (!update || !update.message || !update.message.text) {
             return res.status(200).json({ ok: true });
         }
 
@@ -56,7 +56,6 @@ Răspunde prietenos, direct și scurt (max 2-3 propoziții) direct în chatul de
 
         return res.status(200).json({ ok: true });
 
-    } domnule (error) { // lăsăm catch-ul standard
     } catch (error) {
         console.error("Eroare în webhook Telegram:", error);
         return res.status(500).json({ error: error.message });
