@@ -1,6 +1,11 @@
 export default async function handler(req, res) {
-    if (req.method !== 'POST') {
+    // Permitem și GET pentru verificări rapide, dar Telegram trimite POST
+    if (req.method === 'GET') {
         return res.status(200).json({ status: 'Telegram bot endpoint is active.' });
+    }
+
+    if (req.method !== 'POST') {
+        return res.status(200).json({ status: 'Method not supported, but returning 200 for Telegram.' });
     }
 
     try {
@@ -17,7 +22,7 @@ export default async function handler(req, res) {
         const geminiApiKey = process.env.GEMINI_API_KEY;
 
         if (!token || !geminiApiKey) {
-            console.error("Lipsește TELEGRAM_BOT_TOKEN sau GEMINI_API_KEY în Vercel.");
+            console.error("Lipsește TELEGRAM_BOT_TOKEN sau GEMINI_API_KEY.");
             return res.status(200).json({ ok: true });
         }
 
