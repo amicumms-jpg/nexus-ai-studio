@@ -31,7 +31,7 @@ Răspunde prietenos, direct și scurt (max 2-3 propoziții) direct în chatul de
         };
 
         // Apelăm Gemini API
-        const activeModel = 'gemini-2.5-flash';
+        const activeModel = 'gemini-3.8-flash';
         const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
