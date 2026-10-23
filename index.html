@@ -35,7 +35,7 @@
     </script>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
-    <!-- Canvas pentru efectul Matrix Rain Continuu -->
+    <!-- Canvas Matrix Rain -->
     <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
     
     <!-- Notificări Toast Container -->
@@ -94,7 +94,6 @@
                     <span>Gratuit: <strong id="freeCountDisplay" class="text-white">10/10</strong></span>
                 </div>
 
-                <!-- Buton Chat Telegram Direct -->
                 <a href="https://t.me/NexusAiStudioBot" target="_blank" class="flex items-center gap-1.5 bg-cyan-600/30 border border-cyan-400/50 hover:bg-cyan-600/50 px-2.5 py-0.5 rounded-xl text-[10px] text-cyan-300 transition cursor-pointer">
                     <i class="fa-brands fa-telegram text-cyan-400 text-xs"></i>
                     <span class="font-semibold">Bot Telegram</span>
@@ -128,9 +127,8 @@
 
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
-        <!-- Sidebar Fără Jocul Snake -->
-        <aside id="appSidebar" class="hidden md:flex fixed md:relative top-12 left-2 z-50 flex-col w-64 bg-panelBg border border-gray-800 rounded-2xl shrink-0 p-2 h-[85vh] max-h-[85vh] overflow-hidden shadow-2xl">
-            <!-- Buton Deschide Asistent -->
+        <!-- Sidebar Complet (Toate Taburile) -->
+        <aside id="appSidebar" class="hidden md:flex fixed md:relative top-12 left-2 z-50 flex-col w-64 bg-panelBg border border-gray-800 rounded-2xl shrink-0 p-2 h-[83vh] max-h-[83vh] overflow-hidden shadow-2xl">
             <button onclick="toggleNexusChat()" class="w-full py-2.5 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-2 mb-2 shrink-0 cursor-pointer shadow">
                 <i class="fa-solid fa-comments text-sm font-bold"></i>
                 <span>Asistent AI Flotant</span>
@@ -235,12 +233,10 @@
             </div>
 
             <!-- Tab 1.1: Prompt Enhancer -->
-            <div id="tab-promptEnhancer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+            <div id="tab-promptEnhancer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                     <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
-                        <div>
-                            <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-cyanNeon mr-1.5"></i>Prompt AI Enhancer</h2>
-                        </div>
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-cyanNeon mr-1.5"></i>Prompt AI Enhancer</h2>
                         <button onclick="clearTabChat('promptEnhancer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
                     </div>
                     <div id="promptEnhancerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
@@ -248,18 +244,276 @@
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
                         <input type="text" id="promptEnhancerInput" placeholder="Ex: Scrie o postare despre cafea..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')">
-                        <button onclick="sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')" class="bg-cyanNeon text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer">Trimite</button>
+                        <button onclick="sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')" class="bg-cyanNeon text-darkBg font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Trimite</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab 12: Cont & Google Login -->
-            <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
+            <!-- Tab 1.2: Web Search -->
+            <div id="tab-webSearch" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-emeraldNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-emeraldNeon/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-globe text-emeraldNeon mr-1.5"></i>Web Search AI</h2>
+                        <button onclick="clearTabChat('webSearch')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="webSearchMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Ce subiect dorești să cauți pe internet?</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="webSearchInput" placeholder="Ex: Ultimele știri..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('webSearchMessages', 'webSearchInput', '[Web Search]: ')">
+                        <button onclick="sendChatMessage('webSearchMessages', 'webSearchInput', '[Web Search]: ')" class="bg-emeraldNeon text-darkBg font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Caută</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 1.3: Summarizer -->
+            <div id="tab-summarizer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-amberGlow/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-contract text-amberGlow mr-1.5"></i>AI Summarizer</h2>
+                        <button onclick="clearTabChat('summarizer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="summarizerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Lipește textul pentru a genera un rezumat.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="summarizerInput" placeholder="Lipește textul..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('summarizerMessages', 'summarizerInput', '[Summarizer]: ')">
+                        <button onclick="sendChatMessage('summarizerMessages', 'summarizerInput', '[Summarizer]: ')" class="bg-amberGlow text-darkBg font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Rezumă</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 1.4: Code Studio -->
+            <div id="tab-codeStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-purple-500/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-purple-500/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-code text-purple-400 mr-1.5"></i>Code Studio</h2>
+                        <button onclick="clearTabChat('codeStudio')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="codeStudioMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2 font-mono">
+                        <div class="text-gray-400">// Descrie codul dorit...</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="codeStudioInput" placeholder="Ex: Scrie o funcție..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('codeStudioMessages', 'codeStudioInput', '[Code Studio]: ')">
+                        <button onclick="sendChatMessage('codeStudioMessages', 'codeStudioInput', '[Code Studio]: ')" class="bg-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Generează</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 1.5: PDF & Doc Analyzer -->
+            <div id="tab-docAnalyzer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-red-500/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-red-500/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-pdf text-red-400 mr-1.5"></i>PDF & Doc Analyzer</h2>
+                        <button onclick="clearTabChat('docAnalyzer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="docAnalyzerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Lipește conținutul documentului pentru analiză.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="docAnalyzerInput" placeholder="Conținut document..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('docAnalyzerMessages', 'docAnalyzerInput', '[Doc Analyzer]: ')">
+                        <button onclick="sendChatMessage('docAnalyzerMessages', 'docAnalyzerInput', '[Doc Analyzer]: ')" class="bg-red-500 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Analizează</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 1.6: Email & Copywriting -->
+            <div id="tab-emailCopywriting" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-blue-500/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-blue-500/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-envelope-open-text text-blue-400 mr-1.5"></i>Email & Copywriting</h2>
+                        <button onclick="clearTabChat('emailCopywriting')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="emailCopywritingMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Descrie produsul sau oferta pentru copywriting.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="emailCopywritingInput" placeholder="Ex: Email de promovare..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('emailCopywritingMessages', 'emailCopywritingInput', '[Copywriting]: ')">
+                        <button onclick="sendChatMessage('emailCopywritingMessages', 'emailCopywritingInput', '[Copywriting]: ')" class="bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Scrie</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: TikTok AI Studio -->
+            <div id="tab-tiktokStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-tiktokColor/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-brands fa-tiktok text-tiktokColor mr-2"></i> TikTok Viral AI Studio</h2>
+                        <button onclick="clearTabChat('tiktok')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="tiktokMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Scrie subiectul pentru scripturi TikTok virale.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="tiktokInput" placeholder="Ex: Idei video viral..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('tiktokMessages', 'tiktokInput', '[TikTok AI Specialist]: ')">
+                        <button onclick="sendChatMessage('tiktokMessages', 'tiktokInput', '[TikTok AI Specialist]: ')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Instagram AI Studio -->
+            <div id="tab-instaStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-instaColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-instaColor/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-brands fa-instagram text-instaColor mr-2"></i> Instagram AI Creator</h2>
+                        <button onclick="clearTabChat('insta')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="instaMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Ce descriere sau carusel Instagram pregătim?</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="instaInput" placeholder="Ex: Caption atragător..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('instaMessages', 'instaInput', '[Instagram Creator AI]: ')">
+                        <button onclick="sendChatMessage('instaMessages', 'instaInput', '[Instagram Creator AI]: ')" class="bg-instaColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: YouTube AI Studio -->
+            <div id="tab-ytStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-ytColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-ytColor/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-brands fa-youtube text-ytColor mr-2"></i> YouTube AI Scriptwriter</h2>
+                        <button onclick="clearTabChat('yt')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="ytMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Despre ce subiect facem scenariul de YouTube?</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="ytInput" placeholder="Ex: Structură video recenzie..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('ytMessages', 'ytInput', '[YouTube Scriptwriter AI]: ')">
+                        <button onclick="sendChatMessage('ytMessages', 'ytInput', '[YouTube Scriptwriter AI]: ')" class="bg-ytColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Hashtag & SEO -->
+            <div id="tab-hashtagStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-violetPop/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-violetPop/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-hashtag text-violetPop mr-2"></i> Hashtag & SEO AI</h2>
+                        <button onclick="clearTabChat('hashtag')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="hashtagMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Introdu nișa ta pentru hashtag-uri și tag-uri SEO.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="hashtagInput" placeholder="Ex: Nișa de fitness..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('hashtagMessages', 'hashtagInput', '[SEO Specialist]: ')">
+                        <button onclick="sendChatMessage('hashtagMessages', 'hashtagInput', '[SEO Specialist]: ')" class="bg-violetPop text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Calendar Editorial -->
+            <div id="tab-editorialStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4" style="display:none;">
+                <div class="max-w-4xl mx-auto w-full space-y-4">
+                    <div class="p-3 bg-amber-950/30 border border-amberGlow/30 rounded-2xl">
+                        <h2 class="text-sm font-bold text-white flex items-center"><i class="fa-solid fa-calendar-days text-amberGlow mr-2"></i>Calendar Editorial</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-panelBg border border-gray-800 p-4 rounded-2xl space-y-3">
+                            <h3 class="text-xs font-bold text-amberGlow uppercase">Adaugă Postare</h3>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase">Platformă</label>
+                                <select id="postPlatform" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-2 py-2 text-xs text-white outline-none">
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="YouTube">YouTube</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase">Titlu</label>
+                                <input type="text" id="postTitle" placeholder="Titlu video" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase">Dată & Oră</label>
+                                <input type="datetime-local" id="postDate" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            </div>
+                            <button onclick="addEditorialPost()" class="w-full bg-amberGlow text-darkBg font-bold text-xs py-2 rounded-xl cursor-pointer">Programează</button>
+                        </div>
+                        <div class="md:col-span-2 bg-panelBg border border-gray-800 p-4 rounded-2xl flex flex-col space-y-3">
+                            <h3 class="text-xs font-bold text-white uppercase">Postări Programate</h3>
+                            <div id="editorialListContainer" class="space-y-2 overflow-y-auto max-h-72">
+                                <div class="text-xs text-gray-500 italic">Nicio postare programată.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: A/B Testing -->
+            <div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-vials text-cyanNeon mr-2"></i> A/B Testing Titluri</h2>
+                        <button onclick="clearTabChat('ab')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="abMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Scrie ideea pentru a genera variante A/B de titluri.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="abInput" placeholder="Ex: Titlu video..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing]: ')">
+                        <button onclick="sendChatMessage('abMessages', 'abInput', '[A/B Testing]: ')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 8: Podcast Script -->
+            <div id="tab-podcastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-amberGlow/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-podcast text-amberGlow mr-2"></i> Podcast Script & Q&A</h2>
+                        <button onclick="clearTabChat('podcast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="podcastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Introdu tema podcastului.</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="podcastInput" placeholder="Ex: Scenariu podcast despre AI..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('podcastMessages', 'podcastInput', '[Podcast AI]: ')">
+                        <button onclick="sendChatMessage('podcastMessages', 'podcastInput', '[Podcast AI]: ')" class="bg-amberGlow text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Trimite</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 9: AI Roast -->
+            <div id="tab-roastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3" style="display:none;">
+                <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between pb-2 border-b border-tiktokColor/30 mb-2 shrink-0">
+                        <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-fire text-tiktokColor mr-2"></i> AI Roast My Content</h2>
+                        <button onclick="clearTabChat('roast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    </div>
+                    <div id="roastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Lipește textul pe care vrei să îl roastăm!</div>
+                    </div>
+                    <div class="flex space-x-2 items-center shrink-0">
+                        <input type="text" id="roastInput" placeholder="Lipește textul..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('roastMessages', 'roastInput', '[Roaster]: ')">
+                        <button onclick="sendChatMessage('roastMessages', 'roastInput', '[Roaster]: ')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Roast!</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 10: Billing & PRO -->
+            <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center" style="display:none;">
+                <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
+                    <div class="text-center space-y-1">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg"><i class="fa-solid fa-crown"></i></div>
+                        <h2 class="text-lg font-bold text-white">Acces Nexus AI Studio Pro</h2>
+                    </div>
+                    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800 max-w-xl mx-auto shadow-md">
+                        <label class="block text-xs font-semibold text-gray-300 mb-2">Cheie VIP de acces:</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="licenseKeyInput" placeholder="NEXUS-PRO-XXXX" class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none uppercase font-mono">
+                            <button onclick="activateLicenseKey()" class="bg-cyanNeon text-darkBg font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Activează</button>
+                        </div>
+                        <p id="licenseStatus" class="text-[10px] text-gray-400 mt-2">Introdu codul primit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 11: Cont & Google Login -->
+            <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center" style="display:none;">
                 <div id="authAccountCard" class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
                     <div class="text-center space-y-1">
                         <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
                         <h2 class="text-lg font-bold text-white">Autentificare & Cont Personal</h2>
-                        <p class="text-[10px] text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-1">
                         <button onclick="socialLogin('Google')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer">
@@ -269,46 +523,72 @@
                             <i class="fa-brands fa-github text-white"></i> <span>Login GitHub</span>
                         </button>
                     </div>
-                    <div class="flex items-center my-2 text-gray-500 text-[10px]">
-                        <hr class="flex-1 border-gray-800">
-                        <span class="px-2">SAU FORMULAR NOU</span>
-                        <hr class="flex-1 border-gray-800">
-                    </div>
-                    <div class="space-y-2.5">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Nume Complet</label>
-                                <input type="text" id="regFullName" placeholder="Ion Popescu" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Telefon</label>
-                                <input type="text" id="regPhone" placeholder="0712345678" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                        </div>
+                    <div class="space-y-2.5 pt-2">
                         <div>
                             <label class="text-[9px] text-gray-400 font-bold uppercase">Email</label>
-                            <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                            <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Parolă</label>
-                                <input type="password" id="regPass" placeholder="••••••••" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Oraș</label>
-                                <input type="text" id="regCity" placeholder="București" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
+                        <div>
+                            <label class="text-[9px] text-gray-400 font-bold uppercase">Parolă</label>
+                            <input type="password" id="regPass" placeholder="••••••••" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
                         </div>
-                        <button onclick="registerCompleteUser()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-1">Creează Cont</button>
+                        <button onclick="registerCompleteUser()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon text-darkBg font-bold text-xs py-2.5 rounded-xl cursor-pointer">Creează Cont</button>
                     </div>
-                    <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-0.5"></div>
+                    <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium"></div>
                 </div>
             </div>
 
+            <!-- Tab 12: Text-to-Video -->
+            <div id="tab-textToVideoStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3" style="display:none;">
+                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl">
+                    <h2 class="font-bold text-xs text-cyanNeon mb-1"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video Studio</h2>
+                    <div class="flex space-x-2 mb-2">
+                        <input type="text" id="textToVideoInput" placeholder="Ex: Peisaj cyberpunk..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none">
+                        <button onclick="generateTextToVideo()" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer">Generează</button>
+                    </div>
+                    <div id="textToVideoResult" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto min-h-[140px] whitespace-pre-line">Așteptare comenzi...</div>
+                </div>
+            </div>
+
+            <!-- Tab 13: Suport -->
+            <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4" style="display:none;">
+                <div class="bg-panelBg border border-amberGlow/30 p-5 rounded-2xl shadow-xl flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-amberGlow"><i class="fa-solid fa-headset mr-2"></i> Suport & Asistență</h2>
+                        <p class="text-xs text-gray-400 mt-1">Suntem aici să te ajutăm rapid!</p>
+                    </div>
+                    <a href="mailto:suport@nexusaistudio.ro" class="bg-amberGlow text-darkBg font-bold text-xs px-4 py-2 rounded-xl">Trimite Email</a>
+                </div>
+            </div>
         </main>
     </div>
 
-    <!-- Scripturi Utilitare JavaScript -->
+    <!-- Footer Complet -->
+    <footer class="w-full py-2 px-4 text-center text-[10px] text-gray-400 shrink-0 border-t border-gray-800 bg-panelBg flex items-center justify-center gap-3 flex-wrap z-20">
+        <span>Plăți Securizate Stripe</span> &bull; 
+        <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon">Politică Confidențialitate (GDPR)</a> &bull; 
+        <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline">Termeni și Condiții</a> &bull; 
+        <a href="https://t.me/NexusAiStudioBot" target="_blank" class="hover:underline text-cyan-400 font-semibold"><i class="fa-brands fa-telegram"></i> Bot Telegram</a> &bull; 
+        <span>Creat de <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
+    </footer>
+
+    <!-- Modale -->
+    <div id="termsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-xl w-full p-4 text-xs text-gray-300">
+            <h3 class="font-bold text-white mb-2">Termeni și Condiții</h3>
+            <p>Prin utilizarea platformei, ești de acord cu termenii de utilizare.</p>
+            <button onclick="closeModal('termsModal')" class="mt-3 px-3 py-1 bg-gray-800 text-white rounded">Închide</button>
+        </div>
+    </div>
+    <div id="privacyModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-panelBg border border-gray-800 rounded-2xl max-w-xl w-full p-4 text-xs text-gray-300">
+            <h3 class="font-bold text-white mb-2">Politică Confidențialitate</h3>
+            <p>Datele tale sunt în siguranță conform GDPR.</p>
+            <button onclick="closeModal('privacyModal')" class="mt-3 px-3 py-1 bg-gray-800 text-white rounded">Închide</button>
+        </div>
+    </div>
+
+    <!-- Scripturi Principale & Logica Taburilor -->
     <script>
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
@@ -318,25 +598,18 @@
             if (type === 'success') bgClass = 'bg-emerald-500/20 border-emerald-500 text-emerald-400';
             if (type === 'error') bgClass = 'bg-red-500/20 border-red-500 text-red-400';
 
-            toast.className = `pointer-events-auto px-4 py-3 rounded-xl border ${bgClass} shadow-xl text-xs flex items-center space-x-2 transition transform translate-y-2 opacity-0 duration-300`;
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl border ${bgClass} shadow-xl text-xs flex items-center space-x-2`;
             toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${message}</span>`;
             container.appendChild(toast);
-
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
         function toggleQuickNotePopup() { document.getElementById('quickNoteModal').classList.toggle('hidden'); }
         function saveQuickNoteState() { localStorage.setItem('NEXUS_QUICK_NOTE', document.getElementById('quickNoteText').value); }
         function toggleBossKey() { document.getElementById('bossExcelScreen').classList.toggle('hidden'); }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('appSidebar');
-            if (sidebar) sidebar.classList.toggle('hidden');
-        }
+        function toggleSidebar() { const sidebar = document.getElementById('appSidebar'); if (sidebar) sidebar.classList.toggle('hidden'); }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function switchTab(tabId, titleName) {
             document.querySelectorAll('.app-tab').forEach(tab => {
@@ -346,7 +619,6 @@
 
             let targetId = tabId;
             if (tabId === 'chat' || tabId === 'chatGeneral') targetId = 'tab-chat';
-            else if (tabId === 'authAccount') targetId = 'tab-authAccount';
             else if (!targetId.startsWith('tab-')) targetId = `tab-${targetId}`;
 
             let target = document.getElementById(targetId);
@@ -392,9 +664,49 @@
             }
             msgBox.scrollTop = msgBox.scrollHeight;
         }
+
+        function clearTabChat(tabType) {
+            const box = document.getElementById(`${tabType}Messages`);
+            if(box) box.innerHTML = `<div class="text-gray-400">Chat curățat. Cu ce începem?</div>`;
+        }
+
+        let editorialPosts = JSON.parse(localStorage.getItem('NEXUS_EDITORIAL') || '[]');
+        function addEditorialPost() {
+            const platform = document.getElementById('postPlatform').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const date = document.getElementById('postDate').value;
+            if(!title || !date) return showToast('Completează toate câmpurile!', 'error');
+            editorialPosts.push({ platform, title, date });
+            localStorage.setItem('NEXUS_EDITORIAL', JSON.stringify(editorialPosts));
+            renderEditorialPosts();
+            showToast('Postare programată!', 'success');
+        }
+        function renderEditorialPosts() {
+            const container = document.getElementById('editorialListContainer');
+            if(!container) return;
+            if(editorialPosts.length === 0) { container.innerHTML = `<div class="text-xs text-gray-500 italic">Nicio postare programată.</div>`; return; }
+            container.innerHTML = editorialPosts.map((p, idx) => `
+                <div class="bg-gray-900 border border-gray-800 p-2.5 rounded-xl flex items-center justify-between text-xs">
+                    <div><span class="font-bold text-amberGlow">[${p.platform}]</span> ${p.title} (${p.date})</div>
+                    <button onclick="editorialPosts.splice(${idx},1);renderEditorialPosts();" class="text-red-400 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        async function generateTextToVideo() {
+            const inputEl = document.getElementById('textToVideoInput');
+            const resultBox = document.getElementById('textToVideoResult');
+            const text = inputEl.value.trim();
+            if (!text) return showToast('Introdu o descriere!', 'error');
+            resultBox.innerHTML = 'Se generează...';
+            try {
+                const res = await fetchFromServer(`Creează scenariu video: "${text}"`);
+                resultBox.innerText = res;
+            } catch(e) { resultBox.innerText = 'Eroare: ' + e.message; }
+        }
     </script>
 
-    <!-- FIREBASE AUTHENTICATION SCRIPT -->
+    <!-- Firebase Auth -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
@@ -405,8 +717,7 @@
             projectId: "nexus-ai-studio-8335f",
             storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
             messagingSenderId: "645678013335",
-            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-            measurementId: "G-W0PJNEF4S5"
+            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -415,23 +726,13 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const userName = user.displayName || user.email;
-                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
                 const container = document.getElementById('authAccountCard');
                 if (container) {
                     container.innerHTML = `
                         <div class="text-center space-y-4 py-6">
-                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
-                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
-                            <p class="text-xs text-gray-400">${user.email}</p>
-                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
-                                Cont Conectat & Verificat ✅
-                            </div>
-                            <div class="pt-4">
-                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
-                                    Deconectare / Schimbă Contul
-                                </button>
-                            </div>
+                            <img src="${user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon object-cover">
+                            <h3 class="text-lg font-bold text-white">Bun venit, ${user.displayName || user.email}!</h3>
+                            <button onclick="logoutUser()" class="bg-gray-800 text-gray-300 text-xs px-4 py-2 rounded-xl cursor-pointer">Deconectare</button>
                         </div>
                     `;
                 }
@@ -441,139 +742,94 @@
         window.socialLogin = async function(provider) {
             if (provider === 'Google') {
                 try {
-                    const result = await signInWithPopup(auth, googleProvider);
-                    showToast("Autentificat cu succes: " + (result.user.displayName || result.user.email), "success");
-                } catch (error) {
-                    alert("Eroare la autentificare Google: " + error.message);
-                }
-            } else {
-                alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
+                    await signInWithPopup(auth, googleProvider);
+                    showToast("Autentificat cu succes!", "success");
+                } catch (e) { alert("Eroare: " + e.message); }
             }
         };
 
         window.registerCompleteUser = async function() {
             const email = document.getElementById("regEmail")?.value.trim();
             const password = document.getElementById("regPass")?.value.trim();
-            const fullName = document.getElementById("regFullName")?.value.trim();
-            const statusEl = document.getElementById('userAccountStatus');
-
-            if (!email || !password) {
-                alert("Introdu adresa de e-mail și parola!");
-                return;
-            }
-
+            if (!email || !password) return alert("Completează emailul și parola!");
             try {
-                const res = await createUserWithEmailAndPassword(auth, email, password);
+                await createUserWithEmailAndPassword(auth, email, password);
                 showToast("Cont creat cu succes!", "success");
-                if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
-            } catch (err) {
-                alert("Eroare la crearea contului: " + err.message);
-            }
+            } catch (e) { alert("Eroare: " + e.message); }
         };
 
-        window.logoutUser = async function() {
-            try {
-                await signOut(auth);
-                location.reload();
-            } catch (error) {
-                console.error("Eroare la deconectare:", error);
-            }
-        };
+        window.logoutUser = async function() { await signOut(auth); location.reload(); };
     </script>
 
-    <!-- Matrix Rain -->
+    <!-- Matrix & Geolocație -->
     <script>
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
-        function resizeMatrixCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resizeMatrixCanvas();
-        window.addEventListener('resize', resizeMatrixCanvas);
-
+        function resizeMatrix() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
         const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const fontSize = 16;
-        let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
-
-        function drawMatrix() {
+        let drops = Array(Math.floor(canvas.width / 16)).fill(1);
+        setInterval(() => {
             ctx.fillStyle = 'rgba(11, 15, 25, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#00ff66';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) { drops[i] = 0; }
+            ctx.font = '16px monospace';
+            drops.forEach((y, i) => {
+                ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * 16, y * 16);
+                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
-            }
+            });
+        }, 33);
+
+        let currentCoords = null;
+        navigator.geolocation?.getCurrentPosition(pos => {
+            currentCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+            const lbl = document.getElementById('locationDisplay');
+            if(lbl) lbl.innerText = "GPS Activ ✅";
+        });
+        function openGoogleMapsLocation() {
+            if(currentCoords) window.open(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`, '_blank');
+            else alert("Locație negăsită.");
         }
-        setInterval(drawMatrix, 33);
     </script>
 
-    <!-- ==================== WIDGET CHAT FLOTANT + TELEGRAM ==================== -->
-    <div id="nexus-chat-widget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-        <!-- Buton Telegram direct lângă chat -->
-        <a href="https://t.me/NexusAiStudioBot" target="_blank" class="flex items-center justify-center w-10 h-10 bg-cyan-500 hover:bg-cyan-400 text-white rounded-full shadow-lg transition-transform hover:scale-110" title="Deschide Bot Telegram">
+    <!-- Widget Chat Flotant -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        <a href="https://t.me/NexusAiStudioBot" target="_blank" class="flex items-center justify-center w-10 h-10 bg-cyan-500 text-white rounded-full shadow-lg hover:scale-110 transition" title="Bot Telegram">
             <i class="fa-brands fa-telegram text-lg"></i>
         </a>
-
-        <!-- Buton Chat Flotant -->
-        <button id="nexus-chat-toggle-btn" onclick="toggleNexusChat()" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-2xl hover:scale-105 transition-all cursor-pointer">
+        <button onclick="toggleNexusChat()" class="flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-2xl hover:scale-105 transition cursor-pointer">
             <i class="fa-solid fa-comments text-xl"></i>
-            <span class="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse"></span>
         </button>
-
-        <!-- Fereastră Widget Chat -->
-        <div id="nexus-chat-window" class="hidden flex flex-col absolute bottom-20 right-0 w-[90vw] sm:w-[380px] h-[520px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-3 bg-slate-800/90 border-b border-slate-700/60">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-emerald-500 rounded-full animate-ping"></div>
-                    <span class="font-bold text-sm text-white">Nexus AI Assistant</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-400">
-                    <a href="https://t.me/NexusAiStudioBot" target="_blank" class="hover:text-cyan-400 p-1 text-xs flex items-center gap-1" title="Deschide pe Telegram">
-                        <i class="fa-brands fa-telegram text-sm"></i> Telegram
-                    </a>
-                    <button onclick="toggleNexusChat()" class="hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-                </div>
+        <div id="nexus-chat-window" class="hidden flex flex-col absolute bottom-16 right-0 w-[90vw] sm:w-[380px] h-[480px] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-800 border-b border-slate-700">
+                <span class="font-bold text-sm text-white">Nexus AI Assistant</span>
+                <button onclick="toggleNexusChat()" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-
             <div id="nexus-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm text-slate-200">
-                <div class="bg-slate-800/70 p-3 rounded-xl border border-slate-700/50 max-w-[85%]">
-                    <b>Nexus:</b> Salut! Cu ce te pot ajuta astăzi? Ne poți scrie direct aici sau pe <a href="https://t.me/NexusAiStudioBot" target="_blank" class="text-cyan-400 underline">Telegram Bot</a>!
-                </div>
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700"><b>Nexus:</b> Salut! Cu ce te pot ajuta?</div>
             </div>
-
-            <div class="p-3 bg-slate-800/90 border-t border-slate-700/60 flex items-center space-x-2">
-                <input type="text" id="nexus-chat-input" placeholder="Scrie un mesaj..." onkeydown="if(event.key==='Enter') sendNexusMessage()" class="flex-1 bg-slate-900 border border-slate-700 text-white text-xs rounded-xl px-3 py-2.5 outline-none focus:border-cyan-500" />
-                <button onclick="sendNexusMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3.5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
+            <div class="p-3 bg-slate-800 border-t border-slate-700 flex items-center space-x-2">
+                <input type="text" id="nexus-chat-input" placeholder="Scrie un mesaj..." onkeydown="if(event.key==='Enter') sendNexusMessage()" class="flex-1 bg-slate-900 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 outline-none" />
+                <button onclick="sendNexusMessage()" class="bg-cyan-600 text-white px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
-
     <script>
-        function toggleNexusChat() {
-            document.getElementById('nexus-chat-window').classList.toggle('hidden');
-        }
-
+        function toggleNexusChat() { document.getElementById('nexus-chat-window').classList.toggle('hidden'); }
         async function sendNexusMessage() {
             const input = document.getElementById('nexus-chat-input');
-            const msgBox = document.getElementById('nexus-chat-messages');
-            const text = input.value.trim();
-            if (!text) return;
-
-            msgBox.innerHTML += `<div class="bg-cyan-950/40 border border-cyan-800/40 p-3 rounded-xl max-w-[85%] ml-auto text-cyan-100"><b>Tu:</b> ${text}</div>`;
+            const box = document.getElementById('nexus-chat-messages');
+            if(!input.value.trim()) return;
+            box.innerHTML += `<div class="bg-cyan-950 p-3 rounded-xl ml-auto text-cyan-100"><b>Tu:</b> ${input.value}</div>`;
+            const query = input.value;
             input.value = '';
-            msgBox.scrollTop = msgBox.scrollHeight;
-
             try {
-                const responseText = await fetchFromServer(text);
-                msgBox.innerHTML += `<div class="bg-slate-800/70 p-3 rounded-xl border border-slate-700/50 max-w-[85%] text-slate-200"><b>Nexus:</b> ${responseText}</div>`;
-            } catch (err) {
-                msgBox.innerHTML += `<div class="bg-red-950/40 border border-red-800/40 p-3 rounded-xl max-w-[85%] text-red-300"><b>Eroare:</b> ${err.message}</div>`;
-            }
-            msgBox.scrollTop = msgBox.scrollHeight;
+                const res = await fetchFromServer(query);
+                box.innerHTML += `<div class="bg-slate-800 p-3 rounded-xl text-slate-200"><b>Nexus:</b> ${res}</div>`;
+            } catch(e) { box.innerHTML += `<div class="bg-red-950 p-3 rounded-xl text-red-300">Eroare server.</div>`; }
+            box.scrollTop = box.scrollHeight;
         }
     </script>
 </body>
