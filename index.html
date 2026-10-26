@@ -1301,6 +1301,8 @@
             canvas.height = window.innerHeight;
         });
 
+       <!-- Scripturi JavaScript Complete -->
+    <script>
         // Auto Resize Textarea & Draft Auto-Save în localStorage
         function autoResizeTextarea(textarea) {
             textarea.style.height = 'auto';
@@ -1331,7 +1333,7 @@
             setTimeout(() => el.classList.remove('animate-ping'), 300);
         }
 
-        // Navigare & Comutare Tab-uri
+        // Navigare & Comutare Tab-uri (FUNCȚIA PRINCIPALĂ)
         function switchTab(tabId, title) {
             document.querySelectorAll('.app-tab').forEach(tab => {
                 tab.classList.add('hidden');
@@ -1355,7 +1357,6 @@
             if(sb) sb.classList.toggle('hidden');
         }
 
-        // Ascundere / Afișare Panou Unelte Rapide
         function toggleToolsGrid() {
             const grid = document.getElementById('toolsGrid');
             const icon = document.getElementById('toggleToolsIcon');
@@ -1371,7 +1372,6 @@
             }
         }
 
-        // Notiță Rapidă Volatilă
         function toggleQuickNotePopup() {
             const modal = document.getElementById('quickNoteModal');
             if(modal) modal.classList.toggle('hidden');
@@ -1387,13 +1387,11 @@
             }
         });
 
-        // Deschidere / Închidere Asistent AI Flotant (Robățel)
         function toggleNexusRobot() {
             const win = document.getElementById('nexus-robot-window');
             if(win) win.classList.toggle('hidden');
         }
 
-        // Activare Cheie Licență Oficială PRO (`NEXUS-PRO-`)
         function activateLicenseKey() {
             const key = document.getElementById('licenseKeyInput').value.trim();
             const status = document.getElementById('licenseStatus');
@@ -1412,7 +1410,6 @@
             }
         }
 
-        // Sistem de Notificări Toast
         function showToast(msg, type='info') {
             const container = document.getElementById('toastContainer');
             if(!container) return;
@@ -1427,7 +1424,6 @@
             }, 3000);
         }
 
-        // Selector Platforme în Social & Creator Hub
         function switchSocialPlatform(platform) {
             ['tiktok', 'insta', 'yt', 'seo'].forEach(p => {
                 const btn = document.getElementById('socBtn-' + p);
@@ -1442,7 +1438,6 @@
             }
         }
 
-        // Comunicare Reală cu Serverul / API-ul Backend
         async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
             try {
                 const response = await fetch('/api/chat', {
@@ -1450,11 +1445,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt: promptText, fileData: fileData, model: modelName })
                 });
-
                 const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.error || `Eroare server: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(data.error || `Eroare server: ${response.status}`);
                 return data.text || "Răspuns gol primit de la server.";
             } catch (err) {
                 console.error("Eroare la comunicarea cu serverul:", err);
@@ -1462,13 +1454,11 @@
             }
         }
 
-        // Gestionare Fișiere Atașate
         let attachedFiles = {};
         function handleFileSelect(tabKey) {
             const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
             const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
             const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
-
             if (fileInput && fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
                 attachedFiles[tabKey] = file;
@@ -1499,23 +1489,19 @@
                     const result = reader.result;
                     const base64Index = result.indexOf(';base64,');
                     if (base64Index !== -1) {
-                        const mimeType = result.substring(5, base64Index);
-                        const base64 = result.substring(base64Index + 8);
-                        resolve({ base64, mimeType });
+                        resolve({ base64: result.substring(base64Index + 8), mimeType: result.substring(5, base64Index) });
                     } else {
-                        reject(new Error("Format de fișier invalid."));
+                        reject(new Error("Format fișier invalid."));
                     }
                 };
                 reader.onerror = error => reject(error);
             });
         }
 
-        // Trimitere Mesaj Chat cu Skeleton Loader, API Real și Highlight.js
         async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
             const inputEl = document.getElementById(inputId);
             const msgBox = document.getElementById(messagesContainerId);
             if (!inputEl || !msgBox) return;
-
             const text = inputEl.value.trim();
             const file = attachedFiles ? attachedFiles[tabKey] : null;
             if (!text && !file) return;
@@ -1529,21 +1515,15 @@
             inputEl.style.height = 'auto';
             saveDraft('');
             msgBox.scrollTop = msgBox.scrollHeight;
-
             removeAttachment(tabKey);
 
-            // Skeleton Loader (3 linii animate gri)
             const skeletonId = 'skeleton-' + Date.now();
             msgBox.innerHTML += `<div id="${skeletonId}" class="flex justify-start"><div class="bg-gray-900 p-3 rounded-2xl rounded-tl-none space-y-2 w-64 border border-gray-800"><div class="h-2.5 bg-gray-800 rounded animate-pulse w-3/4"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-1/2"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-5/6"></div></div></div>`;
             msgBox.scrollTop = msgBox.scrollHeight;
 
             try {
-                let fileDataToSend = null;
-                if (file) {
-                    fileDataToSend = await fileToBase64(file);
-                }
-
-                const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect'].value : 'gemini-3.8-flash';
+                let fileDataToSend = file ? await fileToBase64(file) : null;
+                const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
                 const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend, selectedModel);
                 
                 const skel = document.getElementById(skeletonId);
@@ -1561,15 +1541,12 @@
                         </div>
                     </div>
                 `;
-                
                 if(typeof hljs !== 'undefined') hljs.highlightAll();
                 msgBox.scrollTop = msgBox.scrollHeight;
-
             } catch (err) {
                 const skel = document.getElementById(skeletonId);
                 if(skel) skel.remove();
                 msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${err.message}</div>`;
-                msgBox.scrollTop = msgBox.scrollHeight;
             }
         }
 
@@ -1579,11 +1556,9 @@
             if(!input || !container) return;
             const text = input.value.trim();
             if(!text) return;
-
             container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
             input.value = '';
             container.scrollTop = container.scrollHeight;
-
             try {
                 const responseText = await fetchFromServer(prefix + text);
                 const msgId = 'msg-' + Date.now();
@@ -1615,150 +1590,119 @@
             if(!input || !container) return;
             const text = input.value.trim();
             if(!text) return;
-
             container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2 rounded-xl max-w-[85%] text-xs">${escapeHtml(text)}</div></div>`;
             input.value = '';
             container.scrollTop = container.scrollHeight;
-
             try {
                 const reply = await fetchFromServer(text);
                 container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%] text-xs text-slate-200"><b>Nexus AI:</b> ${escapeHtml(reply)}</div>`;
                 container.scrollTop = container.scrollHeight;
             } catch(e) {
-                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl text-xs text-slate-200"><b>Nexus AI:</b> Răspuns indisponibil momentan.</div>`;
+                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl text-xs text-slate-200"><b>Nexus AI:</b> Indisponibil.</div>`;
             }
         }
 
-        // Text-to-Speech (Citire cu voce tare în limba română ro-RO)
         function speakText(elementId) {
             const el = document.getElementById(elementId);
             if(!el) return;
-            const text = el.innerText;
             if('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
+                const utterance = new SpeechSynthesisUtterance(el.innerText);
                 utterance.lang = 'ro-RO';
                 window.speechSynthesis.speak(utterance);
-                showToast('Se citește textul cu voce tare...', 'info');
-            } else {
-                showToast('Sinteza vocală nu este suportată de browserul tău.', 'error');
+                showToast('Se citește textul...', 'info');
             }
         }
 
-        // Recunoaștere Vocală (Microfon 🎙️)
         function startVoiceRecognition() {
             if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'ro-RO';
-                recognition.onstart = () => { document.getElementById('speechStatus').innerText = 'Ascult... Vorbește acum!'; };
                 recognition.onresult = (event) => {
-                    const speechToText = event.results[0][0].transcript;
-                    document.getElementById('nexus-robot-input').value = speechToText;
-                    document.getElementById('speechStatus').innerText = 'Gata de ascultare';
+                    document.getElementById('nexus-robot-input').value = event.results[0][0].transcript;
                 };
-                recognition.onerror = () => { document.getElementById('speechStatus').innerText = 'Eroare microfon'; };
                 recognition.start();
-            } else {
-                showToast('Recunoașterea vocală nu este suportată în browserul tău.', 'error');
             }
         }
 
-        function toggleRobotAudio() {
-            showToast('Stare audio comutată.', 'info');
-        }
+        function toggleRobotAudio() { showToast('Audio comutat.', 'info'); }
 
-        // Funcții Utilitare
         function escapeHtml(text) {
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
         function parseMarkdown(text) {
-            if(typeof marked !== 'undefined') {
-                return marked.parse(text);
-            }
-            return escapeHtml(text);
+            return typeof marked !== 'undefined' ? marked.parse(text) : escapeHtml(text);
         }
 
         function clearTabChat(tab) {
             const container = document.getElementById(tab + 'Messages');
-            if(container) container.innerHTML = '<div class="text-gray-400 text-xs">Chat golit. Introdu o nouă cerere...</div>';
-            showToast('Chat golit cu succes.', 'success');
+            if(container) container.innerHTML = '<div class="text-gray-400 text-xs">Chat golit.</div>';
+            showToast('Chat golit.', 'success');
         }
 
         function addEditorialPost() {
             const platform = document.getElementById('postPlatform').value;
             const title = document.getElementById('postTitle').value;
             const date = document.getElementById('postDate').value;
-            if(!title || !date) {
-                showToast('Completează titlul și data postării!', 'error');
-                return;
-            }
+            if(!title || !date) { showToast('Completează toate câmpurile!', 'error'); return; }
             const container = document.getElementById('editorialListContainer');
             if(container.innerHTML.includes('Nicio postare')) container.innerHTML = '';
-            container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platform}]</span> <span class="text-white font-medium">${escapeHtml(title)}</span><div class="text-[10px] text-gray-400 mt-0.5"><i class="fa-solid fa-clock mr-1"></i>${date}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
-            showToast('Postare programată în calendar cu succes!', 'success');
+            container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platform}]</span> <span class="text-white">${escapeHtml(title)}</span><div class="text-[10px] text-gray-400">${date}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
+            showToast('Postare programată!', 'success');
         }
 
         async function generateTextToVideo() {
             const input = document.getElementById('textToVideoInput').value;
             const result = document.getElementById('textToVideoResult');
-            if(!input) {
-                showToast('Introdu descrierea scenei video!', 'error');
-                return;
-            }
-            result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariul și cadrele video AI... Vă rugăm așteptați...</div>';
+            if(!input) { showToast('Introdu descrierea!', 'error'); return; }
+            result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează video AI...</div>';
             try {
-                const res = await fetchFromServer(`Creează un scenariu video detaliat cadru cu cadru: "${input}"`);
+                const res = await fetchFromServer(`Creează scenariu video: "${input}"`);
                 result.innerText = res;
-                showToast('Video generat cu succes!', 'success');
-            } catch(e) {
-                result.innerText = 'Eroare la generarea video.';
-            }
+                showToast('Generat!', 'success');
+            } catch(e) { result.innerText = 'Eroare.'; }
         }
 
         function socialLogin(provider) {
-            showToast(`Conectare cu ${provider} reușită!`, 'success');
-            document.getElementById('userAccountStatus').innerText = `Conectat cu succes prin ${provider}!`;
+            showToast(`Conectat cu ${provider}!`, 'success');
         }
 
         function registerCompleteUser() {
-            const name = document.getElementById('regFullName').value;
-            const email = document.getElementById('regEmail').value;
-            if(!name || !email) {
-                showToast('Completează cel puțin numele și emailul!', 'error');
-                return;
-            }
-            document.getElementById('userAccountStatus').innerText = `Contul pentru ${name} a fost creat cu succes!`;
-            showToast('Cont înregistrat cu succes!', 'success');
+            showToast('Cont creat cu succes!', 'success');
         }
 
-        function exportFullSession() {
-            showToast('Sesiunea a fost exportată cu succes.', 'success');
-        }
-        function copyFullConversation() {
-            showToast('Conversația a fost copiată în clipboard.', 'success');
-        }
-        function downloadFullConversation() {
-            showToast('Descărcarea conversației a început.', 'success');
-        }
+        function exportFullSession() { showToast('Export realizat.', 'success'); }
+        function copyFullConversation() { showToast('Copiat.', 'success'); }
+        function downloadFullConversation() { showToast('Descărcat.', 'success'); }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const locEl = document.getElementById('locationDisplay');
-                if(locEl) locEl.innerText = 'Cluj-Napoca, RO';
-            }, 1000);
-        });
-        // Simulacru detecție Locație Google Maps
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const locEl = document.getElementById('locationDisplay');
-                if(locEl) locEl.innerText = 'Cluj-Napoca, RO';
-            }, 1000);
-        });
+        // Geolocație & Google Maps
+        let currentCoords = null;
+        function autoDetectUserLocation() {
+            const label = document.getElementById('locationDisplay');
+            if (!navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                currentCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentCoords.lat}&lon=${currentCoords.lon}&zoom=10`);
+                    const data = await res.json();
+                    if(label) label.innerText = data.address.city || data.address.town || "GPS Activ";
+                } catch(e) { if(label) label.innerText = "GPS Activ ✅"; }
+            });
+        }
 
         function openGoogleMapsLocation() {
-            window.open('https://maps.google.com/?q=Cluj-Napoca', '_blank');
+            if (currentCoords) {
+                window.open(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`, '_blank');
+            } else {
+                autoDetectUserLocation();
+                showToast('Se preia locația...', 'info');
+            }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            autoDetectUserLocation();
+        });
     </script>
     <!-- Footer Ultra-Compact (Așa cum ai cerut) -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
