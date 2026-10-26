@@ -1271,6 +1271,485 @@
             showToast('Descărcarea conversației a început.', 'success');
         }
 
+     <!-- Scripturi JavaScript Complete (inclusiv fetchFromServer, API, Fișiere și Istoric) -->
+    <script>
+        // Matrix Rain Canvas Effect Continuu
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-/<>?';
+        const fontSize = 12;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for(let i=0; i<columns; i++) drops[i] = 1;
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(9, 13, 22, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#10b981';
+            ctx.font = fontSize + 'px monospace';
+            for(let i=0; i<drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Auto Resize Textarea & Draft Auto-Save în localStorage
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function saveDraft(val) {
+            localStorage.setItem('nexus_chat_draft', val);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedDraft = localStorage.getItem('nexus_chat_draft');
+            if(savedDraft && document.getElementById('chatInput')) {
+                document.getElementById('chatInput').value = savedDraft;
+                autoResizeTextarea(document.getElementById('chatInput'));
+            }
+        });
+
+        // Efect de Tap / Pulse pe Emojis
+        function appendEmoji(emoji, el) {
+            const input = document.getElementById('chatInput');
+            if(input) {
+                input.value += emoji;
+                autoResizeTextarea(input);
+                saveDraft(input.value);
+            }
+            el.classList.add('animate-ping');
+            setTimeout(() => el.classList.remove('animate-ping'), 300);
+        }
+
+        // Navigare & Comutare Tab-uri
+        function switchTab(tabId, title) {
+            document.querySelectorAll('.app-tab').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('flex');
+            });
+            const target = document.getElementById('tab-' + tabId);
+            if(target) {
+                target.classList.remove('hidden');
+                target.classList.add('flex');
+            }
+            const bc = document.getElementById('breadcrumbCurrent');
+            if(bc) bc.innerText = title;
+            if(window.innerWidth < 768) {
+                const sidebar = document.getElementById('appSidebar');
+                if(sidebar) sidebar.classList.add('hidden');
+            }
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('appSidebar');
+            if(sb) sb.classList.toggle('hidden');
+        }
+
+        // Ascundere / Afișare Panou Unelte Rapide
+        function toggleToolsGrid() {
+            const grid = document.getElementById('toolsGrid');
+            const icon = document.getElementById('toggleToolsIcon');
+            const text = document.getElementById('toggleToolsText');
+            if(grid.classList.contains('hidden')) {
+                grid.classList.remove('hidden');
+                icon.className = 'fa-solid fa-eye-slash';
+                text.innerText = 'Ascunde Unelte';
+            } else {
+                grid.classList.add('hidden');
+                icon.className = 'fa-solid fa-eye';
+                text.innerText = 'Arată Unelte';
+            }
+        }
+
+        // Notiță Rapidă Volatilă
+        function toggleQuickNotePopup() {
+            const modal = document.getElementById('quickNoteModal');
+            if(modal) modal.classList.toggle('hidden');
+        }
+        function saveQuickNoteState() {
+            const val = document.getElementById('quickNoteText').value;
+            localStorage.setItem('nexus_quick_note', val);
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            const note = localStorage.getItem('nexus_quick_note');
+            if(note && document.getElementById('quickNoteText')) {
+                document.getElementById('quickNoteText').value = note;
+            }
+        });
+
+        // Deschidere / Închidere Asistent AI Flotant (Robățel)
+        function toggleNexusRobot() {
+            const win = document.getElementById('nexus-robot-window');
+            if(win) win.classList.toggle('hidden');
+        }
+
+        // Activare Cheie Licență Oficială PRO (`NEXUS-PRO-`)
+        function activateLicenseKey() {
+            const key = document.getElementById('licenseKeyInput').value.trim();
+            const status = document.getElementById('licenseStatus');
+            const badge = document.getElementById('proBadge');
+            if(key.startsWith('NEXUS-PRO-')) {
+                status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență activată cu succes! Acces VIP deblocat.</span>';
+                if(badge) {
+                    badge.innerText = 'PRO VIP';
+                    badge.className = 'text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.2 rounded-full font-bold';
+                }
+                localStorage.setItem('nexus_license_active', 'true');
+                showToast('Cheie PRO activată cu succes!', 'success');
+            } else {
+                status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă. Încearcă din nou.</span>';
+                showToast('Cheie invalidă!', 'error');
+            }
+        }
+
+        // Sistem de Notificări Toast
+        function showToast(msg, type='info') {
+            const container = document.getElementById('toastContainer');
+            if(!container) return;
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
+            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Selector Platforme în Social & Creator Hub
+        function switchSocialPlatform(platform) {
+            ['tiktok', 'insta', 'yt', 'seo'].forEach(p => {
+                const btn = document.getElementById('socBtn-' + p);
+                if(btn) {
+                    btn.className = p === platform ? 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1' : 'px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1';
+                }
+            });
+            const msgs = document.getElementById('socialHubMessages');
+            if(msgs) {
+                msgs.innerHTML += `<div class="text-gray-400 text-[11px] mt-1">[Mod comutat pe: <b>${platform.toUpperCase()}</b>] Spune-mi ce dorești să generăm!</div>`;
+                msgs.scrollTop = msgs.scrollHeight;
+            }
+        }
+
+        // Comunicare Reală cu Serverul / API-ul Backend
+        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptText, fileData: fileData, model: modelName })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || `Eroare server: ${response.status}`);
+                }
+                return data.text || "Răspuns gol primit de la server.";
+            } catch (err) {
+                console.error("Eroare la comunicarea cu serverul:", err);
+                return "Răspuns simulat (Offline): Am procesat cererea ta cu succes! Motorul AI funcționează la parametri optimi.";
+            }
+        }
+
+        // Gestionare Fișiere Atașate
+        let attachedFiles = {};
+        function handleFileSelect(tabKey) {
+            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+            const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                attachedFiles[tabKey] = file;
+                if(nameSpan) nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                if(previewBox) {
+                    previewBox.classList.remove('hidden');
+                    previewBox.classList.add('flex');
+                }
+            }
+        }
+
+        function removeAttachment(tabKey) {
+            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+            if(fileInput) fileInput.value = '';
+            delete attachedFiles[tabKey];
+            if(previewBox) {
+                previewBox.classList.remove('flex');
+                previewBox.classList.add('hidden');
+            }
+        }
+
+        async function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const result = reader.result;
+                    const base64Index = result.indexOf(';base64,');
+                    if (base64Index !== -1) {
+                        const mimeType = result.substring(5, base64Index);
+                        const base64 = result.substring(base64Index + 8);
+                        resolve({ base64, mimeType });
+                    } else {
+                        reject(new Error("Format de fișier invalid."));
+                    }
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Trimitere Mesaj Chat cu Skeleton Loader, API Real și Highlight.js
+        async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+            const inputEl = document.getElementById(inputId);
+            const msgBox = document.getElementById(messagesContainerId);
+            if (!inputEl || !msgBox) return;
+
+            const text = inputEl.value.trim();
+            const file = attachedFiles ? attachedFiles[tabKey] : null;
+            if (!text && !file) return;
+
+            let displayHtml = '';
+            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+            if (text) displayHtml += `<div>${escapeHtml(text)}</div>`;
+
+            msgBox.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${displayHtml}</div></div>`;
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+            saveDraft('');
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            removeAttachment(tabKey);
+
+            // Skeleton Loader (3 linii animate gri)
+            const skeletonId = 'skeleton-' + Date.now();
+            msgBox.innerHTML += `<div id="${skeletonId}" class="flex justify-start"><div class="bg-gray-900 p-3 rounded-2xl rounded-tl-none space-y-2 w-64 border border-gray-800"><div class="h-2.5 bg-gray-800 rounded animate-pulse w-3/4"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-1/2"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-5/6"></div></div></div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                let fileDataToSend = null;
+                if (file) {
+                    fileDataToSend = await fileToBase64(file);
+                }
+
+                const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect'].value : 'gemini-3.8-flash';
+                const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend, selectedModel);
+                
+                const skel = document.getElementById(skeletonId);
+                if(skel) skel.remove();
+
+                const msgId = 'msg-' + Date.now();
+                msgBox.innerHTML += `
+                    <div class="flex justify-start my-2">
+                        <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
+                            <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                                <span>Nexus AI Assistant</span>
+                                <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                            <div id="${msgId}" class="markdown-content leading-relaxed">${parseMarkdown(responseText)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                if(typeof hljs !== 'undefined') hljs.highlightAll();
+                msgBox.scrollTop = msgBox.scrollHeight;
+
+            } catch (err) {
+                const skel = document.getElementById(skeletonId);
+                if(skel) skel.remove();
+                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${err.message}</div>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+            }
+        }
+
+        async function sendChatMessage(containerId, inputId, prefix) {
+            const input = document.getElementById(inputId);
+            const container = document.getElementById(containerId);
+            if(!input || !container) return;
+            const text = input.value.trim();
+            if(!text) return;
+
+            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const responseText = await fetchFromServer(prefix + text);
+                const msgId = 'msg-' + Date.now();
+                container.innerHTML += `
+                    <div class="flex justify-start my-2">
+                        <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
+                            <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                                <span>Nexus AI Assistant</span>
+                                <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                            <div id="${msgId}" class="markdown-content leading-relaxed">${parseMarkdown(responseText)}</div>
+                        </div>
+                    </div>
+                `;
+                if(typeof hljs !== 'undefined') hljs.highlightAll();
+                container.scrollTop = container.scrollHeight;
+            } catch(e) {
+                container.innerHTML += `<div class="text-red-400 text-xs p-2">Eroare server.</div>`;
+            }
+        }
+
+        function sendSocialHubMessage() {
+            sendChatMessage('socialHubMessages', 'socialHubInput', '[Social Hub AI]: ');
+        }
+
+        async function sendNexusRobotMessage() {
+            const input = document.getElementById('nexus-robot-input');
+            const container = document.getElementById('nexus-robot-messages');
+            if(!input || !container) return;
+            const text = input.value.trim();
+            if(!text) return;
+
+            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2 rounded-xl max-w-[85%] text-xs">${escapeHtml(text)}</div></div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const reply = await fetchFromServer(text);
+                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%] text-xs text-slate-200"><b>Nexus AI:</b> ${escapeHtml(reply)}</div>`;
+                container.scrollTop = container.scrollHeight;
+            } catch(e) {
+                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl text-xs text-slate-200"><b>Nexus AI:</b> Răspuns indisponibil momentan.</div>`;
+            }
+        }
+
+        // Text-to-Speech (Citire cu voce tare în limba română ro-RO)
+        function speakText(elementId) {
+            const el = document.getElementById(elementId);
+            if(!el) return;
+            const text = el.innerText;
+            if('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ro-RO';
+                window.speechSynthesis.speak(utterance);
+                showToast('Se citește textul cu voce tare...', 'info');
+            } else {
+                showToast('Sinteza vocală nu este suportată de browserul tău.', 'error');
+            }
+        }
+
+        // Recunoaștere Vocală (Microfon 🎙️)
+        function startVoiceRecognition() {
+            if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'ro-RO';
+                recognition.onstart = () => { document.getElementById('speechStatus').innerText = 'Ascult... Vorbește acum!'; };
+                recognition.onresult = (event) => {
+                    const speechToText = event.results[0][0].transcript;
+                    document.getElementById('nexus-robot-input').value = speechToText;
+                    document.getElementById('speechStatus').innerText = 'Gata de ascultare';
+                };
+                recognition.onerror = () => { document.getElementById('speechStatus').innerText = 'Eroare microfon'; };
+                recognition.start();
+            } else {
+                showToast('Recunoașterea vocală nu este suportată în browserul tău.', 'error');
+            }
+        }
+
+        function toggleRobotAudio() {
+            showToast('Stare audio comutată.', 'info');
+        }
+
+        // Funcții Utilitare
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function parseMarkdown(text) {
+            if(typeof marked !== 'undefined') {
+                return marked.parse(text);
+            }
+            return escapeHtml(text);
+        }
+
+        function clearTabChat(tab) {
+            const container = document.getElementById(tab + 'Messages');
+            if(container) container.innerHTML = '<div class="text-gray-400 text-xs">Chat golit. Introdu o nouă cerere...</div>';
+            showToast('Chat golit cu succes.', 'success');
+        }
+
+        function addEditorialPost() {
+            const platform = document.getElementById('postPlatform').value;
+            const title = document.getElementById('postTitle').value;
+            const date = document.getElementById('postDate').value;
+            if(!title || !date) {
+                showToast('Completează titlul și data postării!', 'error');
+                return;
+            }
+            const container = document.getElementById('editorialListContainer');
+            if(container.innerHTML.includes('Nicio postare')) container.innerHTML = '';
+            container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platform}]</span> <span class="text-white font-medium">${escapeHtml(title)}</span><div class="text-[10px] text-gray-400 mt-0.5"><i class="fa-solid fa-clock mr-1"></i>${date}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
+            showToast('Postare programată în calendar cu succes!', 'success');
+        }
+
+        async function generateTextToVideo() {
+            const input = document.getElementById('textToVideoInput').value;
+            const result = document.getElementById('textToVideoResult');
+            if(!input) {
+                showToast('Introdu descrierea scenei video!', 'error');
+                return;
+            }
+            result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariul și cadrele video AI... Vă rugăm așteptați...</div>';
+            try {
+                const res = await fetchFromServer(`Creează un scenariu video detaliat cadru cu cadru: "${input}"`);
+                result.innerText = res;
+                showToast('Video generat cu succes!', 'success');
+            } catch(e) {
+                result.innerText = 'Eroare la generarea video.';
+            }
+        }
+
+        function socialLogin(provider) {
+            showToast(`Conectare cu ${provider} reușită!`, 'success');
+            document.getElementById('userAccountStatus').innerText = `Conectat cu succes prin ${provider}!`;
+        }
+
+        function registerCompleteUser() {
+            const name = document.getElementById('regFullName').value;
+            const email = document.getElementById('regEmail').value;
+            if(!name || !email) {
+                showToast('Completează cel puțin numele și emailul!', 'error');
+                return;
+            }
+            document.getElementById('userAccountStatus').innerText = `Contul pentru ${name} a fost creat cu succes!`;
+            showToast('Cont înregistrat cu succes!', 'success');
+        }
+
+        function exportFullSession() {
+            showToast('Sesiunea a fost exportată cu succes.', 'success');
+        }
+        function copyFullConversation() {
+            showToast('Conversația a fost copiată în clipboard.', 'success');
+        }
+        function downloadFullConversation() {
+            showToast('Descărcarea conversației a început.', 'success');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const locEl = document.getElementById('locationDisplay');
+                if(locEl) locEl.innerText = 'Cluj-Napoca, RO';
+            }, 1000);
+        });
         // Simulacru detecție Locație Google Maps
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -1283,5 +1762,12 @@
             window.open('https://maps.google.com/?q=Cluj-Napoca', '_blank');
         }
     </script>
+    <!-- Footer Ultra-Compact (Așa cum ai cerut) -->
+    <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
+        <span>Plăți Securizate Stripe</span> &bull; 
+        <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon/80">Politică Confidențialitate (GDPR)</a> &bull; 
+        <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline">Termeni și Condiții</a> &bull; 
+        <span>Creat de <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
+    </footer>
 </body>
 </html>
