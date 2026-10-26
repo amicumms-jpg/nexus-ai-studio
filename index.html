@@ -210,7 +210,6 @@
                 <button onclick="switchTab('abTestingStudio', 'A/B Testing Hook-uri')" id="nav-abTestingStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-vials text-cyanNeon w-4"></i><span>A/B Testing Titluri</span></button>
                 <button onclick="switchTab('podcastStudio', 'Podcast & Q&A Studio')" id="nav-podcastStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-podcast text-amberGlow w-4"></i><span>Podcast Script & Q&A</span></button>
                 <button onclick="switchTab('roastStudio', 'AI Roast My Content')" id="nav-roastStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-fire text-tiktokColor w-4"></i><span>AI Roast My Content 🔥</span></button>
-                <button onclick="switchTab('arcadeStudio', 'AI Mini-Game & Snake')" id="nav-arcadeStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium"><i class="fa-solid fa-gamepad text-emeraldNeon w-4"></i><span>Retro Snake Arcade</span></button>
             </div>
 
             <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Setări & Cont</span>
@@ -246,7 +245,7 @@
         <!-- Dynamic Content Container -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
-            <!-- Tab 1: Chat General -->
+          <!-- Tab 1: Chat General -->
             <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-hidden p-3 space-y-2">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between mb-2 shrink-0">
@@ -255,6 +254,17 @@
                             <i id="toggleToolsIcon" class="fa-solid fa-eye-slash"></i>
                             <span id="toggleToolsText">Ascunde Unelte</span>
                         </button>
+                    </div>
+
+                    <!-- Mesaj de bun venit vizual -->
+                    <div class="bg-gradient-to-r from-cyan-950/40 to-indigo-950/40 border border-cyanNeon/30 p-3 rounded-2xl mb-2 shrink-0 flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center text-sm font-bold shrink-0">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-white">Bun venit la Nexus AI Studio Pro!</h3>
+                            <p class="text-[10px] text-gray-300">Folosește uneltele rapide de sus sau scrie o cerere în chatul general de mai jos.</p>
+                        </div>
                     </div>
 
                    <!-- Panou Modern de Unelte Rapide (Tools Grid) -->
@@ -750,24 +760,6 @@
 
         </div>
 
-            <!-- Tab 11: Retro Snake Arcade -->
-            <div id="tab-arcadeStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4">
-                <div class="max-w-2xl mx-auto w-full space-y-4">
-                    <div class="p-3 bg-emerald-950/30 border border-emeraldNeon/30 rounded-2xl text-center">
-                        <h2 class="text-base font-bold text-white flex items-center justify-center"><i class="fa-solid fa-gamepad text-emeraldNeon mr-2"></i>AI Mini-Game & Retro Snake Arcade 🎮🕹️</h2>
-                        <p class="text-[10px] text-gray-400">Joacă un Snake clasic direct în browser.</p>
-                    </div>
-                    <div class="bg-panelBg border border-emeraldNeon/30 p-5 rounded-2xl space-y-3 text-center shadow-xl">
-                        <div class="flex justify-center space-x-2 mb-1">
-                            <button onclick="startRetroSnake()" class="bg-emeraldNeon hover:opacity-90 text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer shadow">Pornește Retro Snake</button>
-                        </div>
-                        <div id="gameScreenContainer" class="bg-gray-950 border border-gray-800 rounded-xl p-3 min-h-[200px] flex items-center justify-center text-center text-xs text-gray-400 relative overflow-hidden">
-                            <span>Apasă butonul de sus pentru a porni jocul Snake 🕹️</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Tab 12: Cont & Google Login -->
             <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
                 <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
@@ -1178,63 +1170,7 @@
             }
         }
 
-        function startRetroSnake() {
-            if (activeGameInterval) clearInterval(activeGameInterval);
-            const container = document.getElementById('gameScreenContainer');
-            container.innerHTML = `
-                <div class="flex flex-col items-center space-y-2">
-                    <div class="text-xs text-emeraldNeon font-bold">Scor: <span id="snakeScore">0</span></div>
-                    <canvas id="snakeCanvas" width="200" height="200" class="bg-black border border-emeraldNeon/50 rounded"></canvas>
-                    <div class="flex space-x-2 mt-1">
-                        <button onclick="snakeDir='UP'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬆️</button>
-                        <button onclick="snakeDir='DOWN'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬇️</button>
-                        <button onclick="snakeDir='LEFT'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">⬅️</button>
-                        <button onclick="snakeDir='RIGHT'" class="bg-gray-800 px-3 py-1 rounded text-white cursor-pointer">➡️</button>
-                    </div>
-                </div>
-            `;
-            initSnakeGame();
-        }
-
-        function initSnakeGame() {
-            const canvas = document.getElementById('snakeCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let snake = [{x: 10, y: 10}];
-            let food = {x: 5, y: 5};
-            let score = 0;
-            snakeDir = 'RIGHT';
-
-            activeGameInterval = setInterval(() => {
-                let head = {...snake[0]};
-                if(snakeDir === 'UP') head.y--;
-                if(snakeDir === 'DOWN') head.y++;
-                if(snakeDir === 'LEFT') head.x--;
-                if(snakeDir === 'RIGHT') head.x++;
-
-                if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
-                    clearInterval(activeGameInterval);
-                    showToast('Game Over! Scor: ' + score, 'error');
-                    return;
-                }
-
-                if(head.x === food.x && head.y === food.y) {
-                    score += 10;
-                    document.getElementById('snakeScore').innerText = score;
-                    food = {x: Math.floor(Math.random() * 18), y: Math.floor(Math.random() * 18)};
-                } else {
-                    snake.pop();
-                }
-                snake.unshift(head);
-
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#f59e0b';
-                ctx.fillRect(food.x * 10, food.y * 10, 10, 10);
-                ctx.fillStyle = '#10b981';
-                snake.forEach(part => ctx.fillRect(part.x * 10, part.y * 10, 9, 9));
-            }, 120);
-        }
+    
 async function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -2075,16 +2011,16 @@ document.addEventListener("DOMContentLoaded", function() {
         <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline">Termeni și Condiții</a> &bull; 
         <span>Creat de <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
     </footer>
-   <!-- ==================== WIDGET CHAT FLOTANT ==================== -->
- <div id="nexus-chat-widget" class="fixed bottom-24 right-6 z-50">
-        <!-- Butonul Flotant (Declanșator) -->
-        <button id="nexus-chat-toggle-btn" onclick="toggleNexusChat()" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-2xl hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer">
-            <i class="fa-solid fa-comments text-xl"></i>
-            <span class="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse"></span>
+ <!-- ==================== WIDGET CHAT FLOTANT ==================== -->
+    <div id="nexus-chat-widget" class="fixed bottom-16 right-4 z-40">
+        <!-- Butonul Flotant (Declanșator mic) -->
+        <button id="nexus-chat-toggle-btn" onclick="toggleNexusChat()" class="relative flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Chat Asistent">
+            <i class="fa-solid fa-comments text-sm"></i>
+            <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
         </button>
 
-        <!-- Fereastra de Chat (Ascunsă inițial) -->
-        <div id="nexus-chat-window" class="hidden flex flex-col absolute bottom-20 right-0 w-[90vw] sm:w-[380px] h-[520px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
+        <!-- Fereastra de Chat -->
+        <div id="nexus-chat-window" class="hidden flex flex-col absolute bottom-12 right-0 w-[90vw] sm:w-[380px] h-[480px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
             <!-- Header Chat -->
             <div class="flex items-center justify-between px-4 py-3 bg-slate-800/90 border-b border-slate-700/60">
                 <div class="flex items-center space-x-2">
