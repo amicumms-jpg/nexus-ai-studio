@@ -1270,10 +1270,48 @@
             showToast('Descărcarea conversației a început.', 'success');
         }
 
-       <!-- Scripturi JavaScript Complete -->
+       <!-- Scripturi JavaScript Complete și Curățate -->
     <script>
+        // Matrix Rain Canvas Effect Continuu
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        let drops = [];
+
+        function initMatrix() {
+            if(!canvas || !ctx) return;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-/<>?';
+            const fontSize = 12;
+            const columns = canvas.width / fontSize;
+            drops = [];
+            for(let i = 0; i < columns; i++) drops[i] = 1;
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(9, 13, 22, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#10b981';
+                ctx.font = fontSize + 'px monospace';
+                for(let i = 0; i < drops.length; i++) {
+                    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            setInterval(drawMatrix, 33);
+        }
+
+        window.addEventListener('resize', () => {
+            if(canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        });
+
         // Auto Resize Textarea & Draft Auto-Save în localStorage
         function autoResizeTextarea(textarea) {
+            if(!textarea) return;
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
         }
@@ -1283,11 +1321,13 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            initMatrix();
             const savedDraft = localStorage.getItem('nexus_chat_draft');
             if(savedDraft && document.getElementById('chatInput')) {
                 document.getElementById('chatInput').value = savedDraft;
                 autoResizeTextarea(document.getElementById('chatInput'));
             }
+            autoDetectUserLocation();
         });
 
         // Efect de Tap / Pulse pe Emojis
@@ -1298,8 +1338,10 @@
                 autoResizeTextarea(input);
                 saveDraft(input.value);
             }
-            el.classList.add('animate-ping');
-            setTimeout(() => el.classList.remove('animate-ping'), 300);
+            if(el) {
+                el.classList.add('animate-ping');
+                setTimeout(() => el.classList.remove('animate-ping'), 300);
+            }
         }
 
         // Navigare & Comutare Tab-uri (FUNCȚIA PRINCIPALĂ)
@@ -1308,13 +1350,17 @@
                 tab.classList.add('hidden');
                 tab.classList.remove('flex');
             });
-            const target = document.getElementById('tab-' + tabId);
+
+            let targetId = tabId.startsWith('tab-') ? tabId : 'tab-' + tabId;
+            const target = document.getElementById(targetId);
             if(target) {
                 target.classList.remove('hidden');
                 target.classList.add('flex');
             }
+
             const bc = document.getElementById('breadcrumbCurrent');
-            if(bc) bc.innerText = title;
+            if(bc && title) bc.innerText = title;
+
             if(window.innerWidth < 768) {
                 const sidebar = document.getElementById('appSidebar');
                 if(sidebar) sidebar.classList.add('hidden');
@@ -1330,14 +1376,15 @@
             const grid = document.getElementById('toolsGrid');
             const icon = document.getElementById('toggleToolsIcon');
             const text = document.getElementById('toggleToolsText');
+            if(!grid) return;
             if(grid.classList.contains('hidden')) {
                 grid.classList.remove('hidden');
-                icon.className = 'fa-solid fa-eye-slash';
-                text.innerText = 'Ascunde Unelte';
+                if(icon) icon.className = 'fa-solid fa-eye-slash';
+                if(text) text.innerText = 'Ascunde Unelte';
             } else {
                 grid.classList.add('hidden');
-                icon.className = 'fa-solid fa-eye';
-                text.innerText = 'Arată Unelte';
+                if(icon) icon.className = 'fa-solid fa-eye';
+                if(text) text.innerText = 'Arată Unelte';
             }
         }
 
@@ -1345,16 +1392,11 @@
             const modal = document.getElementById('quickNoteModal');
             if(modal) modal.classList.toggle('hidden');
         }
+
         function saveQuickNoteState() {
-            const val = document.getElementById('quickNoteText').value;
-            localStorage.setItem('nexus_quick_note', val);
+            const el = document.getElementById('quickNoteText');
+            if(el) localStorage.setItem('nexus_quick_note', el.value);
         }
-        window.addEventListener('DOMContentLoaded', () => {
-            const note = localStorage.getItem('nexus_quick_note');
-            if(note && document.getElementById('quickNoteText')) {
-                document.getElementById('quickNoteText').value = note;
-            }
-        });
 
         function toggleNexusRobot() {
             const win = document.getElementById('nexus-robot-window');
@@ -1362,11 +1404,13 @@
         }
 
         function activateLicenseKey() {
-            const key = document.getElementById('licenseKeyInput').value.trim();
+            const input = document.getElementById('licenseKeyInput');
             const status = document.getElementById('licenseStatus');
             const badge = document.getElementById('proBadge');
+            const key = input ? input.value.trim() : '';
+
             if(key.startsWith('NEXUS-PRO-')) {
-                status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență activată cu succes! Acces VIP deblocat.</span>';
+                if(status) status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență activată cu succes! Acces VIP deblocat.</span>';
                 if(badge) {
                     badge.innerText = 'PRO VIP';
                     badge.className = 'text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.2 rounded-full font-bold';
@@ -1374,7 +1418,7 @@
                 localStorage.setItem('nexus_license_active', 'true');
                 showToast('Cheie PRO activată cu succes!', 'success');
             } else {
-                status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă. Încearcă din nou.</span>';
+                if(status) status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă. Încearcă din nou.</span>';
                 showToast('Cheie invalidă!', 'error');
             }
         }
@@ -1419,7 +1463,7 @@
                 return data.text || "Răspuns gol primit de la server.";
             } catch (err) {
                 console.error("Eroare la comunicarea cu serverul:", err);
-                return "Răspuns simulat (Offline): Am procesat cererea ta cu succes! Motorul AI funcționează la parametri optimi.";
+                return "Răspuns simulat (Offline): Cererea ta a fost procesată cu succes!";
             }
         }
 
@@ -1492,7 +1536,8 @@
 
             try {
                 let fileDataToSend = file ? await fileToBase64(file) : null;
-                const selectedModel = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-3.8-flash';
+                const modelSelect = document.getElementById('aiModelSelect');
+                const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.8-flash';
                 const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend, selectedModel);
                 
                 const skel = document.getElementById(skeletonId);
@@ -1588,7 +1633,8 @@
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'ro-RO';
                 recognition.onresult = (event) => {
-                    document.getElementById('nexus-robot-input').value = event.results[0][0].transcript;
+                    const robotInput = document.getElementById('nexus-robot-input');
+                    if(robotInput) robotInput.value = event.results[0][0].transcript;
                 };
                 recognition.start();
             }
@@ -1611,26 +1657,31 @@
         }
 
         function addEditorialPost() {
-            const platform = document.getElementById('postPlatform').value;
-            const title = document.getElementById('postTitle').value;
-            const date = document.getElementById('postDate').value;
-            if(!title || !date) { showToast('Completează toate câmpurile!', 'error'); return; }
+            const platformEl = document.getElementById('postPlatform');
+            const titleEl = document.getElementById('postTitle');
+            const dateEl = document.getElementById('postDate');
+            if(!titleEl || !dateEl || !titleEl.value || !dateEl.value) {
+                showToast('Completează toate câmpurile!', 'error');
+                return;
+            }
             const container = document.getElementById('editorialListContainer');
-            if(container.innerHTML.includes('Nicio postare')) container.innerHTML = '';
-            container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platform}]</span> <span class="text-white">${escapeHtml(title)}</span><div class="text-[10px] text-gray-400">${date}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
+            if(container && container.innerHTML.includes('Nicio postare')) container.innerHTML = '';
+            if(container) {
+                container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platformEl.value}]</span> <span class="text-white">${escapeHtml(titleEl.value)}</span><div class="text-[10px] text-gray-400">${dateEl.value}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
+            }
             showToast('Postare programată!', 'success');
         }
 
         async function generateTextToVideo() {
-            const input = document.getElementById('textToVideoInput').value;
+            const inputEl = document.getElementById('textToVideoInput');
             const result = document.getElementById('textToVideoResult');
-            if(!input) { showToast('Introdu descrierea!', 'error'); return; }
-            result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează video AI...</div>';
+            if(!inputEl || !inputEl.value) { showToast('Introdu descrierea!', 'error'); return; }
+            if(result) result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează video AI...</div>';
             try {
-                const res = await fetchFromServer(`Creează scenariu video: "${input}"`);
-                result.innerText = res;
+                const res = await fetchFromServer(`Creează scenariu video: "${inputEl.value}"`);
+                if(result) result.innerText = res;
                 showToast('Generat!', 'success');
-            } catch(e) { result.innerText = 'Eroare.'; }
+            } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
         function socialLogin(provider) {
@@ -1655,8 +1706,10 @@
                 try {
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentCoords.lat}&lon=${currentCoords.lon}&zoom=10`);
                     const data = await res.json();
-                    if(label) label.innerText = data.address.city || data.address.town || "GPS Activ";
+                    if(label) label.innerText = data.address.city || data.address.town || data.address.village || "GPS Activ";
                 } catch(e) { if(label) label.innerText = "GPS Activ ✅"; }
+            }, (err) => {
+                if(label) label.innerText = "GPS Indisponibil";
             });
         }
 
@@ -1668,12 +1721,9 @@
                 showToast('Se preia locația...', 'info');
             }
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            autoDetectUserLocation();
-        });
     </script>
-    <!-- Footer Ultra-Compact (Așa cum ai cerut) -->
+
+    <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
         <span>Plăți Securizate Stripe</span> &bull; 
         <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon/80">Politică Confidențialitate (GDPR)</a> &bull; 
