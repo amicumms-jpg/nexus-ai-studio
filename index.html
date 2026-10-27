@@ -1339,7 +1339,6 @@
         onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Configurația ta oficială Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
         authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
@@ -1353,7 +1352,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Monitorizează starea sesiunii în timp real
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const name = user.displayName || user.email.split('@')[0];
@@ -1374,30 +1372,13 @@
         }
     });
 
-    // Autentificare Socială Reală (Google / Apple)
     window.socialLogin = async function(providerName) {
-        let provider;
-        if (providerName === 'Google') {
-            provider = new GoogleAuthProvider();
-        } else if (providerName === 'Apple') {
-            provider = new OAuthProvider('apple.com');
-        } else {
-            showToast('Provider indisponibil.', 'error');
-            return;
-        }
-
+        let provider = providerName === 'Google' ? new GoogleAuthProvider() : new OAuthProvider('apple.com');
         try {
             showToast(`Se deschide fereastra ${providerName}...`, 'info');
             const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-
-            showToast(`Autentificat cu succes ca ${user.displayName || user.email}!`, 'success');
-
-            setTimeout(() => {
-                if (typeof switchTab === 'function') {
-                    switchTab('chat', 'Home / Tools Hub');
-                }
-            }, 800);
+            showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
+            setTimeout(() => { if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
         } catch (error) {
             console.error("Eroare autentificare Firebase:", error);
             if (error.code === 'auth/popup-closed-by-user') {
@@ -1410,12 +1391,9 @@
         }
     };
 
-    // Înregistrare / Autentificare prin Formular Email & Parolă
     window.registerCompleteUser = async function() {
-        const emailInput = document.getElementById('regEmail');
-        const passInput = document.getElementById('regPass');
-        const email = emailInput ? emailInput.value.trim() : '';
-        const pass = passInput ? passInput.value.trim() : '';
+        const email = document.getElementById('regEmail')?.value.trim() || '';
+        const pass = document.getElementById('regPass')?.value.trim() || '';
 
         if (!email || !pass) {
             showToast('Introdu o adresă de email și o parolă!', 'error');
@@ -1436,29 +1414,23 @@
             }
 
             setTimeout(() => {
-                if (typeof switchTab === 'function') {
-                    switchTab('chat', 'Home / Tools Hub');
-                }
+                if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub');
             }, 800);
         } catch (error) {
             showToast(`Eroare: ${error.message}`, 'error');
         }
     };
 
-    // Delogare Reală
     window.logoutUser = async function() {
         try {
             await signOut(auth);
             showToast('Te-ai delogat cu succes.', 'info');
-            setTimeout(() => {
-                location.reload();
-            }, 500);
+            setTimeout(() => location.reload(), 500);
         } catch (error) {
             showToast('Eroare la delogare.', 'error');
         }
     };
 
-    // Actualizarea interfeței după logare
     function updateUIAfterLogin(name, email, avatar) {
         const authTabContainer = document.querySelector('#tab-authAccount > div');
         if (authTabContainer) {
