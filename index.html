@@ -1325,109 +1325,164 @@
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
-       // Verifică la încărcarea paginii dacă utilizatorul este deja logat
-        window.addEventListener('DOMContentLoaded', () => {
-            initMatrix();
-            const savedDraft = localStorage.getItem('nexus_chat_draft');
-            if(savedDraft && document.getElementById('chatInput')) {
-                document.getElementById('chatInput').value = savedDraft;
-                autoResizeTextarea(document.getElementById('chatInput'));
-            }
-            autoDetectUserLocation();
-            checkExistingSession();
-        });
+       <!-- Scriptul Final Firebase Authentication -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithPopup, 
+        GoogleAuthProvider, 
+        OAuthProvider,
+        signInWithEmailAndPassword, 
+        createUserWithEmailAndPassword,
+        signOut, 
+        onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        function checkExistingSession() {
-            const isLoggedIn = localStorage.getItem('nexus_is_logged_in');
-            if (isLoggedIn === 'true') {
-                const userName = localStorage.getItem('nexus_user_name') || 'Utilizator';
-                const userEmail = localStorage.getItem('nexus_user_email') || 'contact@nexusaistudio.ro';
-                const userAvatar = localStorage.getItem('nexus_user_avatar') || 'https://api.dicebear.com/7.x/avataaars/svg?seed=NexusUser';
-                updateUIAfterLogin(userName, userEmail, userAvatar);
-            }
-        }
+    // Configurația ta oficială Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+        authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+        projectId: "nexus-ai-studio-8335f",
+        storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+        messagingSenderId: "645678013335",
+        appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+        measurementId: "G-W0PJNEF4S5"
+    };
 
-        function socialLogin(provider) {
-            showToast(`Autentificare reușită cu ${provider}!`, 'success');
-            
-            const mockUserData = {
-                name: provider === 'Google' ? 'Valentin S.' : `Utilizator ${provider}`,
-                email: `contact@nexusaistudio.ro`,
-                avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + (provider === 'Google' ? 'Valentin' : provider)
-            };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-            // Salvăm datele corect în localStorage
-            localStorage.setItem('nexus_is_logged_in', 'true');
-            localStorage.setItem('nexus_user_name', mockUserData.name);
-            localStorage.setItem('nexus_user_email', mockUserData.email);
-            localStorage.setItem('nexus_user_avatar', mockUserData.avatar);
-            localStorage.setItem('nexus_auth_provider', provider);
-
-            // Actualizăm interfața instant
-            updateUIAfterLogin(mockUserData.name, mockUserData.email, mockUserData.avatar);
-
-            // Redirecționare automată fluidă către Hub-ul de chat după 1 secundă
-            setTimeout(() => {
-                switchTab('chat', 'Home / Tools Hub');
-            }, 1000);
-        }
-
-        function registerCompleteUser() {
-            const nameInput = document.getElementById('regFullName');
-            const emailInput = document.getElementById('regEmail');
-            
-            const name = nameInput && nameInput.value ? nameInput.value : 'Utilizator Nou';
-            const email = emailInput && emailInput.value ? emailInput.value : 'nume@exemplu.ro';
+    // Monitorizează starea sesiunii în timp real
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const name = user.displayName || user.email.split('@')[0];
+            const email = user.email;
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
 
             localStorage.setItem('nexus_is_logged_in', 'true');
             localStorage.setItem('nexus_user_name', name);
             localStorage.setItem('nexus_user_email', email);
-            localStorage.setItem('nexus_user_avatar', 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + name);
+            localStorage.setItem('nexus_user_avatar', avatar);
 
-            showToast('Cont creat cu succes! Se redirecționează...', 'success');
-            updateUIAfterLogin(name, email, localStorage.getItem('nexus_user_avatar'));
-
-            setTimeout(() => {
-                switchTab('chat', 'Home / Tools Hub');
-            }, 1000);
-        }
-
-        function updateUIAfterLogin(name, email, avatar) {
-            const authTabContainer = document.querySelector('#tab-authAccount > div');
-            if (authTabContainer) {
-                authTabContainer.innerHTML = `
-                    <div class="text-center space-y-3 py-4">
-                        <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover bg-gray-900">
-                        <h2 class="text-lg font-bold text-white">${name}</h2>
-                        <p class="text-xs text-gray-400">${email}</p>
-                        <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
-                            <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
-                        </div>
-                        <button onclick="logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
-                            <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Delogare (Log Out)
-                        </button>
-                    </div>
-                `;
-            }
-            const badge = document.getElementById('proBadge');
-            if(badge) {
-                badge.innerText = 'ONLINE';
-                badge.className = 'text-[9px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
-            }
-        }
-
-        function logoutUser() {
+            updateUIAfterLogin(name, email, avatar);
+        } else {
             localStorage.removeItem('nexus_is_logged_in');
             localStorage.removeItem('nexus_user_name');
             localStorage.removeItem('nexus_user_email');
             localStorage.removeItem('nexus_user_avatar');
-            localStorage.removeItem('nexus_auth_provider');
+        }
+    });
 
-            showToast('Ai ieșit din cont cu succes.', 'info');
+    // Autentificare Socială Reală (Google / Apple)
+    window.socialLogin = async function(providerName) {
+        let provider;
+        if (providerName === 'Google') {
+            provider = new GoogleAuthProvider();
+        } else if (providerName === 'Apple') {
+            provider = new OAuthProvider('apple.com');
+        } else {
+            showToast('Provider indisponibil.', 'error');
+            return;
+        }
+
+        try {
+            showToast(`Se deschide fereastra ${providerName}...`, 'info');
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            showToast(`Autentificat cu succes ca ${user.displayName || user.email}!`, 'success');
+
+            setTimeout(() => {
+                if (typeof switchTab === 'function') {
+                    switchTab('chat', 'Home / Tools Hub');
+                }
+            }, 800);
+        } catch (error) {
+            console.error("Eroare autentificare Firebase:", error);
+            if (error.code === 'auth/popup-closed-by-user') {
+                showToast('Fereastra de autentificare a fost închisă.', 'info');
+            } else if (error.code === 'auth/unauthorized-domain') {
+                showToast('Adaugă domeniul tău în Firebase Console -> Auth -> Settings -> Authorized Domains', 'error');
+            } else {
+                showToast(`Eroare: ${error.message}`, 'error');
+            }
+        }
+    };
+
+    // Înregistrare / Autentificare prin Formular Email & Parolă
+    window.registerCompleteUser = async function() {
+        const emailInput = document.getElementById('regEmail');
+        const passInput = document.getElementById('regPass');
+        const email = emailInput ? emailInput.value.trim() : '';
+        const pass = passInput ? passInput.value.trim() : '';
+
+        if (!email || !pass) {
+            showToast('Introdu o adresă de email și o parolă!', 'error');
+            return;
+        }
+
+        try {
+            try {
+                await createUserWithEmailAndPassword(auth, email, pass);
+                showToast('Cont nou creat cu succes!', 'success');
+            } catch (createErr) {
+                if (createErr.code === 'auth/email-already-in-use') {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                    showToast('Autentificare reușită!', 'success');
+                } else {
+                    throw createErr;
+                }
+            }
+
+            setTimeout(() => {
+                if (typeof switchTab === 'function') {
+                    switchTab('chat', 'Home / Tools Hub');
+                }
+            }, 800);
+        } catch (error) {
+            showToast(`Eroare: ${error.message}`, 'error');
+        }
+    };
+
+    // Delogare Reală
+    window.logoutUser = async function() {
+        try {
+            await signOut(auth);
+            showToast('Te-ai delogat cu succes.', 'info');
             setTimeout(() => {
                 location.reload();
-            }, 800);
+            }, 500);
+        } catch (error) {
+            showToast('Eroare la delogare.', 'error');
         }
+    };
+
+    // Actualizarea interfeței după logare
+    function updateUIAfterLogin(name, email, avatar) {
+        const authTabContainer = document.querySelector('#tab-authAccount > div');
+        if (authTabContainer) {
+            authTabContainer.innerHTML = `
+                <div class="text-center space-y-3 py-4">
+                    <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover bg-gray-900">
+                    <h2 class="text-lg font-bold text-white">${name}</h2>
+                    <p class="text-xs text-gray-400">${email}</p>
+                    <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
+                    </div>
+                    <button onclick="logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
+                        <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Delogare (Log Out)
+                    </button>
+                </div>
+            `;
+        }
+        const badge = document.getElementById('proBadge');
+        if (badge) {
+            badge.innerText = 'ONLINE';
+            badge.className = 'text-[9px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
+        }
+    }
+</script>
 
         function exportFullSession() { showToast('Export realizat.', 'success'); }
         function copyFullConversation() { showToast('Copiat.', 'success'); }
