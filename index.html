@@ -1354,9 +1354,11 @@
                 showToast('Se preia locația...', 'info');
             }
         }
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<!-- Înlocuire de la linia 1357 până la linia 1392 din scriptul tău actual -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
 <script>
+    // Asigurăm disponibilitatea funcțiilor în scopul global (window)
     window.switchTab = window.switchTab || function(tabId, title) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
         const target = document.getElementById('tab-' + tabId);
@@ -1375,20 +1377,27 @@
         if(robot) robot.classList.toggle('hidden');
     };
 
+    // Configurația Firebase salvată într-o constantă globală sigură
     const firebaseConfig = {
-        apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
-        authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+        apiKey: "AIzaSyCNh5PX0ib-ouPITfWt-XpM8Tj_s5j9D9k",
+        authDomain: "://firebaseapp.com",
         projectId: "nexus-ai-studio-8335f",
         storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
         messagingSenderId: "645678013335",
         appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-        measurementId: "G-W0PJNEF4S5"
+        measurementId: "G-W0PJNEF4SS"
     };
 
+    // Inițializare cu verificare strictă pentru a evita erorile interne de tip duplicate
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
+    } else {
+        firebase.app();
     }
-    const auth = firebase.auth();
+
+    // Declarăm instanța Auth pe obiectul global window pentru accesibilitate completă
+    window.auth = firebase.auth();
+</script>
 
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -1463,7 +1472,10 @@
                     <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
                         <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
                     </div>
-                    <button onclick="logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
+                   <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
+    Deconectare
+</button>
+
                         <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Delogare (Log Out)
                     </button>
                 </div>
