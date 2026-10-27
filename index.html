@@ -1325,8 +1325,36 @@
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
-       <!-- Scriptul Final Firebase Authentication -->
-<script type="module">
+        function exportFullSession() { showToast('Export realizat.', 'success'); }
+        function copyFullConversation() { showToast('Copiat.', 'success'); }
+        function downloadFullConversation() { showToast('Descărcat.', 'success'); }
+
+        // Geolocație & Google Maps Redirecționare
+        let currentCoords = null;
+        function autoDetectUserLocation() {
+            const label = document.getElementById('locationDisplay');
+            if (!navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                currentCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentCoords.lat}&lon=${currentCoords.lon}&zoom=10`);
+                    const data = await res.json();
+                    if(label) label.innerText = data.address.city || data.address.town || data.address.village || "GPS Activ";
+                } catch(e) { if(label) label.innerText = "GPS Activ ✅"; }
+            }, (err) => {
+                if(label) label.innerText = "GPS Indisponibil";
+            });
+        }
+
+        function openGoogleMapsLocation() {
+            if (currentCoords) {
+                window.open(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`, '_blank');
+            } else {
+                autoDetectUserLocation();
+                showToast('Se preia locația...', 'info');
+            }
+        }
+   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
         getAuth, 
@@ -1380,11 +1408,9 @@
             showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
             setTimeout(() => { if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
         } catch (error) {
-            console.error("Eroare autentificare Firebase:", error);
+            console.error("Eroare autentificare:", error);
             if (error.code === 'auth/popup-closed-by-user') {
-                showToast('Fereastra de autentificare a fost închisă.', 'info');
-            } else if (error.code === 'auth/unauthorized-domain') {
-                showToast('Adaugă domeniul tău în Firebase Console -> Auth -> Settings -> Authorized Domains', 'error');
+                showToast('Fereastra a fost închisă.', 'info');
             } else {
                 showToast(`Eroare: ${error.message}`, 'error');
             }
@@ -1396,14 +1422,14 @@
         const pass = document.getElementById('regPass')?.value.trim() || '';
 
         if (!email || !pass) {
-            showToast('Introdu o adresă de email și o parolă!', 'error');
+            showToast('Introdu email și parolă!', 'error');
             return;
         }
 
         try {
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                showToast('Cont nou creat cu succes!', 'success');
+                showToast('Cont creat cu succes!', 'success');
             } catch (createErr) {
                 if (createErr.code === 'auth/email-already-in-use') {
                     await signInWithEmailAndPassword(auth, email, pass);
@@ -1412,10 +1438,7 @@
                     throw createErr;
                 }
             }
-
-            setTimeout(() => {
-                if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub');
-            }, 800);
+            setTimeout(() => { if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
         } catch (error) {
             showToast(`Eroare: ${error.message}`, 'error');
         }
@@ -1424,7 +1447,7 @@
     window.logoutUser = async function() {
         try {
             await signOut(auth);
-            showToast('Te-ai delogat cu succes.', 'info');
+            showToast('Ai ieșit din cont.', 'info');
             setTimeout(() => location.reload(), 500);
         } catch (error) {
             showToast('Eroare la delogare.', 'error');
@@ -1454,37 +1477,7 @@
             badge.className = 'text-[9px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
         }
     }
-
-        function exportFullSession() { showToast('Export realizat.', 'success'); }
-        function copyFullConversation() { showToast('Copiat.', 'success'); }
-        function downloadFullConversation() { showToast('Descărcat.', 'success'); }
-
-        // Geolocație & Google Maps Redirecționare
-        let currentCoords = null;
-        function autoDetectUserLocation() {
-            const label = document.getElementById('locationDisplay');
-            if (!navigator.geolocation) return;
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                currentCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
-                try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentCoords.lat}&lon=${currentCoords.lon}&zoom=10`);
-                    const data = await res.json();
-                    if(label) label.innerText = data.address.city || data.address.town || data.address.village || "GPS Activ";
-                } catch(e) { if(label) label.innerText = "GPS Activ ✅"; }
-            }, (err) => {
-                if(label) label.innerText = "GPS Indisponibil";
-            });
-        }
-
-        function openGoogleMapsLocation() {
-            if (currentCoords) {
-                window.open(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`, '_blank');
-            } else {
-                autoDetectUserLocation();
-                showToast('Se preia locația...', 'info');
-            }
-        }
-    </script>
+</script>
 
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
