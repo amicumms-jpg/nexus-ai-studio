@@ -1354,19 +1354,12 @@
                 showToast('Se preia locația...', 'info');
             }
         }
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-        getAuth, 
-        signInWithPopup, 
-        GoogleAuthProvider, 
-        OAuthProvider,
-        signInWithEmailAndPassword, 
-        createUserWithEmailAndPassword,
-        signOut, 
-        onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  <!-- Firebase App & Auth Compat CDN (Compatibil 100% cu codul tău existent, fără module izolate) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
+<script>
+    // Configurația ta Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
         authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
@@ -1377,10 +1370,14 @@
         measurementId: "G-W0PJNEF4S5"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    // Inițializare Firebase Compat
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
 
-    onAuthStateChanged(auth, (user) => {
+    // Monitorizare sesiune în timp real
+    auth.onAuthStateChanged((user) => {
         if (user) {
             const name = user.displayName || user.email.split('@')[0];
             const email = user.email;
@@ -1400,13 +1397,30 @@
         }
     });
 
+    // Autentificare Socială (Google / Apple)
     window.socialLogin = async function(providerName) {
-        let provider = providerName === 'Google' ? new GoogleAuthProvider() : new OAuthProvider('apple.com');
+        let provider;
+        if (providerName === 'Google') {
+            provider = new firebase.auth.GoogleAuthProvider();
+        } else if (providerName === 'Apple') {
+            provider = new firebase.auth.OAuthProvider('apple.com');
+        } else {
+            showToast('Provider indisponibil.', 'error');
+            return;
+        }
+
         try {
             showToast(`Se deschide fereastra ${providerName}...`, 'info');
-            const result = await signInWithPopup(auth, provider);
-            showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
-            setTimeout(() => { if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
+            const result = await auth.signInWithPopup(provider);
+            const user = result.user;
+
+            showToast(`Autentificat cu succes ca ${user.displayName || user.email}!`, 'success');
+
+            setTimeout(() => {
+                if (typeof switchTab === 'function') {
+                    switchTab('chat', 'Home / Tools Hub');
+                }
+            }, 800);
         } catch (error) {
             console.error("Eroare autentificare:", error);
             if (error.code === 'auth/popup-closed-by-user') {
@@ -1417,43 +1431,55 @@
         }
     };
 
+    // Înregistrare / Autentificare prin Formular Email & Parolă
     window.registerCompleteUser = async function() {
-        const email = document.getElementById('regEmail')?.value.trim() || '';
-        const pass = document.getElementById('regPass')?.value.trim() || '';
+        const emailInput = document.getElementById('regEmail');
+        const passInput = document.getElementById('regPass');
+        const email = emailInput ? emailInput.value.trim() : '';
+        const pass = passInput ? passInput.value.trim() : '';
 
         if (!email || !pass) {
-            showToast('Introdu email și parolă!', 'error');
+            showToast('Introdu o adresă de email și o parolă!', 'error');
             return;
         }
 
         try {
             try {
-                await createUserWithEmailAndPassword(auth, email, pass);
-                showToast('Cont creat cu succes!', 'success');
+                await auth.createUserWithEmailAndPassword(email, pass);
+                showToast('Cont nou creat cu succes!', 'success');
             } catch (createErr) {
                 if (createErr.code === 'auth/email-already-in-use') {
-                    await signInWithEmailAndPassword(auth, email, pass);
+                    await auth.signInWithEmailAndPassword(email, pass);
                     showToast('Autentificare reușită!', 'success');
                 } else {
                     throw createErr;
                 }
             }
-            setTimeout(() => { if (typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
+
+            setTimeout(() => {
+                if (typeof switchTab === 'function') {
+                    switchTab('chat', 'Home / Tools Hub');
+                }
+            }, 800);
         } catch (error) {
             showToast(`Eroare: ${error.message}`, 'error');
         }
     };
 
+    // Delogare
     window.logoutUser = async function() {
         try {
-            await signOut(auth);
-            showToast('Ai ieșit din cont.', 'info');
-            setTimeout(() => location.reload(), 500);
+            await auth.signOut();
+            showToast('Te-ai delogat cu succes.', 'info');
+            setTimeout(() => {
+                location.reload();
+            }, 500);
         } catch (error) {
             showToast('Eroare la delogare.', 'error');
         }
     };
 
+    // Actualizarea interfeței după logare
     function updateUIAfterLogin(name, email, avatar) {
         const authTabContainer = document.querySelector('#tab-authAccount > div');
         if (authTabContainer) {
