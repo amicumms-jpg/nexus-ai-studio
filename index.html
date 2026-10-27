@@ -1325,7 +1325,7 @@
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
-        function exportFullSession() { showToast('Export realizat.', 'success'); }
+       function exportFullSession() { showToast('Export realizat.', 'success'); }
         function copyFullConversation() { showToast('Copiat.', 'success'); }
         function downloadFullConversation() { showToast('Descărcat.', 'success'); }
 
@@ -1354,150 +1354,145 @@
                 showToast('Se preia locația...', 'info');
             }
         }
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script>
-    // Manager Taburi robust care elimină complet suprapunerea secțiunilor
-    window.switchTab = function(tabId, title) {
-        // 1. Ascundem absolut toate containerele și secțiunile posibile din pagină
-        const sectionsToHide = document.querySelectorAll('.tab-content, main > div, main > section, div[id$="Section"], div[id^="tab-"]');
-        sectionsToHide.forEach(el => {
-            // Nu atingem elementele de navigare sau sidebar-ul
-            if (!el.id.includes('sidebar') && !el.id.includes('nav') && !el.id.includes('breadcrumb') && !el.id.includes('Header')) {
-                el.classList.add('hidden');
-                el.style.setProperty('display', 'none', 'important');
+    </script>
+
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script>
+        // Manager Taburi curat împotriva suprapunerilor
+        window.switchTab = function(tabId, title) {
+            const sectionsToHide = document.querySelectorAll('.tab-content, main > div, main > section, div[id$="Section"], div[id^="tab-"]');
+            sectionsToHide.forEach(el => {
+                if (!el.id.includes('sidebar') && !el.id.includes('nav') && !el.id.includes('breadcrumb') && !el.id.includes('Header')) {
+                    el.classList.add('hidden');
+                    el.style.setProperty('display', 'none', 'important');
+                }
+            });
+
+            let target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
+            if (tabId === 'chat' || tabId === 'home') {
+                target = document.getElementById('tab-chat') || document.getElementById('toolsGridSection');
+            }
+
+            if (target) {
+                target.classList.remove('hidden');
+                target.style.setProperty('display', 'block', 'important');
+            }
+
+            const breadcrumb = document.getElementById('breadcrumbCurrent');
+            if (breadcrumb) {
+                breadcrumb.innerText = title;
+            }
+        };
+
+        window.toggleToolsGrid = function() {
+            const grid = document.getElementById('toolsGridSection');
+            if(grid) {
+                const isHidden = grid.classList.toggle('hidden');
+                grid.style.display = isHidden ? 'none' : 'block';
+            }
+        };
+
+        window.toggleNexusRobot = function() {
+            const robot = document.getElementById('nexusRobotSection');
+            if(robot) {
+                const isHidden = robot.classList.toggle('hidden');
+                robot.style.display = isHidden ? 'none' : 'block';
+            }
+        };
+
+        // Configurare Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+            authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+            projectId: "nexus-ai-studio-8335f",
+            storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+            messagingSenderId: "645678013335",
+            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+            measurementId: "G-W0PJNEF4S5"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        window.auth = firebase.auth();
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                const name = user.displayName || user.email.split('@')[0];
+                const email = user.email;
+                const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
+                
+                localStorage.setItem('nexus_is_logged_in', 'true');
+                localStorage.setItem('nexus_user_name', name);
+                localStorage.setItem('nexus_user_email', email);
+                localStorage.setItem('nexus_user_avatar', avatar);
+                
+                if(typeof updateUIAfterLogin === 'function') updateUIAfterLogin(name, email, avatar);
+            } else {
+                localStorage.removeItem('nexus_is_logged_in');
+                localStorage.removeItem('nexus_user_name');
+                localStorage.removeItem('nexus_user_email');
+                localStorage.removeItem('nexus_user_avatar');
             }
         });
 
-        // 2. Căutăm tab-ul cerut (după ID direct sau cu prefixul 'tab-')
-        let target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
-        
-        // 3. Dacă utilizatorul a apăsat pe Acasă / Chat principal
-        if (tabId === 'chat' || tabId === 'home') {
-            target = document.getElementById('tab-chat') || document.getElementById('toolsGridSection');
-        }
+        window.socialLogin = async function(providerName) {
+            let provider;
+            if (providerName === 'Google') {
+                provider = new firebase.auth.GoogleAuthProvider();
+            } else if (providerName === 'Apple') {
+                provider = new firebase.auth.OAuthProvider('apple.com');
+            } else {
+                showToast('Provider indisponibil.', 'error');
+                return;
+            }
 
-        // 4. Afișăm exclusiv secțiunea țintă dorită
-        if (target) {
-            target.classList.remove('hidden');
-            target.style.setProperty('display', 'block', 'important');
-        }
+            try {
+                showToast(`Se deschide fereastra ${providerName}...`, 'info');
+                const result = await auth.signInWithPopup(provider);
+                showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
+                setTimeout(() => { switchTab('chat', 'Home / Tools Hub'); }, 800);
+            } catch (error) {
+                showToast(`Eroare: ${error.message}`, 'error');
+            }
+        };
 
-        // 5. Actualizăm titlul din breadcrumb
-        const breadcrumb = document.getElementById('breadcrumbCurrent');
-        if (breadcrumb) {
-            breadcrumb.innerText = title;
-        }
-    };
+        window.logoutUser = async function() {
+            try {
+                await auth.signOut();
+                showToast('Te-ai delogat cu succes.', 'info');
+                setTimeout(() => location.reload(), 500);
+            } catch (error) {
+                showToast('Eroare la delogare.', 'error');
+            }
+        };
 
-    window.toggleToolsGrid = function() {
-        const grid = document.getElementById('toolsGridSection');
-        if(grid) {
-            const isHidden = grid.classList.toggle('hidden');
-            grid.style.display = isHidden ? 'none' : 'block';
-        }
-    };
-
-    window.toggleNexusRobot = function() {
-        const robot = document.getElementById('nexusRobotSection');
-        if(robot) {
-            const isHidden = robot.classList.toggle('hidden');
-            robot.style.display = isHidden ? 'none' : 'block';
-        }
-    };
-
-    // Configurare Firebase Oficială
-    const firebaseConfig = {
-        apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
-        authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
-        projectId: "nexus-ai-studio-8335f",
-        storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
-        messagingSenderId: "645678013335",
-        appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-        measurementId: "G-W0PJNEF4S5"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    window.auth = firebase.auth();
-
-    // Sesiune în timp real
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            const name = user.displayName || user.email.split('@')[0];
-            const email = user.email;
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
-            
-            localStorage.setItem('nexus_is_logged_in', 'true');
-            localStorage.setItem('nexus_user_name', name);
-            localStorage.setItem('nexus_user_email', email);
-            localStorage.setItem('nexus_user_avatar', avatar);
-            
-            if(typeof updateUIAfterLogin === 'function') updateUIAfterLogin(name, email, avatar);
-        } else {
-            localStorage.removeItem('nexus_is_logged_in');
-            localStorage.removeItem('nexus_user_name');
-            localStorage.removeItem('nexus_user_email');
-            localStorage.removeItem('nexus_user_avatar');
-        }
-    });
-
-    window.socialLogin = async function(providerName) {
-        let provider;
-        if (providerName === 'Google') {
-            provider = new firebase.auth.GoogleAuthProvider();
-        } else if (providerName === 'Apple') {
-            provider = new firebase.auth.OAuthProvider('apple.com');
-        } else {
-            showToast('Provider indisponibil.', 'error');
-            return;
-        }
-
-        try {
-            showToast(`Se deschide fereastra ${providerName}...`, 'info');
-            const result = await auth.signInWithPopup(provider);
-            showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
-            setTimeout(() => { switchTab('chat', 'Home / Tools Hub'); }, 800);
-        } catch (error) {
-            showToast(`Eroare: ${error.message}`, 'error');
-        }
-    };
-
-    window.logoutUser = async function() {
-        try {
-            await auth.signOut();
-            showToast('Te-ai delogat cu succes.', 'info');
-            setTimeout(() => location.reload(), 500);
-        } catch (error) {
-            showToast('Eroare la delogare.', 'error');
-        }
-    };
-
-    function updateUIAfterLogin(name, email, avatar) {
-        const authTabContainer = document.querySelector('#tab-authAccount > div');
-        if (authTabContainer) {
-            authTabContainer.innerHTML = `
-                <div class="text-center space-y-3 py-4">
-                    <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover bg-gray-900">
-                    <h2 class="text-lg font-bold text-white">${name}</h2>
-                    <p class="text-xs text-gray-400">${email}</p>
-                    <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
-                        <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
+        function updateUIAfterLogin(name, email, avatar) {
+            const authTabContainer = document.querySelector('#tab-authAccount > div');
+            if (authTabContainer) {
+                authTabContainer.innerHTML = `
+                    <div class="text-center space-y-3 py-4">
+                        <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover bg-gray-900">
+                        <h2 class="text-lg font-bold text-white">${name}</h2>
+                        <p class="text-xs text-gray-400">${email}</p>
+                        <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
+                        </div>
+                        <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
+                            <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Deconectare (Log Out)
+                        </button>
                     </div>
-                    <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
-                        <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Deconectare (Log Out)
-                    </button>
-                </div>
-            `;
+                `;
+            }
+            const badge = document.getElementById('proBadge');
+            if (badge) {
+                badge.innerText = 'ONLINE';
+                badge.className = 'text-[9px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
+            }
         }
-        const badge = document.getElementById('proBadge');
-        if (badge) {
-            badge.innerText = 'ONLINE';
-            badge.className = 'text-[9px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
-        }
-    }
-</script>
+    </script>
 
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
