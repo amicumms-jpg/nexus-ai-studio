@@ -99,46 +99,46 @@
 
             <!-- Utilitare Sus -->
             <div class="flex flex-wrap items-center gap-2 text-xs">
-                <!-- 1. Badge Contor Mesaje Gratuite[cite: 5] -->
+                <!-- 1. Badge Contor Mesaje Gratuite -->
                 <div id="freeMessagesBadge" class="flex items-center gap-1.5 bg-gray-900 border border-cyanNeon/30 px-2.5 py-0.5 rounded-xl text-[10px] text-gray-300">
                     <i class="fa-solid fa-bolt text-cyanNeon"></i>
-                    <span>Gratuit: <strong id="freeCountDisplay" class="text-white">10/10</strong>[cite: 5]</span>
+                    <span>Gratuit: <strong id="freeCountDisplay" class="text-white">10/10</strong>]</span>
                 </div>
 
-                <!-- 2. Banner Reclamă Luminos Partener (Înlocuiește tab-ul PRO de sus)[cite: 4] -->
+                <!-- 2. Banner Reclamă Luminos Partener (Înlocuiește tab-ul PRO de sus) -->
                 <a href="https://nexusaistudio.ro" target="_blank" class="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-yellow-500/80 to-amber-600/80 border border-amber-400 hover:border-yellow-300 px-2.5 py-0.5 rounded-xl text-[10px] text-white transition cursor-pointer animate-pulse shadow-md" title="Reclamă Partener">
                     <i class="fa-solid fa-rectangle-ad text-yellow-200"></i>
-                    <span class="font-semibold">Reclamă Nume Partener</span>[cite: 4]
+                    <span class="font-semibold">Reclamă Nume Partener</span>
                 </a>
 
-                <!-- Buton Notiță[cite: 5] -->
+                <!-- Buton Notiță -->
                 <button onclick="toggleQuickNotePopup()" class="hidden md:flex items-center space-x-1 bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2 py-0.5 rounded-xl text-[10px] transition">
                     <i class="fa-regular fa-note-sticky"></i>
-                    <span id="noteText">Notiță</span>[cite: 5]
+                    <span id="noteText">Notiță</span>
                 </button>
 
-                <!-- Widget Google Maps / Localizare Automată[cite: 5] -->
+                <!-- Widget Google Maps / Localizare Automată -->
                 <button onclick="openGoogleMapsLocation()" class="hidden md:flex items-center space-x-1.5 bg-gray-900 border border-gray-800 hover:border-cyanNeon text-cyanNeon px-2.5 py-0.5 rounded-xl text-[10px] transition cursor-pointer" title="Click pentru a deschide Google Maps">
                     <i class="fa-solid fa-map-location-dot"></i>
-                    <span id="locationDisplay">Se detectează...</span>[cite: 5]
+                    <span id="locationDisplay">Se detectează...</span>
                 </button>
 
-                <!-- Buton Export Sesiune[cite: 5] -->
+                <!-- Buton Export Sesiune -->
                 <button onclick="exportFullSession()" class="hidden md:flex items-center space-x-1 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2 py-0.5 rounded-xl text-[10px] transition">
                     <i class="fa-solid fa-file-arrow-down text-cyan-400"></i>
-                    <span id="exportText">Export</span>[cite: 5]
+                    <span id="exportText">Export</span>
                 </button>
 
                 <div class="hidden md:flex items-center space-x-1">
                     <button onclick="switchTab('billingCard', 'Abonament & PRO')" class="bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[10px] px-2 py-0.5 rounded-xl transition cursor-pointer flex items-center space-x-1 shadow">
-                        <i class="fa-solid fa-credit-card"></i> <span>PRO</span>[cite: 5]
+                        <i class="fa-solid fa-credit-card"></i> <span>PRO</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Popup Notiță Rapidă[cite: 5] -->
+    <!-- Popup Notiță Rapidă -->
     <div id="quickNoteModal" class="fixed top-14 right-5 bg-panelBg border border-amberGlow/50 p-3 rounded-2xl shadow-2xl z-50 w-72 hidden space-y-2">
         <div class="flex justify-between items-center border-b border-gray-800 pb-1.5">
             <span class="text-xs font-bold text-amberGlow flex items-center"><i class="fa-solid fa-pen-nib mr-1.5"></i> Notiță Rapidă Volatilă</span>
@@ -1325,7 +1325,7 @@
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
-        // Verifică la încărcarea paginii dacă utilizatorul este deja logat
+       // Verifică la încărcarea paginii dacă utilizatorul este deja logat
         window.addEventListener('DOMContentLoaded', () => {
             initMatrix();
             const savedDraft = localStorage.getItem('nexus_chat_draft');
@@ -1341,29 +1341,51 @@
             const isLoggedIn = localStorage.getItem('nexus_is_logged_in');
             if (isLoggedIn === 'true') {
                 const userName = localStorage.getItem('nexus_user_name') || 'Utilizator';
-                const userEmail = localStorage.getItem('nexus_user_email') || 'cont@platforma.ro';
-                const userAvatar = localStorage.getItem('nexus_user_avatar') || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+                const userEmail = localStorage.getItem('nexus_user_email') || 'contact@nexusaistudio.ro';
+                const userAvatar = localStorage.getItem('nexus_user_avatar') || 'https://api.dicebear.com/7.x/avataaars/svg?seed=NexusUser';
                 updateUIAfterLogin(userName, userEmail, userAvatar);
             }
         }
 
         function socialLogin(provider) {
             showToast(`Autentificare reușită cu ${provider}!`, 'success');
+            
             const mockUserData = {
                 name: provider === 'Google' ? 'Valentin S.' : `Utilizator ${provider}`,
                 email: `contact@nexusaistudio.ro`,
-                avatar: provider === 'Google' 
-                    ? 'https://lh3.googleusercontent.com/a/ACg8ocL... (sau poza ta de profil)' 
-                    : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + provider
+                avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + (provider === 'Google' ? 'Valentin' : provider)
             };
 
+            // Salvăm datele corect în localStorage
             localStorage.setItem('nexus_is_logged_in', 'true');
             localStorage.setItem('nexus_user_name', mockUserData.name);
             localStorage.setItem('nexus_user_email', mockUserData.email);
             localStorage.setItem('nexus_user_avatar', mockUserData.avatar);
             localStorage.setItem('nexus_auth_provider', provider);
 
+            // Actualizăm interfața instant
             updateUIAfterLogin(mockUserData.name, mockUserData.email, mockUserData.avatar);
+
+            // Redirecționare automată fluidă către Hub-ul de chat după 1 secundă
+            setTimeout(() => {
+                switchTab('chat', 'Home / Tools Hub');
+            }, 1000);
+        }
+
+        function registerCompleteUser() {
+            const nameInput = document.getElementById('regFullName');
+            const emailInput = document.getElementById('regEmail');
+            
+            const name = nameInput && nameInput.value ? nameInput.value : 'Utilizator Nou';
+            const email = emailInput && emailInput.value ? emailInput.value : 'nume@exemplu.ro';
+
+            localStorage.setItem('nexus_is_logged_in', 'true');
+            localStorage.setItem('nexus_user_name', name);
+            localStorage.setItem('nexus_user_email', email);
+            localStorage.setItem('nexus_user_avatar', 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + name);
+
+            showToast('Cont creat cu succes! Se redirecționează...', 'success');
+            updateUIAfterLogin(name, email, localStorage.getItem('nexus_user_avatar'));
 
             setTimeout(() => {
                 switchTab('chat', 'Home / Tools Hub');
@@ -1375,7 +1397,7 @@
             if (authTabContainer) {
                 authTabContainer.innerHTML = `
                     <div class="text-center space-y-3 py-4">
-                        <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                        <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover bg-gray-900">
                         <h2 class="text-lg font-bold text-white">${name}</h2>
                         <p class="text-xs text-gray-400">${email}</p>
                         <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
