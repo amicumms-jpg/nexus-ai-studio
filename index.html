@@ -1357,7 +1357,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-    // Manager Taburi cu curățare completă și sigură a suprapunerilor
+    // Manager Taburi curat și sigur împotriva suprapunerilor vizuale
     window.switchTab = window.switchTab || function(tabId, title) {
         document.querySelectorAll('.tab-content').forEach(el => {
             el.classList.add('hidden');
@@ -1399,7 +1399,7 @@
         }
     };
 
-    // Configurația Firebase corectată oficial
+    // Configurare Firebase oficială
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
         authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
@@ -1413,7 +1413,6 @@
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
-
     window.auth = firebase.auth();
 
     auth.onAuthStateChanged((user) => {
