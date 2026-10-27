@@ -1357,33 +1357,40 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-    // Manager Taburi curat și sigur împotriva suprapunerilor vizuale
-    window.switchTab = window.switchTab || function(tabId, title) {
-        document.querySelectorAll('.tab-content').forEach(el => {
-            el.classList.add('hidden');
-            el.style.setProperty('display', 'none', 'important');
-        });
-
-        const specificSections = ['toolsGridSection', 'nexusRobotSection', 'calendarSection', 'videoSection', 'socialSection'];
-        specificSections.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
+    // Manager Taburi robust care elimină complet suprapunerea secțiunilor
+    window.switchTab = function(tabId, title) {
+        // 1. Ascundem absolut toate containerele și secțiunile posibile din pagină
+        const sectionsToHide = document.querySelectorAll('.tab-content, main > div, main > section, div[id$="Section"], div[id^="tab-"]');
+        sectionsToHide.forEach(el => {
+            // Nu atingem elementele de navigare sau sidebar-ul
+            if (!el.id.includes('sidebar') && !el.id.includes('nav') && !el.id.includes('breadcrumb') && !el.id.includes('Header')) {
                 el.classList.add('hidden');
                 el.style.setProperty('display', 'none', 'important');
             }
         });
 
-        const target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
-        if(target) {
+        // 2. Căutăm tab-ul cerut (după ID direct sau cu prefixul 'tab-')
+        let target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
+        
+        // 3. Dacă utilizatorul a apăsat pe Acasă / Chat principal
+        if (tabId === 'chat' || tabId === 'home') {
+            target = document.getElementById('tab-chat') || document.getElementById('toolsGridSection');
+        }
+
+        // 4. Afișăm exclusiv secțiunea țintă dorită
+        if (target) {
             target.classList.remove('hidden');
             target.style.setProperty('display', 'block', 'important');
         }
 
-        const b = document.getElementById('breadcrumbCurrent');
-        if(b) b.innerText = title;
+        // 5. Actualizăm titlul din breadcrumb
+        const breadcrumb = document.getElementById('breadcrumbCurrent');
+        if (breadcrumb) {
+            breadcrumb.innerText = title;
+        }
     };
 
-    window.toggleToolsGrid = window.toggleToolsGrid || function() {
+    window.toggleToolsGrid = function() {
         const grid = document.getElementById('toolsGridSection');
         if(grid) {
             const isHidden = grid.classList.toggle('hidden');
@@ -1391,7 +1398,7 @@
         }
     };
 
-    window.toggleNexusRobot = window.toggleNexusRobot || function() {
+    window.toggleNexusRobot = function() {
         const robot = document.getElementById('nexusRobotSection');
         if(robot) {
             const isHidden = robot.classList.toggle('hidden');
@@ -1399,7 +1406,7 @@
         }
     };
 
-    // Configurare Firebase oficială
+    // Configurare Firebase Oficială
     const firebaseConfig = {
         apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
         authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
@@ -1415,6 +1422,7 @@
     }
     window.auth = firebase.auth();
 
+    // Sesiune în timp real
     auth.onAuthStateChanged((user) => {
         if (user) {
             const name = user.displayName || user.email.split('@')[0];
