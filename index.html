@@ -147,13 +147,12 @@
         </div>
         <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
     </div>
-
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         <!-- Sidebar -->
         <aside id="appSidebar" class="hidden md:flex fixed md:relative top-12 left-2 z-50 flex-col w-64 bg-panelBg border border-gray-800 rounded-2xl shrink-0 p-2 h-[82vh] max-h-[82vh] overflow-hidden shadow-2xl">
             
-            <!-- Butonul Deschide Asistent AI (Conectat la Robotelul Flotant) -->
+            <!-- Butonul Deschide Asistent AI -->
             <button onclick="toggleNexusRobot()" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow-lg shadow-emerald-500/20">
                 <i class="fa-solid fa-robot font-bold text-sm"></i>
                 <span>Deschide Asistent AI</span>
@@ -195,7 +194,6 @@
 
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
                 <div class="mt-1 space-y-1 text-xs">
-                    <!-- Unificarea într-un singur Social & Creator Hub -->
                     <button onclick="switchTab('socialHub', 'Social & Creator Hub')" id="nav-socialHub" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
                         <i class="fa-solid fa-photo-film text-tiktokColor w-4"></i>
                         <span>Social & Creator Hub</span>
@@ -267,7 +265,7 @@
                         </button>
                     </div>
 
-                    <!-- Mesaj de Bun Venit Vizual (Cald & Profesional) -->
+                    <!-- Mesaj de Bun Venit Vizual -->
                     <div class="bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-panelBg border border-cyanNeon/30 p-3.5 rounded-2xl mb-2 shrink-0 flex items-center space-x-3 shadow-md">
                         <div class="w-9 h-9 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center text-base font-bold shrink-0 animate-pulse">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -340,7 +338,7 @@
                             <button onclick="removeAttachment('chat')" class="text-red-400 hover:text-red-300 ml-2 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                         
-                        <!-- Emoji Picker cu efect de Tap / Pulse -->
+                        <!-- Emoji Picker -->
                         <div class="flex flex-wrap gap-1 py-0.5 px-2 bg-gray-900/80 rounded-xl border border-gray-800 text-[11px] w-max">
                             <span onclick="appendEmoji('🔥', this)" class="cursor-pointer hover:scale-125 transition px-1 py-0.5 rounded select-none">🔥</span>
                             <span onclick="appendEmoji('🚀', this)" class="cursor-pointer hover:scale-125 transition px-1 py-0.5 rounded select-none">🚀</span>
@@ -364,7 +362,7 @@
                             </select>
                         </div>
 
-                        <!-- Câmp de scriere auto-expandabil (Textarea în loc de Input) -->
+                        <!-- Câmp scriere -->
                         <div class="flex space-x-2 items-end">
                             <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
                             <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition shrink-0 mb-0.5" title="Atașează fișier">
@@ -383,8 +381,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- TAB UNIFICAT: Social & Creator Hub (Gruparea TikTok, Instagram, YouTube și SEO intr-un singur loc) -->
+            <!-- TAB UNIFICAT: Social & Creator Hub -->
             <div id="tab-socialHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-gray-800 mb-2 shrink-0 gap-2">
@@ -393,7 +390,6 @@
                             <p class="text-[10px] text-gray-400">Generează conținut viral pentru toate platformele tale dintr-un singur loc 🚀</p>
                         </div>
                         
-                        <!-- Selector Sub-Mod Platformă -->
                         <div class="flex items-center space-x-1 bg-gray-900 p-1 rounded-xl border border-gray-800">
                             <button onclick="switchSocialPlatform('tiktok')" id="socBtn-tiktok" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1">
                                 <i class="fa-brands fa-tiktok"></i> TikTok
@@ -421,7 +417,7 @@
                 </div>
             </div>
 
-            <!-- Sub-Tab-uri auxiliare de unelte (Prompt, Search, Summarizer, Code, Doc, Copywriting) -->
+            <!-- Sub-Tab-uri auxiliare -->
             <div id="tab-promptEnhancer" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                     <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
@@ -652,7 +648,7 @@
                 </div>
             </div>
 
-            <!-- TAB UNIFICAT: Abonament & PRO (Cu Activare Cheie, Card Acces Gratuit/Early Access și Susținere Revolut Me) -->
+            <!-- TAB UNIFICAT: Abonament & PRO -->
             <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
                 <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
                     <div class="text-center space-y-1">
@@ -676,7 +672,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Card 1: Acces Gratuit / Early Access -->
+                        <!-- Card 1: Acces Gratuit -->
                         <div class="bg-panelBg border border-emeraldNeon/30 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center">
@@ -696,7 +692,7 @@
                             </div>
                         </div>
 
-                        <!-- Card 2: Pachetul PRO VIP (Stripe) -->
+                        <!-- Card 2: Pachetul PRO VIP -->
                         <div class="bg-panelBg border border-amberGlow/50 p-4 rounded-2xl space-y-3 shadow-xl flex flex-col justify-between relative overflow-hidden">
                             <div class="absolute top-0 right-0 bg-amberGlow text-darkBg text-[8px] font-black uppercase px-3 py-0.5 rounded-bl-lg">Recomandat</div>
                             <div class="space-y-2">
@@ -716,7 +712,7 @@
                             </a>
                         </div>
 
-                        <!-- Card 3: Susține Proiectul (Revolut Me cu text draguț) -->
+                        <!-- Card 3: Susține Proiectul (Revolut Me) -->
                         <div class="bg-panelBg border border-purple-500/40 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center">
@@ -726,7 +722,7 @@
                                 <div class="text-base font-extrabold text-purple-400">O cafea virtuală</div>
                                 <p class="text-[11px] text-gray-300 leading-snug">Îți place platforma și vrei să susții dezvoltarea ei continuă? Orice contribuție ne ajută să acoperim serverele și să adăugăm unelte AI mai tari!</p>
                             </div>
-                            <a href="https://revolut.me/valentin" target="_blank" class="w-full block text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer">
+                            <a href="https://revolut.me/valentihz6" target="_blank" class="w-full block text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer">
                                 <i class="fa-solid fa-heart mr-1 text-pink-400"></i> Trimite o cafea pe Revolut
                             </a>
                         </div>
@@ -738,7 +734,7 @@
                 </div>
             </div>
 
-            <!-- Tab: Cont, Google & Înregistrare (Intact 100%) -->
+            <!-- Tab: Cont, Google & Înregistrare -->
             <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
                 <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
                     <div class="text-center space-y-1">
@@ -790,7 +786,7 @@
                 </div>
             </div>
 
-            <!-- Tab: Suport & Asistență Clienți (Intact 100%) -->
+            <!-- Tab: Suport & Asistență Clienți -->
             <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
                 <div class="bg-panelBg border border-amberGlow/30 p-5 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
@@ -861,40 +857,33 @@
             </div>
         </main>
     </div>
-
-    <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI (Dreapta-Jos, Mic & Neobstrucționist) -->
+    <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI -->
     <div id="nexus-robot-widget" class="fixed bottom-12 right-4 z-50">
-        <!-- Butonul Flotant (Declanșator Mic) -->
         <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
             <i class="fa-solid fa-robot text-sm"></i>
             <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
         </button>
 
-        <!-- Fereastra de Chat Flotantă -->
         <div id="nexus-robot-window" class="hidden flex flex-col absolute bottom-12 right-0 w-[90vw] sm:w-[380px] h-[480px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
-            <!-- Header Chat Flotant cu Redirecționare Telegram -->
             <div class="flex items-center justify-between px-3 py-2 bg-slate-800 border-b border-slate-700">
                 <div class="flex items-center space-x-2">
                     <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
                     <span class="font-bold text-xs text-white">Nexus Gemini Bot</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <!-- Link direct spre Telegram Bot -->
-                    <a href="https://t.me/your_nexus_bot" target="_blank" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition" title="Deschide în Telegram">
+                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition" title="Deschide în Telegram">
                         <i class="fa-brands fa-telegram"></i> Telegram
                     </a>
                     <button onclick="toggleNexusRobot()" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
                 </div>
             </div>
 
-            <!-- Corp Mesaje Flotant -->
             <div id="nexus-robot-messages" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs text-slate-200">
                 <div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700 max-w-[85%]">
                     <b>Nexus AI:</b> Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!
                 </div>
             </div>
 
-            <!-- Zona de Input Flotantă (Microfon, Sound Toggle, Text & Send) -->
             <div class="p-2.5 bg-slate-800 border-t border-slate-700 flex flex-col space-y-1.5">
                 <div class="flex items-center justify-between px-1 text-[10px] text-slate-400">
                     <span id="speechStatus">Gata de ascultare</span>
@@ -903,13 +892,10 @@
                     </button>
                 </div>
                 <div class="flex items-center space-x-1.5">
-                    <!-- Buton Microfon (Voice Input) -->
                     <button onclick="startVoiceRecognition()" id="micBtn" class="bg-slate-700 hover:bg-slate-600 text-slate-200 p-2 rounded-xl text-xs transition cursor-pointer" title="Apasă și vorbește">
                         <i class="fa-solid fa-microphone"></i>
                     </button>
-
                     <input type="text" id="nexus-robot-input" placeholder="Scrie sau vorbește..." onkeydown="if(event.key==='Enter') sendNexusRobotMessage()" class="flex-1 bg-slate-900 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-cyan-500" />
-                    
                     <button onclick="sendNexusRobotMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-2 rounded-xl text-xs cursor-pointer transition">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
@@ -917,361 +903,9 @@
             </div>
         </div>
     </div>
-<!-- Matrix Rain Effect & Toate Funcționalitățile JavaScript -->
+
+    <!-- Scripturi JavaScript Complete și Curățate -->
     <script>
-        // Matrix Rain Canvas Effect Continuu
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-/<>?';
-        const fontSize = 12;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for(let i=0; i<columns; i++) drops[i] = 1;
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(9, 13, 22, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#10b981';
-            ctx.font = fontSize + 'px monospace';
-            for(let i=0; i<drops.length; i++) {
-                const text = letters.charAt(Math.floor(Math.random() * letters.length));
-                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 33);
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-        // Auto Resize Textarea & Draft Auto-Save în localStorage
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
-
-        function saveDraft(val) {
-            localStorage.setItem('nexus_chat_draft', val);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedDraft = localStorage.getItem('nexus_chat_draft');
-            if(savedDraft && document.getElementById('chatInput')) {
-                document.getElementById('chatInput').value = savedDraft;
-                autoResizeTextarea(document.getElementById('chatInput'));
-            }
-        });
-
-        // Efect de Tap / Pulse pe Emojis
-        function appendEmoji(emoji, el) {
-            const input = document.getElementById('chatInput');
-            if(input) {
-                input.value += emoji;
-                autoResizeTextarea(input);
-                saveDraft(input.value);
-            }
-            el.classList.add('animate-ping');
-            setTimeout(() => el.classList.remove('animate-ping'), 300);
-        }
-
-        // Navigare & Comutare Tab-uri
-        function switchTab(tabId, title) {
-            document.querySelectorAll('.app-tab').forEach(tab => {
-                tab.classList.add('hidden');
-                tab.classList.remove('flex');
-            });
-            const target = document.getElementById('tab-' + tabId);
-            if(target) {
-                target.classList.remove('hidden');
-                target.classList.add('flex');
-            }
-            document.getElementById('breadcrumbCurrent').innerText = title;
-            if(window.innerWidth < 768) {
-                const sidebar = document.getElementById('appSidebar');
-                if(sidebar) sidebar.classList.add('hidden');
-            }
-        }
-
-        function toggleSidebar() {
-            const sb = document.getElementById('appSidebar');
-            if(sb) sb.classList.toggle('hidden');
-        }
-
-        // Ascundere / Afișare Panou Unelte Rapide
-        function toggleToolsGrid() {
-            const grid = document.getElementById('toolsGrid');
-            const icon = document.getElementById('toggleToolsIcon');
-            const text = document.getElementById('toggleToolsText');
-            if(grid.classList.contains('hidden')) {
-                grid.classList.remove('hidden');
-                icon.className = 'fa-solid fa-eye-slash';
-                text.innerText = 'Ascunde Unelte';
-            } else {
-                grid.classList.add('hidden');
-                icon.className = 'fa-solid fa-eye';
-                text.innerText = 'Arată Unelte';
-            }
-        }
-
-        // Notiță Rapidă Volatilă
-        function toggleQuickNotePopup() {
-            const modal = document.getElementById('quickNoteModal');
-            if(modal) modal.classList.toggle('hidden');
-        }
-        function saveQuickNoteState() {
-            const val = document.getElementById('quickNoteText').value;
-            localStorage.setItem('nexus_quick_note', val);
-        }
-        window.addEventListener('DOMContentLoaded', () => {
-            const note = localStorage.getItem('nexus_quick_note');
-            if(note && document.getElementById('quickNoteText')) {
-                document.getElementById('quickNoteText').value = note;
-            }
-        });
-
-        // Deschidere / Închidere Asistent AI Flotant (Robățel)
-        function toggleNexusRobot() {
-            const win = document.getElementById('nexus-robot-window');
-            if(win) win.classList.toggle('hidden');
-        }
-
-        // Activare Cheie Licență Oficială PRO (`NEXUS-PRO-`)
-        let freeMessagesLeft = 10;
-        function activateLicenseKey() {
-            const key = document.getElementById('licenseKeyInput').value.trim();
-            const status = document.getElementById('licenseStatus');
-            const badge = document.getElementById('proBadge');
-            if(key.startsWith('NEXUS-PRO-')) {
-                status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență activată cu succes! Acces VIP deblocat.</span>';
-                badge.innerText = 'PRO VIP';
-                badge.className = 'text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.2 rounded-full font-bold';
-                showToast('Cheie PRO activată cu succes!', 'success');
-            } else {
-                status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă. Încearcă din nou.</span>';
-                showToast('Cheie invalidă!', 'error');
-            }
-        }
-
-        // Sistem de Notificări Toast
-        function showToast(msg, type='info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
-            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${msg}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Selector Platforme în Social & Creator Hub
-        function switchSocialPlatform(platform) {
-            ['tiktok', 'insta', 'yt', 'seo'].forEach(p => {
-                const btn = document.getElementById('socBtn-' + p);
-                if(btn) {
-                    btn.className = p === platform ? 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1' : 'px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1';
-                }
-            });
-            const msgs = document.getElementById('socialHubMessages');
-            msgs.innerHTML += `<div class="text-gray-400 text-[11px] mt-1">[Mod comutat pe: <b>${platform.toUpperCase()}</b>] Spune-mi ce dorești să generăm!</div>`;
-            msgs.scrollTop = msgs.scrollHeight;
-        }
-
-        // Trimitere Mesaj Chat cu Skeleton Loader & Highlight.js
-        function sendChatMessageWithAttachment(containerId, inputId, tabName) {
-            const input = document.getElementById(inputId);
-            const container = document.getElementById(containerId);
-            const text = input.value.trim();
-            if(!text) return;
-
-            if(freeMessagesLeft <= 0) {
-                showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO sau folosește cheia!', 'error');
-                switchTab('billingCard', 'Abonament & PRO');
-                return;
-            }
-            freeMessagesLeft--;
-            document.getElementById('freeCountDisplay').innerText = freeMessagesLeft + '/10';
-
-            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
-            input.value = '';
-            input.style.height = 'auto';
-            saveDraft('');
-            container.scrollTop = container.scrollHeight;
-
-            // Skeleton Loader (3 linii animate gri)
-            const skeletonId = 'skeleton-' + Date.now();
-            container.innerHTML += `<div id="${skeletonId}" class="flex justify-start"><div class="bg-gray-900 p-3 rounded-2xl rounded-tl-none space-y-2 w-64 border border-gray-800"><div class="h-2.5 bg-gray-800 rounded animate-pulse w-3/4"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-1/2"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-5/6"></div></div></div>`;
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                const skel = document.getElementById(skeletonId);
-                if(skel) skel.remove();
-
-                const aiResponse = `Iată răspunsul generat de Nexus AI pentru cererea ta: **${text}**. Totul este optimizat și pregătit pentru succes! \n\n\`\`\`javascript\n// Exemplu de cod generat\nconsole.log("Nexus AI Studio Pro activat cu succes!");\n\`\`\``;
-                
-                const msgId = 'msg-' + Date.now();
-                container.innerHTML += `<div class="flex justify-start"><div class="bg-panelBg border border-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow"><div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold"><span>Nexus AI Assistant</span><button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button></div><div id="${msgId}" class="markdown-content">${parseMarkdown(aiResponse)}</div></div></div>`;
-                
-                hljs.highlightAll();
-                container.scrollTop = container.scrollHeight;
-            }, 1200);
-        }
-
-        function sendChatMessage(containerId, inputId, prefix) {
-            const input = document.getElementById(inputId);
-            const container = document.getElementById(containerId);
-            const text = input.value.trim();
-            if(!text) return;
-
-            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                const reply = `${prefix} Răspunsul expert pentru "${text}" a fost generat cu succes! Conținutul este structurat și optimizat pentru maximă eficiență.`;
-                container.innerHTML += `<div class="flex justify-start"><div class="bg-panelBg border border-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200">${reply}</div></div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 1000);
-        }
-
-        function sendSocialHubMessage() {
-            sendChatMessage('socialHubMessages', 'socialHubInput', '[Social Hub AI]: ');
-        }
-
-        function sendNexusRobotMessage() {
-            const input = document.getElementById('nexus-robot-input');
-            const container = document.getElementById('nexus-robot-messages');
-            const text = input.value.trim();
-            if(!text) return;
-
-            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2 rounded-xl max-w-[85%]">${escapeHtml(text)}</div></div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%]"><b>Nexus AI:</b> Am procesat cererea ta rapid! Totul funcționează perfect.</div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 800);
-        }
-
-        // Text-to-Speech (Citire cu voce tare în limba română ro-RO)
-        function speakText(elementId) {
-            const el = document.getElementById(elementId);
-            if(!el) return;
-            const text = el.innerText;
-            if('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'ro-RO';
-                window.speechSynthesis.speak(utterance);
-                showToast('Se citește textul cu voce tare...', 'info');
-            } else {
-                showToast('Sinteza vocală nu este suportată de browserul tău.', 'error');
-            }
-        }
-
-        // Recunoaștere Vocală (Microfon 🎙️)
-        function startVoiceRecognition() {
-            if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                recognition.lang = 'ro-RO';
-                recognition.onstart = () => { document.getElementById('speechStatus').innerText = 'Ascult... Vorbește acum!'; };
-                recognition.onresult = (event) => {
-                    const speechToText = event.results[0][0].transcript;
-                    document.getElementById('nexus-robot-input').value = speechToText;
-                    document.getElementById('speechStatus').innerText = 'Gata de ascultare';
-                };
-                recognition.onerror = () => { document.getElementById('speechStatus').innerText = 'Eroare microfon'; };
-                recognition.start();
-            } else {
-                showToast('Recunoașterea vocală nu este suportată în browserul tău.', 'error');
-            }
-        }
-
-        function toggleRobotAudio() {
-            showToast('Stare audio comutată.', 'info');
-        }
-
-        // Funcții Utilitare
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        function parseMarkdown(text) {
-            if(typeof marked !== 'undefined') {
-                return marked.parse(text);
-            }
-            return escapeHtml(text);
-        }
-
-        function clearTabChat(tab) {
-            const container = document.getElementById(tab + 'Messages');
-            if(container) container.innerHTML = '<div class="text-gray-400">Chat golit. Introdu o nouă cerere...</div>';
-            showToast('Chat golit cu succes.', 'success');
-        }
-
-        function addEditorialPost() {
-            const platform = document.getElementById('postPlatform').value;
-            const title = document.getElementById('postTitle').value;
-            const date = document.getElementById('postDate').value;
-            if(!title || !date) {
-                showToast('Completează titlul și data postării!', 'error');
-                return;
-            }
-            const container = document.getElementById('editorialListContainer');
-            if(container.innerHTML.includes('Nicio postare')) container.innerHTML = '';
-            container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platform}]</span> <span class="text-white font-medium">${escapeHtml(title)}</span><div class="text-[10px] text-gray-400 mt-0.5"><i class="fa-solid fa-clock mr-1"></i>${date}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
-            showToast('Postare programată în calendar cu succes!', 'success');
-        }
-
-        function generateTextToVideo() {
-            const input = document.getElementById('textToVideoInput').value;
-            const result = document.getElementById('textToVideoResult');
-            if(!input) {
-                showToast('Introdu descrierea scenei video!', 'error');
-                return;
-            }
-            result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariul și cadrele video AI... Vă rugăm așteptați...</div>';
-            setTimeout(() => {
-                result.innerHTML = `✅ **Generare video reușită!**\n\n**Prompt:** ${escapeHtml(input)}\n\n* **Scena 1 (0-3s):** Cadru larg cinematic cu iluminare dinamică.\n* **Scena 2 (3-6s):** Mișcare fluentă a camerei și efecte vizuale de înaltă rezoluție.\n\n*Videoclipul demo este pregătit pentru export în format MP4.*`;
-                showToast('Video generat cu succes!', 'success');
-            }, 1500);
-        }
-
-        function socialLogin(provider) {
-            showToast(`Conectare cu ${provider} reușită!`, 'success');
-            document.getElementById('userAccountStatus').innerText = `Conectat cu succes prin ${provider}!`;
-        }
-
-        function registerCompleteUser() {
-            const name = document.getElementById('regFullName').value;
-            const email = document.getElementById('regEmail').value;
-            if(!name || !email) {
-                showToast('Completează cel puțin numele și emailul!', 'error');
-                return;
-            }
-            document.getElementById('userAccountStatus').innerText = `Contul pentru ${name} a fost creat cu succes!`;
-            showToast('Cont înregistrat cu succes!', 'success');
-        }
-
-        function exportFullSession() {
-            showToast('Sesiunea a fost exportată cu succes în format JSON.', 'success');
-        }
-        function copyFullConversation() {
-            showToast('Conversația a fost copiată în clipboard.', 'success');
-        }
-        function downloadFullConversation() {
-            showToast('Descărcarea conversației a început.', 'success');
-        }
-
-       <!-- Scripturi JavaScript Complete și Curățate -->
-
         // Matrix Rain Canvas Effect Continuu
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
@@ -1366,7 +1000,6 @@
                 if(sidebar) sidebar.classList.add('hidden');
             }
         }
-
         function toggleSidebar() {
             const sb = document.getElementById('appSidebar');
             if(sb) sb.classList.toggle('hidden');
@@ -1403,6 +1036,7 @@
             if(win) win.classList.toggle('hidden');
         }
 
+        let freeMessagesLeft = 10;
         function activateLicenseKey() {
             const input = document.getElementById('licenseKeyInput');
             const status = document.getElementById('licenseStatus');
@@ -1510,7 +1144,6 @@
                 reader.onerror = error => reject(error);
             });
         }
-
         async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
             const inputEl = document.getElementById(inputId);
             const msgBox = document.getElementById(messagesContainerId);
@@ -1518,6 +1151,17 @@
             const text = inputEl.value.trim();
             const file = attachedFiles ? attachedFiles[tabKey] : null;
             if (!text && !file) return;
+
+            if(tabKey === 'chat') {
+                if(freeMessagesLeft <= 0) {
+                    showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO sau folosește cheia!', 'error');
+                    switchTab('billingCard', 'Abonament & PRO');
+                    return;
+                }
+                freeMessagesLeft--;
+                const freeCountDisplay = document.getElementById('freeCountDisplay');
+                if(freeCountDisplay) freeCountDisplay.innerText = freeMessagesLeft + '/10';
+            }
 
             let displayHtml = '';
             if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
