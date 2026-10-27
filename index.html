@@ -1354,72 +1354,64 @@
                 showToast('Se preia locația...', 'info');
             }
         }
-<script src="https://cloudflare.com"></script>
-<script src="https://cloudflare.com"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-// Manager Taburi cu eliminare completă a riscului de suprapunere vizuală
-window.switchTab = window.switchTab || function(tabId, title) {
-    // 1. Ascundem în mod agresiv toate elementele care funcționează ca tab-uri
-    document.querySelectorAll('.tab-content').forEach(el => {
-        el.classList.add('hidden');
-        el.style.setProperty('display', 'none', 'important');
-    });
-
-    // 2. Mapare directă pentru ID-urile vizibile în interfața ta (măsuri de siguranță suplimentare)
-    const specificSections = ['toolsGridSection', 'nexusRobotSection', 'calendarSection', 'videoSection', 'socialSection'];
-    specificSections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
+    // Manager Taburi cu curățare completă și sigură a suprapunerilor
+    window.switchTab = window.switchTab || function(tabId, title) {
+        document.querySelectorAll('.tab-content').forEach(el => {
             el.classList.add('hidden');
             el.style.setProperty('display', 'none', 'important');
+        });
+
+        const specificSections = ['toolsGridSection', 'nexusRobotSection', 'calendarSection', 'videoSection', 'socialSection'];
+        specificSections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('hidden');
+                el.style.setProperty('display', 'none', 'important');
+            }
+        });
+
+        const target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
+        if(target) {
+            target.classList.remove('hidden');
+            target.style.setProperty('display', 'block', 'important');
         }
-    });
 
-    // 3. Afișăm exclusiv containerul țintă cerut de meniu
-    const target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
-    if(target) {
-        target.classList.remove('hidden');
-        // Dacă folosești Tailwind flex/grid, poți înlocui 'block' cu tipul de display nativ dorit
-        target.style.setProperty('display', 'block', 'important'); 
-    }
+        const b = document.getElementById('breadcrumbCurrent');
+        if(b) b.innerText = title;
+    };
 
-    // 4. Actualizăm textul din breadcrumb pentru orientarea utilizatorului
-    const b = document.getElementById('breadcrumbCurrent');
-    if(b) b.innerText = title;
-};
+    window.toggleToolsGrid = window.toggleToolsGrid || function() {
+        const grid = document.getElementById('toolsGridSection');
+        if(grid) {
+            const isHidden = grid.classList.toggle('hidden');
+            grid.style.display = isHidden ? 'none' : 'block';
+        }
+    };
 
-window.toggleToolsGrid = window.toggleToolsGrid || function() {
-    const grid = document.getElementById('toolsGridSection');
-    if(grid) {
-        const isHidden = grid.classList.toggle('hidden');
-        grid.style.display = isHidden ? 'none' : 'block';
-    }
-};
+    window.toggleNexusRobot = window.toggleNexusRobot || function() {
+        const robot = document.getElementById('nexusRobotSection');
+        if(robot) {
+            const isHidden = robot.classList.toggle('hidden');
+            robot.style.display = isHidden ? 'none' : 'block';
+        }
+    };
 
-window.toggleNexusRobot = window.toggleNexusRobot || function() {
-    const robot = document.getElementById('nexusRobotSection');
-    if(robot) {
-        const isHidden = robot.classList.toggle('hidden');
-        robot.style.display = isHidden ? 'none' : 'block';
-    }
-};
-
-    // Configurația Firebase corectată complet
+    // Configurația Firebase corectată oficial
     const firebaseConfig = {
-        apiKey: "AIzaSyCNh5PX0ib-ouPITfWt-XpM8Tj_s5j9D9k",
-        authDomain: "://firebaseapp.com",
+        apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+        authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
         projectId: "nexus-ai-studio-8335f",
         storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
         messagingSenderId: "645678013335",
         appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-        measurementId: "G-W0PJNEF4SS"
+        measurementId: "G-W0PJNEF4S5"
     };
 
-    // Inițializare sigură anti-duplicare
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-    } else {
-        firebase.app();
     }
 
     window.auth = firebase.auth();
@@ -1428,11 +1420,13 @@ window.toggleNexusRobot = window.toggleNexusRobot || function() {
         if (user) {
             const name = user.displayName || user.email.split('@')[0];
             const email = user.email;
-            const avatar = user.photoURL || `https://ui-avatars.com{encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
+            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
+            
             localStorage.setItem('nexus_is_logged_in', 'true');
             localStorage.setItem('nexus_user_name', name);
             localStorage.setItem('nexus_user_email', email);
             localStorage.setItem('nexus_user_avatar', avatar);
+            
             if(typeof updateUIAfterLogin === 'function') updateUIAfterLogin(name, email, avatar);
         } else {
             localStorage.removeItem('nexus_is_logged_in');
@@ -1441,6 +1435,38 @@ window.toggleNexusRobot = window.toggleNexusRobot || function() {
             localStorage.removeItem('nexus_user_avatar');
         }
     });
+
+    window.socialLogin = async function(providerName) {
+        let provider;
+        if (providerName === 'Google') {
+            provider = new firebase.auth.GoogleAuthProvider();
+        } else if (providerName === 'Apple') {
+            provider = new firebase.auth.OAuthProvider('apple.com');
+        } else {
+            showToast('Provider indisponibil.', 'error');
+            return;
+        }
+
+        try {
+            showToast(`Se deschide fereastra ${providerName}...`, 'info');
+            const result = await auth.signInWithPopup(provider);
+            showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
+            setTimeout(() => { switchTab('chat', 'Home / Tools Hub'); }, 800);
+        } catch (error) {
+            showToast(`Eroare: ${error.message}`, 'error');
+        }
+    };
+
+    window.logoutUser = async function() {
+        try {
+            await auth.signOut();
+            showToast('Te-ai delogat cu succes.', 'info');
+            setTimeout(() => location.reload(), 500);
+        } catch (error) {
+            showToast('Eroare la delogare.', 'error');
+        }
+    };
+
     function updateUIAfterLogin(name, email, avatar) {
         const authTabContainer = document.querySelector('#tab-authAccount > div');
         if (authTabContainer) {
@@ -1452,7 +1478,7 @@ window.toggleNexusRobot = window.toggleNexusRobot || function() {
                     <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
                         <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
                     </div>
-                    <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4 structural-btn">
+                    <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
                         <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Deconectare (Log Out)
                     </button>
                 </div>
