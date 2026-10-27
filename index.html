@@ -1354,15 +1354,20 @@
                 showToast('Se preia locația...', 'info');
             }
         }
-<!-- Înlocuire de la linia 1357 până la linia 1392 din scriptul tău actual -->
-<script src="https://gstatic.com"></script>
-<script src="https://gstatic.com"></script>
+<script src="https://cloudflare.com"></script>
+<script src="https://cloudflare.com"></script>
 <script>
-    // Asigurăm disponibilitatea funcțiilor în scopul global (window)
+    // Manager Taburi cu eliminare completă a riscului de suprapunere vizuală
     window.switchTab = window.switchTab || function(tabId, title) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-content').forEach(el => {
+            el.classList.add('hidden');
+            el.style.display = 'none';
+        });
         const target = document.getElementById('tab-' + tabId);
-        if(target) target.classList.remove('hidden');
+        if(target) {
+            target.classList.remove('hidden');
+            target.style.display = 'block';
+        }
         const b = document.getElementById('breadcrumbCurrent');
         if(b) b.innerText = title;
     };
@@ -1376,8 +1381,7 @@
         const robot = document.getElementById('nexusRobotSection');
         if(robot) robot.classList.toggle('hidden');
     };
-
-    // Configurația Firebase salvată într-o constantă globală sigură
+    // Configurația Firebase corectată complet
     const firebaseConfig = {
         apiKey: "AIzaSyCNh5PX0ib-ouPITfWt-XpM8Tj_s5j9D9k",
         authDomain: "://firebaseapp.com",
@@ -1388,22 +1392,20 @@
         measurementId: "G-W0PJNEF4SS"
     };
 
-    // Inițializare cu verificare strictă pentru a evita erorile interne de tip duplicate
+    // Inițializare sigură anti-duplicare
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     } else {
         firebase.app();
     }
 
-    // Declarăm instanța Auth pe obiectul global window pentru accesibilitate completă
     window.auth = firebase.auth();
-
 
     auth.onAuthStateChanged((user) => {
         if (user) {
             const name = user.displayName || user.email.split('@')[0];
             const email = user.email;
-            const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
+            const avatar = user.photoURL || `https://ui-avatars.com{encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
             localStorage.setItem('nexus_is_logged_in', 'true');
             localStorage.setItem('nexus_user_name', name);
             localStorage.setItem('nexus_user_email', email);
@@ -1416,51 +1418,6 @@
             localStorage.removeItem('nexus_user_avatar');
         }
     });
-
-    window.socialLogin = async function(providerName) {
-        let provider = providerName === 'Google' ? new firebase.auth.GoogleAuthProvider() : new firebase.auth.OAuthProvider('apple.com');
-        try {
-            showToast(`Se deschide fereastra ${providerName}...`, 'info');
-            const result = await auth.signInWithPopup(provider);
-            showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
-            setTimeout(() => { if(typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
-        } catch (error) {
-            showToast(`Eroare: ${error.message}`, 'error');
-        }
-    };
-
-    window.registerCompleteUser = async function() {
-        const email = document.getElementById('regEmail')?.value.trim() || '';
-        const pass = document.getElementById('regPass')?.value.trim() || '';
-        if (!email || !pass) { showToast('Introdu email și parolă!', 'error'); return; }
-        try {
-            try {
-                await auth.createUserWithEmailAndPassword(email, pass);
-                showToast('Cont creat cu succes!', 'success');
-            } catch (createErr) {
-                if (createErr.code === 'auth/email-already-in-use') {
-                    await auth.signInWithEmailAndPassword(email, pass);
-                    showToast('Autentificare reușită!', 'success');
-                } else {
-                    throw createErr;
-                }
-            }
-            setTimeout(() => { if(typeof switchTab === 'function') switchTab('chat', 'Home / Tools Hub'); }, 800);
-        } catch (error) {
-            showToast(`Eroare: ${error.message}`, 'error');
-        }
-    };
-
-    window.logoutUser = async function() {
-        try {
-            await auth.signOut();
-            showToast('Te-ai delogat cu succes.', 'info');
-            setTimeout(() => location.reload(), 500);
-        } catch (error) {
-            showToast('Eroare la delogare.', 'error');
-        }
-    };
-
     function updateUIAfterLogin(name, email, avatar) {
         const authTabContainer = document.querySelector('#tab-authAccount > div');
         if (authTabContainer) {
@@ -1472,11 +1429,8 @@
                     <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
                         <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
                     </div>
-                   <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
-    Deconectare
-</button>
-
-                        <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Delogare (Log Out)
+                    <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4 structural-btn">
+                        <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Deconectare (Log Out)
                     </button>
                 </div>
             `;
