@@ -44,6 +44,15 @@
             }
         }
     </script>
+    <style>
+    @media (max-width: 768px) {
+        body, html, main {
+            overflow-y: auto !important;
+            height: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+</style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
     <!-- Canvas pentru efectul Matrix Rain Continuu -->
@@ -1399,21 +1408,42 @@
             }
         };
 
-        window.toggleToolsGrid = function() {
-            const grid = document.getElementById('toolsGridSection');
-            if(grid) {
-                const isHidden = grid.classList.toggle('hidden');
-                grid.style.display = isHidden ? 'none' : 'block';
-            }
-        };
-
-        window.toggleNexusRobot = function() {
-            const robot = document.getElementById('nexusRobotSection');
-            if(robot) {
-                const isHidden = robot.classList.toggle('hidden');
-                robot.style.display = isHidden ? 'none' : 'block';
-            }
-        };
+       window.toggleToolsGrid = function() {
+    // Căutăm containerul după ID sau după clasa grilei de unelte
+    const grid = document.getElementById('toolsGridSection') || document.querySelector('.grid');
+    if (grid) {
+        const isHidden = grid.classList.toggle('hidden');
+        grid.style.setProperty('display', isHidden ? 'none' : 'grid', 'important');
+        
+        // Actualizăm textul butonului dacă este cazul
+        const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
+        if (btn) {
+            btn.innerHTML = isHidden ? '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte' : '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte';
+        }
+    }
+};
+       window.toggleNexusRobot = function() {
+    const robot = document.getElementById('nexusRobotSection');
+    if (robot) {
+        // Verificăm starea curentă bazată pe clase sau display
+        const isHidden = robot.classList.contains('hidden') || robot.style.display === 'none';
+        
+        if (isHidden) {
+            robot.classList.remove('hidden');
+            robot.style.setProperty('display', 'block', 'important');
+            // Facem scroll automat spre el sau spre zona de chat integrată
+            robot.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            robot.classList.add('hidden');
+            robot.style.setProperty('display', 'none', 'important');
+        }
+    } else {
+        // Fallback de siguranță dacă secțiunea nu este găsită pe pagina curentă
+        if (typeof switchTab === 'function') {
+            switchTab('chat', 'Nexus Neural Assistant');
+        }
+    }
+};
 
         // Configurare Firebase
         const firebaseConfig = {
