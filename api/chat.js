@@ -61,7 +61,7 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-        const activeModel = 'gemini-3.8-flash';
+        const activeModel = 'gemini-2.0-flash';
         
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
