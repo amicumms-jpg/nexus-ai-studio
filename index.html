@@ -1408,37 +1408,35 @@
             }
         };
 
-       window.toggleToolsGrid = function() {
-    // Căutăm containerul după ID sau după clasa grilei de unelte
-    const grid = document.getElementById('toolsGridSection') || document.querySelector('.grid');
+     window.toggleToolsGrid = function() {
+    // Folosim ID-ul tău real din HTML: toolsGrid
+    const grid = document.getElementById('toolsGrid');
     if (grid) {
         const isHidden = grid.classList.toggle('hidden');
         grid.style.setProperty('display', isHidden ? 'none' : 'grid', 'important');
         
-        // Actualizăm textul butonului dacă este cazul
+        // Actualizăm textul butonului
         const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
         if (btn) {
             btn.innerHTML = isHidden ? '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte' : '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte';
         }
     }
 };
-       window.toggleNexusRobot = function() {
+
+window.toggleNexusRobot = function() {
     const robot = document.getElementById('nexusRobotSection');
     if (robot) {
-        // Verificăm starea curentă bazată pe clase sau display
         const isHidden = robot.classList.contains('hidden') || robot.style.display === 'none';
         
         if (isHidden) {
             robot.classList.remove('hidden');
             robot.style.setProperty('display', 'block', 'important');
-            // Facem scroll automat spre el sau spre zona de chat integrată
             robot.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
             robot.classList.add('hidden');
             robot.style.setProperty('display', 'none', 'important');
         }
     } else {
-        // Fallback de siguranță dacă secțiunea nu este găsită pe pagina curentă
         if (typeof switchTab === 'function') {
             switchTab('chat', 'Nexus Neural Assistant');
         }
