@@ -175,6 +175,33 @@
                     <i class="fa-solid fa-credit-card"></i> Pachet PRO
                 </button>
             </div>
+            <!-- Unelte Rapide în Meniul de Mobil -->
+<div class="grid grid-cols-2 gap-2 p-2 mt-2 border-t border-gray-800">
+    <div onclick="switchTab('promptEnhancer', 'Prompt Enhancer')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-cyanNeon cursor-pointer">
+        <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon text-xs"></i>
+        <span class="text-[10px] font-bold">Prompt AI</span>
+    </div>
+    <div onclick="switchTab('webSearch', 'Căutare & Web AI')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-emeraldNeon cursor-pointer">
+        <i class="fa-solid fa-globe text-emeraldNeon text-xs"></i>
+        <span class="text-[10px] font-bold">Web Search</span>
+    </div>
+    <div onclick="switchTab('summarizer', 'AI Summarizer')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-amberGlow cursor-pointer">
+        <i class="fa-solid fa-file-contract text-amberGlow text-xs"></i>
+        <span class="text-[10px] font-bold">Summarizer</span>
+    </div>
+    <div onclick="switchTab('codeStudio', 'Code Studio')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-purple-400 cursor-pointer">
+        <i class="fa-solid fa-code text-purple-400 text-xs"></i>
+        <span class="text-[10px] font-bold">Code Studio</span>
+    </div>
+    <div onclick="switchTab('docAnalyzer', 'PDF & Doc Analyzer')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-red-400 cursor-pointer">
+        <i class="fa-solid fa-file-pdf text-red-400 text-xs"></i>
+        <span class="text-[10px] font-bold">PDF & Docs</span>
+    </div>
+    <div onclick="switchTab('emailCopywriting', 'Email & Copywriting')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-blue-400 cursor-pointer">
+        <i class="fa-solid fa-envelope-open-text text-blue-400 text-xs"></i>
+        <span class="text-[10px] font-bold">Copywriting</span>
+    </div>
+</div>
 
             <!-- Meniu Navigare -->
             <div class="flex-1 space-y-1 overflow-y-auto pr-1" style="scrollbar-width: thin;">
@@ -310,7 +337,39 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
+    <!-- Unelte Rapide integrate în Meniul Lateral -->
+<div class="text-[10px] font-bold text-gray-500 uppercase px-3 mt-4 mb-1">Unelte Rapide</div>
+
+<div onclick="switchTab('promptEnhancer', 'Prompt Enhancer')" class="flex items-center space-x-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-cyanNeon cursor-pointer transition">
+    <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon w-4"></i>
+    <span class="text-xs">Prompt AI</span>
+</div>
+
+<div onclick="switchTab('webSearch', 'Căutare & Web AI')" class="flex items-center space-x-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-emeraldNeon cursor-pointer transition">
+    <i class="fa-solid fa-globe text-emeraldNeon w-4"></i>
+    <span class="text-xs">Web Search</span>
+</div>
+
+<div onclick="switchTab('summarizer', 'AI Summarizer')" class="flex items-center space-x-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-amberGlow cursor-pointer transition">
+    <i class="fa-solid fa-file-contract text-amberGlow w-4"></i>
+    <span class="text-xs">Summarizer</span>
+</div>
+
+<div onclick="switchTab('codeStudio', 'Code Studio')" class="flex items-center space-x-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-purple-400 cursor-pointer transition">
+    <i class="fa-solid fa-code text-purple-400 w-4"></i>
+    <span class="text-xs">Code Studio</span>
+</div>
+
+<div onclick="switchTab('docAnalyzer', 'PDF & Doc Analyzer')" class="flex items-center space-x-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-red-400 cursor-pointer transition">
+    <i class="fa-solid fa-file-pdf text-red-400 w-4"></i>
+    <span class="text-xs">PDF & Docs</span>
+</div>
+
+<div onclick="switchTab('emailCopywriting', 'Email & Copywriting')" class="flex items-center space-x-2 px-3 py-2 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-blue-400 cursor-pointer transition">
+    <i class="fa-solid fa-envelope-open-text text-blue-400 w-4"></i>
+    <span class="text-xs">Copywriting</span>
+</div>
             <!-- TAB UNIFICAT: Social & Creator Hub -->
             <div id="tab-socialHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
