@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, message, fileData } = req.body;
+        const { prompt, message, fileData, model } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -61,7 +61,8 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-        const activeModel = 'gemini-2.0-flash';
+        // Preluăm dinamic modelul trimis din interfață sau folosim un fallback sigur
+        const activeModel = model || 'gemini-2.0-flash';
         
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
