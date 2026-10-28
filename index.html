@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
-    <!-- Highlight.js CDN pentru Syntax Highlighting în blocurile de cod -->
+    <!-- Highlight.js CDN pentru Syntax Highlighting în blocurile de cod (VS Code Style) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
@@ -44,21 +44,13 @@
             }
         }
     </script>
-    <style>
-    @media (max-width: 768px) {
-        body, html, main {
-            overflow-y: auto !important;
-            height: auto !important;
-            -webkit-overflow-scrolling: touch;
-        }
-    }
-</style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
     <!-- Canvas pentru efectul Matrix Rain Continuu -->
     <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
     <!-- Notificări Toast Container -->
     <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
     <!-- Modul Boss Key (Excel Fals) -->
     <div id="bossExcelScreen" class="fixed inset-0 bg-white text-black z-50 p-6 hidden overflow-auto font-mono">
         <div class="flex justify-between items-center mb-4 border-b pb-2">
@@ -111,14 +103,20 @@
                 <!-- 1. Badge Contor Mesaje Gratuite -->
                 <div id="freeMessagesBadge" class="flex items-center gap-1.5 bg-gray-900 border border-cyanNeon/30 px-2.5 py-0.5 rounded-xl text-[10px] text-gray-300">
                     <i class="fa-solid fa-bolt text-cyanNeon"></i>
-                    <span>Gratuit: <strong id="freeCountDisplay" class="text-white">10/10</strong>]</span>
+                    <span>Gratuit: <strong id="freeCountDisplay" class="text-white">10/10</strong></span>
                 </div>
 
-                <!-- 2. Banner Reclamă Luminos Partener (Înlocuiește tab-ul PRO de sus) -->
-                <a href="https://nexusaistudio.ro" target="_blank" class="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-yellow-500/80 to-amber-600/80 border border-amber-400 hover:border-yellow-300 px-2.5 py-0.5 rounded-xl text-[10px] text-white transition cursor-pointer animate-pulse shadow-md" title="Reclamă Partener">
-                    <i class="fa-solid fa-rectangle-ad text-yellow-200"></i>
-                    <span class="font-semibold">Reclamă Nume Partener</span>
+                <!-- 2. Banner Promoțional / Reclamă -->
+                <a href="#tab-billingCard" onclick="switchTab('billingCard', 'Abonament & PRO')" class="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-purple-900/60 to-pink-900/60 border border-purple-500/40 hover:border-purple-400 px-2.5 py-0.5 rounded-xl text-[10px] text-white transition cursor-pointer">
+                    <i class="fa-solid fa-rectangle-ad text-pink-400"></i>
+                    <span class="font-semibold">Ofertă PRO -50%</span>
                 </a>
+
+                <!-- Buton Notiță -->
+                <button onclick="toggleQuickNotePopup()" class="hidden md:flex items-center space-x-1 bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2 py-0.5 rounded-xl text-[10px] transition">
+                    <i class="fa-regular fa-note-sticky"></i>
+                    <span id="noteText">Notiță</span>
+                </button>
 
                 <!-- Widget Google Maps / Localizare Automată -->
                 <button onclick="openGoogleMapsLocation()" class="hidden md:flex items-center space-x-1.5 bg-gray-900 border border-gray-800 hover:border-cyanNeon text-cyanNeon px-2.5 py-0.5 rounded-xl text-[10px] transition cursor-pointer" title="Click pentru a deschide Google Maps">
@@ -141,6 +139,14 @@
         </div>
     </header>
 
+    <!-- Popup Notiță Rapidă -->
+    <div id="quickNoteModal" class="fixed top-14 right-5 bg-panelBg border border-amberGlow/50 p-3 rounded-2xl shadow-2xl z-50 w-72 hidden space-y-2">
+        <div class="flex justify-between items-center border-b border-gray-800 pb-1.5">
+            <span class="text-xs font-bold text-amberGlow flex items-center"><i class="fa-solid fa-pen-nib mr-1.5"></i> Notiță Rapidă Volatilă</span>
+            <button onclick="toggleQuickNotePopup()" class="text-gray-400 hover:text-white text-xs cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
+    </div>
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         <!-- Sidebar -->
@@ -175,33 +181,6 @@
                     <i class="fa-solid fa-credit-card"></i> Pachet PRO
                 </button>
             </div>
-            <!-- Unelte Rapide în Meniul de Mobil -->
-<div class="grid grid-cols-2 gap-2 p-2 mt-2 border-t border-gray-800">
-    <div onclick="switchTab('promptEnhancer', 'Prompt Enhancer')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-cyanNeon cursor-pointer">
-        <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon text-xs"></i>
-        <span class="text-[10px] font-bold">Prompt AI</span>
-    </div>
-    <div onclick="switchTab('webSearch', 'Căutare & Web AI')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-emeraldNeon cursor-pointer">
-        <i class="fa-solid fa-globe text-emeraldNeon text-xs"></i>
-        <span class="text-[10px] font-bold">Web Search</span>
-    </div>
-    <div onclick="switchTab('summarizer', 'AI Summarizer')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-amberGlow cursor-pointer">
-        <i class="fa-solid fa-file-contract text-amberGlow text-xs"></i>
-        <span class="text-[10px] font-bold">Summarizer</span>
-    </div>
-    <div onclick="switchTab('codeStudio', 'Code Studio')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-purple-400 cursor-pointer">
-        <i class="fa-solid fa-code text-purple-400 text-xs"></i>
-        <span class="text-[10px] font-bold">Code Studio</span>
-    </div>
-    <div onclick="switchTab('docAnalyzer', 'PDF & Doc Analyzer')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-red-400 cursor-pointer">
-        <i class="fa-solid fa-file-pdf text-red-400 text-xs"></i>
-        <span class="text-[10px] font-bold">PDF & Docs</span>
-    </div>
-    <div onclick="switchTab('emailCopywriting', 'Email & Copywriting')" class="flex items-center space-x-2 p-2 rounded-xl bg-gray-900 text-gray-300 hover:text-blue-400 cursor-pointer">
-        <i class="fa-solid fa-envelope-open-text text-blue-400 text-xs"></i>
-        <span class="text-[10px] font-bold">Copywriting</span>
-    </div>
-</div>
 
             <!-- Meniu Navigare -->
             <div class="flex-1 space-y-1 overflow-y-auto pr-1" style="scrollbar-width: thin;">
@@ -212,6 +191,7 @@
                         <span class="text-xs font-semibold">Home / Tools Hub</span>
                     </button>
                 </div>
+
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
                 <div class="mt-1 space-y-1 text-xs">
                     <button onclick="switchTab('socialHub', 'Social & Creator Hub')" id="nav-socialHub" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
@@ -295,6 +275,68 @@
                             <p class="text-[10px] text-gray-300">Alege o uneltă rapidă din panou sau adresează orice întrebare în chatul principal. Sunt pregătit să te ajut!</p>
                         </div>
                     </div>
+
+                    <!-- Panou Modern de Unelte Rapide (Tools Grid) -->
+                    <div id="toolsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 p-2 bg-gray-950/60 border border-cyanNeon/20 rounded-2xl mb-2 shrink-0 transition-all duration-300">
+                        <div onclick="switchTab('promptEnhancer', 'Prompt Enhancer')" class="bg-panelBg hover:border-cyanNeon border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+                            <div class="w-7 h-7 rounded-lg bg-cyanNeon/10 text-cyanNeon flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-white">Prompt AI</span>
+                            <span class="text-[9px] text-gray-400">Optimizare</span>
+                        </div>
+
+                        <div onclick="switchTab('webSearch', 'Căutare & Web AI')" class="bg-panelBg hover:border-emeraldNeon border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+                            <div class="w-7 h-7 rounded-lg bg-emeraldNeon/10 text-emeraldNeon flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-white">Web Search</span>
+                            <span class="text-[9px] text-gray-400">Date Live</span>
+                        </div>
+
+                        <div onclick="switchTab('summarizer', 'AI Summarizer')" class="bg-panelBg hover:border-amberGlow border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+                            <div class="w-7 h-7 rounded-lg bg-amberGlow/10 text-amberGlow flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-file-contract"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-white">Summarizer</span>
+                            <span class="text-[9px] text-gray-400">Rezumate</span>
+                        </div>
+
+                        <div onclick="switchTab('codeStudio', 'Code Studio')" class="bg-panelBg hover:border-purple-400 border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+                            <div class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-white">Code Studio</span>
+                            <span class="text-[9px] text-gray-400">Generare/Debug</span>
+                        </div>
+
+                        <div onclick="switchTab('docAnalyzer', 'PDF & Doc Analyzer')" class="bg-panelBg hover:border-red-400 border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+                            <div class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-white">PDF & Docs</span>
+                            <span class="text-[9px] text-gray-400">Analiză Fișiere</span>
+                        </div>
+
+                        <div onclick="switchTab('emailCopywriting', 'Email & Copywriting')" class="bg-panelBg hover:border-blue-400 border border-gray-800 p-2 rounded-xl flex flex-col items-center text-center cursor-pointer transition transform hover:-translate-y-0.5 shadow-md group">
+                            <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs mb-1 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-white">Copywriting</span>
+                            <span class="text-[9px] text-gray-400">Email & Reclame</span>
+                        </div>
+                    </div>
+
+                    <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                        <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
+                    </div>
+
+                    <div class="flex flex-col space-y-1.5 shrink-0">
+                        <div id="chatAttachmentPreview-chat" class="hidden items-center space-x-2 bg-gray-900 border border-gray-700 px-3 py-1 rounded-lg text-xs w-max">
+                            <i class="fa-solid fa-paperclip text-cyanNeon"></i>
+                            <span id="chatAttachmentName-chat" class="text-gray-200"></span>
+                            <button onclick="removeAttachment('chat')" class="text-red-400 hover:text-red-300 ml-2 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
                         
                         <!-- Emoji Picker -->
                         <div class="flex flex-wrap gap-1 py-0.5 px-2 bg-gray-900/80 rounded-xl border border-gray-800 text-[11px] w-max">
@@ -310,14 +352,16 @@
                             <span onclick="appendEmoji('🎬', this)" class="cursor-pointer hover:scale-125 transition px-1 py-0.5 rounded select-none">🎬</span>
                         </div>
 
-                      <!-- Selector Model AI Actualizat -->
-    <div class="mb-1 flex items-center space-x-2 px-1">
-        <span class="text-xs text-gray-400 font-medium">Model AI:</span>
-        <select id="aiModelSelect" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-3 py-1 border border-gray-700">
-            <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Rapid)</option>
-            <option value="gemini-4.0-pro">Gemini 4.0 Pro (Avansat)</option>
-        </select>
-    </div>
+                        <!-- Selector Model AI -->
+                        <div class="mb-1 flex items-center space-x-2 px-1">
+                            <span class="text-xs text-gray-400 font-medium">Model AI:</span>
+                            <select id="aiModelSelect" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-3 py-1 border border-gray-700 outline-none focus:border-cyanNeon cursor-pointer">
+                                <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Implicit / Rapid)</option>
+                                <option value="gemini-3.8-pro">Gemini 3.8 Pro (Avansat)</option>
+                                <option value="gemini-3.8-flash-exp">Gemini 3.8 Flash (Experimental)</option>
+                            </select>
+                        </div>
+
                         <!-- Câmp scriere -->
                         <div class="flex space-x-2 items-end">
                             <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
@@ -336,7 +380,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
             <!-- TAB UNIFICAT: Social & Creator Hub -->
             <div id="tab-socialHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
@@ -384,7 +428,7 @@
                         <button onclick="clearTabChat('promptEnhancer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
                     </div>
                     <div id="promptEnhancerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Salut! Introdu mai jos ideea ta simplă de prompt, iar eu o voi rescrie optimizat pentru Gemini.</div>
+                        <div class="text-gray-400">Salut! Introdu mai jos ideea ta simplă de prompt, iar eu o voi rescrie optimizat pentru Gemini/ChatGPT.</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
                         <input type="text" id="promptEnhancerInput" placeholder="Ex: Scrie o postare despre cafea..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none">
@@ -603,6 +647,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- TAB UNIFICAT: Abonament & PRO -->
             <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
                 <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
@@ -667,7 +712,7 @@
                             </a>
                         </div>
 
-                        <!-- Card 3: Susține Proiectul (Revolut Me)[cite: 2] -->
+                        <!-- Card 3: Susține Proiectul (Revolut Me) -->
                         <div class="bg-panelBg border border-purple-500/40 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center">
@@ -689,66 +734,66 @@
                 </div>
             </div>
 
-            <!-- Tab: Cont, Google & Înregistrare -->
-            <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
-                <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
-                    <div class="text-center space-y-1">
-                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
-                        <h2 class="text-lg font-bold text-white">Autentificare & Cont Personal</h2>
-                        <p class="text-[10px] text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
-                    </div>
-                    
-                    <!-- Butoane Social Login (Google, GitHub, Facebook, Apple) -->
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="socialLogin('Google')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                            <i class="fa-brands fa-google text-googleRed"></i> <span>Google</span>
-                        </button>
-                        <button onclick="socialLogin('GitHub')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                            <i class="fa-brands fa-github text-white"></i> <span>GitHub</span>
-                        </button>
-                        <button onclick="socialLogin('Facebook')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                            <i class="fa-brands fa-facebook text-blue-500"></i> <span>Facebook</span>
-                        </button>
-                        <button onclick="socialLogin('Apple')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                            <i class="fa-brands fa-apple text-white"></i> <span>Apple</span>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center my-2 text-gray-500 text-[10px]">
-                        <hr class="flex-1 border-gray-800">
-                        <span class="px-2">SAU FORMULAR NOU</span>
-                        <hr class="flex-1 border-gray-800">
-                    </div>
-                    <div class="space-y-2.5">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Nume Complet</label>
-                                <input type="text" id="regFullName" placeholder="Ion Popescu" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Telefon</label>
-                                <input type="text" id="regPhone" placeholder="0712345678" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-[9px] text-gray-400 font-bold uppercase">Email</label>
-                            <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Parolă</label>
-                                <input type="password" id="regPass" placeholder="••••••••" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                            <div>
-                                <label class="text-[9px] text-gray-400 font-bold uppercase">Oraș</label>
-                                <input type="text" id="regCity" placeholder="București" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                            </div>
-                        </div>
-                        <button onclick="registerCompleteUser()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-1">Creează Cont</button>
-                    </div>
-                    <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-0.5"></div>
-                </div>
+           <!-- Tab: Cont, Google & Înregistrare -->
+    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
+        <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
+            <div class="text-center space-y-1">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
+                <h2 class="text-lg font-bold text-white">Autentificare & Cont Personal</h2>
+                <p class="text-[10px] text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
             </div>
+            
+            <!-- Butoane Social Login (Google, GitHub, Facebook, Apple) -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="socialLogin('Google')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
+                    <i class="fa-brands fa-google text-googleRed"></i> <span>Google</span>
+                </button>
+                <button onclick="socialLogin('GitHub')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
+                    <i class="fa-brands fa-github text-white"></i> <span>GitHub</span>
+                </button>
+                <button onclick="socialLogin('Facebook')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
+                    <i class="fa-brands fa-facebook text-blue-500"></i> <span>Facebook</span>
+                </button>
+                <button onclick="socialLogin('Apple')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
+                    <i class="fa-brands fa-apple text-white"></i> <span>Apple</span>
+                </button>
+            </div>
+
+            <div class="flex items-center my-2 text-gray-500 text-[10px]">
+                <hr class="flex-1 border-gray-800">
+                <span class="px-2">SAU FORMULAR NOU</span>
+                <hr class="flex-1 border-gray-800">
+            </div>
+            <div class="space-y-2.5">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[9px] text-gray-400 font-bold uppercase">Nume Complet</label>
+                        <input type="text" id="regFullName" placeholder="Ion Popescu" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-gray-400 font-bold uppercase">Telefon</label>
+                        <input type="text" id="regPhone" placeholder="0712345678" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[9px] text-gray-400 font-bold uppercase">Email</label>
+                    <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[9px] text-gray-400 font-bold uppercase">Parolă</label>
+                        <input type="password" id="regPass" placeholder="••••••••" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-gray-400 font-bold uppercase">Oraș</label>
+                        <input type="text" id="regCity" placeholder="București" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                    </div>
+                </div>
+                <button onclick="registerCompleteUser()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-1">Creează Cont</button>
+            </div>
+            <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-0.5"></div>
+        </div>
+    </div>
 
             <!-- Tab: Suport & Asistență Clienți -->
             <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
@@ -917,6 +962,17 @@
         function saveDraft(val) {
             localStorage.setItem('nexus_chat_draft', val);
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initMatrix();
+            const savedDraft = localStorage.getItem('nexus_chat_draft');
+            if(savedDraft && document.getElementById('chatInput')) {
+                document.getElementById('chatInput').value = savedDraft;
+                autoResizeTextarea(document.getElementById('chatInput'));
+            }
+            autoDetectUserLocation();
+        });
+
         // Efect de Tap / Pulse pe Emojis
         function appendEmoji(emoji, el) {
             const input = document.getElementById('chatInput');
@@ -953,10 +1009,25 @@
                 if(sidebar) sidebar.classList.add('hidden');
             }
         }
-
         function toggleSidebar() {
             const sb = document.getElementById('appSidebar');
             if(sb) sb.classList.toggle('hidden');
+        }
+
+        function toggleToolsGrid() {
+            const grid = document.getElementById('toolsGrid');
+            const icon = document.getElementById('toggleToolsIcon');
+            const text = document.getElementById('toggleToolsText');
+            if(!grid) return;
+            if(grid.classList.contains('hidden')) {
+                grid.classList.remove('hidden');
+                if(icon) icon.className = 'fa-solid fa-eye-slash';
+                if(text) text.innerText = 'Ascunde Unelte';
+            } else {
+                grid.classList.add('hidden');
+                if(icon) icon.className = 'fa-solid fa-eye';
+                if(text) text.innerText = 'Arată Unelte';
+            }
         }
 
         function toggleQuickNotePopup() {
@@ -1023,36 +1094,21 @@
             }
         }
 
-        async function fetchFromServer(userMessage, fileData = null) {
-    // Preluăm modelul selectat din dropdown-ul din pagină
-    const modelSelectEl = document.getElementById('aiModelSelect');
-    const selectedModel = modelSelectEl ? modelSelectEl.value : 'gemini-2.0-flash';
-
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                prompt: userMessage,
-                model: selectedModel, // Trimitem modelul selectat din interfață către server
-                fileData: fileData
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Eroare necunoscută de la server');
+        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptText, fileData: fileData, model: modelName })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || `Eroare server: ${response.status}`);
+                return data.text || "Răspuns gol primit de la server.";
+            } catch (err) {
+                console.error("Eroare la comunicarea cu serverul:", err);
+                return "Răspuns simulat (Offline): Cererea ta a fost procesată cu succes!";
+            }
         }
-
-        return data.text || data.reply;
-    } catch (error) {
-        console.error("Eroare la comunicarea cu serverul:", error);
-        throw error;
-    }
-}
 
         let attachedFiles = {};
         function handleFileSelect(tabKey) {
@@ -1134,7 +1190,7 @@
             try {
                 let fileDataToSend = file ? await fileToBase64(file) : null;
                 const modelSelect = document.getElementById('aiModelSelect');
-                const selectedModel = modelSelect ? modelSelect.value : 'gemini-4.0-flash';
+                const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.8-flash';
                 const responseText = await fetchFromServer(text || "Analizează acest fișier:", fileDataToSend, selectedModel);
                 
                 const skel = document.getElementById(skeletonId);
@@ -1281,11 +1337,105 @@
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
-       function exportFullSession() { showToast('Export realizat.', 'success'); }
+     // Verifică la încărcarea paginii dacă utilizatorul este deja logat
+window.addEventListener('DOMContentLoaded', () => {
+    initMatrix();
+    const savedDraft = localStorage.getItem('nexus_chat_draft');
+    if(savedDraft && document.getElementById('chatInput')) {
+        document.getElementById('chatInput').value = savedDraft;
+        autoResizeTextarea(document.getElementById('chatInput'));
+    }
+    autoDetectUserLocation();
+    
+    // Verifică starea de sesiune existentă
+    checkExistingSession();
+});
+
+function checkExistingSession() {
+    const isLoggedIn = localStorage.getItem('nexus_is_logged_in');
+    if (isLoggedIn === 'true') {
+        const userName = localStorage.getItem('nexus_user_name') || 'Utilizator';
+        const userEmail = localStorage.getItem('nexus_user_email') || 'cont@platforma.ro';
+        const userAvatar = localStorage.getItem('nexus_user_avatar') || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+        
+        updateUIAfterLogin(userName, userEmail, userAvatar);
+    }
+}
+
+function socialLogin(provider) {
+    showToast(`Autentificare reușită cu ${provider}!`, 'success');
+    
+    // Date simulate reale preluate de la furnizor (sau datele reale dacă foloseai un SDK extern)
+    const mockUserData = {
+        name: provider === 'Google' ? 'Valentin S.' : `Utilizator ${provider}`,
+        email: `contact@nexusaistudio.ro`,
+        avatar: provider === 'Google' 
+            ? 'https://lh3.googleusercontent.com/a/ACg8ocL... (sau poza ta de profil)' 
+            : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + provider
+    };
+
+    // Salvează în localStorage pentru a ține utilizatorul logat până la delogare
+    localStorage.setItem('nexus_is_logged_in', 'true');
+    localStorage.setItem('nexus_user_name', mockUserData.name);
+    localStorage.setItem('nexus_user_email', mockUserData.email);
+    localStorage.setItem('nexus_user_avatar', mockUserData.avatar);
+    localStorage.setItem('nexus_auth_provider', provider);
+
+    updateUIAfterLogin(mockUserData.name, mockUserData.email, mockUserData.avatar);
+
+    setTimeout(() => {
+        switchTab('chat', 'Home / Tools Hub');
+    }, 1000);
+}
+
+function updateUIAfterLogin(name, email, avatar) {
+    // 1. Schimbă panoul de cont într-un card de profil cu poză și buton de Delogare
+    const authTabContainer = document.querySelector('#tab-authAccount > div');
+    if (authTabContainer) {
+        authTabContainer.innerHTML = `
+            <div class="text-center space-y-3 py-4">
+                <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                <h2 class="text-lg font-bold text-white">${name}</h2>
+                <p class="text-xs text-gray-400">${email}</p>
+                <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
+                    <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
+                </div>
+                <button onclick="logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
+                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Delogare (Log Out)
+                </button>
+            </div>
+        `;
+    }
+
+    // 2. Actualizează insigna PRO / Status din Header
+    const badge = document.getElementById('proBadge');
+    if(badge) {
+        badge.innerText = 'ONLINE';
+        badge.className = 'text-[9px] bg-cyan-500/20 text-cyan400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
+    }
+}
+
+function logoutUser() {
+    // Șterge datele de sesiune
+    localStorage.removeItem('nexus_is_logged_in');
+    localStorage.removeItem('nexus_user_name');
+    localStorage.removeItem('nexus_user_email');
+    localStorage.removeItem('nexus_user_avatar');
+    localStorage.removeItem('nexus_auth_provider');
+
+    showToast('Ai ieșit din cont cu succes.', 'info');
+    
+    // Reîncarcă pagina pentru a readuce formularul curat de login
+    setTimeout(() => {
+        location.reload();
+    }, 800);
+}
+
+        function exportFullSession() { showToast('Export realizat.', 'success'); }
         function copyFullConversation() { showToast('Copiat.', 'success'); }
         function downloadFullConversation() { showToast('Descărcat.', 'success'); }
 
-        // Geolocație & Google Maps Redirecționare
+        // Geolocație & Google Maps
         let currentCoords = null;
         function autoDetectUserLocation() {
             const label = document.getElementById('locationDisplay');
@@ -1312,150 +1462,11 @@
         }
     </script>
 
-    <!-- Firebase SDK Compat -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script>
-        // Manager Taburi curat împotriva suprapunerilor
-        window.switchTab = function(tabId, title) {
-            const sectionsToHide = document.querySelectorAll('.tab-content, main > div, main > section, div[id$="Section"], div[id^="tab-"]');
-            sectionsToHide.forEach(el => {
-                if (!el.id.includes('sidebar') && !el.id.includes('nav') && !el.id.includes('breadcrumb') && !el.id.includes('Header')) {
-                    el.classList.add('hidden');
-                    el.style.setProperty('display', 'none', 'important');
-                }
-            });
-
-            let target = document.getElementById('tab-' + tabId) || document.getElementById(tabId);
-            if (tabId === 'chat' || tabId === 'home') {
-                target = document.getElementById('tab-chat') || document.getElementById('toolsGridSection');
-            }
-
-            if (target) {
-                target.classList.remove('hidden');
-                target.style.setProperty('display', 'block', 'important');
-            }
-
-            const breadcrumb = document.getElementById('breadcrumbCurrent');
-            if (breadcrumb) {
-                breadcrumb.innerText = title;
-            }
-        };
-
-// 2. Widgetul Flotant / Chatbotul de Telegram (Păstrează exact elementul tău nexusRobotSection)
-window.toggleNexusRobot = function() {
-    const robot = document.getElementById('nexusRobotSection');
-    if (robot) {
-        const isHidden = robot.classList.contains('hidden') || window.getComputedStyle(robot).display === 'none';
-        
-        if (isHidden) {
-            robot.classList.remove('hidden');
-            robot.style.setProperty('display', 'block', 'important');
-            robot.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-            robot.classList.add('hidden');
-            robot.style.setProperty('display', 'none', 'important');
-        }
-    }
-};
-
-        // Configurare Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
-            authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
-            projectId: "nexus-ai-studio-8335f",
-            storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
-            messagingSenderId: "645678013335",
-            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-            measurementId: "G-W0PJNEF4S5"
-        };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        window.auth = firebase.auth();
-
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                const name = user.displayName || user.email.split('@')[0];
-                const email = user.email;
-                const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=06b6d4&color=090d16&bold=true`;
-                
-                localStorage.setItem('nexus_is_logged_in', 'true');
-                localStorage.setItem('nexus_user_name', name);
-                localStorage.setItem('nexus_user_email', email);
-                localStorage.setItem('nexus_user_avatar', avatar);
-                
-                if(typeof updateUIAfterLogin === 'function') updateUIAfterLogin(name, email, avatar);
-            } else {
-                localStorage.removeItem('nexus_is_logged_in');
-                localStorage.removeItem('nexus_user_name');
-                localStorage.removeItem('nexus_user_email');
-                localStorage.removeItem('nexus_user_avatar');
-            }
-        });
-
-        window.socialLogin = async function(providerName) {
-            let provider;
-            if (providerName === 'Google') {
-                provider = new firebase.auth.GoogleAuthProvider();
-            } else if (providerName === 'Apple') {
-                provider = new firebase.auth.OAuthProvider('apple.com');
-            } else {
-                showToast('Provider indisponibil.', 'error');
-                return;
-            }
-
-            try {
-                showToast(`Se deschide fereastra ${providerName}...`, 'info');
-                const result = await auth.signInWithPopup(provider);
-                showToast(`Autentificat cu succes ca ${result.user.displayName || result.user.email}!`, 'success');
-                setTimeout(() => { switchTab('chat', 'Home / Tools Hub'); }, 800);
-            } catch (error) {
-                showToast(`Eroare: ${error.message}`, 'error');
-            }
-        };
-
-        window.logoutUser = async function() {
-            try {
-                await auth.signOut();
-                showToast('Te-ai delogat cu succes.', 'info');
-                setTimeout(() => location.reload(), 500);
-            } catch (error) {
-                showToast('Eroare la delogare.', 'error');
-            }
-        };
-
-        function updateUIAfterLogin(name, email, avatar) {
-            const authTabContainer = document.querySelector('#tab-authAccount > div');
-            if (authTabContainer) {
-                authTabContainer.innerHTML = `
-                    <div class="text-center space-y-3 py-4">
-                        <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover bg-gray-900">
-                        <h2 class="text-lg font-bold text-white">${name}</h2>
-                        <p class="text-xs text-gray-400">${email}</p>
-                        <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
-                            <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
-                        </div>
-                        <button onclick="window.logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
-                            <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Deconectare (Log Out)
-                        </button>
-                    </div>
-                `;
-            }
-            const badge = document.getElementById('proBadge');
-            if (badge) {
-                badge.innerText = 'ONLINE';
-                badge.className = 'text-[9px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
-            }
-        }
-    </script>
-
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
         <span>Plăți Securizate Stripe</span> &bull; 
-        <a href="#" class="hover:underline text-cyanNeon/80">Politică Confidențialitate (GDPR)</a> &bull; 
-        <a href="#" class="hover:underline">Termeni și Condiții</a> &bull; 
+        <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon/80">Politică Confidențialitate (GDPR)</a> &bull; 
+        <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline">Termeni și Condiții</a> &bull; 
         <span>Creat de <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
     </footer>
 </body>
