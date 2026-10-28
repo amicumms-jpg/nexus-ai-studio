@@ -1408,14 +1408,38 @@
             }
         };
 
-     window.toggleToolsGrid = function() {
-    // Folosim ID-ul tău real din HTML: toolsGrid
+   window.toggleToolsGrid = function() {
+    const grid = document.getElementById('toolsGrid');
+    if (grid) {
+        // Verificăm dacă este ascuns curent
+        const isHidden = grid.style.display === 'none' || grid.classList.contains('hidden');
+        
+        if (isHidden) {
+            grid.style.setProperty('display', 'grid', 'important');
+            grid.classList.remove('hidden');
+        } else {
+            grid.style.setProperty('display', 'none', 'important');
+            grid.classList.add('hidden');
+        }
+        
+        // Schimbăm textul butonului
+        const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
+        if (btn) {
+            btn.innerHTML = isHidden ? '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte' : '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte';
+        }
+    }
+};
+// 1. Ascunde / Arată Unelte (Ascunde complet elementul, fără spații goale)
+window.toggleToolsGrid = function() {
     const grid = document.getElementById('toolsGrid');
     if (grid) {
         const isHidden = grid.classList.toggle('hidden');
-        grid.style.setProperty('display', isHidden ? 'none' : 'grid', 'important');
+        if (isHidden) {
+            grid.style.setProperty('display', 'none', 'important');
+        } else {
+            grid.style.setProperty('display', 'grid', 'important');
+        }
         
-        // Actualizăm textul butonului
         const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
         if (btn) {
             btn.innerHTML = isHidden ? '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte' : '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte';
@@ -1423,10 +1447,11 @@
     }
 };
 
+// 2. Widgetul Flotant / Chatbotul de Telegram (Păstrează exact elementul tău nexusRobotSection)
 window.toggleNexusRobot = function() {
     const robot = document.getElementById('nexusRobotSection');
     if (robot) {
-        const isHidden = robot.classList.contains('hidden') || robot.style.display === 'none';
+        const isHidden = robot.classList.contains('hidden') || window.getComputedStyle(robot).display === 'none';
         
         if (isHidden) {
             robot.classList.remove('hidden');
@@ -1435,10 +1460,6 @@ window.toggleNexusRobot = function() {
         } else {
             robot.classList.add('hidden');
             robot.style.setProperty('display', 'none', 'important');
-        }
-    } else {
-        if (typeof switchTab === 'function') {
-            switchTab('chat', 'Nexus Neural Assistant');
         }
     }
 };
