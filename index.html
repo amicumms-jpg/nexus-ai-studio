@@ -1429,23 +1429,6 @@
         }
     }
 };
-// 1. Ascunde / Arată Unelte (Ascunde complet elementul, fără spații goale)
-window.toggleToolsGrid = function() {
-    const grid = document.getElementById('toolsGrid');
-    if (grid) {
-        const isHidden = grid.classList.toggle('hidden');
-        if (isHidden) {
-            grid.style.setProperty('display', 'none', 'important');
-        } else {
-            grid.style.setProperty('display', 'grid', 'important');
-        }
-        
-        const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
-        if (btn) {
-            btn.innerHTML = isHidden ? '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte' : '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte';
-        }
-    }
-};
 
 // 2. Widgetul Flotant / Chatbotul de Telegram (Păstrează exact elementul tău nexusRobotSection)
 window.toggleNexusRobot = function() {
