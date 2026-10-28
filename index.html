@@ -1316,39 +1316,6 @@
             }
         };
 
-  window.toggleToolsGrid = function() {
-    const grid = document.getElementById('toolsGrid');
-    const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
-    // Găsim containerul principal care ține chatul / secțiunea curentă
-    const chatContainer = grid ? grid.closest('.flex-col') || grid.parentElement : null;
-    
-    if (grid) {
-        const isHidden = grid.classList.contains('hidden') || grid.style.display === 'none';
-        
-        if (isHidden) {
-            // Afișăm uneltele la loc
-            grid.classList.remove('hidden');
-            grid.style.setProperty('display', 'grid', 'important');
-            if (chatContainer) {
-                chatContainer.style.removeProperty('height');
-            }
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte';
-            }
-        } else {
-            // Ascundem uneltele și lăsăm chatul să se extindă maxim pe verticală
-            grid.classList.add('hidden');
-            grid.style.setProperty('display', 'none', 'important');
-            if (chatContainer) {
-                chatContainer.style.setProperty('height', '100%', 'important');
-            }
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte';
-            }
-        }
-    }
-};
-
 // 2. Widgetul Flotant / Chatbotul de Telegram (Păstrează exact elementul tău nexusRobotSection)
 window.toggleNexusRobot = function() {
     const robot = document.getElementById('nexusRobotSection');
