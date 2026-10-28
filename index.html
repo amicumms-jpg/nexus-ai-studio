@@ -1408,24 +1408,35 @@
             }
         };
 
-   window.toggleToolsGrid = function() {
+  window.toggleToolsGrid = function() {
     const grid = document.getElementById('toolsGrid');
+    const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
+    // Găsim containerul principal care ține chatul / secțiunea curentă
+    const chatContainer = grid ? grid.closest('.flex-col') || grid.parentElement : null;
+    
     if (grid) {
-        // Verificăm dacă este ascuns curent
-        const isHidden = grid.style.display === 'none' || grid.classList.contains('hidden');
+        const isHidden = grid.classList.contains('hidden') || grid.style.display === 'none';
         
         if (isHidden) {
-            grid.style.setProperty('display', 'grid', 'important');
+            // Afișăm uneltele la loc
             grid.classList.remove('hidden');
+            grid.style.setProperty('display', 'grid', 'important');
+            if (chatContainer) {
+                chatContainer.style.removeProperty('height');
+            }
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte';
+            }
         } else {
-            grid.style.setProperty('display', 'none', 'important');
+            // Ascundem uneltele și lăsăm chatul să se extindă maxim pe verticală
             grid.classList.add('hidden');
-        }
-        
-        // Schimbăm textul butonului
-        const btn = document.querySelector('button[onclick*="toggleToolsGrid"]');
-        if (btn) {
-            btn.innerHTML = isHidden ? '<i class="fa-solid fa-eye-slash mr-1"></i> Ascunde Unelte' : '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte';
+            grid.style.setProperty('display', 'none', 'important');
+            if (chatContainer) {
+                chatContainer.style.setProperty('height', '100%', 'important');
+            }
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-eye mr-1"></i> Arată Unelte';
+            }
         }
     }
 };
