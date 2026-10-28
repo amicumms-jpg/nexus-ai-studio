@@ -61,8 +61,11 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-        // Preluăm dinamic modelul trimis din interfață sau folosim un fallback sigur
-        const activeModel = model || 'gemini-2.0-flash';
+       // Preluăm modelul din interfață și îl mapăm la un model acceptat sigur de Google API
+        let activeModel = model || 'gemini-2.0-flash';
+        if (activeModel.includes('4.0') || activeModel.includes('3.8') || activeModel.includes('pro')) {
+            activeModel = 'gemini-2.0-flash';
+        }
         
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
