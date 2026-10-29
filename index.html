@@ -1453,10 +1453,11 @@ function activateLicenseKey() {
             }
         };
 
-        // REPARARE BINDING: Permite butoanelor HTML din pagină să acceseze funcția switchTab
-        if (typeof switchTab !== 'undefined') {
-            window.switchTab = switchTab;
-        }
+              // REPARARE BINDING: Permite butoanelor HTML din pagină să acceseze funcțiile
+        window.switchTab = typeof switchTab !== 'undefined' ? switchTab : function() {};
+        window.toggleSidebar = typeof toggleSidebar !== 'undefined' ? toggleSidebar : function() {};
+        window.toggleNexusRobot = typeof toggleNexusRobot !== 'undefined' ? toggleNexusRobot : function() {};
+
 // Închiderea finală a întregului script modul pornit la linia 883
 </script>
 
