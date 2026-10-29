@@ -1386,7 +1386,6 @@ function activateLicenseKey() {
                 }
             }
         });
-
         window.socialLogin = async function(provider) {
             if (provider === 'Google') {
                 try {
@@ -1397,7 +1396,7 @@ function activateLicenseKey() {
 
                     alert("Autentificat cu succes: " + userName);
 
-                    const container = document.getElementById('tab-authAccount').querySelector('.max-w-md');
+                    const container = document.getElementById('tab-authAccount')?.querySelector('.max-w-md');
                     if (container) {
                         container.innerHTML = `
                             <div class="text-center space-y-4 py-6">
@@ -1445,7 +1444,6 @@ function activateLicenseKey() {
             }
         };
 
-        // Funcția de deconectare curată
         window.logoutUser = async function() {
             try {
                 await signOut(auth);
@@ -1454,7 +1452,14 @@ function activateLicenseKey() {
                 console.error("Eroare la deconectare:", error);
             }
         };
+
+        // REPARARE BINDING: Permite butoanelor HTML din pagină să acceseze funcția switchTab
+        if (typeof switchTab !== 'undefined') {
+            window.switchTab = switchTab;
+        }
+// Închiderea finală a întregului script modul pornit la linia 883
 </script>
+
   
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
