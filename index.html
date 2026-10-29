@@ -1000,21 +1000,6 @@
             const win = document.getElementById('nexus-robot-window');
             if(win) win.classList.toggle('hidden');
         }
-function toggleQuickNotePopUp() {
-    const modal = document.getElementById('quickNoteModal');
-    if(modal) modal.classList.toggle('hidden');
-}
-
-function saveQuickNoteState() {
-    const el = document.getElementById('quickNoteText');
-    if(el) localStorage.setItem('nexus_quick_note', el.value);
-}
-
-function toggleNexusRobot() {
-    const win = document.getElementById('nexus-robot-window');
-    if(win) win.classList.toggle('hidden');
-}
-
 function toggleBossKey() {
     const screen = document.getElementById('bossExcelScreen');
     if(screen) screen.classList.toggle('hidden');
