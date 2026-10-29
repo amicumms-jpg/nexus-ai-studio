@@ -51,28 +51,7 @@
     <!-- Notificări Toast Container -->
     <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    <!-- Modul Boss Key (Excel Fals) -->
-    <div id="bossExcelScreen" class="fixed inset-0 bg-white text-black z-50 p-6 hidden overflow-auto font-mono">
-        <div class="flex justify-between items-center mb-4 border-b pb-2">
-            <h2 class="text-lg font-bold">Financial Balances & Quarterly Sheet Q3/Q4 - Internal Audit</h2>
-            <button onclick="toggleBossKey()" class="bg-red-600 text-white px-3 py-1 text-xs rounded cursor-pointer">Ieși din Modul Secret</button>
-        </div>
-        <table class="w-full border-collapse border border-gray-400 text-xs">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border border-gray-400 p-2">ID Tranzacție</th>
-                    <th class="border border-gray-400 p-2">Departament</th>
-                    <th class="border border-gray-400 p-2">Furnizor</th>
-                    <th class="border border-gray-400 p-2">Valoare RON</th>
-                    <th class="border border-gray-400 p-2">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td class="border border-gray-400 p-2">TR-9021</td><td class="border border-gray-400 p-2">Logistica</td><td class="border border-gray-400 p-2">Global Transport SRL</td><td class="border border-gray-400 p-2">4,520.00</td><td class="border border-gray-400 p-2 text-green-600">Reconciliat</td></tr>
-                <tr><td class="border border-gray-400 p-2">TR-9022</td><td class="border border-gray-400 p-2">Telecom</td><td class="border border-gray-400 p-2">FiberLink Networks</td><td class="border border-gray-400 p-2">1,230.50</td><td class="border border-gray-400 p-2 text-green-600">Reconciliat</td></tr>
-            </tbody>
-        </table>
-    </div>
+  
 
     <!-- Top Navigation Bar & Rich Utility Header -->
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2 flex flex-col md:flex-row items-center justify-between shrink-0 shadow-lg z-20 space-y-2 md:space-y-0">
@@ -112,28 +91,11 @@
                     <span class="font-semibold">Ofertă PRO -50%</span>
                 </a>
 
-                <!-- Buton Notiță -->
-                <button onclick="toggleQuickNotePopup()" class="hidden md:flex items-center space-x-1 bg-gray-900 border border-gray-800 hover:border-amberGlow text-amberGlow px-2 py-0.5 rounded-xl text-[10px] transition">
-                    <i class="fa-regular fa-note-sticky"></i>
-                    <span id="noteText">Notiță</span>
-                </button>
-
                 <!-- Widget Google Maps / Localizare Automată -->
                 <button onclick="openGoogleMapsLocation()" class="hidden md:flex items-center space-x-1.5 bg-gray-900 border border-gray-800 hover:border-cyanNeon text-cyanNeon px-2.5 py-0.5 rounded-xl text-[10px] transition cursor-pointer" title="Click pentru a deschide Google Maps">
                     <i class="fa-solid fa-map-location-dot"></i>
                     <span id="locationDisplay">Se detectează...</span>
                 </button>
-
-                <!-- Buton Export Sesiune -->
-                <button onclick="exportFullSession()" class="hidden md:flex items-center space-x-1 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 px-2 py-0.5 rounded-xl text-[10px] transition">
-                    <i class="fa-solid fa-file-arrow-down text-cyan-400"></i>
-                    <span id="exportText">Export</span>
-                </button>
-
-                <div class="hidden md:flex items-center space-x-1">
-                    <button onclick="switchTab('billingCard', 'Abonament & PRO')" class="bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[10px] px-2 py-0.5 rounded-xl transition cursor-pointer flex items-center space-x-1 shadow">
-                        <i class="fa-solid fa-credit-card"></i> <span>PRO</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -998,16 +960,6 @@
                 if(icon) icon.className = 'fa-solid fa-eye';
                 if(text) text.innerText = 'Arată Unelte';
             }
-        }
-
-        function toggleQuickNotePopup() {
-            const modal = document.getElementById('quickNoteModal');
-            if(modal) modal.classList.toggle('hidden');
-        }
-
-        function saveQuickNoteState() {
-            const el = document.getElementById('quickNoteText');
-            if(el) localStorage.setItem('nexus_quick_note', el.value);
         }
 
         function toggleNexusRobot() {
