@@ -1358,7 +1358,50 @@ function logoutUser() {
                 showToast('Se preia locația...', 'info');
             }
         }
-    </script>
+  <!-- Firebase App și Auth SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  // Configurația ta din consola Firebase
+  const firebaseConfig = {
+    apiKey: "API_KEY_TAU_DIN_FIREBASE",
+    authDomain: "PROIECTUL_TAU.firebaseapp.com",
+    projectId: "PROIECTUL_TAU",
+    storageBucket: "PROIECTUL_TAU.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef"
+  };
+
+  // Inițializare
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Funcție de Logare cu Google
+  window.loginWithGoogle = async function() {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      alert(`Te-ai autentificat cu succes! Bun venit, ${user.displayName}`);
+      console.log("Date Utilizator:", user);
+      // Aici poți redirecționa utilizatorul sau poți actualiza UI-ul
+    } catch (error) {
+      console.error("Eroare Autentificare Google:", error);
+      alert("Autentificarea a eșuat: " + error.message);
+    }
+  };
+
+  // Ascultător pentru starea utilizatorului (conectat / deconectat)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Utilizator conectat:", user.email);
+    } else {
+      console.log("Niciun utilizator conectat.");
+    }
+  });
+</script>
+    
 
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
