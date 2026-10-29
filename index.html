@@ -945,25 +945,33 @@
         }
 
         let freeMessagesLeft = 10;
-        function activateLicenseKey() {
-            const input = document.getElementById('licenseKeyInput');
-            const status = document.getElementById('licenseStatus');
-            const badge = document.getElementById('proBadge');
-            const key = input ? input.value.trim() : '';
+       function activateLicenseKey() {
+    const input = document.getElementById('licenseKeyInput');
+    const status = document.getElementById('licenseStatus');
+    const badge = document.getElementById('proBadge');
+    const key = input ? input.value.trim() : '';
 
-            if(key.startsWith('NEXUS-PRO-')) {
-                if(status) status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență activată cu succes! Acces VIP deblocat.</span>';
-                if(badge) {
-                    badge.innerText = 'PRO VIP';
-                    badge.className = 'text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.2 rounded-full font-bold';
-                }
-                localStorage.setItem('nexus_license_active', 'true');
-                showToast('Cheie PRO activată cu succes!', 'success');
-            } else {
-                if(status) status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă. Încearcă din nou.</span>';
-                showToast('Cheie invalidă!', 'error');
-            }
+    // Lista oficială de chei permise pentru cadou
+    const cheiCadouValide = [
+        "NEXUS-PRO-CADOU-VIP1",
+        "NEXUS-PRO-VIP-VIP2",
+        "NEXUS-PRO-FRIEND-2026",
+        "NEXUS-PRO-SPECIAL-VIP4"
+    ];
+
+    if (cheiCadouValide.includes(key)) {
+        if (status) status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență PRO VIP Activată!</span>';
+        if (badge) {
+            badge.innerText = 'PRO VIP';
+            badge.className = 'text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.2 rounded-full font-bold';
         }
+        localStorage.setItem('nexus_license_active', 'true');
+        showToast('Cheie PRO activată cu succes!', 'success');
+    } else {
+        if (status) status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă sau inexistentă!</span>';
+        showToast('Cheia introdusă nu este validă.', 'error');
+    }
+}
 
         function showToast(msg, type='info') {
             const container = document.getElementById('toastContainer');
