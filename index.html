@@ -1346,122 +1346,120 @@ function activateLicenseKey() {
             }
         }
    
-        const firebaseConfig = {
-            apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
-            authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
-            projectId: "nexus-ai-studio-8335f",
-            storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
-            messagingSenderId: "645678013335",
-            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-            measurementId: "G-W0PJNEF4S5"
-        };
+          const firebaseConfig = {
+      apiKey: "AIzaSyChN5PX0lb-ouPITfWT-XpM8tj_s5j9D9k",
+      authDomain: "://firebaseapp.com",
+      projectId: "nexus-ai-studio-8335f",
+      storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+      messagingSenderId: "645678013335",
+      appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+      measurementId: "G-W0PJNEF455"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const googleProvider = new GoogleAuthProvider();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
 
-        // Verifică automat dacă utilizatorul este deja logat când deschide sau dă refresh la pagină
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const userName = user.displayName || user.email;
-                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+  // Verifică automat dacă utilizatorul este deja logat când deschide sau dă refresh la pagină
+  onAuthStateChanged(auth, (user) => {
+      if (user) {
+          const userName = user.displayName || user.email;
+          const userPhoto = user.photoURL || 'https://flaticon.com';
 
-                const container = document.querySelector('#tab-authAccount .max-w-md');
-                if (container) {
-                    container.innerHTML = `
-                        <div class="text-center space-y-4 py-6">
-                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
-                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
-                            <p class="text-xs text-gray-400">${user.email}</p>
-                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
-                                Cont Conectat & Verificat ✅
-                            </div>
-                            <div class="pt-4">
-                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
-                                    Deconectare / Schimbă Contul
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-        });
-        window.socialLogin = async function(provider) {
-            if (provider === 'Google') {
-                try {
-                    const result = await signInWithPopup(auth, googleProvider);
-                    const user = result.user;
-                    const userName = user.displayName || user.email;
-                    const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+          const container = document.getElementById('tab-authAccount')?.querySelector('.max-w-md');
+          if (container) {
+              container.innerHTML = `
+                  <div class="text-center space-y-4 py-6">
+                      <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                      <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                      <p class="text-xs text-gray-400">${user.email}</p>
+                      <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                          Cont Conectat & Verificat ✅
+                      </div>
+                      <div class="pt-4">
+                          <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                              Deconectare / Schimbă Contul
+                             </button>
+                      </div>
+                  </div>
+              `;
+          }
+      }
+  });
 
-                    alert("Autentificat cu succes: " + userName);
+  window.socialLogin = async function(provider) {
+      if (provider === 'Google') {
+          try {
+              const result = await signInWithPopup(auth, googleProvider);
+              const user = result.user;
+              const userName = user.displayName || user.email;
+              const userPhoto = user.photoURL || 'https://flaticon.com';
 
-                    const container = document.getElementById('tab-authAccount')?.querySelector('.max-w-md');
-                    if (container) {
-                        container.innerHTML = `
-                            <div class="text-center space-y-4 py-6">
-                                <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
-                                <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
-                                <p class="text-xs text-gray-400">${user.email}</p>
-                                <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
-                                    Cont Conectat & Verificat ✅
-                                </div>
-                                <div class="pt-4">
-                                    <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
-                                        Deconectare / Schimbă Contul
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } catch (error) {
-                    console.error("Eroare Google Auth:", error);
-                    alert("Eroare la autentificare: " + error.message);
-                }
-            } else {
-                alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
-            }
-        };
+              alert("Autentificat cu succes: " + userName);
 
-        window.registerCompleteUser = async function() {
-            const email = document.getElementById("regEmail")?.value.trim();
-            const password = document.getElementById("regPass")?.value.trim();
-            const fullName = document.getElementById("regFullName")?.value.trim();
-            const statusEl = document.getElementById('userAccountStatus');
+              const container = document.getElementById('tab-authAccount')?.querySelector('.max-w-md');
+              if (container) {
+                  container.innerHTML = `
+                      <div class="text-center space-y-4 py-6">
+                          <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                          <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                          <p class="text-xs text-gray-400">${user.email}</p>
+                          <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                              Cont Conectat & Verificat ✅
+                          </div>
+                          <div class="pt-4">
+                              <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                  Deconectare / Schimbă Contul
+                              </button>
+                          </div>
+                      </div>
+                  `;
+              }
+          } catch (error) {
+              console.error("Eroare Google Auth:", error);
+              alert("Eroare la autentificare: " + error.message);
+          }
+      } else {
+          alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
+      }
+  };
 
-            if (!email || !password) {
-                alert("Introdu adresa de e-mail și parola!");
-                return;
-            }
+  window.registerCompleteUser = async function() {
+      const email = document.getElementById("regEmail")?.value.trim();
+      const password = document.getElementById("regPass")?.value.trim();
+      const fullName = document.getElementById("regFullName")?.value.trim();
+      const statusEl = document.getElementById('userAccountStatus');
 
-            try {
-                const res = await createUserWithEmailAndPassword(auth, email, password);
-                alert("Cont creat cu succes pentru: " + res.user.email);
-                if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
-            } catch (err) {
-                console.error("Eroare Firebase:", err);
-                alert("Eroare la crearea contului: " + err.message);
-            }
-        };
+      if (!email || !password) {
+          alert("Introdu adresa de e-mail și parola!");
+          return;
+      }
 
-        window.logoutUser = async function() {
-            try {
-                await signOut(auth);
-                location.reload();
-            } catch (error) {
-                console.error("Eroare la deconectare:", error);
-            }
-        };
+      try {
+          const res = await createUserWithEmailAndPassword(auth, email, password);
+          alert("Cont creat cu succes pentru: " + res.user.email);
+          if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
+      } catch (err) {
+          console.error("Eroare Firebase:", err);
+          alert("Eroare la crearea contului: " + err.message);
+      }
+  };
 
-              // REPARARE BINDING: Permite butoanelor HTML din pagină să acceseze funcțiile
-        window.switchTab = typeof switchTab !== 'undefined' ? switchTab : function() {};
-        window.toggleSidebar = typeof toggleSidebar !== 'undefined' ? toggleSidebar : function() {};
-        window.toggleNexusRobot = typeof toggleNexusRobot !== 'undefined' ? toggleNexusRobot : function() {};
+  window.logoutUser = async function() {
+      try {
+          await signOut(auth);
+          location.reload();
+      } catch (error) {
+          console.error("Eroare la deconectare:", error);
+      }
+  };
 
-// Închiderea finală a întregului script modul pornit la linia 883
+  // REPARARE BINDING GLOBALE
+  window.switchTab = typeof switchTab !== 'undefined' ? switchTab : function() {};
+  window.toggleSidebar = typeof toggleSidebar !== 'undefined' ? toggleSidebar : function() {};
+  window.toggleNexusRobot = typeof toggleNexusRobot !== 'undefined' ? toggleNexusRobot : function() {};
+
 </script>
-
-  
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
         <span>Plăți Securizate Stripe</span> &bull; 
