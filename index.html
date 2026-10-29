@@ -951,25 +951,48 @@
     const badge = document.getElementById('proBadge');
     const key = input ? input.value.trim() : '';
 
-    // Lista oficială de chei permise pentru cadou
-    const cheiCadouValide = [
-        "NEXUS-PRO-CADOU-VIP1",
-        "NEXUS-PRO-VIP-VIP2",
-        "NEXUS-PRO-FRIEND-2026",
-        "NEXUS-PRO-SPECIAL-VIP4"
-    ];
+    // Lista ta de coduri VIP valabile (poți adăuga câte vrei aici)
+const validLicenseKeys = [
+    "NEXUS-VIP-2026",
+    "NEXUS-PRIETEN-01",
+    "NEXUS-PRO-EARLY",
+    "TEST-ACCESS-100"
+];
 
-    if (cheiCadouValide.includes(key)) {
-        if (status) status.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Licență PRO VIP Activată!</span>';
-        if (badge) {
-            badge.innerText = 'PRO VIP';
-            badge.className = 'text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.2 rounded-full font-bold';
+function activateLicenseKey() {
+    const inputField = document.getElementById('licenseKeyInput');
+    const statusText = document.getElementById('licenseStatus');
+    
+    if (!inputField || !statusText) return;
+    
+    const userKey = inputField.value.trim().toUpperCase();
+
+    if (!userKey) {
+        statusText.innerText = "Te rugăm să introduci un cod valid.";
+        statusText.className = "text-[10px] text-amber-400 mt-2";
+        return;
+    }
+
+    // Verificăm dacă codul introdus există în lista noastră
+    if (validLicenseKeys.includes(userKey)) {
+        // Salvăm statutul PRO în memoria browserului (LocalStorage)
+        localStorage.setItem('nexus_pro_activated', 'true');
+        localStorage.setItem('nexus_license_key', userKey);
+
+        statusText.innerText = "Felicitări! Ai activat accesul PRO Nelimitat!";
+        statusText.className = "text-[10px] text-emerald-400 font-bold mt-2";
+
+        // Actualizăm badge-ul vizual din aplicație
+        const topBadge = document.querySelector('.bg-amberGlow\\/20');
+        if (topBadge) {
+            topBadge.innerText = "PRO ACTIV";
+            topBadge.className = "text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold";
         }
-        localStorage.setItem('nexus_license_active', 'true');
-        showToast('Cheie PRO activată cu succes!', 'success');
+        
+        alert("Licență activată cu succes! Ai acces complet Nexus PRO.");
     } else {
-        if (status) status.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Cheie invalidă sau inexistentă!</span>';
-        showToast('Cheia introdusă nu este validă.', 'error');
+        statusText.innerText = "Codul introdus este invalid sau a expirat.";
+        statusText.className = "text-[10px] text-red-400 mt-2";
     }
 }
 
@@ -1367,34 +1390,119 @@ function logoutUser() {
                 showToast('Se preia locația...', 'info');
             }
         }
-        <!-- Firebase App și Auth SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      <!-- Firebase SDK Modular și Logica de Autentificare -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AICI_PUI_API_KEY_TA_DIN_FIREBASE",
-    authDomain: "PROIECTUL_TAU.firebaseapp.com",
-    projectId: "PROIECTUL_TAU",
-    storageBucket: "PROIECTUL_TAU.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef"
-  };
+        const firebaseConfig = {
+            apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+            authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+            projectId: "nexus-ai-studio-8335f",
+            storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+            messagingSenderId: "645678013335",
+            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+            measurementId: "G-W0PJNEF4S5"
+        };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
 
-  window.loginWithGoogle = async function() {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      alert(`Te-ai autentificat cu succes! Bun venit, ${user.displayName}`);
-    } catch (error) {
-      console.error("Eroare Autentificare Google:", error);
-      alert("Autentificarea a eșuat: " + error.message);
-    }
-  };
+        // Verifică automat dacă utilizatorul este deja logat când deschide sau dă refresh la pagină
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userName = user.displayName || user.email;
+                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+                const container = document.querySelector('#tab-authAccount .max-w-md');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center space-y-4 py-6">
+                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                            <p class="text-xs text-gray-400">${user.email}</p>
+                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                                Cont Conectat & Verificat ✅
+                            </div>
+                            <div class="pt-4">
+                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                    Deconectare / Schimbă Contul
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        window.socialLogin = async function(provider) {
+            if (provider === 'Google') {
+                try {
+                    const result = await signInWithPopup(auth, googleProvider);
+                    const user = result.user;
+                    const userName = user.displayName || user.email;
+                    const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+                    alert("Autentificat cu succes: " + userName);
+
+                    const container = document.getElementById('tab-authAccount').querySelector('.max-w-md');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="text-center space-y-4 py-6">
+                                <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                                <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                                <p class="text-xs text-gray-400">${user.email}</p>
+                                <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                                    Cont Conectat & Verificat ✅
+                                </div>
+                                <div class="pt-4">
+                                    <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                        Deconectare / Schimbă Contul
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error("Eroare Google Auth:", error);
+                    alert("Eroare la autentificare: " + error.message);
+                }
+            } else {
+                alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
+            }
+        };
+
+        window.registerCompleteUser = async function() {
+            const email = document.getElementById("regEmail")?.value.trim();
+            const password = document.getElementById("regPass")?.value.trim();
+            const fullName = document.getElementById("regFullName")?.value.trim();
+            const statusEl = document.getElementById('userAccountStatus');
+
+            if (!email || !password) {
+                alert("Introdu adresa de e-mail și parola!");
+                return;
+            }
+
+            try {
+                const res = await createUserWithEmailAndPassword(auth, email, password);
+                alert("Cont creat cu succes pentru: " + res.user.email);
+                if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
+            } catch (err) {
+                console.error("Eroare Firebase:", err);
+                alert("Eroare la crearea contului: " + err.message);
+            }
+        };
+
+        // Funcția de deconectare curată
+        window.logoutUser = async function() {
+            try {
+                await signOut(auth);
+                location.reload();
+            } catch (error) {
+                console.error("Eroare la deconectare:", error);
+            }
+        };
 </script>
   
     <!-- Footer Ultra-Compact -->
