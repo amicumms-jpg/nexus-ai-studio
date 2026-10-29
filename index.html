@@ -51,7 +51,64 @@
     <!-- Notificări Toast Container -->
     <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-  
+  <!-- Modul Boss Key (Excel Fals) -->
+<div id="bossExcelScreen" class="fixed inset-0 bg-white text-black z-50 p-6 hidden overflow-auto font-mono">
+    <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h2 class="text-lg font-bold">Financial Balances & Quarterly Sheet Q3/Q4 - Internal Audit</h2>
+        <button onclick="toggleBossKey()" class="bg-red-600 text-white px-3 py-1 text-xs rounded cursor-pointer">Ieși din Modul Secret</button>
+    </div>
+    <table class="w-full border-collapse border border-gray-400 text-xs">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-400 p-2">ID Tranzacție</th>
+                <th class="border border-gray-400 p-2">Departament</th>
+                <th class="border border-gray-400 p-2">Furnizor</th>
+                <th class="border border-gray-400 p-2">Valoare RON</th>
+                <th class="border border-gray-400 p-2">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="border border-gray-400 p-2">TR-9021</td>
+                <td class="border border-gray-400 p-2">Logistica</td>
+                <td class="border border-gray-400 p-2">Global Transport SRL</td>
+                <td class="border border-gray-400 p-2">4,520.00</td>
+                <td class="border border-gray-400 p-2 text-green-600">Reconciliat</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-400 p-2">TR-9022</td>
+                <td class="border border-gray-400 p-2">Telecom</td>
+                <td class="border border-gray-400 p-2">FiberLink Networks</td>
+                <td class="border border-gray-400 p-2">1,230.50</td>
+                <td class="border border-gray-400 p-2 text-green-600">Reconciliat</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Opțiuni Rapide Mobil -->
+<div class="md:hidden pt-2 pb-2 px-1 border-b border-gray-800 my-2 space-y-1.5">
+    <div class="text-[9px] font-bold text-gray-500 uppercase tracking-wider px-2">Opțiuni Rapide</div>
+    <div class="grid grid-cols-2 gap-1.5">
+        <button onclick="toggleQuickNotePopUp()" class="flex items-center justify-center gap-1.5 bg-gray-900 border border-gray-800 text-gray-300 py-1.5 rounded-xl text-[10px]">
+            <i class="fa-solid fa-note-sticky text-amberGlow"></i> Notiță
+        </button>
+        <button onclick="exportFullSession()" class="flex items-center justify-center gap-1.5 bg-gray-900 border border-gray-800 text-gray-300 py-1.5 rounded-xl text-[10px]">
+            <i class="fa-solid fa-file-arrow-down text-cyan-400"></i> Export
+        </button>
+    </div>
+    <div class="grid grid-cols-2 gap-1.5">
+        <button onclick="copyFullConversation()" class="flex items-center justify-center gap-1 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 py-1.5 rounded-xl text-[10px] transition cursor-pointer">
+            <i class="fa-solid fa-copy text-cyanNeon"></i> <span>Copiază Tot</span>
+        </button>
+        <button onclick="downloadFullConversation()" class="flex items-center justify-center gap-1 bg-gray-900 border border-gray-800 hover:border-amberGlow text-gray-300 py-1.5 rounded-xl text-[10px] transition cursor-pointer">
+            <i class="fa-solid fa-download text-amberGlow"></i> <span>Descarcă Tot</span>
+        </button>
+    </div>
+    <button onclick="switchTab('billingCard', 'Abonament & PRO')" class="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[10px] py-1.5 rounded-xl shadow">
+        <i class="fa-solid fa-credit-card"></i> Pachet PRO
+    </button>
+</div>
 
     <!-- Top Navigation Bar & Rich Utility Header -->
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2 flex flex-col md:flex-row items-center justify-between shrink-0 shadow-lg z-20 space-y-2 md:space-y-0">
@@ -943,7 +1000,25 @@
             const win = document.getElementById('nexus-robot-window');
             if(win) win.classList.toggle('hidden');
         }
+function toggleQuickNotePopUp() {
+    const modal = document.getElementById('quickNoteModal');
+    if(modal) modal.classList.toggle('hidden');
+}
 
+function saveQuickNoteState() {
+    const el = document.getElementById('quickNoteText');
+    if(el) localStorage.setItem('nexus_quick_note', el.value);
+}
+
+function toggleNexusRobot() {
+    const win = document.getElementById('nexus-robot-window');
+    if(win) win.classList.toggle('hidden');
+}
+
+function toggleBossKey() {
+    const screen = document.getElementById('bossExcelScreen');
+    if(screen) screen.classList.toggle('hidden');
+}
         let freeMessagesLeft = 10;
        function activateLicenseKey() {
     const input = document.getElementById('licenseKeyInput');
