@@ -1033,29 +1033,6 @@ function activateLicenseKey() {
         return;
     }
 
-    // Verificăm dacă codul introdus există în lista noastră
-    if (validLicenseKeys.includes(userKey)) {
-        // Salvăm statutul PRO în memoria browserului (LocalStorage)
-        localStorage.setItem('nexus_pro_activated', 'true');
-        localStorage.setItem('nexus_license_key', userKey);
-
-        statusText.innerText = "Felicitări! Ai activat accesul PRO Nelimitat!";
-        statusText.className = "text-[10px] text-emerald-400 font-bold mt-2";
-
-        // Actualizăm badge-ul vizual din aplicație
-        const topBadge = document.querySelector('.bg-amberGlow\\/20');
-        if (topBadge) {
-            topBadge.innerText = "PRO ACTIV";
-            topBadge.className = "text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold";
-        }
-        
-        alert("Licență activată cu succes! Ai acces complet Nexus PRO.");
-    } else {
-        statusText.innerText = "Codul introdus este invalid sau a expirat.";
-        statusText.className = "text-[10px] text-red-400 mt-2";
-    }
-}
-
         function showToast(msg, type='info') {
             const container = document.getElementById('toastContainer');
             if(!container) return;
@@ -1327,98 +1304,12 @@ function activateLicenseKey() {
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
         }
 
-     // Verifică la încărcarea paginii dacă utilizatorul este deja logat
-window.addEventListener('DOMContentLoaded', () => {
-    initMatrix();
-    const savedDraft = localStorage.getItem('nexus_chat_draft');
-    if(savedDraft && document.getElementById('chatInput')) {
-        document.getElementById('chatInput').value = savedDraft;
-        autoResizeTextarea(document.getElementById('chatInput'));
-    }
-    autoDetectUserLocation();
-    
-    // Verifică starea de sesiune existentă
-    checkExistingSession();
-});
-
-function checkExistingSession() {
-    const isLoggedIn = localStorage.getItem('nexus_is_logged_in');
-    if (isLoggedIn === 'true') {
-        const userName = localStorage.getItem('nexus_user_name') || 'Utilizator';
-        const userEmail = localStorage.getItem('nexus_user_email') || 'cont@platforma.ro';
-        const userAvatar = localStorage.getItem('nexus_user_avatar') || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
-        
-        updateUIAfterLogin(userName, userEmail, userAvatar);
-    }
-}
-
-function socialLogin(provider) {
-    showToast(`Autentificare reușită cu ${provider}!`, 'success');
-    
-    // Date simulate reale preluate de la furnizor (sau datele reale dacă foloseai un SDK extern)
-    const mockUserData = {
-        name: provider === 'Google' ? 'Valentin S.' : `Utilizator ${provider}`,
-        email: `contact@nexusaistudio.ro`,
-        avatar: provider === 'Google' 
-            ? 'https://lh3.googleusercontent.com/a/ACg8ocL... (sau poza ta de profil)' 
-            : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + provider
-    };
-
-    // Salvează în localStorage pentru a ține utilizatorul logat până la delogare
-    localStorage.setItem('nexus_is_logged_in', 'true');
-    localStorage.setItem('nexus_user_name', mockUserData.name);
-    localStorage.setItem('nexus_user_email', mockUserData.email);
-    localStorage.setItem('nexus_user_avatar', mockUserData.avatar);
-    localStorage.setItem('nexus_auth_provider', provider);
-
-    updateUIAfterLogin(mockUserData.name, mockUserData.email, mockUserData.avatar);
-
-    setTimeout(() => {
-        switchTab('chat', 'Home / Tools Hub');
-    }, 1000);
-}
-
-function updateUIAfterLogin(name, email, avatar) {
-    // 1. Schimbă panoul de cont într-un card de profil cu poză și buton de Delogare
-    const authTabContainer = document.querySelector('#tab-authAccount > div');
-    if (authTabContainer) {
-        authTabContainer.innerHTML = `
-            <div class="text-center space-y-3 py-4">
-                <img src="${avatar}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
-                <h2 class="text-lg font-bold text-white">${name}</h2>
-                <p class="text-xs text-gray-400">${email}</p>
-                <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs py-1.5 px-3 rounded-xl font-semibold">
-                    <i class="fa-solid fa-circle-check mr-1"></i> Cont Autentificat Activ
-                </div>
-                <button onclick="logoutUser()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-4">
-                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Delogare (Log Out)
-                </button>
-            </div>
-        `;
-    }
-
     // 2. Actualizează insigna PRO / Status din Header
     const badge = document.getElementById('proBadge');
     if(badge) {
         badge.innerText = 'ONLINE';
         badge.className = 'text-[9px] bg-cyan-500/20 text-cyan400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
     }
-}
-
-function logoutUser() {
-    // Șterge datele de sesiune
-    localStorage.removeItem('nexus_is_logged_in');
-    localStorage.removeItem('nexus_user_name');
-    localStorage.removeItem('nexus_user_email');
-    localStorage.removeItem('nexus_user_avatar');
-    localStorage.removeItem('nexus_auth_provider');
-
-    showToast('Ai ieșit din cont cu succes.', 'info');
-    
-    // Reîncarcă pagina pentru a readuce formularul curat de login
-    setTimeout(() => {
-        location.reload();
-    }, 800);
 }
 
         function exportFullSession() { showToast('Export realizat.', 'success'); }
