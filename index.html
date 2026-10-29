@@ -44,34 +44,6 @@
             }
         }
     </script>
-    <!-- Firebase App și Auth SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AICI_PUI_API_KEY_TA_DIN_FIREBASE",
-    authDomain: "PROIECTUL_TAU.firebaseapp.com",
-    projectId: "PROIECTUL_TAU",
-    storageBucket: "PROIECTUL_TAU.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-
-  window.loginWithGoogle = async function() {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      alert(`Te-ai autentificat cu succes! Bun venit, ${user.displayName}`);
-    } catch (error) {
-      console.error("Eroare Autentificare Google:", error);
-      alert("Autentificarea a eșuat: " + error.message);
-    }
-  };
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
     <!-- Canvas pentru efectul Matrix Rain Continuu -->
