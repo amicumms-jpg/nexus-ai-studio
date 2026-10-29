@@ -881,7 +881,11 @@
 
     <!-- Scripturi JavaScript Complete și Curățate -->
    <script type="module">
-        // Matrix Rain Canvas Effect Continuu
+ // Firebase SDK Modular si Logica de Autentificare
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+       
+       // Matrix Rain Canvas Effect Continuu
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
         let drops = [];
@@ -1341,10 +1345,7 @@ function activateLicenseKey() {
                 showToast('Se preia locația...', 'info');
             }
         }
-     // Firebase SDK Modular si Logica de Autentificare
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-
+   
         const firebaseConfig = {
             apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
             authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
