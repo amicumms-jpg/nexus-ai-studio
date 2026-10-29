@@ -1452,12 +1452,6 @@ function activateLicenseKey() {
           console.error("Eroare la deconectare:", error);
       }
   };
-
-  // REPARARE BINDING GLOBALE
-  window.switchTab = typeof switchTab !== 'undefined' ? switchTab : function() {};
-  window.toggleSidebar = typeof toggleSidebar !== 'undefined' ? toggleSidebar : function() {};
-  window.toggleNexusRobot = typeof toggleNexusRobot !== 'undefined' ? toggleNexusRobot : function() {};
-
 </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
