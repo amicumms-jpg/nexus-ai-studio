@@ -1109,20 +1109,20 @@
         };
 
         async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: promptText, fileData: fileData, model: modelName })
-                });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || `Eroare server: ${response.status}`);
-                return data.text || "Răspuns gol primit de la server.";
-            } catch (err) {
-                console.error("Eroare la comunicarea cu serverul:", err);
-                return "Răspuns simulat (Offline): Cererea ta a fost procesată cu succes!";
-            }
-        }
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: promptText, fileData: fileData, model: modelName })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || `Eroare server: ${response.status}`);
+        return data.text || "Răspuns gol primit de la server.";
+    } catch (err) {
+        console.error("Eroare la comunicarea cu serverul:", err);
+        return `Eroare: ${err.message || 'Nu s-a putut contacta serverul.'}`;
+    }
+}
 
         let attachedFiles = {};
         window.handleFileSelect = function(tabKey) {
