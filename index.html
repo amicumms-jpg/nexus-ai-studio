@@ -1525,12 +1525,16 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     
     if (!promptInput || !resultContainer) return;
     
-    // Preluăm textul și curățăm spațiile inutile
+    // Preluăm textul și eliminăm diacriticele și caracterele problematice
     const rawPrompt = promptInput.value || promptInput.innerText || "";
-    const prompt = rawPrompt.trim();
+    const cleanPrompt = rawPrompt
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Șterge diacriticele (ă, â, î, ș, ț)
+        .replace(/[^\w\s,.-]/gi, '') // Păstrează doar litere, cifre, spații și semne de bază
+        .trim();
 
-    if (!prompt) {
-        alert('Te rog să introduci o descriere pentru a genera vizualul!');
+    if (!cleanPrompt) {
+        alert('Te rog să introduci o descriere validă pentru a genera vizualul!');
         return;
     }
 
@@ -1542,9 +1546,9 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         </div>
     `;
 
-    // 2. Codăm corect promptul pentru a evita eroarea 400
+    // 2. Construim URL-ul curat
     const styleModifier = customStyle || "cinematic lighting, high detail, 8k, professional design";
-    const fullText = prompt + ", " + styleModifier;
+    const fullText = cleanPrompt + ", " + styleModifier;
     const encodedPrompt = encodeURIComponent(fullText);
     const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
 
@@ -1555,7 +1559,7 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     img.onload = () => {
         resultContainer.innerHTML = `
             <div class="flex flex-col gap-3 h-full">
-                <p class="text-[10px] text-gray-500 truncate">Prompt: ${prompt}</p>
+                <p class="text-[10px] text-gray-500 truncate">Prompt: ${cleanPrompt}</p>
                 <div class="flex-1 rounded-xl overflow-hidden border border-cyanNeon/30 shadow-lg bg-gray-900 group relative min-h-[220px]">
                     <img src="${imageUrl}" alt="Asset vizual generat" class="w-full h-full object-contain" />
                     
@@ -1576,7 +1580,7 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         resultContainer.innerHTML = `
             <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
                 <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
-                <span class="text-red-400 text-xs">Eroare la generarea vizualului. Încearcă din nou.</span>
+                <span class="text-red-400 text-xs">Eroare la generarea vizualului. Încearcă un alt prompt.</span>
             </div>
         `;
     };
