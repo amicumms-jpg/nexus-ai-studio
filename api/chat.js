@@ -1,3 +1,5 @@
+import { DEPARTMENTS } from '../agentsConfig.js';
+
 export default async function handler(req, res) {
     // Setează antetele CORS pentru a permite apeluri din orice browser/interfață
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -23,14 +25,14 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, message, fileData, model } = req.body;
+        const { prompt, message, fileData, model, department } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
-        // Acceptă atât `prompt` cât și `message` (pentru compatibilitate cu diverse widget-uri)
+        // Acceptă atât `prompt` cât și `message`
         const userPrompt = prompt || message || "Analizează acest fișier:";
 
         let parts = [{ text: userPrompt }];
@@ -44,25 +46,17 @@ export default async function handler(req, res) {
             });
         }
 
-        // Prompt de Sistem (Instrucțiuni actualizate pentru Donații & Early Access)
+        // ALEGEREA DINAMICĂ A DEPARTAMENTULUI (Tech sau Documente)
+        const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.TECH;
+
         const systemInstruction = {
             parts: [{
-                text: `Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).
-Rolul tău principal este să ajuți utilizatorii să navigheze pe platformă, să le oferi suport rapid (FAQ) și să le explici modelul de susținere a proiectului.
-
-REGULI ȘI GHIDAJ:
-1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite:
-   - Pentru rețele sociale: TikTok AI Creator, Instagram AI Creator, YouTube AI Scriptwriter.
-   - Pentru dezvoltare & cod: Code Studio.
-   - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
-2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre funcționarea platformei. Menționează că platforma este în faza de testare/Early Access (100% gratuită). Pentru contact direct: contact@nexusaistudio.ro.
-3. SUSȚINERE & DONAȚII: Când utilizatorul întreabă despre pachetul PRO, opțiuni avansate sau cum poate ajuta proiectul, explică-i că platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
-4. TON DE COMUNICARE: Fii amabil, concis (răspunsuri scurte, max 2-4 propoziții), profesionist și direct la subiect.`
+                text: selectedDept.systemPrompt
             }]
         };
 
-       // Preluăm modelul din interfață și îl mapăm la un model acceptat sigur de Google API
-        let activeModel = model || 'gemini-3.8-flash';
+        // Preluăm modelul din interfață 
+        let activeModel = model || 'gemini-2.5-flash';
        
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
