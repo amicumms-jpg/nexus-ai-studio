@@ -1463,23 +1463,81 @@ window.generate3DVisual = async function() {
     const resultContainer = document.getElementById('result-3d-container');
     
     if (!prompt.trim()) {
-        alert('Te rog să introduci o descriere pentru conceptul 3D!');
+        alert('Te rog să introduci o descriere pentru vizualul 3D!');
         return;
     }
 
-    resultContainer.innerHTML = '<div class="text-cyanNeon animate-pulse flex items-center justify-center gap-2"><i class="fa-solid fa-spinner fa-spin"></i> Se generează conceptul 3D cu ajutorul AI...</div>';
+    // 1. Afișăm un mesaj de încărcare și o animație de cub care se învârte
+    resultContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center gap-3 py-10">
+            <i class="fa-solid fa-cube fa-spin text-3xl text-cyanNeon"></i>
+            <p class="text-xs text-gray-400 animate-pulse">Se generează vizualul 3D (randare complexă)...</p>
+        </div>
+    `;
 
+    // 2. Generăm un URL unic pentru imagine folosind un serviciu de tip Image API
+    // Adăugăm un timestamp la final pentru a ne asigura că browserul încarcă noua imagine de fiecare dată
+    const encodedPrompt = encodeURIComponent(prompt + ", 3d render, octane render, cinematic lighting, high detail, 8k");
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
+
+    // 3. Creăm un element de imagine pentru a preîncărca vizualul
+    const img = new Image();
+    img.src = imageUrl;
+
+    // 4. Așteptăm ca imaginea să se încarce complet
+    img.onload = () => {
+        // Odată încărcată, o afișăm în container
+        resultContainer.innerHTML = `
+            <div class="flex flex-col gap-3 h-full">
+                <p class="text-[10px] text-gray-500 truncate">Prompt: ${prompt}</p>
+                <div class="flex-1 rounded-xl overflow-hidden border border-cyanNeon/30 shadow-lg bg-gray-900 group relative">
+                    <img src="${imageUrl}" alt="Randare 3D generată" class="w-full h-full object-contain" />
+                    
+                    {/* Butoane de acțiune rapide */}
+                    <div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
+                        <button onclick="downloadImage('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                         <button onclick="openFullscreen('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    // 5. În cazul în care generarea eșuează (ex: server down)
+    img.onerror = () => {
+        resultContainer.innerHTML = `
+            <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
+                <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
+                <span class="text-red-400 text-xs">Eroare la generarea vizualului.</span>
+                <p class="text-[10px] text-gray-500">Serviciul de generare imagini este momentan indisponibil. Te rugăm să încerci din nou mai târziu.</p>
+            </div>
+        `;
+    };
+};
+
+// Funcții ajutătoare opționale (pentru butoanele de descărcare/fullscreen)
+window.downloadImage = async function(url) {
     try {
-        const data = await callNexusAI({
-            prompt: `Generează o descriere tehnică detaliată și un concept de design 3D profesional pentru: ${prompt}`,
-            department: 'general',
-            model: 'gemini-3.8-flash'
-        });
-
-        resultContainer.innerHTML = `<div class="text-left text-gray-200 whitespace-pre-wrap">${data.text || data.reply}</div>`;
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'nexus-3d-visual.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     } catch (err) {
-        resultContainer.innerHTML = `<span class="text-red-400">Eroare: ${err.message}. Te rugăm să încerci din nou.</span>`;
+        alert('Nu s-a putut descărca imaginea.');
     }
+};
+
+window.openFullscreen = function(url) {
+    // Deschide imaginea într-o fereastră nouă
+    window.open(url, '_blank');
 };
        // Helper universal pentru apeluri ultra-rapide cu auto-retry la erori de trafic
 async function callNexusAI(payload, maxRetries = 2) {
