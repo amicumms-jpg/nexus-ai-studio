@@ -195,10 +195,10 @@
                         <span>Text-to-Video Studio</span>
                     </button>
                 </div>
-<!-- Buton Meniu Lateral: 3D Visual Studio -->
-<a href="#" onclick="switchTab('3d-visual')" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition font-medium">
-    <i class="fa-solid fa-cube text-cyanNeon w-4 text-center"></i>
-    <span>3D Visual Studio</span>
+<!-- Buton Meniu Lateral: AI Creative Studio -->
+<a href="#" onclick="switchTab('3d-visual')" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition">
+    <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon w-4 text-center"></i>
+    <span>AI Creative Studio</span>
 </a>
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate</span>
                 <div class="mt-1 space-y-1 text-xs">
@@ -643,42 +643,59 @@
                 </div>
             </div>
 
-<!-- Tab: 3D Visual Studio -->
+<!-- TAB UNIFICAT: AI CREATIVE STUDIO (LOGOS, STICKERS & PROMPTS) -->
 <div id="tab-3d-visual" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
-    <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto w-full">
-        <h2 class="font-bold text-xs text-cyanNeon mb-1"><i class="fa-solid fa-cube mr-2"></i>3D Visual & Model Generation</h2>
-        <p class="text-[10px] text-gray-400 mb-2">Descrie obiectul sau scena 3D pe care dorești să o generezi cu ajutorul AI.</p>
+    <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto w-full space-y-4">
         
-        <div class="flex flex-col gap-2 mb-3">
-            <textarea id="prompt-3d" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-cyanNeon transition" placeholder="Ex: Un scaun futurist minimalist, stil cyberpunk, randat 3D realist..."></textarea>
-            
-            <!-- Exemple Rapide -->
-            <div>
-                <span class="block text-[10px] text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">💡 Exemple rapide (Click pentru a testa):</span>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="setPrompt3D('Machetă arhitecturală modernă, fațadă de sticlă, iluminat nocturn detaliat')" class="text-left bg-gray-950 hover:bg-cyanNeon/10 border border-gray-800 hover:border-cyanNeon/40 p-2 rounded-lg text-[11px] text-gray-300 transition flex items-center gap-2">
-                        <span>🏢</span> Machetă Arhitecturală
-                    </button>
-                    <button onclick="setPrompt3D('Gadget sci-fi futurist, design industrial, textură metalică lucioasă, randat 3D')" class="text-left bg-gray-950 hover:bg-cyanNeon/10 border border-gray-800 hover:border-cyanNeon/40 p-2 rounded-lg text-[11px] text-gray-300 transition flex items-center gap-2">
-                        <span>🚀</span> Obiect Sci-Fi / Gadget
-                    </button>
-                    <button onclick="setPrompt3D('Personaj stil cartoon 3D, drăguț, culori vibrante, randat 3D stil Pixar')" class="text-left bg-gray-950 hover:bg-cyanNeon/10 border border-gray-800 hover:border-cyanNeon/40 p-2 rounded-lg text-[11px] text-gray-300 transition flex items-center gap-2">
-                        <span>🧸</span> Personaj 3D Stylized
-                    </button>
-                    <button onclick="setPrompt3D('Mobilier minimalist scandinav, scaun ergonomic din lemn și metal finisat')" class="text-left bg-gray-950 hover:bg-cyanNeon/10 border border-gray-800 hover:border-cyanNeon/40 p-2 rounded-lg text-[11px] text-gray-300 transition flex items-center gap-2">
-                        <span>🪑</span> Mobilier Minimalist
-                    </button>
-                </div>
-            </div>
+        <div>
+            <h2 class="font-bold text-sm text-cyanNeon mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Creative Studio & Prompt Lab
+            </h2>
+            <p class="text-[10px] text-gray-400">Generează rapid elemente vizuale de impact, brand identity sau optimizează-ți ideile.</p>
+        </div>
 
-            <button onclick="generate3DVisual()" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition mt-2">
-                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generează Concept 3D
+        <!-- Selector de Mod / Categorie -->
+        <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="setCreativeMode('logo')" id="btn-mode-logo" class="py-2 px-2 rounded-xl text-xs font-medium bg-cyanNeon text-darkBg transition flex items-center justify-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-paintbrush"></i> Logo & Brand
+            </button>
+            <button type="button" onclick="setCreativeMode('sticker')" id="btn-mode-sticker" class="py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-face-smile"></i> Sticker & Meme
+            </button>
+            <button type="button" onclick="setCreativeMode('enhancer')" id="btn-mode-enhancer" class="py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bolt"></i> Prompt Lab
             </button>
         </div>
-        
-        <div id="result-3d-container" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto border border-gray-800 flex items-center justify-center text-center text-gray-500">
-            Previzualizarea sau randarea 3D va apărea aici...
+
+        <!-- Caseta de Text Principală -->
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Descrie ideea ta:</label>
+            <textarea id="prompt-creative" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-cyanNeon transition" placeholder="Ex: O cafenea modernă cu pisici nerăbdătoare..."></textarea>
         </div>
+
+        <!-- Stiluri rapide adaptate -->
+        <div>
+            <span class="block text-[10px] text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">💡 Exemple rapide (Click pentru a testa):</span>
+            <div id="quick-examples" class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="setCreativePrompt('Minimalist tech startup logo, vibrant blue gradient, vector')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition">Logo Tech</button>
+                <button type="button" onclick="setCreativePrompt('Cute cyberpunk cat sticker, bold white outline, die-cut vector')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition">Sticker Cyber</button>
+                <button type="button" onclick="setCreativePrompt('Futuristic neon city background with cyberpunk neon lights')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition">Cyber Concept</button>
+            </div>
+        </div>
+
+        <!-- Butonul de Acțiune Principal -->
+        <button type="button" onclick="executeCreativeAction()" class="w-full bg-gradient-to-r from-cyanNeon to-blue-500 text-darkBg font-bold py-2.5 px-4 rounded-xl shadow-lg hover:opacity-90 transition flex items-center justify-center gap-2 text-xs">
+            <i class="fa-solid fa-play"></i> <span id="action-btn-text">Generează Logo & Brand</span>
+        </button>
+
+        <!-- Zona de Rezultat -->
+        <div id="result-creative-container" class="bg-gray-950 p-4 rounded-xl border border-gray-800 min-h-[220px] flex items-center justify-center text-center">
+            <div class="flex flex-col items-center gap-2 text-gray-500">
+                <i class="fa-solid fa-image text-2xl text-gray-600"></i>
+                <p class="text-xs">Rezultatul va apărea aici instant.</p>
+            </div>
+        </div>
+
     </div>
 </div>
             <!-- TAB UNIFICAT: Abonament & PRO -->
@@ -1522,116 +1539,53 @@ window.setDepartment = function(deptId) {
         textarea.value = cleanText;
     }
 };
-// 1. Variabilă globală ca să nu mai trimitem cereri spam la server (evită eroarea 402)
-if (typeof window.lastGenerationTime === 'undefined') {
-    window.lastGenerationTime = 0;
-}
+let currentCreativeMode = 'logo';
 
-window.generateVisualForTab = async function(inputId, containerId, customStyle = "") {
-    const currentTime = Date.now();
-    const cooldownMs = 45000; // Limita de 45 secunde impusă de Pollinations
+window.setCreativeMode = function(mode) {
+    currentCreativeMode = mode;
+    ['logo', 'sticker', 'enhancer'].forEach(m => {
+        const btn = document.getElementById(`btn-mode-${m}`);
+        if(btn) {
+            if(m === mode) {
+                btn.className = "py-2 px-2 rounded-xl text-xs font-medium bg-cyanNeon text-darkBg transition flex items-center justify-center gap-1.5 shadow-md";
+            } else {
+                btn.className = "py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5";
+            }
+        }
+    });
+
+    const btnText = document.getElementById('action-btn-text');
+    if(btnText) {
+        if(mode === 'logo') btnText.innerText = "Generează Logo & Brand";
+        if(mode === 'sticker') btnText.innerText = "Generează Sticker / Meme";
+        if(mode === 'enhancer') btnText.innerText = "Optimizează & Generează Prompt";
+    }
+};
+
+window.setCreativePrompt = function(text) {
+    const ta = document.getElementById('prompt-creative');
+    if(ta) ta.value = text;
+};
+
+window.executeCreativeAction = function() {
+    const ta = document.getElementById('prompt-creative');
+    if(!ta) return;
+    const prompt = ta.value.trim();
     
-    // Blocăm execuția dacă se apasă prea repede
-    if (currentTime - window.lastGenerationTime < cooldownMs) {
-        const secondsLeft = Math.ceil((cooldownMs - (currentTime - window.lastGenerationTime)) / 1000);
-        alert(`Serverul este ocupat. Te rog așteaptă ${secondsLeft} secunde.`);
+    if(!prompt) {
+        alert('Te rog introdu o descriere!');
         return;
     }
 
-    const promptInput = document.getElementById(inputId);
-    const resultContainer = document.getElementById(containerId);
-    
-    if (!promptInput || !resultContainer) return;
-    
-    // Preluăm textul brut din input sau textul predefinit din butoanele de exemple
-    const rawPrompt = promptInput.value || promptInput.innerText || "";
-    
-    // CURĂȚARE CORECTĂ: Scoate diacriticele și semnele dubioase care crapă URL-ul (Evită eroarea 400)
-    const cleanPrompt = rawPrompt
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
-        .replace(/[^a-zA-Z0-9\s,.-]/g, '') 
-        .trim();
-
-    if (!cleanPrompt) {
-        alert('Te rog introdu un prompt valid.');
-        return;
+    let style = "vector graphic, clean background, professional branding";
+    if(currentCreativeMode === 'sticker') {
+        style = "die-cut sticker style, bold white border, vibrant pop colors, vector illustration";
+    } else if(currentCreativeMode === 'enhancer') {
+        style = "highly detailed cinematic masterclass, 8k resolution, ultra-realistic professional photography";
     }
 
-    // Salvăm timestamp-ul curent pentru a valida cererea
-    window.lastGenerationTime = Date.now();
-
-    // Afișăm loader-ul în interfață
-    resultContainer.innerHTML = `
-        <div class="flex flex-col items-center justify-center gap-3 py-10">
-            <i class="fa-solid fa-wand-magic-sparkles fa-spin text-3xl text-cyanNeon"></i>
-            <p class="text-xs text-gray-400 animate-pulse">Se generează elementul vizual multimedia...</p>
-        </div>
-    `;
-
-    // Combinăm promptul curățat cu stilul ales
-    const styleModifier = customStyle.trim() || "cinematic lighting, high detail, 8k, professional design";
-    const fullText = `${cleanPrompt}, ${styleModifier}`;
-    
-    // ENCODE URL STRICTOR
-    const encodedPrompt = encodeURIComponent(fullText).replace(/%20/g, "%20");
-    
-    // URL-ul corectat complet:
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${window.lastGenerationTime}`;
-
-    // Încărcăm imaginea în mod controlat
-    const img = new Image();
-    img.src = imageUrl;
-
-    img.onload = () => {
-        resultContainer.innerHTML = `
-            <div class="flex flex-col gap-3 h-full">
-                <p class="text-[10px] text-gray-500 truncate">Prompt: ${cleanPrompt}</p>
-                <div class="flex-1 rounded-xl overflow-hidden border border-cyanNeon/30 shadow-lg bg-gray-900 group relative min-h-[220px]">
-                    <img src="${imageUrl}" alt="Asset vizual generat" class="w-full h-full object-contain" />
-                    <div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="downloadImage(\`${imageUrl}\`)" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Descarcă">
-                            <i class="fa-solid fa-download"></i>
-                        </button>
-                        <button onclick="openFullscreen(\`${imageUrl}\`)" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Fullscreen">
-                            <i class="fa-solid fa-expand"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    };
-
-    img.onerror = () => {
-        // Dacă dă eroare, resetăm timpul ca userul să poată reîncerca imediat
-        window.lastGenerationTime = 0;
-        resultContainer.innerHTML = `
-            <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
-                <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
-                <span class="text-red-400 text-xs">Limita Free atinsă sau eroare server. Așteaptă 45 secunde și încearcă din nou.</span>
-            </div>
-        `;
-    };
-};
-// 4. Păstrăm compatibilitatea directă pentru tab-ul 3D existent
-window.generate3DVisual = function() {
-    generateVisualForTab('prompt-3d', 'result-3d-container', '3d render, octane render, cinematic lighting, 8k');
-};
-
-// Funcții ajutătoare pentru descărcare și ecran complet
-window.downloadImage = async function(url) {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'nexus-visual-asset.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } catch (err) {
-        alert('Nu s-a putut descărca imaginea.');
-    }
+    // Apelăm motorul universal pe care l-am securizat anterior
+    generateVisualForTab('prompt-creative', 'result-creative-container', style);
 };
 
 window.openFullscreen = function(url) {
