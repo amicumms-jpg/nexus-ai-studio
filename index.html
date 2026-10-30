@@ -1451,6 +1451,46 @@ window.setDepartment = function(deptId) {
     currentDepartment = deptId;
     console.log("Specialist selectat:", currentDepartment);
 }
+       window.setPrompt3D = function(text) {
+    const textarea = document.getElementById('prompt-3d');
+    if (textarea) {
+        textarea.value = text;
+    }
+};
+
+window.generate3DVisual = async function() {
+    const prompt = document.getElementById('prompt-3d').value;
+    const resultContainer = document.getElementById('result-3d-container');
+    
+    if (!prompt.trim()) {
+        alert('Te rog să introduci o descriere pentru conceptul 3D!');
+        return;
+    }
+
+    resultContainer.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează conceptul 3D cu ajutorul AI...</div>';
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt: `Generează o descriere tehnică detaliată și un concept de design 3D profesional pentru: ${prompt}`,
+                department: 'general',
+                model: 'gemini-3.8-flash'
+            })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            resultContainer.innerHTML = `<div class="text-left text-gray-200 whitespace-pre-wrap">${data.text || data.reply}</div>`;
+        } else {
+            resultContainer.innerHTML = `<span class="text-red-400">Eroare: ${data.error || 'Nu s-a putut genera.'}</span>`;
+        }
+    } catch (err) {
+        resultContainer.innerHTML = `<span class="text-red-400">Eroare de rețea: ${err.message}</span>`;
+    }
+}; 
     </script>
 
     <!-- Footer Ultra-Compact -->
