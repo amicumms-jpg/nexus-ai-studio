@@ -1,7 +1,6 @@
 import { DEPARTMENTS } from '../agentsConfig.js';
 
 export default async function handler(req, res) {
-    // Setează antetele CORS pentru a permite apeluri din orice browser/interfață
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -10,12 +9,10 @@ export default async function handler(req, res) {
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
 
-    // Tratare preflight OPTIONS (trimisă automat de browsere înainte de POST)
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    // Permitem și verificarea simplă din browser (GET)
     if (req.method === 'GET') {
         return res.status(200).json({ status: 'Chat API endpoint is active.' });
     }
@@ -32,10 +29,14 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
-        // Acceptă atât `prompt` cât și `message`
-        const userPrompt = prompt || message || "Analizează acest fișier:";
+        const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.GENERAL;
 
-        let parts = [{ text: userPrompt }];
+        const userPrompt = prompt || message || "Analizează acest fișier:";
+        
+        // Integrăm instrucțiunea specialistului direct în prompt pentru viteză maximă și zero erori de timeout
+        const finalPrompt = `[Instrucțiune rol specialist: ${selectedDept.systemPrompt}]\n\nÎntrebare / Cerere utilizator: ${userPrompt}`;
+
+        let parts = [{ text: finalPrompt }];
 
         if (fileData && fileData.base64 && fileData.mimeType) {
             parts.push({
@@ -46,23 +47,13 @@ export default async function handler(req, res) {
             });
         }
 
-        // ALEGEREA DINAMICĂ A DEPARTAMENTULUI (Folosește GENERAL ca fallback corect)
-        const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.GENERAL;
-
-        const systemInstruction = {
-            parts: [{
-                text: selectedDept.systemPrompt
-            }]
-        };
-
-        // Preluăm modelul din interfață 
-        let activeModel = model || 'gemini-2.5-flash';
+        // Preluăm modelul din interfață sau folosim modelul tău implicit preferat
+        let activeModel = model || 'gemini-3.8-flash';
        
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                systemInstruction: systemInstruction,
                 contents: [{ parts: parts }]
             })
         });
