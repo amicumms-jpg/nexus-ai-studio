@@ -37,23 +37,21 @@ export default async function handler(req, res) {
             });
         }
 
-        const modelsToTry = [
-            model || 'gemini-3.8-flash',
-            'gemini-2.5-flash',
-            'gemini-1.5-flash'
-        ];
+        // Folosim strict modelul compatibil cu noile chei
+        const activeModel = model || 'gemini-3.8-flash';
 
         let apiResponse = null;
         let data = null;
         let success = false;
+        let maxRetries = 2;
 
-        // Parcurgem modelele cu limită de timp (timeout) de 8 secunde per încercare
-        for (let currentModel of modelsToTry) {
+        // Încercăm modelul cu reîncercare automată și timeout de 8 secunde
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 secunde timeout
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
 
             try {
-                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
+                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts }] }),
@@ -75,12 +73,12 @@ export default async function handler(req, res) {
                 }
             } catch (err) {
                 clearTimeout(timeoutId);
-                console.warn(`Modelul ${currentModel} a eșuat sau a expirat timeout-ul:`, err.message);
+                console.warn(`Încercarea ${attempt} a eșuat:`, err.message);
             }
         }
 
         if (!success || !apiResponse?.ok) {
-            throw new Error(data?.error?.message || 'Toate modelele Gemini sunt momentan ocupate. Te rugăm să încerci din nou.');
+            throw new Error(data?.error?.message || 'Modelul este momentan suprasolicitat. Te rugăm să încerci din nou.');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
