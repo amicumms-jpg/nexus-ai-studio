@@ -9,17 +9,9 @@ export default async function handler(req, res) {
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active.' });
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method === 'GET') return res.status(200).json({ status: 'Chat API endpoint active.' });
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
         const { prompt, message, fileData, model, department } = req.body;
@@ -30,10 +22,9 @@ export default async function handler(req, res) {
         }
 
         const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.GENERAL;
-
         const userPrompt = prompt || message || "Analizează acest fișier:";
         
-        // Integrăm instrucțiunea specialistului direct în prompt pentru viteză maximă și zero erori de timeout
+        // Unificăm promptul pentru viteza maximă de răspuns
         const finalPrompt = `[Instrucțiune rol specialist: ${selectedDept.systemPrompt}]\n\nÎntrebare / Cerere utilizator: ${userPrompt}`;
 
         let parts = [{ text: finalPrompt }];
@@ -47,15 +38,13 @@ export default async function handler(req, res) {
             });
         }
 
-        // Preluăm modelul din interfață sau folosim modelul tău implicit preferat
+        // Se blochează nativ pe versiunile 3.8+ conform noilor cerințe
         let activeModel = model || 'gemini-3.8-flash';
        
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: parts }]
-            })
+            body: JSON.stringify({ contents: [{ parts }] })
         });
 
         const rawText = await apiResponse.text();
@@ -64,7 +53,7 @@ export default async function handler(req, res) {
         try {
             data = JSON.parse(rawText);
         } catch (e) {
-            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
+            throw new Error("Răspuns invalid de la serverul Google.");
         }
 
         if (!apiResponse.ok) {
