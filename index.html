@@ -1518,19 +1518,32 @@ window.setDepartment = function(deptId) {
     }
 };
 
-// Funcție universală pentru generarea de conținut vizual în ORICE tab
+// Definim o variabilă globală sau în afara funcției pentru a reține ultimul timestamp
+if (typeof window.lastGenerationTime === 'undefined') {
+    window.lastGenerationTime = 0;
+}
+
 window.generateVisualForTab = async function(inputId, containerId, customStyle = "") {
+    const currentTime = Date.now();
+    const cooldownMs = 45000; // 45 de secunde impuse de Pollinations
+    
+    // Verificăm dacă a trecut destul timp de la ultima cerere
+    if (currentTime - window.lastGenerationTime < cooldownMs) {
+        const secondsLeft = Math.ceil((cooldownMs - (currentTime - window.lastGenerationTime)) / 1000);
+        alert(`Te rog să aștepți încă ${secondsLeft} secunde înainte de a genera o nouă imagine!`);
+        return;
+    }
+
     const promptInput = document.getElementById(inputId);
     const resultContainer = document.getElementById(containerId);
     
     if (!promptInput || !resultContainer) return;
     
-    // 1. Preluăm textul și curățăm diacriticele corect
     const rawPrompt = promptInput.value || promptInput.innerText || "";
     const cleanPrompt = rawPrompt
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Scoate diacriticele (ă, â, î, ș, ț -> a, a, i, s, t)
-        .replace(/[^a-zA-Z0-9\s,.-]/g, '') // Lăsăm doar caractere standard sigure pentru URL
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9\s,.-]/g, '')
         .trim();
 
     if (!cleanPrompt) {
@@ -1538,7 +1551,9 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         return;
     }
 
-    // 2. Animație de încărcare
+    // Actualizăm timpul ultimei rulări reușite (trecute de validare)
+    window.lastGenerationTime = Date.now();
+
     resultContainer.innerHTML = `
         <div class="flex flex-col items-center justify-center gap-3 py-10">
             <i class="fa-solid fa-wand-magic-sparkles fa-spin text-3xl text-cyanNeon"></i>
@@ -1546,26 +1561,20 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         </div>
     `;
 
-    // 3. REZOLVARE BUGS: Curățăm stilul și asigurăm concatenarea curată
     const styleModifier = customStyle.trim() || "cinematic lighting, high detail, 8k, professional design";
     const fullText = `${cleanPrompt}, ${styleModifier}`;
-    
-    // Generăm URL-ul folosind parametrul codat 100% corect
     const encodedPrompt = encodeURIComponent(fullText);
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
+    const imageUrl = `https://pollinations.ai{encodedPrompt}?nologo=true&seed=${window.lastGenerationTime}`;
 
-    // 4. Încărcăm imaginea prin obiectul Image pentru a prinde erorile HTTP de rețea
     const img = new Image();
     img.src = imageUrl;
 
     img.onload = () => {
-        // Înlocuim ghilimelele simple din apelurile de funcții inline pentru a evita spargerea HTML-ului
         resultContainer.innerHTML = `
             <div class="flex flex-col gap-3 h-full">
                 <p class="text-[10px] text-gray-500 truncate">Prompt: ${cleanPrompt}</p>
                 <div class="flex-1 rounded-xl overflow-hidden border border-cyanNeon/30 shadow-lg bg-gray-900 group relative min-h-[220px]">
                     <img src="${imageUrl}" alt="Asset vizual generat" class="w-full h-full object-contain" />
-                    
                     <div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
                         <button onclick="downloadImage(\`${imageUrl}\`)" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Descarcă">
                             <i class="fa-solid fa-download"></i>
@@ -1580,14 +1589,17 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     };
 
     img.onerror = () => {
+        // Resetăm timpul în caz de eroare, ca să poată reîncerca imediat dacă a fost alt tip de eroare
+        window.lastGenerationTime = 0;
         resultContainer.innerHTML = `
             <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
                 <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
-                <span class="text-red-400 text-xs">Eroare la generarea vizualului. Încearcă din nou.</span>
+                <span class="text-red-400 text-xs">Eroare / Limitare la generare. Așteaptă 45s și încearcă din nou.</span>
             </div>
         `;
     };
 };
+
 
 
 // 4. Păstrăm compatibilitatea directă pentru tab-ul 3D existent
