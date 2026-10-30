@@ -1525,12 +1525,12 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     
     if (!promptInput || !resultContainer) return;
     
-    // Preluăm textul și eliminăm diacriticele și caracterele problematice
+    // 1. Preluăm textul și curățăm diacriticele DIN PRIMA SECUNDĂ
     const rawPrompt = promptInput.value || promptInput.innerText || "";
     const cleanPrompt = rawPrompt
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Șterge diacriticele (ă, â, î, ș, ț)
-        .replace(/[^\w\s,.-]/gi, '') // Păstrează doar litere, cifre, spații și semne de bază
+        .replace(/[\u0300-\u036f]/g, "") // Scoate diacriticele (ă, â, î, ș, ț -> a, a, i, s, t)
+        .replace(/[^a-zA-Z0-9\s,.-]/g, '') // Lăsăm doar caractere standard sigure pentru URL
         .trim();
 
     if (!cleanPrompt) {
@@ -1538,7 +1538,7 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         return;
     }
 
-    // 1. Animație de încărcare
+    // 2. Animație de încărcare
     resultContainer.innerHTML = `
         <div class="flex flex-col items-center justify-center gap-3 py-10">
             <i class="fa-solid fa-wand-magic-sparkles fa-spin text-3xl text-cyanNeon"></i>
@@ -1546,13 +1546,13 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         </div>
     `;
 
-    // 2. Construim URL-ul curat
+    // 3. Construim URL-ul codat perfect
     const styleModifier = customStyle || "cinematic lighting, high detail, 8k, professional design";
     const fullText = cleanPrompt + ", " + styleModifier;
     const encodedPrompt = encodeURIComponent(fullText);
     const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
 
-    // 3. Încărcăm imaginea
+    // 4. Încărcăm imaginea
     const img = new Image();
     img.src = imageUrl;
 
@@ -1580,7 +1580,7 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         resultContainer.innerHTML = `
             <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
                 <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
-                <span class="text-red-400 text-xs">Eroare la generarea vizualului. Încearcă un alt prompt.</span>
+                <span class="text-red-400 text-xs">Eroare la generarea vizualului. Încearcă din nou.</span>
             </div>
         `;
     };
