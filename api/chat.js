@@ -46,8 +46,8 @@ export default async function handler(req, res) {
             });
         }
 
-        // ALEGEREA DINAMICĂ A DEPARTAMENTULUI (Tech sau Documente)
-        const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.TECH;
+        // ALEGEREA DINAMICĂ A DEPARTAMENTULUI (Folosește GENERAL ca fallback corect)
+        const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.GENERAL;
 
         const systemInstruction = {
             parts: [{
