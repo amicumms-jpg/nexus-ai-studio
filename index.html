@@ -1525,8 +1525,11 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     
     if (!promptInput || !resultContainer) return;
     
-    const prompt = promptInput.value;
-    if (!prompt.trim()) {
+    // Preluăm textul și curățăm spațiile inutile
+    const rawPrompt = promptInput.value || promptInput.innerText || "";
+    const prompt = rawPrompt.trim();
+
+    if (!prompt) {
         alert('Te rog să introduci o descriere pentru a genera vizualul!');
         return;
     }
@@ -1539,9 +1542,10 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         </div>
     `;
 
-    // 2. Construim URL-ul pentru imagine
+    // 2. Codăm corect promptul pentru a evita eroarea 400
     const styleModifier = customStyle || "cinematic lighting, high detail, 8k, professional design";
-    const encodedPrompt = encodeURIComponent(prompt + ", " + styleModifier);
+    const fullText = prompt + ", " + styleModifier;
+    const encodedPrompt = encodeURIComponent(fullText);
     const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
 
     // 3. Încărcăm imaginea
@@ -1556,10 +1560,10 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
                     <img src="${imageUrl}" alt="Asset vizual generat" class="w-full h-full object-contain" />
                     
                     <div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="downloadImage('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs">
+                        <button onclick="downloadImage('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Descarcă">
                             <i class="fa-solid fa-download"></i>
                         </button>
-                         <button onclick="openFullscreen('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs">
+                         <button onclick="openFullscreen('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Fullscreen">
                             <i class="fa-solid fa-expand"></i>
                         </button>
                     </div>
