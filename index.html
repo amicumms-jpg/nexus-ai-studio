@@ -241,25 +241,23 @@
                    <div class="flex items-center justify-between mb-2 shrink-0">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> Nexus Neural Assistant - Home / Tools Hub</h2>
                     </div>
-<!-- Selector Departamente / Specialiști -->
-<div class="flex gap-2 mb-3 shrink-0">
-    <button onclick="setDepartment('tech')" id="btn-dept-tech" class="px-3 py-1.5 text-xs rounded-lg bg-cyanNeon/20 text-cyanNeon border border-cyanNeon/50 transition font-medium">
-        <i class="fa-solid fa-wrench mr-1"></i> Tehnic & Diagnoză
-    </button>
-    <button onclick="setDepartment('documents')" id="btn-dept-documents" class="px-3 py-1.5 text-xs rounded-lg bg-panelBg text-gray-400 border border-gray-700 hover:border-cyanNeon/50 transition font-medium">
-        <i class="fa-solid fa-file-text mr-1"></i> Analiză Fișiere
-    </button>
+<!-- Selector 12 Specialiști AI (Dropdown) -->
+<div class="mb-3 shrink-0">
+    <select id="department-select" onchange="setDepartment(this.value)" class="w-full px-3 py-2 text-xs rounded-lg bg-panelBg text-cyanNeon border border-cyanNeon/40 focus:outline-none focus:border-cyanNeon transition font-medium">
+        <option value="general">💬 ChatGPT - Asistent General & Cod</option>
+        <option value="gemini">🧠 Google Gemini - Căutare & Date</option>
+        <option value="perplexity">🌐 Perplexity - Research & Web</option>
+        <option value="claude">✒️ Claude - Deep Reasoning & Eseuri</option>
+        <option value="notion">📋 Notion AI - Sumarizare & Task-uri</option>
+        <option value="otter">🎙️ Otter.ai - Transcriere & Rezumate</option>
+        <option value="zapier">⚡ Zapier AI - Automatizări Workflows</option>
+        <option value="grammarly">✍️ Grammarly - Corectură & Stil Text</option>
+        <option value="elevenlabs">🎧 ElevenLabs - Scenarii Audio & Voice</option>
+        <option value="canva">🎨 Canva - Design & Image Prompts</option>
+        <option value="runway">🎬 Runway - Prompting & Video</option>
+        <option value="documents" selected>📁 Microsoft Copilot - Analiză Fișiere</option>
+    </select>
 </div>
-                    <!-- Mesaj de Bun Venit Vizual -->
-                    <div class="bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-panelBg border border-cyanNeon/30 p-3.5 rounded-2xl mb-2 shrink-0 flex items-center space-x-3 shadow-md">
-                        <div class="w-9 h-9 rounded-xl bg-cyanNeon/20 text-cyanNeon flex items-center justify-center text-base font-bold shrink-0 animate-pulse">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xs font-bold text-white">Bun venit la Nexus AI Studio Pro! ✨</h3>
-                            <p class="text-[10px] text-gray-300">Alege o uneltă rapidă din panou sau adresează orice întrebare în chatul principal. Sunt pregătit să te ajut!</p>
-                        </div>
-                    </div>
 
                     <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400">Salut! Sunt asistentul tău general. Cu ce începem?</div>
@@ -1405,25 +1403,12 @@ window.activateLicenseKey = function() {
                 console.error("Eroare la deconectare:", error);
             }
         };
-  // Variabila care reține departamentul activ pentru chat
-let currentDepartment = 'tech';
+// Variabila care reține departamentul activ pentru chat
+let currentDepartment = 'documents';
 
 window.setDepartment = function(deptId) {
     currentDepartment = deptId;
-    
-    // Schimbăm vizual aspectul butoanelor dacă există în pagină
-    const btnTech = document.getElementById('btn-dept-tech');
-    const btnDocs = document.getElementById('btn-dept-documents');
-    
-    if (!btnTech || !btnDocs) return;
-    
-    if (deptId === 'tech') {
-        btnTech.className = "px-3 py-1.5 text-xs rounded-lg bg-cyanNeon/20 text-cyanNeon border border-cyanNeon/50 transition font-medium";
-        btnDocs.className = "px-3 py-1.5 text-xs rounded-lg bg-panelBg text-gray-400 border border-gray-700 hover:border-cyanNeon/50 transition font-medium";
-    } else {
-        btnDocs.className = "px-3 py-1.5 text-xs rounded-lg bg-cyanNeon/20 text-cyanNeon border border-cyanNeon/50 transition font-medium";
-        btnTech.className = "px-3 py-1.5 text-xs rounded-lg bg-panelBg text-gray-400 border border-gray-700 hover:border-cyanNeon/50 transition font-medium";
-    }
+    console.log("Specialist selectat:", currentDepartment);
 }
     </script>
 
