@@ -1525,7 +1525,7 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     
     if (!promptInput || !resultContainer) return;
     
-    // 1. Preluăm textul și curățăm diacriticele DIN PRIMA SECUNDĂ
+    // 1. Preluăm textul și curățăm diacriticele corect
     const rawPrompt = promptInput.value || promptInput.innerText || "";
     const cleanPrompt = rawPrompt
         .normalize("NFD")
@@ -1546,17 +1546,20 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         </div>
     `;
 
-    // 3. Construim URL-ul codat perfect
-    const styleModifier = customStyle || "cinematic lighting, high detail, 8k, professional design";
-    const fullText = cleanPrompt + ", " + styleModifier;
+    // 3. REZOLVARE BUGS: Curățăm stilul și asigurăm concatenarea curată
+    const styleModifier = customStyle.trim() || "cinematic lighting, high detail, 8k, professional design";
+    const fullText = `${cleanPrompt}, ${styleModifier}`;
+    
+    // Generăm URL-ul folosind parametrul codat 100% corect
     const encodedPrompt = encodeURIComponent(fullText);
     const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
 
-    // 4. Încărcăm imaginea
+    // 4. Încărcăm imaginea prin obiectul Image pentru a prinde erorile HTTP de rețea
     const img = new Image();
     img.src = imageUrl;
 
     img.onload = () => {
+        // Înlocuim ghilimelele simple din apelurile de funcții inline pentru a evita spargerea HTML-ului
         resultContainer.innerHTML = `
             <div class="flex flex-col gap-3 h-full">
                 <p class="text-[10px] text-gray-500 truncate">Prompt: ${cleanPrompt}</p>
@@ -1564,10 +1567,10 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
                     <img src="${imageUrl}" alt="Asset vizual generat" class="w-full h-full object-contain" />
                     
                     <div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="downloadImage('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Descarcă">
+                        <button onclick="downloadImage(\`${imageUrl}\`)" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Descarcă">
                             <i class="fa-solid fa-download"></i>
                         </button>
-                         <button onclick="openFullscreen('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Fullscreen">
+                        <button onclick="openFullscreen(\`${imageUrl}\`)" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs" title="Fullscreen">
                             <i class="fa-solid fa-expand"></i>
                         </button>
                     </div>
@@ -1585,6 +1588,7 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         `;
     };
 };
+
 
 // 4. Păstrăm compatibilitatea directă pentru tab-ul 3D existent
 window.generate3DVisual = function() {
