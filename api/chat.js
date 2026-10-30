@@ -24,7 +24,6 @@ export default async function handler(req, res) {
         const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.GENERAL;
         const userPrompt = prompt || message || "Analizează acest fișier:";
         
-        // Unificăm promptul pentru viteza maximă de răspuns
         const finalPrompt = `[Instrucțiune rol specialist: ${selectedDept.systemPrompt}]\n\nÎntrebare / Cerere utilizator: ${userPrompt}`;
 
         let parts = [{ text: finalPrompt }];
@@ -38,26 +37,44 @@ export default async function handler(req, res) {
             });
         }
 
-        // Se blochează nativ pe versiunile 3.8+ conform noilor cerințe
         let activeModel = model || 'gemini-3.8-flash';
-       
-        let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts }] })
-        });
-
-        const rawText = await apiResponse.text();
+        
+        let apiResponse;
+        let rawText;
         let data;
+        let maxRetries = 2; // Încearcă de 2 ori în caz de trafic mare
 
-        try {
-            data = JSON.parse(rawText);
-        } catch (e) {
-            throw new Error("Răspuns invalid de la serverul Google.");
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts }] })
+            });
+
+            rawText = await apiResponse.text();
+
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                data = null;
+            }
+
+            // Dacă e succes sau nu e eroare de server/high demand, ieșim din buclă
+            if (apiResponse.ok) {
+                break;
+            }
+
+            // Dacă e eroare 5xx sau high demand și mai avem încercări, așteptăm 1.5 secunde și reîncercăm
+            if (attempt < maxRetries && (apiResponse.status >= 500 || (data && data.error?.message?.includes('high demand')))) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                continue;
+            } else {
+                break;
+            }
         }
 
         if (!apiResponse.ok) {
-            throw new Error(data.error?.message || 'Eroare de la serverul Google Gemini');
+            throw new Error(data?.error?.message || 'Eroare de la serverul Google Gemini');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
