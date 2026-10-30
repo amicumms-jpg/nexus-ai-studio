@@ -37,7 +37,6 @@ export default async function handler(req, res) {
             });
         }
 
-        // Lista modelelor în ordinea încercării (Principalul + Fallback-uri compatibile)
         const modelsToTry = [
             model || 'gemini-3.8-flash',
             'gemini-2.5-flash',
@@ -48,14 +47,20 @@ export default async function handler(req, res) {
         let data = null;
         let success = false;
 
-        // Încercăm modelele pe rând în caz de eroare de server / high demand
+        // Parcurgem modelele cu limită de timp (timeout) de 8 secunde per încercare
         for (let currentModel of modelsToTry) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 secunde timeout
+
             try {
                 apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts }] })
+                    body: JSON.stringify({ contents: [{ parts }] }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 const rawText = await apiResponse.text();
                 try {
@@ -66,15 +71,16 @@ export default async function handler(req, res) {
 
                 if (apiResponse.ok && data?.candidates?.[0]) {
                     success = true;
-                    break; // Dacă a reușit, oprim căutarea și mergem mai departe
+                    break;
                 }
             } catch (err) {
-                console.warn(`Modelul ${currentModel} a eșuat, încercăm următorul...`, err);
+                clearTimeout(timeoutId);
+                console.warn(`Modelul ${currentModel} a eșuat sau a expirat timeout-ul:`, err.message);
             }
         }
 
         if (!success || !apiResponse?.ok) {
-            throw new Error(data?.error?.message || 'Toate modelele Gemini sunt momentan suprasolicitate. Te rugăm să încerci din nou în câteva secunde.');
+            throw new Error(data?.error?.message || 'Toate modelele Gemini sunt momentan ocupate. Te rugăm să încerci din nou.');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
