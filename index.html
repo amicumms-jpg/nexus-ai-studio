@@ -889,13 +889,13 @@
         });
 
         // Auto Resize Textarea & Draft Auto-Save în localStorage
-        function autoResizeTextarea(textarea) {
+       window.autoResizeTextarea = function(textarea) {
             if(!textarea) return;
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
         }
 
-        function saveDraft(val) {
+       window.saveDraft = function(val){
             localStorage.setItem('nexus_chat_draft', val);
         }
 
