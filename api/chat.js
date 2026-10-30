@@ -37,44 +37,44 @@ export default async function handler(req, res) {
             });
         }
 
-        let activeModel = model || 'gemini-3.8-flash';
-        
-        let apiResponse;
-        let rawText;
-        let data;
-        let maxRetries = 2; // Încearcă de 2 ori în caz de trafic mare
+        // Lista modelelor în ordinea încercării (Principalul + Fallback-uri compatibile)
+        const modelsToTry = [
+            model || 'gemini-3.8-flash',
+            'gemini-2.5-flash',
+            'gemini-1.5-flash'
+        ];
 
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts }] })
-            });
+        let apiResponse = null;
+        let data = null;
+        let success = false;
 
-            rawText = await apiResponse.text();
-
+        // Încercăm modelele pe rând în caz de eroare de server / high demand
+        for (let currentModel of modelsToTry) {
             try {
-                data = JSON.parse(rawText);
-            } catch (e) {
-                data = null;
-            }
+                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts }] })
+                });
 
-            // Dacă e succes sau nu e eroare de server/high demand, ieșim din buclă
-            if (apiResponse.ok) {
-                break;
-            }
+                const rawText = await apiResponse.text();
+                try {
+                    data = JSON.parse(rawText);
+                } catch (e) {
+                    data = null;
+                }
 
-            // Dacă e eroare 5xx sau high demand și mai avem încercări, așteptăm 1.5 secunde și reîncercăm
-            if (attempt < maxRetries && (apiResponse.status >= 500 || (data && data.error?.message?.includes('high demand')))) {
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                continue;
-            } else {
-                break;
+                if (apiResponse.ok && data?.candidates?.[0]) {
+                    success = true;
+                    break; // Dacă a reușit, oprim căutarea și mergem mai departe
+                }
+            } catch (err) {
+                console.warn(`Modelul ${currentModel} a eșuat, încercăm următorul...`, err);
             }
         }
 
-        if (!apiResponse.ok) {
-            throw new Error(data?.error?.message || 'Eroare de la serverul Google Gemini');
+        if (!success || !apiResponse?.ok) {
+            throw new Error(data?.error?.message || 'Toate modelele Gemini sunt momentan suprasolicitate. Te rugăm să încerci din nou în câteva secunde.');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
