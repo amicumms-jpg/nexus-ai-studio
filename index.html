@@ -1405,10 +1405,10 @@ window.activateLicenseKey = function() {
                 console.error("Eroare la deconectare:", error);
             }
         };
-        // Variabila care reține departamentul activ pentru chat
+  // Variabila care reține departamentul activ pentru chat
 let currentDepartment = 'tech';
 
-function setDepartment(deptId) {
+window.setDepartment = function(deptId) {
     currentDepartment = deptId;
     
     // Schimbăm vizual aspectul butoanelor dacă există în pagină
