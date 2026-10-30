@@ -239,7 +239,7 @@
         <!-- Dynamic Content Container -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
-            <!-- Tab 1: Chat General (Home / Tools Hub) -->
+           <!-- Tab 1: Chat General (Home / Tools Hub) -->
             <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-hidden p-3 space-y-2">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between mb-2 shrink-0">
@@ -305,12 +305,17 @@
                                 <i class="fa-solid fa-paperclip"></i>
                             </button>
                             
-                            <textarea id="chatInput" rows="1" placeholder="Scrie mesajul tău (se extinde automat)..." 
+                            <textarea id="chatInput" rows="1" placeholder="Scrie mesajul tău sau descrie un vizual..." 
                                 class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon resize-none max-h-36 overflow-y-auto"
                                 oninput="autoResizeTextarea(this); saveDraft(this.value);"
                                 onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat'); }"></textarea>
                             
-                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition shrink-0 mb-0.5">
+                            <!-- Buton nou de Generare Vizuală Multimedia -->
+                            <button onclick="generateVisualForTab('chatInput', 'chatMessages', 'digital art, high quality, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition shrink-0 mb-0.5" title="Generează Vizual / Imagine">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </button>
+
+                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition shrink-0 mb-0.5" title="Trimite mesaj text">
                                 <i class="fa-solid fa-paper-plane"></i>
                             </button>
                         </div>
@@ -323,7 +328,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-gray-800 mb-2 shrink-0 gap-2">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-photo-film text-tiktokColor mr-2"></i> Social & Creator Hub</h2>
-                            <p class="text-[10px] text-gray-400">Generează conținut viral pentru toate platformele tale dintr-un singur loc 🚀</p>
+                            <p class="text-[10px] text-gray-400">Generează conținut viral și vizualuri pentru toate platformele dintr-un singur loc 🚀</p>
                         </div>
                         
                         <div class="flex items-center space-x-1 bg-gray-900 p-1 rounded-xl border border-gray-800">
@@ -343,11 +348,17 @@
                     </div>
 
                     <div id="socialHubMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Salut! Ai ales modul **TikTok**. Introdu ideea ta de video pentru a genera hook-uri și scenarii virale!</div>
+                        <div class="text-gray-400">Salut! Ai ales modul **TikTok**. Introdu ideea ta de video pentru a genera hook-uri, scenarii sau vizualuri virale!</div>
                     </div>
 
                     <div class="flex space-x-2 items-center shrink-0">
                         <textarea id="socialHubInput" rows="1" placeholder="Scrie cererea ta pentru rețeaua selectată..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-tiktokColor resize-none max-h-28" oninput="autoResizeTextarea(this)"></textarea>
+                        
+                        <!-- Buton de Generare Vizuală Multimedia pentru Social Hub -->
+                        <button onclick="generateVisualForTab('socialHubInput', 'socialHubMessages', 'social media viral graphic, vibrant, cinematic')" class="bg-gray-800 border border-tiktokColor/50 text-tiktokColor hover:bg-tiktokColor hover:text-white font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition shrink-0" title="Generează Vizual / Imagine Social Media">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendSocialHubMessage()" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -359,15 +370,21 @@
                     <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-cyanNeon mr-1.5"></i>Prompt AI Enhancer</h2>
-                            <p class="text-[10px] text-gray-400">Transformă prompt-uri simple în instrucțiuni AI detaliate și profesionale 🪄</p>
+                            <p class="text-[10px] text-gray-400">Transformă prompt-uri simple în instrucțiuni AI sau vizualuri detaliate 🪄</p>
                         </div>
                         <button onclick="clearTabChat('promptEnhancer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
                     </div>
                     <div id="promptEnhancerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Salut! Introdu mai jos ideea ta simplă de prompt, iar eu o voi rescrie optimizat pentru Gemini/ChatGPT.</div>
+                        <div class="text-gray-400">Salut! Introdu mai jos ideea ta simplă de prompt sau vizual.</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="promptEnhancerInput" placeholder="Ex: Scrie o postare despre cafea..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none">
+                        <input type="text" id="promptEnhancerInput" placeholder="Ex: Scrie o postare sau descrie un vizual..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none">
+                        
+                        <!-- Buton generare vizuală pentru Enhancer -->
+                        <button onclick="generateVisualForTab('promptEnhancerInput', 'promptEnhancerMessages', 'detailed graphic, cinematic, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')" class="bg-cyanNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-paper-plane"></i> Mărește</button>
                     </div>
                 </div>
@@ -378,15 +395,21 @@
                     <div class="flex items-center justify-between pb-2 border-b border-emeraldNeon/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-globe text-emeraldNeon mr-1.5"></i>Web Search AI</h2>
-                            <p class="text-[10px] text-gray-400">Căutare de date live și sinteză de informații recente pe web 🌐</p>
+                            <p class="text-[10px] text-gray-400">Căutare de date live sau generare de elemente vizuale din web 🌐</p>
                         </div>
                         <button onclick="clearTabChat('webSearch')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
                     </div>
                     <div id="webSearchMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Ce subiect dorești să cauți pe internet astăzi?</div>
+                        <div class="text-gray-400">Ce subiect dorești să cauți sau să vizualizezi astăzi?</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="webSearchInput" placeholder="Ex: Ultimele știri despre tehnologie..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-emeraldNeon outline-none">
+                        <input type="text" id="webSearchInput" placeholder="Ex: Ultimele știri sau concept vizual..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-emeraldNeon outline-none">
+                        
+                        <!-- Buton generare vizuală pentru Web Search -->
+                        <button onclick="generateVisualForTab('webSearchInput', 'webSearchMessages', 'photorealistic, high-end design, 8k')" class="bg-gray-800 border border-emeraldNeon/50 text-emeraldNeon hover:bg-emeraldNeon hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('webSearchMessages', 'webSearchInput', '[Web Search]: ')" class="bg-emeraldNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-magnifying-glass"></i> Caută</button>
                     </div>
                 </div>
@@ -397,15 +420,21 @@
                     <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-contract text-amberGlow mr-1.5"></i>AI Summarizer</h2>
-                            <p class="text-[10px] text-gray-400">Extractează ideile principale și concluziile din texte lungi 📝</p>
+                            <p class="text-[10px] text-gray-400">Extractează idei principale sau generează vizualuri bazate pe text 📝</p>
                         </div>
                         <button onclick="clearTabChat('summarizer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
                     </div>
                     <div id="summarizerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Lipește un articol sau un text lung pentru a genera un rezumat.</div>
+                        <div class="text-gray-400">Lipește un articol sau descrie un subiect pentru rezumat / vizual.</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="summarizerInput" placeholder="Lipește textul sau introduceți subiectul..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-amberGlow outline-none">
+                        <input type="text" id="summarizerInput" placeholder="Lipește textul sau descrie vizualul dorit..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-amberGlow outline-none">
+                        
+                        <!-- Buton generare vizuală pentru Summarizer -->
+                        <button onclick="generateVisualForTab('summarizerInput', 'summarizerMessages', 'infographic style, clean, professional')" class="bg-gray-800 border border-amberGlow/50 text-amberGlow hover:bg-amberGlow hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('summarizerMessages', 'summarizerInput', '[Summarizer]: ')" class="bg-amberGlow hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-bolt"></i> Rezumă</button>
                     </div>
                 </div>
@@ -416,15 +445,21 @@
                     <div class="flex items-center justify-between pb-2 border-b border-purple-500/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-code text-purple-400 mr-1.5"></i>Code Studio</h2>
-                            <p class="text-[10px] text-gray-400">Generare, refactorizare și rezolvare de erori în cod 💻</p>
+                            <p class="text-[10px] text-gray-400">Generare de cod, interfețe UI sau concept art tehnic 💻</p>
                         </div>
                         <button onclick="clearTabChat('codeStudio')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded">Curăță</button>
                     </div>
                     <div id="codeStudioMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2 font-mono">
-                        <div class="text-gray-400">// Descrie ce cod dorești să generezi sau lipește eroarea primită...</div>
+                        <div class="text-gray-400">// Descrie ce cod sau element vizual/UI dorești să generezi...</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="codeStudioInput" placeholder="Ex: Scrie o funcție JS pentru..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-400 outline-none">
+                        <input type="text" id="codeStudioInput" placeholder="Ex: Funcție JS sau design UI futurist..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-400 outline-none">
+                        
+                        <!-- Buton generare vizuală pentru Code Studio -->
+                        <button onclick="generateVisualForTab('codeStudioInput', 'codeStudioMessages', 'UI design mockup, cyberpunk, high tech, 8k')" class="bg-gray-800 border border-purple-500/50 text-purple-400 hover:bg-purple-500 hover:text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Concept Vizual UI">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('codeStudioMessages', 'codeStudioInput', '[Code Studio]: ')" class="bg-purple-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1"><i class="fa-solid fa-terminal"></i> Generează</button>
                     </div>
                 </div>
@@ -507,21 +542,27 @@
                 </div>
             </div>
 
-            <!-- Tab: A/B Testing -->
+          <!-- Tab: A/B Testing -->
             <div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                     <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-vials text-cyanNeon mr-2"></i> A/B Testing Titluri & Hook-uri AI</h2>
-                            <p class="text-[10px] text-gray-400">Chat dedicat pentru generare și testare comparativă de titluri 🧪</p>
+                            <p class="text-[10px] text-gray-400">Chat dedicat pentru generare, testare și vizualuri comparative 🧪</p>
                         </div>
                         <button onclick="clearTabChat('ab')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
                     <div id="abMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Scrie ideea sau tema videoclipului pentru a genera variante A/B de titluri.</div>
+                        <div class="text-gray-400">Scrie ideea sau tema videoclipului pentru a genera variante A/B sau vizualuri.</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="abInput" placeholder="Ex: Generează 3 variante A/B de titlu pentru un video..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
+                        <input type="text" id="abInput" placeholder="Ex: Generează variante A/B sau vizual pentru..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
+                        
+                        <!-- Buton Vizual A/B -->
+                        <button onclick="generateVisualForTab('abInput', 'abMessages', 'marketing banner, professional layout, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual A/B">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -533,15 +574,21 @@
                     <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-podcast text-amberGlow mr-2"></i> Podcast Script & Q&A Assistant</h2>
-                            <p class="text-[10px] text-gray-400">Chat dedicat pentru conceperea scenariilor și întrebărilor de podcast 🎙️</p>
+                            <p class="text-[10px] text-gray-400">Scenarii de podcast și generare de coperți/vizualuri 🎙️</p>
                         </div>
                         <button onclick="clearTabChat('podcast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
                     <div id="podcastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Introdu tema podcastului și numele invitatului pentru a genera un scenariu de dialog.</div>
+                        <div class="text-gray-400">Introdu tema podcastului pentru a genera scenariu sau copertă vizuală.</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="podcastInput" placeholder="Ex: Creează un scenariu de podcast despre AI..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow" onkeydown="if(event.key==='Enter') sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')">
+                        <input type="text" id="podcastInput" placeholder="Ex: Scenariu sau copertă podcast despre..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow">
+                        
+                        <!-- Buton Vizual Podcast -->
+                        <button onclick="generateVisualForTab('podcastInput', 'podcastMessages', 'podcast cover art, studio microphone aesthetic, professional lighting')" class="bg-gray-800 border border-amberGlow/50 text-amberGlow hover:bg-amberGlow hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Copertă / Vizual">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')" class="bg-amberGlow text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -553,15 +600,21 @@
                     <div class="flex items-center justify-between pb-2 border-b border-tiktokColor/30 mb-2 shrink-0">
                         <div>
                             <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-fire text-tiktokColor mr-2"></i> AI Roast My Content</h2>
-                            <p class="text-[10px] text-gray-400">Chat discret pentru analiză critică și evaluare amuzantă / sarcastică 🔥</p>
+                            <p class="text-[10px] text-gray-400">Analiză critică, meme-uri sau evaluare vizuală sarcastică 🔥</p>
                         </div>
                         <button onclick="clearTabChat('roast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
                     </div>
                     <div id="roastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Lipește textul postării sau ideea ta, iar AI-ul o va analiza și roasta direct!</div>
+                        <div class="text-gray-400">Lipește textul sau descrie un vizual pentru un roast complet!</div>
                     </div>
                     <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="roastInput" placeholder="Lipește textul pe care vrei să îl roastăm..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-tiktokColor" onkeydown="if(event.key==='Enter') sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')">
+                        <input type="text" id="roastInput" placeholder="Lipește textul pentru roast..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-tiktokColor">
+                        
+                        <!-- Buton Vizual Roast -->
+                        <button onclick="generateVisualForTab('roastInput', 'roastMessages', 'funny caricature style, vibrant, expressive')" class="bg-gray-800 border border-tiktokColor/50 text-tiktokColor hover:bg-tiktokColor hover:text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual Caricatură">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </button>
+
                         <button onclick="sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -569,20 +622,27 @@
 
             <!-- Tab: Text-to-Video Studio -->
             <div id="tab-textToVideoStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
-                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto">
+                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto w-full">
                     <h2 class="font-bold text-xs text-cyanNeon mb-1"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
-                    <p class="text-[10px] text-gray-400 mb-2">Introdu o descriere detaliată a scenei sau a videoclipului dorit.</p>
+                    <p class="text-[10px] text-gray-400 mb-2">Introdu o descriere detaliată a scenei pentru randare vizuală sau video.</p>
                     
                     <div class="flex space-x-2 mb-2">
-                        <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu o mașină zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon">
+                        <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu mașini zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon">
+                        
+                        <!-- Legătură directă la motorul universal pentru randare video/cinematică -->
+                        <button onclick="generateVisualForTab('textToVideoInput', 'textToVideoResult', 'cinematic motion shot, 4k resolution, hyperrealistic')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold text-xs px-3 py-2 rounded-xl cursor-pointer transition">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Randare Vizuală
+                        </button>
+
                         <button onclick="generateTextToVideo()" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition">Generează Video AI</button>
                     </div>
 
-                    <div id="textToVideoResult" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 min-h-[140px] whitespace-pre-line mb-2">
+                    <div id="textToVideoResult" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 min-h-[140px] whitespace-pre-line mb-2 flex flex-col items-center justify-center text-center text-gray-500">
                         Așteptare comenzi pentru generare video...
                     </div>
                 </div>
             </div>
+
 <!-- Tab: 3D Visual Studio -->
 <div id="tab-3d-visual" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
     <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto w-full">
@@ -1458,42 +1518,43 @@ window.setDepartment = function(deptId) {
     }
 };
 
-window.generate3DVisual = async function() {
-    const prompt = document.getElementById('prompt-3d').value;
-    const resultContainer = document.getElementById('result-3d-container');
+// Funcție universală pentru generarea de conținut vizual în ORICE tab
+window.generateVisualForTab = async function(inputId, containerId, customStyle = "") {
+    const promptInput = document.getElementById(inputId);
+    const resultContainer = document.getElementById(containerId);
     
+    if (!promptInput || !resultContainer) return;
+    
+    const prompt = promptInput.value;
     if (!prompt.trim()) {
-        alert('Te rog să introduci o descriere pentru vizualul 3D!');
+        alert('Te rog să introduci o descriere pentru a genera vizualul!');
         return;
     }
 
-    // 1. Afișăm un mesaj de încărcare și o animație de cub care se învârte
+    // 1. Animație de încărcare
     resultContainer.innerHTML = `
         <div class="flex flex-col items-center justify-center gap-3 py-10">
-            <i class="fa-solid fa-cube fa-spin text-3xl text-cyanNeon"></i>
-            <p class="text-xs text-gray-400 animate-pulse">Se generează vizualul 3D (randare complexă)...</p>
+            <i class="fa-solid fa-wand-magic-sparkles fa-spin text-3xl text-cyanNeon"></i>
+            <p class="text-xs text-gray-400 animate-pulse">Se generează elementul vizual multimedia...</p>
         </div>
     `;
 
-    // 2. Generăm un URL unic pentru imagine folosind un serviciu de tip Image API
-    // Adăugăm un timestamp la final pentru a ne asigura că browserul încarcă noua imagine de fiecare dată
-    const encodedPrompt = encodeURIComponent(prompt + ", 3d render, octane render, cinematic lighting, high detail, 8k");
+    // 2. Construim URL-ul pentru imagine
+    const styleModifier = customStyle || "cinematic lighting, high detail, 8k, professional design";
+    const encodedPrompt = encodeURIComponent(prompt + ", " + styleModifier);
     const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${Date.now()}`;
 
-    // 3. Creăm un element de imagine pentru a preîncărca vizualul
+    // 3. Încărcăm imaginea
     const img = new Image();
     img.src = imageUrl;
 
-    // 4. Așteptăm ca imaginea să se încarce complet
     img.onload = () => {
-        // Odată încărcată, o afișăm în container
         resultContainer.innerHTML = `
             <div class="flex flex-col gap-3 h-full">
                 <p class="text-[10px] text-gray-500 truncate">Prompt: ${prompt}</p>
-                <div class="flex-1 rounded-xl overflow-hidden border border-cyanNeon/30 shadow-lg bg-gray-900 group relative">
-                    <img src="${imageUrl}" alt="Randare 3D generată" class="w-full h-full object-contain" />
+                <div class="flex-1 rounded-xl overflow-hidden border border-cyanNeon/30 shadow-lg bg-gray-900 group relative min-h-[220px]">
+                    <img src="${imageUrl}" alt="Asset vizual generat" class="w-full h-full object-contain" />
                     
-                    {/* Butoane de acțiune rapide */}
                     <div class="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
                         <button onclick="downloadImage('${imageUrl}')" class="bg-darkBg/80 p-1.5 rounded-md text-cyanNeon hover:bg-cyanNeon hover:text-darkBg text-xs">
                             <i class="fa-solid fa-download"></i>
@@ -1507,26 +1568,29 @@ window.generate3DVisual = async function() {
         `;
     };
 
-    // 5. În cazul în care generarea eșuează (ex: server down)
     img.onerror = () => {
         resultContainer.innerHTML = `
             <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
                 <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
-                <span class="text-red-400 text-xs">Eroare la generarea vizualului.</span>
-                <p class="text-[10px] text-gray-500">Serviciul de generare imagini este momentan indisponibil. Te rugăm să încerci din nou mai târziu.</p>
+                <span class="text-red-400 text-xs">Eroare la generarea vizualului. Încearcă din nou.</span>
             </div>
         `;
     };
 };
 
-// Funcții ajutătoare opționale (pentru butoanele de descărcare/fullscreen)
+// 4. Păstrăm compatibilitatea directă pentru tab-ul 3D existent
+window.generate3DVisual = function() {
+    generateVisualForTab('prompt-3d', 'result-3d-container', '3d render, octane render, cinematic lighting, 8k');
+};
+
+// Funcții ajutătoare pentru descărcare și ecran complet
 window.downloadImage = async function(url) {
     try {
         const response = await fetch(url);
         const blob = await response.blob();
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'nexus-3d-visual.png';
+        link.download = 'nexus-visual-asset.png';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -1536,7 +1600,6 @@ window.downloadImage = async function(url) {
 };
 
 window.openFullscreen = function(url) {
-    // Deschide imaginea într-o fereastră nouă
     window.open(url, '_blank');
 };
        // Helper universal pentru apeluri ultra-rapide cu auto-retry la erori de trafic
