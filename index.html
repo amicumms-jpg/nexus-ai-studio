@@ -1469,28 +1469,45 @@ window.generate3DVisual = async function() {
 
     resultContainer.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează conceptul 3D cu ajutorul AI...</div>';
 
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: `Generează o descriere tehnică detaliată și un concept de design 3D profesional pentru: ${prompt}`,
-                department: 'general',
-                model: 'gemini-3.8-flash'
-            })
-        });
+    let retries = 2;
+    let success = false;
+    let data = null;
 
-        const data = await response.json();
-        
-        if (response.ok) {
-            resultContainer.innerHTML = `<div class="text-left text-gray-200 whitespace-pre-wrap">${data.text || data.reply}</div>`;
-        } else {
-            resultContainer.innerHTML = `<span class="text-red-400">Eroare: ${data.error || 'Nu s-a putut genera.'}</span>`;
+    while (retries > 0 && !success) {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: `Generează o descriere tehnică detaliată și un concept de design 3D profesional pentru: ${prompt}`,
+                    department: 'general',
+                    model: 'gemini-3.8-flash'
+                })
+            });
+
+            data = await response.json();
+            
+            if (response.ok) {
+                success = true;
+            } else {
+                retries--;
+                if (retries === 0) throw new Error(data.error || 'Eroare de la server.');
+                await new Promise(res => setTimeout(res, 2000)); // Așteaptă 2 secunde înainte de retry
+            }
+        } catch (err) {
+            if (retries === 0) {
+                resultContainer.innerHTML = `<span class="text-red-400">Eroare: ${err.message}. Modelul este momentan suprasolicitat, încearcă din nou în câteva secunde.</span>`;
+                return;
+            }
+            retries--;
+            await new Promise(res => setTimeout(res, 2000));
         }
-    } catch (err) {
-        resultContainer.innerHTML = `<span class="text-red-400">Eroare de rețea: ${err.message}</span>`;
     }
-}; 
+
+    if (success) {
+        resultContainer.innerHTML = `<div class="text-left text-gray-200 whitespace-pre-wrap">${data.text || data.reply}</div>`;
+    }
+};
     </script>
 
     <!-- Footer Ultra-Compact -->
