@@ -1467,47 +1467,51 @@ window.generate3DVisual = async function() {
         return;
     }
 
-    resultContainer.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează conceptul 3D cu ajutorul AI...</div>';
+    resultContainer.innerHTML = '<div class="text-cyanNeon animate-pulse flex items-center justify-center gap-2"><i class="fa-solid fa-spinner fa-spin"></i> Se generează conceptul 3D cu ajutorul AI...</div>';
 
-    let retries = 2;
-    let success = false;
-    let data = null;
+    try {
+        const data = await callNexusAI({
+            prompt: `Generează o descriere tehnică detaliată și un concept de design 3D profesional pentru: ${prompt}`,
+            department: 'general',
+            model: 'gemini-3.8-flash'
+        });
 
-    while (retries > 0 && !success) {
+        resultContainer.innerHTML = `<div class="text-left text-gray-200 whitespace-pre-wrap">${data.text || data.reply}</div>`;
+    } catch (err) {
+        resultContainer.innerHTML = `<span class="text-red-400">Eroare: ${err.message}. Te rugăm să încerci din nou.</span>`;
+    }
+};
+       // Helper universal pentru apeluri ultra-rapide cu auto-retry la erori de trafic
+async function callNexusAI(payload, maxRetries = 2) {
+    let attempts = 0;
+    while (attempts <= maxRetries) {
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prompt: `Generează o descriere tehnică detaliată și un concept de design 3D profesional pentru: ${prompt}`,
-                    department: 'general',
-                    model: 'gemini-3.8-flash'
-                })
+                body: JSON.stringify(payload)
             });
 
-            data = await response.json();
-            
-            if (response.ok) {
-                success = true;
-            } else {
-                retries--;
-                if (retries === 0) throw new Error(data.error || 'Eroare de la server.');
-                await new Promise(res => setTimeout(res, 2000)); // Așteaptă 2 secunde înainte de retry
+            const data = await response.json();
+
+            // Dacă este ok, returnăm răspunsul direct
+            if (response.ok) return data;
+
+            // Dacă Google indică supraîncărcare (503/500/High Demand), reîncercăm automat după 1.5 secunde
+            if (attempts < maxRetries && (response.status >= 500 || (data.error && data.error.includes('demand')))) {
+                attempts++;
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                continue;
             }
+
+            throw new Error(data.error || 'Eroare la procesare.');
         } catch (err) {
-            if (retries === 0) {
-                resultContainer.innerHTML = `<span class="text-red-400">Eroare: ${err.message}. Modelul este momentan suprasolicitat, încearcă din nou în câteva secunde.</span>`;
-                return;
-            }
-            retries--;
-            await new Promise(res => setTimeout(res, 2000));
+            if (attempts >= maxRetries) throw err;
+            attempts++;
+            await new Promise(resolve => setTimeout(resolve, 1500));
         }
     }
-
-    if (success) {
-        resultContainer.innerHTML = `<div class="text-left text-gray-200 whitespace-pre-wrap">${data.text || data.reply}</div>`;
-    }
-};
+} 
     </script>
 
     <!-- Footer Ultra-Compact -->
