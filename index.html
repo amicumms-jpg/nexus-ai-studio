@@ -1342,9 +1342,9 @@ window.activateLicenseKey = function() {
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
                 const userName = user.displayName || user.email;
-                const userPhoto = user.photoURL || 'https://flaticon.com';
+                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
-                alert("Autentificat cu succes: " + userName);
+                showToast("Autentificat cu succes: " + userName, "success");
 
                 const parentEl = document.getElementById('tab-authAccount');
                 const container = parentEl ? parentEl.querySelector('.max-w-md') : null;
