@@ -1511,26 +1511,30 @@ window.setDepartment = function(deptId) {
     currentDepartment = deptId;
     console.log("Specialist selectat:", currentDepartment);
 }
-       window.setPrompt3D = function(text) {
+     window.setPrompt3D = function(text) {
+    const cleanText = text
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/[^a-zA-Z0-9\s,.-]/g, '');
+        
     const textarea = document.getElementById('prompt-3d');
     if (textarea) {
-        textarea.value = text;
+        textarea.value = cleanText;
     }
 };
-
-// Definim o variabilă globală sau în afara funcției pentru a reține ultimul timestamp
+// 1. Variabilă globală ca să nu mai trimitem cereri spam la server (evită eroarea 402)
 if (typeof window.lastGenerationTime === 'undefined') {
     window.lastGenerationTime = 0;
 }
 
 window.generateVisualForTab = async function(inputId, containerId, customStyle = "") {
     const currentTime = Date.now();
-    const cooldownMs = 45000; // 45 de secunde impuse de Pollinations
+    const cooldownMs = 45000; // Limita de 45 secunde impusă de Pollinations
     
-    // Verificăm dacă a trecut destul timp de la ultima cerere
+    // Blocăm execuția dacă se apasă prea repede
     if (currentTime - window.lastGenerationTime < cooldownMs) {
         const secondsLeft = Math.ceil((cooldownMs - (currentTime - window.lastGenerationTime)) / 1000);
-        alert(`Te rog să aștepți încă ${secondsLeft} secunde înainte de a genera o nouă imagine!`);
+        alert(`Serverul este ocupat. Te rog așteaptă ${secondsLeft} secunde.`);
         return;
     }
 
@@ -1539,21 +1543,25 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     
     if (!promptInput || !resultContainer) return;
     
+    // Preluăm textul brut din input sau textul predefinit din butoanele de exemple
     const rawPrompt = promptInput.value || promptInput.innerText || "";
+    
+    // CURĂȚARE CORECTĂ: Scoate diacriticele și semnele dubioase care crapă URL-ul (Evită eroarea 400)
     const cleanPrompt = rawPrompt
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-zA-Z0-9\s,.-]/g, '')
+        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/[^a-zA-Z0-9\s,.-]/g, '') 
         .trim();
 
     if (!cleanPrompt) {
-        alert('Te rog să introduci o descriere validă pentru a genera vizualul!');
+        alert('Te rog introdu un prompt valid.');
         return;
     }
 
-    // Actualizăm timpul ultimei rulări reușite (trecute de validare)
+    // Salvăm timestamp-ul curent pentru a valida cererea
     window.lastGenerationTime = Date.now();
 
+    // Afișăm loader-ul în interfață
     resultContainer.innerHTML = `
         <div class="flex flex-col items-center justify-center gap-3 py-10">
             <i class="fa-solid fa-wand-magic-sparkles fa-spin text-3xl text-cyanNeon"></i>
@@ -1561,11 +1569,17 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
         </div>
     `;
 
+    // Combinăm promptul curățat cu stilul ales
     const styleModifier = customStyle.trim() || "cinematic lighting, high detail, 8k, professional design";
     const fullText = `${cleanPrompt}, ${styleModifier}`;
-    const encodedPrompt = encodeURIComponent(fullText);
-    const imageUrl = `https://pollinations.ai{encodedPrompt}?nologo=true&seed=${window.lastGenerationTime}`;
+    
+    // ENCODE URL STRICTOR
+    const encodedPrompt = encodeURIComponent(fullText).replace(/%20/g, "%20");
+    
+    // URL-ul corectat complet:
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&seed=${window.lastGenerationTime}`;
 
+    // Încărcăm imaginea în mod controlat
     const img = new Image();
     img.src = imageUrl;
 
@@ -1589,19 +1603,16 @@ window.generateVisualForTab = async function(inputId, containerId, customStyle =
     };
 
     img.onerror = () => {
-        // Resetăm timpul în caz de eroare, ca să poată reîncerca imediat dacă a fost alt tip de eroare
+        // Dacă dă eroare, resetăm timpul ca userul să poată reîncerca imediat
         window.lastGenerationTime = 0;
         resultContainer.innerHTML = `
             <div class="flex flex-col items-center justify-center gap-3 py-8 text-center">
                 <i class="fa-solid fa-triangle-exclamation text-xl text-red-400"></i>
-                <span class="text-red-400 text-xs">Eroare / Limitare la generare. Așteaptă 45s și încearcă din nou.</span>
+                <span class="text-red-400 text-xs">Limita Free atinsă sau eroare server. Așteaptă 45 secunde și încearcă din nou.</span>
             </div>
         `;
     };
 };
-
-
-
 // 4. Păstrăm compatibilitatea directă pentru tab-ul 3D existent
 window.generate3DVisual = function() {
     generateVisualForTab('prompt-3d', 'result-3d-container', '3d render, octane render, cinematic lighting, 8k');
