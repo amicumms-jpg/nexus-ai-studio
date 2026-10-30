@@ -86,30 +86,6 @@
     </table>
 </div>
 
-<!-- Opțiuni Rapide Mobil -->
-<div class="md:hidden pt-2 pb-2 px-1 border-b border-gray-800 my-2 space-y-1.5">
-    <div class="text-[9px] font-bold text-gray-500 uppercase tracking-wider px-2">Opțiuni Rapide</div>
-    <div class="grid grid-cols-2 gap-1.5">
-        <button onclick="toggleQuickNotePopUp()" class="flex items-center justify-center gap-1.5 bg-gray-900 border border-gray-800 text-gray-300 py-1.5 rounded-xl text-[10px]">
-            <i class="fa-solid fa-note-sticky text-amberGlow"></i> Notiță
-        </button>
-        <button onclick="exportFullSession()" class="flex items-center justify-center gap-1.5 bg-gray-900 border border-gray-800 text-gray-300 py-1.5 rounded-xl text-[10px]">
-            <i class="fa-solid fa-file-arrow-down text-cyan-400"></i> Export
-        </button>
-    </div>
-    <div class="grid grid-cols-2 gap-1.5">
-        <button onclick="copyFullConversation()" class="flex items-center justify-center gap-1 bg-gray-900 border border-gray-800 hover:border-cyan-400 text-gray-300 py-1.5 rounded-xl text-[10px] transition cursor-pointer">
-            <i class="fa-solid fa-copy text-cyanNeon"></i> <span>Copiază Tot</span>
-        </button>
-        <button onclick="downloadFullConversation()" class="flex items-center justify-center gap-1 bg-gray-900 border border-gray-800 hover:border-amberGlow text-gray-300 py-1.5 rounded-xl text-[10px] transition cursor-pointer">
-            <i class="fa-solid fa-download text-amberGlow"></i> <span>Descarcă Tot</span>
-        </button>
-    </div>
-    <button onclick="switchTab('billingCard', 'Abonament & PRO')" class="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-amberGlow to-orange-500 text-darkBg font-bold text-[10px] py-1.5 rounded-xl shadow">
-        <i class="fa-solid fa-credit-card"></i> Pachet PRO
-    </button>
-</div>
-
     <!-- Top Navigation Bar & Rich Utility Header -->
     <header class="bg-panelBg border-b border-gray-800 px-4 py-2 flex flex-col md:flex-row items-center justify-between shrink-0 shadow-lg z-20 space-y-2 md:space-y-0">
         <div class="flex items-center space-x-4 w-full md:w-auto justify-between md:justify-start">
@@ -158,14 +134,6 @@
         </div>
     </header>
 
-    <!-- Popup Notiță Rapidă -->
-    <div id="quickNoteModal" class="fixed top-14 right-5 bg-panelBg border border-amberGlow/50 p-3 rounded-2xl shadow-2xl z-50 w-72 hidden space-y-2">
-        <div class="flex justify-between items-center border-b border-gray-800 pb-1.5">
-            <span class="text-xs font-bold text-amberGlow flex items-center"><i class="fa-solid fa-pen-nib mr-1.5"></i> Notiță Rapidă Volatilă</span>
-            <button onclick="toggleQuickNotePopup()" class="text-gray-400 hover:text-white text-xs cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <textarea id="quickNoteText" rows="4" placeholder="Scrie o idee rapidă aici..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow resize-none" oninput="saveQuickNoteState()"></textarea>
-    </div>
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10">
         <!-- Sidebar -->
@@ -620,20 +588,8 @@
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg">
                             <i class="fa-solid fa-crown"></i>
                         </div>
-                        <h2 class="text-lg font-bold text-white">Abonamente, Chei de Activare & Susținere Project</h2>
+                        <h2 class="text-lg font-bold text-white">Abonamente & Susținere Project</h2>
                         <p class="text-[10px] text-gray-400">Alege modul tău de acces la Nexus AI Studio Pro.</p>
-                    </div>
-
-                    <!-- Card Câmp Activare Cheie Oficială PRO -->
-                    <div class="bg-gray-950 p-4 rounded-2xl border border-cyanNeon/40 max-w-xl mx-auto shadow-xl">
-                        <label class="block text-xs font-semibold text-gray-300 mb-2"><i class="fa-solid fa-key text-cyanNeon mr-1"></i> Ai primit o cheie oficială de activare?</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="licenseKeyInput" placeholder="NEXUS-PRO-XXXX-YYYY" class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none font-mono uppercase">
-                            <button onclick="activateLicenseKey()" class="bg-cyanNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer">
-                                <i class="fa-solid fa-check"></i> Activează
-                            </button>
-                        </div>
-                        <p id="licenseStatus" class="text-[10px] text-gray-400 mt-2">Introdu codul licenței pentru a debloca instant accesul complet VIP.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -708,12 +664,12 @@
                 <p class="text-[10px] text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
             </div>
             
-            <!-- Butoane Social Login (Google, GitHub, Facebook, Apple) -->
+            <!-- Butoane Social Login -->
             <div class="grid grid-cols-2 gap-2 pt-1">
-               <button onclick="loginWithGoogle()" class="flex items-center justify-center space-x-2 py-2.5 bg-gray-900 border border-gray-700 rounded-xl hover:border-cyanNeon text-white text-xs transition">
-    <i class="fa-brands fa-google text-red-500"></i>
-    <span>Google</span>
-</button>
+               <button onclick="loginWithGoogle()" class="flex items-center justify-center space-x-2 py-2.5 bg-gray-900 border border-gray-700 rounded-xl hover:border-cyanNeon text-white text-xs transition cursor-pointer">
+                    <i class="fa-brands fa-google text-red-500"></i>
+                    <span>Google</span>
+                </button>
                 <button onclick="socialLogin('GitHub')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
                     <i class="fa-brands fa-github text-white"></i> <span>GitHub</span>
                 </button>
@@ -832,6 +788,7 @@
             </div>
         </main>
     </div>
+
     <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI -->
     <div id="nexus-robot-widget" class="fixed bottom-12 right-4 z-50">
         <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
@@ -878,14 +835,13 @@
             </div>
         </div>
     </div>
-
     <!-- Scripturi JavaScript Complete și Curățate -->
-   <script type="module">
- // Firebase SDK Modular si Logica de Autentificare
+    <script type="module">
+        // Firebase SDK Modular si Logica de Autentificare
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
        
-       // Matrix Rain Canvas Effect Continuu
+        // Matrix Rain Canvas Effect Continuu
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
         let drops = [];
@@ -958,7 +914,7 @@
         }
 
         // Navigare & Comutare Tab-uri (FUNCȚIA PRINCIPALĂ)
-        function switchTab(tabId, title) {
+        window.switchTab = function(tabId, title) {
             document.querySelectorAll('.app-tab').forEach(tab => {
                 tab.classList.add('hidden');
                 tab.classList.remove('flex');
@@ -978,64 +934,24 @@
                 const sidebar = document.getElementById('appSidebar');
                 if(sidebar) sidebar.classList.add('hidden');
             }
-        }
-        function toggleSidebar() {
+        };
+
+        window.toggleSidebar = function() {
             const sb = document.getElementById('appSidebar');
             if(sb) sb.classList.toggle('hidden');
-        }
+        };
 
-        function toggleToolsGrid() {
-            const grid = document.getElementById('toolsGrid');
-            const icon = document.getElementById('toggleToolsIcon');
-            const text = document.getElementById('toggleToolsText');
-            if(!grid) return;
-            if(grid.classList.contains('hidden')) {
-                grid.classList.remove('hidden');
-                if(icon) icon.className = 'fa-solid fa-eye-slash';
-                if(text) text.innerText = 'Ascunde Unelte';
-            } else {
-                grid.classList.add('hidden');
-                if(icon) icon.className = 'fa-solid fa-eye';
-                if(text) text.innerText = 'Arată Unelte';
-            }
-        }
-
-        function toggleNexusRobot() {
+        window.toggleNexusRobot = function() {
             const win = document.getElementById('nexus-robot-window');
             if(win) win.classList.toggle('hidden');
-        }
-function toggleBossKey() {
-    const screen = document.getElementById('bossExcelScreen');
-    if(screen) screen.classList.toggle('hidden');
-}
-        let freeMessagesLeft = 10;
-       function activateLicenseKey() {
-    const input = document.getElementById('licenseKeyInput');
-    const status = document.getElementById('licenseStatus');
-    const badge = document.getElementById('proBadge');
-    const key = input ? input.value.trim() : '';
+        };
 
-    // Lista ta de coduri VIP valabile (poți adăuga câte vrei aici)
-const validLicenseKeys = [
-    "NEXUS-VIP-2026",
-    "NEXUS-PRIETEN-01",
-    "NEXUS-PRO-EARLY",
-    "TEST-ACCESS-100"
-];
+        window.toggleBossKey = function() {
+            const screen = document.getElementById('bossExcelScreen');
+            if(screen) screen.classList.toggle('hidden');
+        };
 
-function activateLicenseKey() {
-    const inputField = document.getElementById('licenseKeyInput');
-    const statusText = document.getElementById('licenseStatus');
-    
-    if (!inputField || !statusText) return;
-    
-    const userKey = inputField.value.trim().toUpperCase();
-
-    if (!userKey) {
-        statusText.innerText = "Te rugăm să introduci un cod valid.";
-        statusText.className = "text-[10px] text-amber-400 mt-2";
-        return;
-    }
+        let freeMessagesList = 10;
 
         function showToast(msg, type='info') {
             const container = document.getElementById('toastContainer');
@@ -1051,7 +967,7 @@ function activateLicenseKey() {
             }, 3000);
         }
 
-        function switchSocialPlatform(platform) {
+        window.switchSocialPlatform = function(platform) {
             ['tiktok', 'insta', 'yt', 'seo'].forEach(p => {
                 const btn = document.getElementById('socBtn-' + p);
                 if(btn) {
@@ -1063,7 +979,7 @@ function activateLicenseKey() {
                 msgs.innerHTML += `<div class="text-gray-400 text-[11px] mt-1">[Mod comutat pe: <b>${platform.toUpperCase()}</b>] Spune-mi ce dorești să generăm!</div>`;
                 msgs.scrollTop = msgs.scrollHeight;
             }
-        }
+        };
 
         async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
             try {
@@ -1082,7 +998,7 @@ function activateLicenseKey() {
         }
 
         let attachedFiles = {};
-        function handleFileSelect(tabKey) {
+        window.handleFileSelect = function(tabKey) {
             const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
             const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
             const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
@@ -1095,9 +1011,9 @@ function activateLicenseKey() {
                     previewBox.classList.add('flex');
                 }
             }
-        }
+        };
 
-        function removeAttachment(tabKey) {
+        window.removeAttachment = function(tabKey) {
             const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
             const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
             if(fileInput) fileInput.value = '';
@@ -1106,7 +1022,7 @@ function activateLicenseKey() {
                 previewBox.classList.remove('flex');
                 previewBox.classList.add('hidden');
             }
-        }
+        };
 
         async function fileToBase64(file) {
             return new Promise((resolve, reject) => {
@@ -1124,7 +1040,8 @@ function activateLicenseKey() {
                 reader.onerror = error => reject(error);
             });
         }
-        async function sendChatMessageWithAttachment(messagesContainerId, inputId, tabKey) {
+
+        window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
             const inputEl = document.getElementById(inputId);
             const msgBox = document.getElementById(messagesContainerId);
             if (!inputEl || !msgBox) return;
@@ -1133,14 +1050,14 @@ function activateLicenseKey() {
             if (!text && !file) return;
 
             if(tabKey === 'chat') {
-                if(freeMessagesLeft <= 0) {
-                    showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO sau folosește cheia!', 'error');
-                    switchTab('billingCard', 'Abonament & PRO');
+                if(freeMessagesList <= 0) {
+                    showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO!', 'error');
+                    window.switchTab('billingCard', 'Abonament & PRO');
                     return;
                 }
-                freeMessagesLeft--;
+                freeMessagesList--;
                 const freeCountDisplay = document.getElementById('freeCountDisplay');
-                if(freeCountDisplay) freeCountDisplay.innerText = freeMessagesLeft + '/10';
+                if(freeCountDisplay) freeCountDisplay.innerText = freeMessagesList + '/10';
             }
 
             let displayHtml = '';
@@ -1152,7 +1069,7 @@ function activateLicenseKey() {
             inputEl.style.height = 'auto';
             saveDraft('');
             msgBox.scrollTop = msgBox.scrollHeight;
-            removeAttachment(tabKey);
+            window.removeAttachment(tabKey);
 
             const skeletonId = 'skeleton-' + Date.now();
             msgBox.innerHTML += `<div id="${skeletonId}" class="flex justify-start"><div class="bg-gray-900 p-3 rounded-2xl rounded-tl-none space-y-2 w-64 border border-gray-800"><div class="h-2.5 bg-gray-800 rounded animate-pulse w-3/4"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-1/2"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-5/6"></div></div></div>`;
@@ -1186,9 +1103,9 @@ function activateLicenseKey() {
                 if(skel) skel.remove();
                 msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${err.message}</div>`;
             }
-        }
+        };
 
-        async function sendChatMessage(containerId, inputId, prefix) {
+        window.sendChatMessage = async function(containerId, inputId, prefix) {
             const input = document.getElementById(inputId);
             const container = document.getElementById(containerId);
             if(!input || !container) return;
@@ -1216,13 +1133,13 @@ function activateLicenseKey() {
             } catch(e) {
                 container.innerHTML += `<div class="text-red-400 text-xs p-2">Eroare server.</div>`;
             }
-        }
+        };
 
-        function sendSocialHubMessage() {
-            sendChatMessage('socialHubMessages', 'socialHubInput', '[Social Hub AI]: ');
-        }
+        window.sendSocialHubMessage = function() {
+            window.sendChatMessage('socialHubMessages', 'socialHubInput', '[Social Hub AI]: ');
+        };
 
-        async function sendNexusRobotMessage() {
+        window.sendNexusRobotMessage = async function() {
             const input = document.getElementById('nexus-robot-input');
             const container = document.getElementById('nexus-robot-messages');
             if(!input || !container) return;
@@ -1238,9 +1155,9 @@ function activateLicenseKey() {
             } catch(e) {
                 container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl text-xs text-slate-200"><b>Nexus AI:</b> Indisponibil.</div>`;
             }
-        }
+        };
 
-        function speakText(elementId) {
+        window.speakText = function(elementId) {
             const el = document.getElementById(elementId);
             if(!el) return;
             if('speechSynthesis' in window) {
@@ -1249,9 +1166,9 @@ function activateLicenseKey() {
                 window.speechSynthesis.speak(utterance);
                 showToast('Se citește textul...', 'info');
             }
-        }
+        };
 
-        function startVoiceRecognition() {
+        window.startVoiceRecognition = function() {
             if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
@@ -1262,9 +1179,9 @@ function activateLicenseKey() {
                 };
                 recognition.start();
             }
-        }
+        };
 
-        function toggleRobotAudio() { showToast('Audio comutat.', 'info'); }
+        window.toggleRobotAudio = function() { showToast('Audio comutat.', 'info'); };
 
         function escapeHtml(text) {
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1274,13 +1191,13 @@ function activateLicenseKey() {
             return typeof marked !== 'undefined' ? marked.parse(text) : escapeHtml(text);
         }
 
-        function clearTabChat(tab) {
+        window.clearTabChat = function(tab) {
             const container = document.getElementById(tab + 'Messages');
             if(container) container.innerHTML = '<div class="text-gray-400 text-xs">Chat golit.</div>';
             showToast('Chat golit.', 'success');
-        }
+        };
 
-        function addEditorialPost() {
+        window.addEditorialPost = function() {
             const platformEl = document.getElementById('postPlatform');
             const titleEl = document.getElementById('postTitle');
             const dateEl = document.getElementById('postDate');
@@ -1294,9 +1211,9 @@ function activateLicenseKey() {
                 container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platformEl.value}]</span> <span class="text-white">${escapeHtml(titleEl.value)}</span><div class="text-[10px] text-gray-400">${dateEl.value}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
             }
             showToast('Postare programată!', 'success');
-        }
+        };
 
-        async function generateTextToVideo() {
+        window.generateTextToVideo = async function() {
             const inputEl = document.getElementById('textToVideoInput');
             const result = document.getElementById('textToVideoResult');
             if(!inputEl || !inputEl.value) { showToast('Introdu descrierea!', 'error'); return; }
@@ -1306,19 +1223,7 @@ function activateLicenseKey() {
                 if(result) result.innerText = res;
                 showToast('Generat!', 'success');
             } catch(e) { if(result) result.innerText = 'Eroare.'; }
-        }
-
-    // 2. Actualizează insigna PRO / Status din Header
-    const badge = document.getElementById('proBadge');
-    if(badge) {
-        badge.innerText = 'ONLINE';
-        badge.className = 'text-[9px] bg-cyan-500/20 text-cyan400 border border-cyan-500/30 px-2 py-0.2 rounded-full font-bold';
-    }
-}
-
-        function exportFullSession() { showToast('Export realizat.', 'success'); }
-        function copyFullConversation() { showToast('Copiat.', 'success'); }
-        function downloadFullConversation() { showToast('Descărcat.', 'success'); }
+        };
 
         // Geolocație & Google Maps
         let currentCoords = null;
@@ -1337,122 +1242,126 @@ function activateLicenseKey() {
             });
         }
 
-        function openGoogleMapsLocation() {
+        window.openGoogleMapsLocation = function() {
             if (currentCoords) {
                 window.open(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`, '_blank');
             } else {
                 autoDetectUserLocation();
                 showToast('Se preia locația...', 'info');
             }
-        }
-   
-          const firebaseConfig = {
-      apiKey: "AIzaSyChN5PX0lb-ouPITfWT-XpM8tj_s5j9D9k",
-      authDomain: "://firebaseapp.com",
-      projectId: "nexus-ai-studio-8335f",
-      storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
-      messagingSenderId: "645678013335",
-      appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
-      measurementId: "G-W0PJNEF455"
-  };
+        };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
+        // Configurare Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyChN5PX0lb-ouPITfWT-XpM8tj_s5j9D9k",
+            authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+            projectId: "nexus-ai-studio-8335f",
+            storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+            messagingSenderId: "645678013335",
+            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+            measurementId: "G-W0PJNEF455"
+        };
 
-  onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const userName = user.displayName || user.email;
-            const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
 
-            const container = document.getElementById('tab-authAccount')?.querySelector('.max-w-md');
-            if (container) {
-                container.innerHTML = `
-                    <div class="text-center space-y-4 py-6">
-                        <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
-                        <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
-                        <p class="text-xs text-gray-400">${user.email}</p>
-                        <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
-                            Cont Conectat & Verificat ✅
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userName = user.displayName || user.email;
+                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+                const parentEl = document.getElementById('tab-authAccount');
+                const container = parentEl ? parentEl.querySelector('.max-w-md') : null;
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center space-y-4 py-6">
+                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                            <p class="text-xs text-gray-400">${user.email}</p>
+                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                                Cont Conectat & Verificat ✅
+                            </div>
+                            <div class="pt-4">
+                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                    Deconectare / Schimbă Contul
+                                </button>
+                            </div>
                         </div>
-                        <div class="pt-4">
-                            <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
-                                Deconectare / Schimbă Contul
-                            </button>
-                        </div>
-                    </div>
-                `;
+                    `;
+                }
             }
-        }
-    });
+        });
 
-  window.socialLogin = async function(provider) {
-      if (provider === 'Google') {
-          try {
-              const result = await signInWithPopup(auth, googleProvider);
-              const user = result.user;
-              const userName = user.displayName || user.email;
-              const userPhoto = user.photoURL || 'https://flaticon.com';
+        window.loginWithGoogle = async function() {
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+                const userName = user.displayName || user.email;
+                const userPhoto = user.photoURL || 'https://flaticon.com';
 
-              alert("Autentificat cu succes: " + userName);
+                alert("Autentificat cu succes: " + userName);
 
-              const container = document.getElementById('tab-authAccount')?.querySelector('.max-w-md');
-              if (container) {
-                  container.innerHTML = `
-                      <div class="text-center space-y-4 py-6">
-                          <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
-                          <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
-                          <p class="text-xs text-gray-400">${user.email}</p>
-                          <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
-                              Cont Conectat & Verificat ✅
-                          </div>
-                          <div class="pt-4">
-                              <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
-                                  Deconectare / Schimbă Contul
-                              </button>
-                          </div>
-                      </div>
-                  `;
-              }
-          } catch (error) {
-              console.error("Eroare Google Auth:", error);
-              alert("Eroare la autentificare: " + error.message);
-          }
-      } else {
-          alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
-      }
-  };
+                const parentEl = document.getElementById('tab-authAccount');
+                const container = parentEl ? parentEl.querySelector('.max-w-md') : null;
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center space-y-4 py-6">
+                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                            <p class="text-xs text-gray-400">${user.email}</p>
+                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                                Cont Conectat & Verificat ✅
+                            </div>
+                            <div class="pt-4">
+                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                    Deconectare / Schimbă Contul
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Eroare Google Auth:", error);
+                alert("Eroare la autentificare: " + error.message);
+            }
+        };
 
-  window.registerCompleteUser = async function() {
-      const email = document.getElementById("regEmail")?.value.trim();
-      const password = document.getElementById("regPass")?.value.trim();
-      const fullName = document.getElementById("regFullName")?.value.trim();
-      const statusEl = document.getElementById('userAccountStatus');
+        window.socialLogin = async function(provider) {
+            alert("Autentificarea cu " + provider + " va fi disponibilă în curând.");
+        };
 
-      if (!email || !password) {
-          alert("Introdu adresa de e-mail și parola!");
-          return;
-      }
+        window.registerCompleteUser = async function() {
+            const email = document.getElementById("regEmail")?.value.trim();
+            const password = document.getElementById("regPass")?.value.trim();
+            const fullName = document.getElementById("regFullName")?.value.trim();
+            const statusEl = document.getElementById('userAccountStatus');
 
-      try {
-          const res = await createUserWithEmailAndPassword(auth, email, password);
-          alert("Cont creat cu succes pentru: " + res.user.email);
-          if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
-      } catch (err) {
-          console.error("Eroare Firebase:", err);
-          alert("Eroare la crearea contului: " + err.message);
-      }
-  };
+            if (!email || !password) {
+                alert("Introdu adresa de e-mail și parola!");
+                return;
+            }
 
-  window.logoutUser = async function() {
-      try {
-          await signOut(auth);
-          location.reload();
-      } catch (error) {
-          console.error("Eroare la deconectare:", error);
-      }
-  };
-</script>
+            try {
+                const res = await createUserWithEmailAndPassword(auth, email, password);
+                alert("Cont creat cu succes pentru: " + res.user.email);
+                if (statusEl) statusEl.innerText = `Cont creat pentru ${fullName || res.user.email} ✅`;
+            } catch (err) {
+                console.error("Eroare Firebase:", err);
+                alert("Eroare la crearea contului: " + err.message);
+            }
+        };
+
+        window.logoutUser = async function() {
+            try {
+                await signOut(auth);
+                location.reload();
+            } catch (error) {
+                console.error("Eroare la deconectare:", error);
+            }
+        };
+    </script>
+
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
         <span>Plăți Securizate Stripe</span> &bull; 
