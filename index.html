@@ -1231,7 +1231,33 @@
                 msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${err.message}</div>`;
             }
         };
+// --- ACEASTA ESTE FUNCȚIA CARE TREBUIE SĂ FIE ÎN CODUL TĂU ---
+        async function fetchFromServer(promptText) {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                throw new Error("Utilizatorul nu este autentificat!");
+            }
 
+            // Luăm token-ul de securitate Firebase al utilizatorului curent
+            const idToken = await currentUser.getIdToken();
+
+            const response = await fetch('https://us-central1-nexus-ai-studio-8335f.cloudfunctions.net/generateAI', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({ prompt: promptText })
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || "Eroare de la serverul AI.");
+            }
+
+            return data.result;
+        }
         window.sendChatMessage = async function(containerId, inputId, prefix) {
             const input = document.getElementById(inputId);
             const container = document.getElementById(containerId);
@@ -1521,6 +1547,42 @@ window.activateLicenseKey = function() {
                 console.error("Eroare la deconectare:", error);
             }
         };
+        // Funcție pentru a trimite prompturi către backend-ul tău securizat (Firebase Functions)
+window.sendAIPromptToNexus = async function(promptText) {
+    try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+            alert("Trebuie să fii autentificat pentru a folosi AI-ul!");
+            return null;
+        }
+
+        // Luăm token-ul de securitate Firebase al utilizatorului curent
+        const idToken = await currentUser.getIdToken();
+
+        // Apelăm funcția ta din Cloud (înlocuiește URL-ul cu cel obținut după `firebase deploy`)
+        const response = await fetch('https://us-central1-nexus-ai-studio-8335f.cloudfunctions.net/generateAI', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({ prompt: promptText })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || "Eroare necunoscută de la serverul AI.");
+        }
+
+        return data.result; // Răspunsul curat de la AI
+
+    } catch (error) {
+        console.error("Eroare la apelul AI:", error);
+        alert("Eroare AI: " + error.message);
+        return null;
+    }
+};
 // Variabila care reține departamentul activ pentru chat
 let currentDepartment = 'documents';
 
