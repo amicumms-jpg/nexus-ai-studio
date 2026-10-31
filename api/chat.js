@@ -67,13 +67,15 @@ REGULI ȘI GHIDAJ:
         let rawModel = model || 'gemini-3.8-flash';
         let activeModel = 'gemini-3.8-flash';
 
-        if (rawModel.includes('pro')) {
-            activeModel = 'gemini-3.8-pro';
-        } else if (rawModel.includes('flash') || rawModel.includes('exp')) {
-            activeModel = 'gemini-3.8-flash';
-        } else {
-            activeModel = rawModel;
-        }
+      if (rawModel.includes('pro')) {
+    activeModel = 'gemini-3.8-pro';
+} else if (rawModel.includes('flash') || rawModel.includes('exp')) {
+    activeModel = 'gemini-3.8-flash';
+} else {
+    // În loc de activeModel = rawModel;, pune fallback-ul stabil:
+    activeModel = 'gemini-3.8-flash'; 
+}
+
        
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
