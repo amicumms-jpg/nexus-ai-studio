@@ -1,3 +1,5 @@
+import { DEPARTMENTS } from '../agentsConfig.js';
+
 export default async function handler(req, res) {
     // Setează antetele CORS pentru a permite apeluri din orice browser/interfață
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -61,8 +63,17 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-       // Preluăm modelul din interfață și îl mapăm la un model acceptat sigur de Google API
-        let activeModel = model || 'gemini-3.8-flash';
+        // Mapare sigură a modelelor pentru a evita erorile de tip "not found"
+        let rawModel = model || 'gemini-3.8-flash';
+        let activeModel = 'gemini-3.8-flash';
+
+        if (rawModel.includes('pro')) {
+            activeModel = 'gemini-3.8-pro';
+        } else if (rawModel.includes('flash') || rawModel.includes('exp')) {
+            activeModel = 'gemini-3.8-flash';
+        } else {
+            activeModel = rawModel;
+        }
        
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
