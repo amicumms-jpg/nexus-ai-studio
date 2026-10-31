@@ -67,17 +67,15 @@ REGULI ȘI GHIDAJ:
         let rawModel = model || 'gemini-3.8-flash';
         let activeModel = 'gemini-3.8-flash';
 
-      if (rawModel.includes('pro')) {
-    activeModel = 'gemini-3.8-pro';
-} else if (rawModel.includes('flash') || rawModel.includes('exp')) {
-    activeModel = 'gemini-3.8-flash';
-} else {
-    // În loc de activeModel = rawModel;, pune fallback-ul stabil:
-    activeModel = 'gemini-3.8-flash'; 
-}
-
+        if (rawModel.includes('pro')) {
+            activeModel = 'gemini-3.8-pro';
+        } else if (rawModel.includes('flash') || rawModel.includes('exp')) {
+            activeModel = 'gemini-3.8-flash';
+        } else {
+            activeModel = 'gemini-3.8-flash'; // Fallback stabil în loc de rawModel brut
+        }
        
-        let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+        let apiResponse = await fetch(`https://googleapis.com{activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -96,7 +94,12 @@ REGULI ȘI GHIDAJ:
         }
 
         if (!apiResponse.ok) {
-            throw new Error(data.error?.message || 'Eroare de la serverul Google Gemini');
+            // Dacă eroarea conține detalii despre cotă, aruncăm un mesaj specific detectabil în catch
+            const errMsg = data.error?.message || '';
+            if (errMsg.toLowerCase().includes('quota') || apiResponse.status === 429) {
+                throw new Error('QUOTA_EXCEEDED');
+            }
+            throw new Error(errMsg || 'Eroare de la serverul Google Gemini');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
@@ -105,6 +108,13 @@ REGULI ȘI GHIDAJ:
 
     } catch (error) {
         console.error("Eroare server API chat:", error);
+
+        // Gestionare inteligentă pentru depășirea limitei de cereri Google
+        if (error.message === 'QUOTA_EXCEEDED' || error.message.toLowerCase().includes('quota')) {
+            const quotaMessage = "⚠️ Limita de mesaje pentru modelul gratuit a fost temporar atinsă. Sistemul își va reveni automat în 60 de secunde. Pentru acces nelimitat, poți activa pachetul Nexus Pro VIP din secțiunea de Abonamente!";
+            return res.status(200).json({ text: quotaMessage, reply: quotaMessage });
+        }
+
         return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
     }
 }
