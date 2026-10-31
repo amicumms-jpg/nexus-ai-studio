@@ -75,7 +75,7 @@ REGULI ȘI GHIDAJ:
             activeModel = 'gemini-3.8-flash'; // Fallback stabil în loc de rawModel brut
         }
        
-        let apiResponse = await fetch(`https://googleapis.com{activeModel}:generateContent?key=${apiKey}`, {
+               let apiResponse = await fetch(`https://googleapis.com{activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -83,6 +83,7 @@ REGULI ȘI GHIDAJ:
                 contents: [{ parts: parts }]
             })
         });
+
 
         const rawText = await apiResponse.text();
         let data;
