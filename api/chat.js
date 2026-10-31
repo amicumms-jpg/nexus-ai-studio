@@ -1,6 +1,5 @@
-import { DEPARTMENTS } from '../agentsConfig.js';
-
 export default async function handler(req, res) {
+    // Setează antetele CORS pentru a permite apeluri din orice browser/interfață
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -9,24 +8,32 @@ export default async function handler(req, res) {
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
 
-    if (req.method === 'OPTIONS') return res.status(200).end();
-    if (req.method === 'GET') return res.status(200).json({ status: 'Chat API endpoint active.' });
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+    // Tratare preflight OPTIONS (trimisă automat de browsere înainte de POST)
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    // Permitem și verificarea simplă din browser (GET)
+    if (req.method === 'GET') {
+        return res.status(200).json({ status: 'Chat API endpoint is active.' });
+    }
+
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
 
     try {
-        const { prompt, message, fileData, model, department } = req.body;
+        const { prompt, message, fileData, model } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
-        const selectedDept = Object.values(DEPARTMENTS).find(d => d.id === department) || DEPARTMENTS.GENERAL;
+        // Acceptă atât `prompt` cât și `message` (pentru compatibilitate cu diverse widget-uri)
         const userPrompt = prompt || message || "Analizează acest fișier:";
-        
-        const finalPrompt = `[Instrucțiune rol specialist: ${selectedDept.systemPrompt}]\n\nÎntrebare / Cerere utilizator: ${userPrompt}`;
 
-        let parts = [{ text: finalPrompt }];
+        let parts = [{ text: userPrompt }];
 
         if (fileData && fileData.base64 && fileData.mimeType) {
             parts.push({
@@ -37,64 +44,46 @@ export default async function handler(req, res) {
             });
         }
 
-        // Lista de modele compatibile 3.8 în ordinea preferinței pentru fallback
-        const requestedModel = model || 'gemini-3.8-flash';
-        const fallbackModels = [
-            requestedModel,
-            'gemini-3.8-flash',
-            'gemini-3.8-pro'
-        ];
-        // Eliminăm duplicatele din listă
-        const modelsToTry = [...new Set(fallbackModels)];
+        // Prompt de Sistem (Instrucțiuni actualizate pentru Donații & Early Access)
+        const systemInstruction = {
+            parts: [{
+                text: `Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).
+Rolul tău principal este să ajuți utilizatorii să navigheze pe platformă, să le oferi suport rapid (FAQ) și să le explici modelul de susținere a proiectului.
 
-        let apiResponse = null;
-        let data = null;
-        let success = false;
-        let lastErrorMessage = '';
+REGULI ȘI GHIDAJ:
+1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite:
+   - Pentru rețele sociale: TikTok AI Creator, Instagram AI Creator, YouTube AI Scriptwriter.
+   - Pentru dezvoltare & cod: Code Studio.
+   - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
+2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre funcționarea platformei. Menționează că platforma este în faza de testare/Early Access (100% gratuită). Pentru contact direct: contact@nexusaistudio.ro.
+3. SUSȚINERE & DONAȚII: Când utilizatorul întreabă despre pachetul PRO, opțiuni avansate sau cum poate ajuta proiectul, explică-i că platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
+4. TON DE COMUNICARE: Fii amabil, concis (răspunsuri scurte, max 2-4 propoziții), profesionist și direct la subiect.`
+            }]
+        };
 
-        // Încercăm pe rând modelele disponibile până când unul răspunde cu succes
-        for (const activeModel of modelsToTry) {
-            let maxRetries = 2;
+       // Preluăm modelul din interfață și îl mapăm la un model acceptat sigur de Google API
+        let activeModel = model || 'gemini-3.8-flash';
+       
+        let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                systemInstruction: systemInstruction,
+                contents: [{ parts: parts }]
+            })
+        });
 
-            for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const rawText = await apiResponse.text();
+        let data;
 
-                try {
-                    apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/${activeModel}:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts }] }),
-                        signal: controller.signal
-                    });
-
-                    clearTimeout(timeoutId);
-
-                    const rawText = await apiResponse.text();
-                    try {
-                        data = JSON.parse(rawText);
-                    } catch (e) {
-                        data = null;
-                    }
-
-                    if (apiResponse.ok && data?.candidates?.[0]) {
-                        success = true;
-                        break;
-                    } else {
-                        lastErrorMessage = data?.error?.message || `Eroare HTTP ${apiResponse.status} pe modelul ${activeModel}`;
-                    }
-                } catch (err) {
-                    clearTimeout(timeoutId);
-                    lastErrorMessage = err.message;
-                    console.warn(`Modelul ${activeModel} (încercarea ${attempt}) a eșuat:`, err.message);
-                }
-            }
-
-            if (success) break; // Dacă un model a răspuns cu succes, ieșim din bucla principală
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
         }
 
-        if (!success || !apiResponse?.ok) {
-            throw new Error(lastErrorMessage || 'Toate modelele sunt momentan suprasolicitate. Te rugăm să încerci din nou.');
+        if (!apiResponse.ok) {
+            throw new Error(data.error?.message || 'Eroare de la serverul Google Gemini');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
