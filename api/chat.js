@@ -61,7 +61,7 @@ export default async function handler(req, res) {
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
 
                 try {
-                    apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                    apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/${activeModel}:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contents: [{ parts }] }),
