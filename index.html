@@ -1586,8 +1586,9 @@ let currentDepartment = 'documents';
 window.setDepartment = function(deptId) {
     currentDepartment = deptId;
     console.log("Specialist selectat:", currentDepartment);
-}
-     window.setPrompt3D = function(text) {
+};
+
+window.setPrompt3D = function(text) {
     const cleanText = text
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "") 
@@ -1598,6 +1599,7 @@ window.setDepartment = function(deptId) {
         textarea.value = cleanText;
     }
 };
+
 let currentCreativeMode = 'logo';
 
 window.setCreativeMode = function(mode) {
@@ -1643,12 +1645,56 @@ window.executeCreativeAction = function() {
         style = "highly detailed cinematic masterclass, 8k resolution, ultra-realistic professional photography";
     }
 
-    // Apelăm motorul universal pe care l-am securizat anterior
+    // Apelăm motorul universal securizat
     generateVisualForTab('prompt-creative', 'result-creative-container', style);
 };
 
 window.openFullscreen = function(url) {
     window.open(url, '_blank');
+};
+
+// Funcția pentru generarea vizualelor/conținutului creativ
+function generateVisualForTab(promptInputId, containerId, style) {
+    const promptElement = document.getElementById(promptInputId);
+    const containerElement = document.getElementById(containerId);
+    
+    if (!promptElement || !containerElement) {
+        console.error("Elementele pentru generare lipsesc din pagină.");
+        return;
+    }
+
+    const userText = promptElement.value || "Generează conținut creativ";
+    containerElement.innerHTML = `<div style="color: #00ffff; padding: 10px;">Se generează conținutul (${style})... Vă rugăm așteptați...</div>`;
+
+    fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: `${userText} [Stil: ${style}]`, department: 'general' })
+    })
+    .then(res => res.json())
+    .then(data => {
+        containerElement.innerHTML = `<div style="color: #fff; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;">${data.text || data.reply || 'Generat cu succes!'}</div>`;
+    })
+    .catch(err => {
+        containerElement.innerHTML = `<div style="color: #ff4d4d;">Eroare la generare: ${err.message}</div>`;
+    });
+}
+
+// Funcție pentru deschiderea modalelor (Termeni, GDPR, etc.) – adăugată pentru a elimina orice eroare lipsă
+window.openModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+    } else {
+        console.warn("Modalul cu ID-ul specificat nu a fost găsit:", modalId);
+    }
+};
+
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+    }
 };
        // Helper universal pentru apeluri ultra-rapide cu auto-retry la erori de trafic
 async function callNexusAI(payload, maxRetries = 2) {
