@@ -37,48 +37,64 @@ export default async function handler(req, res) {
             });
         }
 
-        // Folosim strict modelul compatibil cu noile chei
-        const activeModel = model || 'gemini-3.8-flash';
+        // Lista de modele compatibile 3.8 în ordinea preferinței pentru fallback
+        const requestedModel = model || 'gemini-3.8-flash';
+        const fallbackModels = [
+            requestedModel,
+            'gemini-3.8-flash',
+            'gemini-3.8-pro'
+        ];
+        // Eliminăm duplicatele din listă
+        const modelsToTry = [...new Set(fallbackModels)];
 
         let apiResponse = null;
         let data = null;
         let success = false;
-        let maxRetries = 2;
+        let lastErrorMessage = '';
 
-        // Încercăm modelul cu reîncercare automată și timeout de 8 secunde
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
+        // Încercăm pe rând modelele disponibile până când unul răspunde cu succes
+        for (const activeModel of modelsToTry) {
+            let maxRetries = 2;
 
-            try {
-                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts }] }),
-                    signal: controller.signal
-                });
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-                clearTimeout(timeoutId);
-
-                const rawText = await apiResponse.text();
                 try {
-                    data = JSON.parse(rawText);
-                } catch (e) {
-                    data = null;
-                }
+                    apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts }] }),
+                        signal: controller.signal
+                    });
 
-                if (apiResponse.ok && data?.candidates?.[0]) {
-                    success = true;
-                    break;
+                    clearTimeout(timeoutId);
+
+                    const rawText = await apiResponse.text();
+                    try {
+                        data = JSON.parse(rawText);
+                    } catch (e) {
+                        data = null;
+                    }
+
+                    if (apiResponse.ok && data?.candidates?.[0]) {
+                        success = true;
+                        break;
+                    } else {
+                        lastErrorMessage = data?.error?.message || `Eroare HTTP ${apiResponse.status} pe modelul ${activeModel}`;
+                    }
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    lastErrorMessage = err.message;
+                    console.warn(`Modelul ${activeModel} (încercarea ${attempt}) a eșuat:`, err.message);
                 }
-            } catch (err) {
-                clearTimeout(timeoutId);
-                console.warn(`Încercarea ${attempt} a eșuat:`, err.message);
             }
+
+            if (success) break; // Dacă un model a răspuns cu succes, ieșim din bucla principală
         }
 
         if (!success || !apiResponse?.ok) {
-            throw new Error(data?.error?.message || 'Modelul este momentan suprasolicitat. Te rugăm să încerci din nou.');
+            throw new Error(lastErrorMessage || 'Toate modelele sunt momentan suprasolicitate. Te rugăm să încerci din nou.');
         }
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
