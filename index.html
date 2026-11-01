@@ -220,7 +220,10 @@
                         <span>AI Roast My Content 🔥</span>
                     </button>
                 </div>
-
+<button onclick="switchTab('freeToolsHub')" id="nav-freeToolsHub" class="w-full text-left p-2.5 rounded-lg flex items-center gap-3 text-slate-300 hover:bg-cyan-500/10 hover:text-cyan-400 transition">
+    <i class="fas fa-solid fa-th-large text-cyanNeon w-4"></i>
+    <span>Free Tools Hub (Toate în 1)</span>
+</button>
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Setări & Cont</span>
                 <div class="mt-1 space-y-1 text-xs">
                     <button onclick="switchTab('billingCard', 'Abonament & PRO')" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
@@ -327,6 +330,87 @@
                     </div>
                 </div>
             </div>
+            <!-- TAB UNIFICAT: Free Tools Hub -->
+<div id="freeToolsHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="p-6 bg-slate-900 text-white rounded-xl shadow-lg border border-cyan-500/30 overflow-y-auto h-full">
+        <h2 class="text-2xl font-bold mb-4 text-cyan-400 flex items-center gap-2">
+            <i class="fas fa-layer-group"></i> Free Tools Hub - Toate uneltele esențiale
+        </h2>
+        <p class="text-slate-400 mb-6">Centralizatorul tău personal cu alternative gratuite pentru cele mai populare platforme.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- 1. Cercetare & Text -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">1. Cercetare (DeepSeek Alt)</h3>
+                <p class="text-sm text-slate-400 mb-3">Asistență avansată pentru logică, cod și texte lungi.</p>
+                <button onclick="activateTool('chat')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 2. Imagini -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">2. Imagini (Ideogram Alt)</h3>
+                <p class="text-sm text-slate-400 mb-3">Generează vizualuri și grafica direct din prompt.</p>
+                <button onclick="activateTool('imageGen')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 3. Editor PDF / WM -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">3. Fișiere & PDF (LightPDF)</h3>
+                <p class="text-sm text-slate-400 mb-3">Procesează documente și extrage informații rapid.</p>
+                <button onclick="activateTool('pdfTools')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 4. Prezentări -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">4. Prezentări (Slides)</h3>
+                <p class="text-sm text-slate-400 mb-3">Creează structuri de slide-uri și pitch deck-uri.</p>
+                <button onclick="activateTool('slides')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 5. Scriere & Corectură -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">5. Scriere (ProWritingAid)</h3>
+                <p class="text-sm text-slate-400 mb-3">Optimizează gramatica, tonul și stilul textelor.</p>
+                <button onclick="activateTool('writing')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 6. Automatizări -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">6. Automatizări (Bardeen)</h3>
+                <p class="text-sm text-slate-400 mb-3">Fluxuri de lucru rapide și scripturi de automatizare.</p>
+                <button onclick="activateTool('automations')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 7. Design & Bannere -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">7. Design (Canva Alt)</h3>
+                <p class="text-sm text-slate-400 mb-3">Editor vizual rapid pentru bannere și materiale.</p>
+                <button onclick="activateTool('design')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+            <!-- 8. Video Generator -->
+            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-400 transition">
+                <h3 class="font-bold text-cyan-300 mb-2">8. Video (Pika / Runway)</h3>
+                <p class="text-sm text-slate-400 mb-3">Unelte pentru animații și randare video scurt.</p>
+                <button onclick="activateTool('videoGen')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-2 rounded text-sm font-semibold">Accesează</button>
+            </div>
+
+        </div>
+
+        <!-- Zona de afișare a rezultatului -->
+        <div id="toolResultContainer" class="mt-6 p-6 bg-slate-950 border border-cyan-500/40 rounded-xl hidden">
+            <div class="flex justify-between items-center mb-3">
+                <h3 id="toolResultTitle" class="text-lg font-bold text-cyan-400">Rezultat Generat</h3>
+                <button onclick="closeToolResult()" class="text-slate-400 hover:text-white text-sm bg-slate-800 px-3 py-1 rounded">Închide ✕</button>
+            </div>
+            <div id="toolResultContent" class="text-slate-300 text-sm whitespace-pre-wrap leading-relaxed bg-slate-900 p-4 rounded-lg border border-slate-800 max-h-96 overflow-y-auto">
+                <!-- Aici va apărea răspunsul -->
+            </div>
+        </div>
+
+    </div>
+</div>
             <!-- TAB UNIFICAT: Social & Creator Hub -->
             <div id="tab-socialHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
@@ -1030,7 +1114,56 @@
             }
             autoDetectUserLocation();
         });
+// Funcția unificată pentru comutarea tab-urilor (dacă nu o aveai deja definită complet)
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => {
+        el.style.display = 'none';
+    });
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) {
+        targetTab.style.display = 'block';
+    }
+}
 
+// Funcția care preia acțiunea de la cele 8 unelte și o trimite corect la backend
+async function activateTool(toolType) {
+    const userPrompt = prompt("Introdu detaliile sau subiectul pentru această unealtă:");
+    if (!userPrompt) return;
+
+    const resultContainer = document.getElementById('toolResultContainer');
+    const resultTitle = document.getElementById('toolResultTitle');
+    const resultContent = document.getElementById('toolResultContent');
+
+    resultContainer.classList.remove('hidden');
+    resultTitle.innerText = `Se procesează (${toolType})...`;
+    resultContent.innerHTML = `<span class="text-cyan-400 animate-pulse">Se generează răspunsul specializat, te rugăm așteaptă...</span>`;
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                prompt: userPrompt, 
+                toolType: toolType,
+                model: 'gemini-3.8-flash' 
+            })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Eroare de comunicare.');
+
+        resultTitle.innerText = `Rezultat pentru: ${toolType}`;
+        resultContent.innerText = data.text;
+
+    } catch (err) {
+        resultTitle.innerText = "Eroare";
+        resultContent.innerText = "A apărut o eroare: " + err.message;
+    }
+}
+
+function closeToolResult() {
+    document.getElementById('toolResultContainer').classList.add('hidden');
+}
         // Efect de Tap / Pulse pe Emojis
         function appendEmoji(emoji, el) {
             const input = document.getElementById('chatInput');
