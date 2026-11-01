@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
     // Permitem și verificarea simplă din browser (GET)
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active (Streaming enabled).' });
+        return res.status(200).json({ status: 'Chat API endpoint is active (Instant Streaming enabled).' });
     }
 
     if (req.method !== 'POST') {
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
         }
 
-        // Acceptă atât `prompt` cât și `message` (pentru compatibilitate cu diverse widget-uri)
+        // Acceptă atât `prompt` cât și `message`
         const userPrompt = prompt || message || "Analizează acest fișier:";
 
         let parts = [{ text: userPrompt }];
@@ -81,7 +81,6 @@ export default async function handler(req, res) {
                 break;
         }
 
-        // Prompt de Sistem integrat cu regulile de bază și adaptat pentru Hub
         const systemInstruction = {
             parts: [{
                 text: `${specializedRoleDescription}
@@ -98,13 +97,11 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-        // Lista de modele ordonate după prioritate
         const modelsPriorityList = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-pro'];
 
         let apiResponse = null;
         let activeModel = '';
 
-        // Încercăm modelele în ordine folosind endpoint-ul de streaming (alt=sse)
         for (const modelCandidate of modelsPriorityList) {
             activeModel = modelCandidate;
             
@@ -118,7 +115,6 @@ REGULI ȘI GHIDAJ:
                     })
                 });
 
-                // Dacă modelul a răspuns cu succes, oprim căutarea
                 if (apiResponse.ok) {
                     break;
                 }
@@ -132,10 +128,11 @@ REGULI ȘI GHIDAJ:
             throw new Error('Eroare de la serverul Google Gemini sau limită de cotă depășită.');
         }
 
-        // Setăm antetele pentru Server-Sent Events (Streaming pe Vercel)
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
+        // Setăm antetele critice pentru streaming instant pe Vercel (fără buffer)
+        res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
         res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no'); // Oprește buffer-ul pe proxy-uri
 
         const reader = apiResponse.body.getReader();
         const decoder = new TextDecoder();
@@ -146,6 +143,11 @@ REGULI ȘI GHIDAJ:
 
             const chunk = decoder.decode(value, { stream: true });
             res.write(chunk);
+
+            // Forțăm trimiterea imediată a pachetului spre client dacă funcția există
+            if (typeof res.flush === 'function') {
+                res.flush();
+            }
         }
 
         res.end();
