@@ -90,48 +90,34 @@ REGULI ȘI GHIDAJ:
 1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite:
    - Pentru rețele sociale: TikTok AI Creator, Instagram AI Creator, YouTube AI Scriptwriter.
    - Pentru dezvoltare & cod: Code Studio.
-   - Für marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
+   - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
 2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre funcționarea platformei. Menționează că platforma este în faza de testare/Early Access (100% gratuită). Pentru contact direct: contact@nexusaistudio.ro.
 3. SUSȚINERE & DONAȚII: Când utilizatorul întreabă despre pachetul PRO, opțiuni avansate sau cum poate ajuta proiectul, explică-i că platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
 4. TON DE COMUNICARE: Fii amabil, concis, profesionist și direct la subiect.`
             }]
         };
 
-        const modelsPriorityList = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-pro'];
+        // Folosim direct modelul cerut sau varianta standard validă de flash
+        const activeModel = model && model.includes('flash') ? model : 'gemini-1.5-flash';
 
-        let apiResponse = null;
-        let activeModel = '';
+        // Setăm antetele critice pentru streaming IMEDIAT înainte de fetch
+        res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no');
 
-        for (const modelCandidate of modelsPriorityList) {
-            activeModel = modelCandidate;
-            
-            try {
-                // Setăm antetele critice pentru streaming IMEDIAT înainte de fetch, ca Vercel să deschidă canalul spre browser
-                res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-                res.setHeader('Cache-Control', 'no-cache, no-transform');
-                res.setHeader('Connection', 'keep-alive');
-                res.setHeader('X-Accel-Buffering', 'no');
+        const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                systemInstruction: systemInstruction,
+                contents: [{ parts: parts }]
+            })
+        });
 
-                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        systemInstruction: systemInstruction,
-                        contents: [{ parts: parts }]
-                    })
-                });
-
-                if (apiResponse.ok) {
-                    break;
-                }
-            } catch (fetchError) {
-                console.error(`Erore la modelul ${activeModel}:`, fetchError);
-                continue;
-            }
-        }
-
-        if (!apiResponse || !apiResponse.ok) {
-            throw new Error('Eroare de la serverul Google Gemini sau limită de cotă depășită.');
+        if (!apiResponse.ok) {
+            const errBody = await apiResponse.text();
+            throw new Error(`Eroare Google Gemini API (${apiResponse.status}): ${errBody}`);
         }
 
         const reader = apiResponse.body.getReader();
@@ -144,7 +130,6 @@ REGULI ȘI GHIDAJ:
             const chunk = decoder.decode(value, { stream: true });
             res.write(chunk);
 
-            // Forțăm trimiterea imediată a pachetului spre client dacă funcția există
             if (typeof res.flush === 'function') {
                 res.flush();
             }
