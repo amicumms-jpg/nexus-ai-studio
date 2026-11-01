@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, message, fileData, model } = req.body;
+        const { prompt, message, fileData, model, department, toolType } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -46,11 +46,43 @@ export default async function handler(req, res) {
             });
         }
 
-        // Prompt de Sistem (Instrucțiuni actualizate pentru Donații & Early Access)
+        // Gestionăm rolul specializat în funcție de unealta accesată din Free Tools Hub
+        let specializedRoleDescription = "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).";
+
+        switch (toolType) {
+            case 'chat':
+                specializedRoleDescription = "Ești un expert avansat în cercetare, logică și programare (alternativă de top pentru DeepSeek).";
+                break;
+            case 'imageGen':
+                specializedRoleDescription = "Ești un specialist în ingineria prompturilor vizuale pentru generare de imagini de înaltă calitate (stil Midjourney/Ideogram). Generează prompturi vizuale detaliate în engleză pe baza cererii utilizatorului.";
+                break;
+            case 'pdfTools':
+                specializedRoleDescription = "Ești un expert în analiza, extragerea și sinteza documentelor, contractelor și fișierelor PDF.";
+                break;
+            case 'slides':
+                specializedRoleDescription = "Ești un expert în crearea de pitch deck-uri și structuri de prezentări profesionale (slide cu slide).";
+                break;
+            case 'writing':
+                specializedRoleDescription = "Ești un copywriter profesionist și editor de text (stil ProWritingAid). Corectează, reformulează și optimizează stilul textului.";
+                break;
+            case 'automations':
+                specializedRoleDescription = "Ești un expert în automatizări de fluxuri de lucru, scripturi și integrare de API-uri (stil Bardeen).";
+                break;
+            case 'design':
+                specializedRoleDescription = "Ești un designer UI/UX și specialist în elemente grafice rapide. Generează cod HTML/CSS curat sau idei de layout pentru bannere și materiale vizuale.";
+                break;
+            case 'videoGen':
+                specializedRoleDescription = "Ești un scenarist și expert în producție video scurtă. Creează cadre, storyboard-uri și prompturi pentru instrumente de tip Runway/Pika.";
+                break;
+            default:
+                break;
+        }
+
+        // Prompt de Sistem integrat cu regulile tale de bază și adaptat pentru Hub
         const systemInstruction = {
             parts: [{
-                text: `Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).
-Rolul tău principal este să ajuți utilizatorii să navigheze pe platformă, să le oferi suport rapid (FAQ) și să le explici modelul de susținere a proiectului.
+                text: `${specializedRoleDescription}
+Rolul tău secundar este să ajuți utilizatorii să navigheze pe platformă, să le oferi suport rapid și să le explici modelul de susținere a proiectului.
 
 REGULI ȘI GHIDAJ:
 1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite:
@@ -59,7 +91,7 @@ REGULI ȘI GHIDAJ:
    - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
 2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre funcționarea platformei. Menționează că platforma este în faza de testare/Early Access (100% gratuită). Pentru contact direct: contact@nexusaistudio.ro.
 3. SUSȚINERE & DONAȚII: Când utilizatorul întreabă despre pachetul PRO, opțiuni avansate sau cum poate ajuta proiectul, explică-i că platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
-4. TON DE COMUNICARE: Fii amabil, concis (răspunsuri scurte, max 2-4 propoziții), profesionist și direct la subiect.`
+4. TON DE COMUNICARE: Fii amabil, concis, profesionist și direct la subiect.`
             }]
         };
 
@@ -75,7 +107,7 @@ REGULI ȘI GHIDAJ:
             activeModel = 'gemini-3.8-flash';
         }
        
-        // URL-ul corectat complet pentru Google API v1beta
+        // URL-ul complet pentru Google API v1beta
         let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
