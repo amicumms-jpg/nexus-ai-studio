@@ -1872,7 +1872,47 @@ async function callNexusAI(payload, maxRetries = 2) {
         }
     }
 } 
-    </script>
+  // Lipește codul aici, exact deasupra lui </script>
+    window.activateTool = async function(toolType) {
+        const userPrompt = prompt("Introdu detaliile sau subiectul pentru această unealtă:");
+        if (!userPrompt) return;
+
+        const resultContainer = document.getElementById('toolResultContainer');
+        const resultTitle = document.getElementById('toolResultTitle');
+        const resultContent = document.getElementById('toolResultContent');
+
+        if (resultContainer) resultContainer.classList.remove('hidden');
+        if (resultTitle) resultTitle.innerText = `Se procesează (${toolType})...`;
+        if (resultContent) resultContent.innerHTML = `<span class="text-cyan-400 animate-pulse">Se generează răspunsul specializat, te rugăm așteaptă...</span>`;
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    prompt: userPrompt, 
+                    toolType: toolType,
+                    model: 'gemini-3.8-flash' 
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Eroare de comunicare.');
+
+            if (resultTitle) resultTitle.innerText = `Rezultat pentru: ${toolType}`;
+            if (resultContent) resultContent.innerText = data.text;
+
+        } catch (err) {
+            if (resultTitle) resultTitle.innerText = "Eroare";
+            if (resultContent) resultContent.innerText = "A apărut o eroare: " + err.message;
+        }
+    }
+
+    window.closeToolResult = function() {
+        const container = document.getElementById('toolResultContainer');
+        if (container) container.classList.add('hidden');
+    }
+</script>
 
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
