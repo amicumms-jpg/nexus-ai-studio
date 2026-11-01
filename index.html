@@ -1705,14 +1705,21 @@
             }
         });
 
+      <!-- Scripturi Globale pentru Funcționalitatea Butoanelor -->
+    <script>
+        // Funcții globale expuse direct pe window pentru butoane
         window.loginWithGoogle = async function() {
-            try {
-                const result = await signInWithPopup(auth, googleProvider);
-                const user = result.user;
-                showToast("Autentificat cu succes: " + (user.displayName || user.email), "success");
-            } catch (error) {
-                console.error("Eroare Google Auth:", error);
-                alert("Eroare la autentificare: " + error.message);
+            if (typeof auth !== 'undefined' && typeof googleProvider !== 'undefined') {
+                try {
+                    const result = await signInWithPopup(auth, googleProvider);
+                    const user = result.user;
+                    showToast("Autentificat cu succes: " + (user.displayName || user.email), "success");
+                } catch (error) {
+                    console.error("Eroare Google Auth:", error);
+                    alert("Eroare la autentificare: " + error.message);
+                }
+            } else {
+                alert("Sistemul de autentificare se inițializează, te rugăm încearcă în 2 secunde.");
             }
         };
 
@@ -1749,12 +1756,56 @@
                 console.error("Eroare la deconectare:", error);
             }
         };
+    </script>
 
-        // Încărcare Module Secundare Agent
-        import './agentMemory.js';
-        import './agentTools.js';
-        import './agentWorkflow.js';
-        console.log("Toate modulele și scripturile Nexus AI Studio au fost încărcate cu succes!");
+    <!-- Modul Firebase Core & Auth (Fără fișiere externe lipsă care dau eroare 404/MIME) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyChN5PX0lb-ouPITFwT-XpM8tj_s5j9D9k",
+            authDomain: "nexus-ai-studio-8335f.firebaseapp.com",
+            projectId: "nexus-ai-studio-8335f",
+            storageBucket: "nexus-ai-studio-8335f.firebasestorage.app",
+            messagingSenderId: "645678013335",
+            appId: "1:645678013335:web:7d88fb7bf8acd6b06f42d2",
+            measurementId: "G-W0PJNEF4S5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.auth = getAuth(app);
+        window.googleProvider = new GoogleAuthProvider();
+        window.db = getFirestore(app);
+
+        onAuthStateChanged(window.auth, (user) => {
+            if (user) {
+                const userName = user.displayName || user.email;
+                const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                const parentEl = document.getElementById('tab-authAccount');
+                const container = parentEl ? parentEl.querySelector('.max-w-md') : null;
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center space-y-4 py-6">
+                            <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
+                            <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
+                            <p class="text-xs text-gray-400">${user.email}</p>
+                            <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">
+                                Cont Conectat & Verificat ✅
+                            </div>
+                            <div class="pt-4">
+                                <button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                                    Deconectare / Schimbă Contul
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        console.log("Firebase & Auth inițializate cu succes în fereastra globală!");
     </script>
 
     <!-- Footer Ultra-Compact -->
