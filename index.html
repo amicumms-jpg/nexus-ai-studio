@@ -1976,11 +1976,14 @@ async function callNexusAI(payload, maxRetries = 2) {
         }
     }
 
-    window.closeToolResult = function() {
+   window.closeToolResult = function() {
         const container = document.getElementById('toolResultContainer');
         if (container) container.classList.add('hidden');
     }
-  <script type="module">
+</script> <!-- Aici închidem scriptul vechi -->
+
+<!-- Iar aici începe scriptul separat pentru module -->
+<script type="module">
     import './agentMemory.js';
     import './agentTools.js';
     import './agentWorkflow.js';
