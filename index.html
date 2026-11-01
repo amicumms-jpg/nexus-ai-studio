@@ -1623,7 +1623,75 @@ window.activateLicenseKey = function() {
                 }
             }
         });
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";
 
+// Inițializăm Firestore folosind instanța 'app' existentă
+const db = getFirestore(app);
+
+class AgentMemory {
+  constructor() {
+    this.shortTermMemory = {
+      activeContext: []
+    };
+  }
+
+  // --- MEMORIA PE TERMEN LUNG (Salvată în Firestore pentru userul curent) ---
+  async savePreference(key, value) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    try {
+      const docRef = doc(db, "nexus_memory", currentUser.uid);
+      await setDoc(docRef, {
+        preferences: {
+          [key]: value,
+          updatedAt: new Date().toISOString()
+        }
+      }, { merge: true });
+      console.log(`[Memorie Long-Term] Salvat: ${key} = ${value}`);
+    } catch (error) {
+      console.error("Erore la salvarea preferinței:", error);
+    }
+  }
+
+  async getPreferences() {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return {};
+
+    try {
+      const docRef = doc(db, "nexus_memory", currentUser.uid);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? (docSnap.data().preferences || {}) : {};
+    } catch (error) {
+      console.error("Erore la citirea preferințelor:", error);
+      return {};
+    }
+  }
+
+  // --- MEMORIA PE TERMEN SCURT (Contextul din sesiune) ---
+  addContext(role, content) {
+    this.shortTermMemory.activeContext.push({
+      role,
+      content,
+      timestamp: Date.now()
+    });
+
+    // Păstrăm ultimele 10 interacțiuni
+    if (this.shortTermMemory.activeContext.length > 10) {
+      this.shortTermMemory.activeContext.shift();
+    }
+  }
+
+  getContext() {
+    return this.shortTermMemory.activeContext;
+  }
+
+  clearContext() {
+    this.shortTermMemory.activeContext = [];
+  }
+}
+
+export const agentMemory = new AgentMemory();
         window.loginWithGoogle = async function() {
             try {
                 const result = await signInWithPopup(auth, googleProvider);
