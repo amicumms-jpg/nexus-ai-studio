@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
     // Permitem și verificarea simplă din browser (GET)
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active.' });
+        return res.status(200).json({ status: 'Chat API endpoint is active (Streaming enabled).' });
     }
 
     if (req.method !== 'POST') {
@@ -103,15 +103,13 @@ REGULI ȘI GHIDAJ:
 
         let apiResponse = null;
         let activeModel = '';
-        let rawText = '';
-        let data = null;
 
-        // Încercăm modelele în ordine până când unul răspunde cu succes 200 OK
+        // Încercăm modelele în ordine folosind endpoint-ul de streaming (alt=sse)
         for (const modelCandidate of modelsPriorityList) {
             activeModel = modelCandidate;
             
             try {
-                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -120,45 +118,47 @@ REGULI ȘI GHIDAJ:
                     })
                 });
 
-                rawText = await apiResponse.text();
-
-                try {
-                    data = JSON.parse(rawText);
-                } catch (e) {
-                    data = null;
-                }
-
-                // Dacă răspunsul este cu succes, oprim căutarea
-                if (apiResponse.ok && data && data.candidates) {
+                // Dacă modelul a răspuns cu succes, oprim căutarea
+                if (apiResponse.ok) {
                     break;
                 }
             } catch (fetchError) {
                 console.error(`Erore la modelul ${activeModel}:`, fetchError);
-                // Continuă cu următorul model din listă dacă apare o eroare de rețea
                 continue;
             }
         }
 
         if (!apiResponse || !apiResponse.ok) {
-            const errMsg = data?.error?.message || '';
-            if (errMsg.toLowerCase().includes('quota') || apiResponse?.status === 429) {
-                throw new Error('QUOTA_EXCEEDED');
-            }
-            throw new Error(errMsg || 'Eroare de la serverul Google Gemini');
+            throw new Error('Eroare de la serverul Google Gemini sau limită de cotă depășită.');
         }
 
-        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
+        // Setăm antetele pentru Server-Sent Events (Streaming pe Vercel)
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
 
-        return res.status(200).json({ text: responseText, reply: responseText, usedModel: activeModel });
+        const reader = apiResponse.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            res.write(chunk);
+        }
+
+        res.end();
 
     } catch (error) {
         console.error("Eroare server API chat:", error);
-
-        if (error.message === 'QUOTA_EXCEEDED' || error.message.toLowerCase().includes('quota')) {
-            const quotaMessage = "⚠️ Limita de mesaje pentru modelul principal a fost temporar atinsă, iar sistemul a comutat pe rezerva secundară. Pentru acces nelimitat prioritar, poți activa pachetul Nexus Pro VIP din secțiunea de Abonamente!";
-            return res.status(200).json({ text: quotaMessage, reply: quotaMessage });
+        if (!res.headersSent) {
+            if (error.message.toLowerCase().includes('quota') || error.message.includes('429')) {
+                return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
+            }
+            return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
+        } else {
+            res.end();
         }
-
-        return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
     }
 }
