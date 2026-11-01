@@ -1158,14 +1158,13 @@
             });
         }
 
-      // Funcție principală actualizată pentru Streaming pe Vercel (/api/chat)
+     // Funcție principală actualizată pentru Streaming instant pe Vercel (/api/chat)
         async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
             const currentUser = auth.currentUser;
             if (!currentUser) {
                 throw new Error("Utilizatorul nu este autentificat!");
             }
 
-            // Preluăm departamentul selectat din interfață (dacă există)
             const departmentSelect = document.getElementById('department-select');
             const selectedDept = departmentSelect ? departmentSelect.value : 'general';
 
@@ -1183,7 +1182,6 @@
             });
 
             if (!response.ok) {
-                // Încercăm să citim eroarea ca JSON sau text
                 let errorMsg = "Eroare de la serverul AI.";
                 try {
                     const errData = await response.json();
@@ -1196,35 +1194,39 @@
                 throw new Error(errorMsg);
             }
 
-            // Citim stream-ul Server-Sent Events (SSE) trimis de Vercel cuvânt cu cuvânt
             const reader = response.body.getReader();
             const decoder = new TextDecoder("utf-8");
             let accumulatedText = "";
+            let textBuffer = ""; // Buffer crucial pentru a nu pierde nicio frântură de JSON
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = decoder.decode(value, { stream: true });
-                const lines = chunk.split("\n");
+                textBuffer += decoder.decode(value, { stream: true });
+                const lines = textBuffer.split("\n");
+                
+                // Păstrăm ultima linie în buffer în caz că este tăiată la jumătate
+                textBuffer = lines.pop(); 
                 
                 for (const line of lines) {
-                    if (line.startsWith("data:")) {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine.startsWith("data:")) {
                         try {
-                            const jsonStr = line.replace(/^data:\s*/, "").trim();
+                            const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
                             if (!jsonStr) continue;
                             
                             const parsed = JSON.parse(jsonStr);
                             const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
                             
-                            accumulatedText += piece;
-                            
-                            // Dacă avem o funcție de callback (pentru afișare în timp real), o apelăm
-                            if (onChunkReceived) {
-                                onChunkReceived(accumulatedText);
+                            if (piece) {
+                                accumulatedText += piece;
+                                if (onChunkReceived) {
+                                    onChunkReceived(accumulatedText);
+                                }
                             }
                         } catch (e) {
-                            // Ignorăm bucățile incomplete de JSON până la următorul chunk
+                            // Trecem peste fragmentul incomplet, va fi reîntregit în următorul ciclu
                         }
                     }
                 }
