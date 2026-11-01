@@ -1,5 +1,8 @@
 import { DEPARTMENTS } from '../agentsConfig.js';
 
+// Mărește timpul maxim de execuție pe Vercel la 30 de secunde (evită eroarea 504)
+export const maxDuration = 30;
+
 export default async function handler(req, res) {
     // Setează antetele CORS pentru a permite apeluri din orice browser/interfață
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -95,7 +98,7 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-        // Ordinea de prioritate: Principal 3.8-flash, Secundar (fallback) 3.5-flash-lite (și 3.8-pro ca opțiune ulterioară dacă e cazul)
+        // Lista de modele ordonate după prioritate
         const modelsPriorityList = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-pro'];
 
         let apiResponse = null;
@@ -107,26 +110,32 @@ REGULI ȘI GHIDAJ:
         for (const modelCandidate of modelsPriorityList) {
             activeModel = modelCandidate;
             
-            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    systemInstruction: systemInstruction,
-                    contents: [{ parts: parts }]
-                })
-            });
-
-            rawText = await apiResponse.text();
-
             try {
-                data = JSON.parse(rawText);
-            } catch (e) {
-                data = null;
-            }
+                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: systemInstruction,
+                        contents: [{ parts: parts }]
+                    })
+                });
 
-            // Dacă răspunsul este cu succes, oprim căutarea și folosim rezultatul
-            if (apiResponse.ok && data && data.candidates) {
-                break;
+                rawText = await apiResponse.text();
+
+                try {
+                    data = JSON.parse(rawText);
+                } catch (e) {
+                    data = null;
+                }
+
+                // Dacă răspunsul este cu succes, oprim căutarea
+                if (apiResponse.ok && data && data.candidates) {
+                    break;
+                }
+            } catch (fetchError) {
+                console.error(`Erore la modelul ${activeModel}:`, fetchError);
+                // Continuă cu următorul model din listă dacă apare o eroare de rețea
+                continue;
             }
         }
 
