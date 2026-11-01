@@ -78,7 +78,7 @@ export default async function handler(req, res) {
                 break;
         }
 
-        // Prompt de Sistem integrat cu regulile tale de bază și adaptat pentru Hub
+        // Prompt de Sistem integrat cu regulile de bază și adaptat pentru Hub
         const systemInstruction = {
             parts: [{
                 text: `${specializedRoleDescription}
@@ -95,40 +95,44 @@ REGULI ȘI GHIDAJ:
             }]
         };
 
-        // Mapare sigură a modelelor pentru a evita erorile de tip "not found"
-        let rawModel = model || 'gemini-3.8-flash';
-        let activeModel = 'gemini-3.8-flash';
+        // Ordinea de prioritate: Principal 3.8-flash, Secundar (fallback) 3.5-flash-lite (și 3.8-pro ca opțiune ulterioară dacă e cazul)
+        const modelsPriorityList = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-pro'];
 
-        if (rawModel.includes('pro')) {
-            activeModel = 'gemini-3.8-pro';
-        } else if (rawModel.includes('flash') || rawModel.includes('exp')) {
-            activeModel = 'gemini-3.8-flash';
-        } else {
-            activeModel = 'gemini-3.8-flash';
+        let apiResponse = null;
+        let activeModel = '';
+        let rawText = '';
+        let data = null;
+
+        // Încercăm modelele în ordine până când unul răspunde cu succes 200 OK
+        for (const modelCandidate of modelsPriorityList) {
+            activeModel = modelCandidate;
+            
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    systemInstruction: systemInstruction,
+                    contents: [{ parts: parts }]
+                })
+            });
+
+            rawText = await apiResponse.text();
+
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                data = null;
+            }
+
+            // Dacă răspunsul este cu succes, oprim căutarea și folosim rezultatul
+            if (apiResponse.ok && data && data.candidates) {
+                break;
+            }
         }
-       
-        // URL-ul complet pentru Google API v1beta
-        let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                systemInstruction: systemInstruction,
-                contents: [{ parts: parts }]
-            })
-        });
 
-        const rawText = await apiResponse.text();
-        let data;
-
-        try {
-            data = JSON.parse(rawText);
-        } catch (e) {
-            throw new Error("Răspuns invalid de la serverul Google: " + rawText.substring(0, 100));
-        }
-
-        if (!apiResponse.ok) {
-            const errMsg = data.error?.message || '';
-            if (errMsg.toLowerCase().includes('quota') || apiResponse.status === 429) {
+        if (!apiResponse || !apiResponse.ok) {
+            const errMsg = data?.error?.message || '';
+            if (errMsg.toLowerCase().includes('quota') || apiResponse?.status === 429) {
                 throw new Error('QUOTA_EXCEEDED');
             }
             throw new Error(errMsg || 'Eroare de la serverul Google Gemini');
@@ -136,13 +140,13 @@ REGULI ȘI GHIDAJ:
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Răspuns gol primit de la AI.";
 
-        return res.status(200).json({ text: responseText, reply: responseText });
+        return res.status(200).json({ text: responseText, reply: responseText, usedModel: activeModel });
 
     } catch (error) {
         console.error("Eroare server API chat:", error);
 
         if (error.message === 'QUOTA_EXCEEDED' || error.message.toLowerCase().includes('quota')) {
-            const quotaMessage = "⚠️ Limita de mesaje pentru modelul gratuit a fost temporar atinsă. Sistemul își va reveni automat în 60 de secunde. Pentru acces nelimitat, poți activa pachetul Nexus Pro VIP din secțiunea de Abonamente!";
+            const quotaMessage = "⚠️ Limita de mesaje pentru modelul principal a fost temporar atinsă, iar sistemul a comutat pe rezerva secundară. Pentru acces nelimitat prioritar, poți activa pachetul Nexus Pro VIP din secțiunea de Abonamente!";
             return res.status(200).json({ text: quotaMessage, reply: quotaMessage });
         }
 
