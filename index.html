@@ -1158,8 +1158,8 @@
             });
         }
 
-       // Funcția principală actualizată pentru Vercel (/api/chat)
-        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash') {
+      // Funcție principală actualizată pentru Streaming pe Vercel (/api/chat)
+        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
             const currentUser = auth.currentUser;
             if (!currentUser) {
                 throw new Error("Utilizatorul nu este autentificat!");
@@ -1182,16 +1182,58 @@
                 })
             });
 
-            const data = await response.json();
-            
             if (!response.ok) {
-                throw new Error(data.error || "Eroare de la serverul AI.");
+                // Încercăm să citim eroarea ca JSON sau text
+                let errorMsg = "Eroare de la serverul AI.";
+                try {
+                    const errData = await response.json();
+                    errorMsg = errData.error || errorMsg;
+                } catch(e) {}
+                
+                if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED') {
+                    throw new Error('QUOTA_EXCEEDED');
+                }
+                throw new Error(errorMsg);
             }
 
-            return data.text || data.reply || "Răspuns gol primit de la server.";
+            // Citim stream-ul Server-Sent Events (SSE) trimis de Vercel cuvânt cu cuvânt
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let accumulatedText = "";
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split("\n");
+                
+                for (const line of lines) {
+                    if (line.startsWith("data:")) {
+                        try {
+                            const jsonStr = line.replace(/^data:\s*/, "").trim();
+                            if (!jsonStr) continue;
+                            
+                            const parsed = JSON.parse(jsonStr);
+                            const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                            
+                            accumulatedText += piece;
+                            
+                            // Dacă avem o funcție de callback (pentru afișare în timp real), o apelăm
+                            if (onChunkReceived) {
+                                onChunkReceived(accumulatedText);
+                            }
+                        } catch (e) {
+                            // Ignorăm bucățile incomplete de JSON până la următorul chunk
+                        }
+                    }
+                }
+            }
+
+            return accumulatedText || "Răspuns gol primit de la server.";
         }
 
-        window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
+     window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
             const inputEl = document.getElementById(inputId);
             const msgBox = document.getElementById(messagesContainerId);
             if (!inputEl || !msgBox) return;
@@ -1221,9 +1263,21 @@
             msgBox.scrollTop = msgBox.scrollHeight;
             window.removeAttachment(tabKey);
 
-            const skeletonId = 'skeleton-' + Date.now();
-            msgBox.innerHTML += `<div id="${skeletonId}" class="flex justify-start"><div class="bg-gray-900 p-3 rounded-2xl rounded-tl-none space-y-2 w-64 border border-gray-800"><div class="h-2.5 bg-gray-800 rounded animate-pulse w-3/4"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-1/2"></div><div class="h-2.5 bg-gray-800 rounded animate-pulse w-5/6"></div></div></div>`;
+            // Creăm din prima căsuța unde va curge textul generat în timp real
+            const msgId = 'msg-' + Date.now();
+            msgBox.innerHTML += `
+                <div class="flex justify-start my-2">
+                    <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                            <span>Nexus AI Assistant</span>
+                            <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
+                    </div>
+                </div>
+            `;
             msgBox.scrollTop = msgBox.scrollHeight;
+            const contentDiv = document.getElementById(msgId);
 
             try {
                 let fileDataToSend = file ? await fileToBase64(file) : null;
@@ -1234,29 +1288,19 @@
                 const selectedDept = departmentSelect ? departmentSelect.value : 'general';
                 const finalPrompt = `[Specialist: ${selectedDept}] ${text || "Analizează acest fișier:"}`;
 
-                const responseText = await fetchFromServer(finalPrompt, fileDataToSend, selectedModel);
-                
-                const skel = document.getElementById(skeletonId);
-                if(skel) skel.remove();
+                // Apelăm fetchFromServer cu callback-ul de streaming
+                await fetchFromServer(finalPrompt, fileDataToSend, selectedModel, (currentText) => {
+                    contentDiv.innerHTML = parseMarkdown(currentText);
+                    if(typeof hljs !== 'undefined') hljs.highlightAll();
+                    msgBox.scrollTop = msgBox.scrollHeight;
+                });
 
-                const msgId = 'msg-' + Date.now();
-                msgBox.innerHTML += `
-                    <div class="flex justify-start my-2">
-                        <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
-                            <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
-                                <span>Nexus AI Assistant</span>
-                                <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
-                            </div>
-                            <div id="${msgId}" class="markdown-content leading-relaxed">${parseMarkdown(responseText)}</div>
-                        </div>
-                    </div>
-                `;
-                if(typeof hljs !== 'undefined') hljs.highlightAll();
-                msgBox.scrollTop = msgBox.scrollHeight;
             } catch (err) {
-                const skel = document.getElementById(skeletonId);
-                if(skel) skel.remove();
-                msgBox.innerHTML += `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${err.message}</div>`;
+                if (err.message === 'QUOTA_EXCEEDED') {
+                    contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
+                } else {
+                    contentDiv.innerHTML = `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${escapeHtml(err.message)}</div>`;
+                }
             }
         };
 
@@ -1269,24 +1313,30 @@
             container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
             input.value = '';
             container.scrollTop = container.scrollHeight;
-            try {
-                const responseText = await fetchFromServer(prefix + text);
-                const msgId = 'msg-' + Date.now();
-                container.innerHTML += `
-                    <div class="flex justify-start my-2">
-                        <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
-                            <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
-                                <span>Nexus AI Assistant</span>
-                                <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
-                            </div>
-                            <div id="${msgId}" class="markdown-content leading-relaxed">${parseMarkdown(responseText)}</div>
+            
+            const msgId = 'msg-' + Date.now();
+            container.innerHTML += `
+                <div class="flex justify-start my-2">
+                    <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                            <span>Nexus AI Assistant</span>
+                            <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
                         </div>
+                        <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
                     </div>
-                `;
-                if(typeof hljs !== 'undefined') hljs.highlightAll();
-                container.scrollTop = container.scrollHeight;
+                </div>
+            `;
+            container.scrollTop = container.scrollHeight;
+            const contentDiv = document.getElementById(msgId);
+
+            try {
+                await fetchFromServer(prefix + text, null, 'gemini-3.8-flash', (currentText) => {
+                    contentDiv.innerHTML = parseMarkdown(currentText);
+                    if(typeof hljs !== 'undefined') hljs.highlightAll();
+                    container.scrollTop = container.scrollHeight;
+                });
             } catch(e) {
-                container.innerHTML += `<div class="text-red-400 text-xs p-2">Eroare server: ${escapeHtml(e.message)}</div>`;
+                contentDiv.innerHTML = `<div class="text-red-400 text-xs p-2">Eroare server: ${escapeHtml(e.message)}</div>`;
             }
         };
 
@@ -1303,12 +1353,19 @@
             container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2 rounded-xl max-w-[85%] text-xs">${escapeHtml(text)}</div></div>`;
             input.value = '';
             container.scrollTop = container.scrollHeight;
+            
+            const msgId = 'robot-msg-' + Date.now();
+            container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%] text-xs text-slate-200"><b>Nexus AI:</b> <span id="${msgId}">Se generează...</span></div>`;
+            container.scrollTop = container.scrollHeight;
+            const contentDiv = document.getElementById(msgId);
+
             try {
-                const reply = await fetchFromServer(text);
-                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%] text-xs text-slate-200"><b>Nexus AI:</b> ${escapeHtml(reply)}</div>`;
-                container.scrollTop = container.scrollHeight;
+                await fetchFromServer(text, null, 'gemini-3.8-flash', (currentText) => {
+                    contentDiv.innerText = currentText;
+                    container.scrollTop = container.scrollHeight;
+                });
             } catch(e) {
-                container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl text-xs text-slate-200"><b>Nexus AI:</b> Indisponibil.</div>`;
+                contentDiv.innerText = "Indisponibil.";
             }
         };
 
