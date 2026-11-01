@@ -90,7 +90,7 @@ REGULI ȘI GHIDAJ:
 1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite:
    - Pentru rețele sociale: TikTok AI Creator, Instagram AI Creator, YouTube AI Scriptwriter.
    - Pentru dezvoltare & cod: Code Studio.
-   - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
+   - Für marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
 2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre funcționarea platformei. Menționează că platforma este în faza de testare/Early Access (100% gratuită). Pentru contact direct: contact@nexusaistudio.ro.
 3. SUSȚINERE & DONAȚII: Când utilizatorul întreabă despre pachetul PRO, opțiuni avansate sau cum poate ajuta proiectul, explică-i că platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
 4. TON DE COMUNICARE: Fii amabil, concis, profesionist și direct la subiect.`
@@ -106,6 +106,12 @@ REGULI ȘI GHIDAJ:
             activeModel = modelCandidate;
             
             try {
+                // Setăm antetele critice pentru streaming IMEDIAT înainte de fetch, ca Vercel să deschidă canalul spre browser
+                res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+                res.setHeader('Cache-Control', 'no-cache, no-transform');
+                res.setHeader('Connection', 'keep-alive');
+                res.setHeader('X-Accel-Buffering', 'no');
+
                 apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -127,12 +133,6 @@ REGULI ȘI GHIDAJ:
         if (!apiResponse || !apiResponse.ok) {
             throw new Error('Eroare de la serverul Google Gemini sau limită de cotă depășită.');
         }
-
-        // Setăm antetele critice pentru streaming instant pe Vercel (fără buffer)
-        res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-        res.setHeader('Cache-Control', 'no-cache, no-transform');
-        res.setHeader('Connection', 'keep-alive');
-        res.setHeader('X-Accel-Buffering', 'no'); // Oprește buffer-ul pe proxy-uri
 
         const reader = apiResponse.body.getReader();
         const decoder = new TextDecoder();
