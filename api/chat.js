@@ -84,7 +84,7 @@ export default async function handler(req, res) {
         const maxRetries = 2;
 
         while (attempts <= maxRetries) {
-            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
+           apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
