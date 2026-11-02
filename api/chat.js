@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active (Gemini 3.8 Streaming enabled).' });
+        return res.status(200).json({ status: 'Chat API endpoint is active (Fallback & Streaming enabled).' });
     }
 
     if (req.method !== 'POST') {
@@ -70,26 +70,61 @@ export default async function handler(req, res) {
             }]
         };
 
-        // Forțăm modelul oficial Gemini 3.8 Flash compatibil cu noile chei
-        const activeModel = model && model.includes('flash') ? model : 'gemini-3.8-flash';
+        const activeModel = model || 'gemini-3.8-flash';
 
+        // Setăm antetele pentru streaming instant
         res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache, no-transform');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');
 
-        let apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                systemInstruction: systemInstruction,
-                contents: [{ parts: parts }]
-            })
-        });
+        // Ordinea de fallback automată în caz de 503 sau 429
+        const modelsToTry = [
+            activeModel,
+            'gemini-3.8-flash',
+            'gemini-3.6-flash',
+            'gemini-3.5-flash-lite'
+        ];
+        
+        // Eliminăm duplicatele din listă
+        const uniqueModelsToTry = [...new Set(modelsToTry)];
 
-        if (!apiResponse.ok) {
-            const errBody = await apiResponse.text();
-            throw new Error(`Eroare Google Gemini API (${apiResponse.status}): ${errBody}`);
+        let apiResponse;
+        let success = false;
+
+        for (const modelToTest of uniqueModelsToTry) {
+            try {
+                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToTest}:streamGenerateContent?alt=sse&key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: systemInstruction,
+                        contents: [{ parts: parts }]
+                    })
+                });
+
+                if (apiResponse.ok) {
+                    success = true;
+                    break;
+                } else {
+                    const errText = await apiResponse.clone().text();
+                    // Dacă primim eroare 503 (Unavailable) sau 429 (Rate Limit), trecem la următorul model
+                    if (apiResponse.status === 503 || apiResponse.status === 429 || errText.includes('503') || errText.includes('UNAVAILABLE')) {
+                        console.warn(`Modelul ${modelToTest} este ocupat (Eroare ${apiResponse.status}), încercăm următorul model alternativ...`);
+                        continue;
+                    } else {
+                        // Pentru alte tipuri de erori, oprim bucla
+                        break;
+                    }
+                }
+            } catch (err) {
+                console.warn(`Eroare de rețea pentru modelul ${modelToTest}:`, err);
+            }
+        }
+
+        if (!success || !apiResponse.ok) {
+            const errBody = apiResponse ? await apiResponse.text() : 'Eroare de rețea';
+            throw new Error(`Toate modelele sunt momentan suprasolicitate (Eroare 503/429). Detalii: ${errBody}`);
         }
 
         const reader = apiResponse.body.getReader();
