@@ -1789,39 +1789,37 @@ window.closeModal = function(modalId) {
 };
 
 // Helper universal pentru apeluri ultra-rapide cu auto-retry corectat la erori de trafic
-async function callNexusAI(payload, maxRetries = 2) {
-    let attempts = 0;
-    while (attempts <= maxRetries) {
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            let data = {};
+    async function callNexusAI(payload, maxRetries = 2) {
+        let attempts = 0;
+        while (attempts <= maxRetries) {
             try {
-                data = await response.json();
-            } catch (e) {}
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-            // Dacă este ok, returnăm răspunsul direct
-            if (response.ok) return data;
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (e) {}
 
-            // Dacă Google indică supraîncărcare (503/500/High Demand), reîncercăm automat după 1.5 secunde
-            if (attempts < maxRetries && (response.status >= 500 || (data.error && data.error.includes('demand')))) {
+                if (response.ok) return data;
+
+                if (attempts < maxRetries && (response.status >= 500 || (data.error && data.error.includes('demand')))) {
+                    attempts++;
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    continue;
+                }
+                
+                throw new Error(data.error || 'Eroare la procesare.');
+            } catch (err) {
+                if (attempts >= maxRetries) throw err;
                 attempts++;
                 await new Promise(resolve => setTimeout(resolve, 1500));
-                continue;
             }
-            
-            throw new Error(data.error || 'Eroare la procesare.');
-        } catch (err) {
-            if (attempts >= maxRetries) throw err;
-            attempts++;
-            await new Promise(resolve => setTimeout(resolve, 1500));
         }
     }
-}
 </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
