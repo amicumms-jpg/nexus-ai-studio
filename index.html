@@ -97,6 +97,37 @@
     border-color: rgba(6, 182, 212, 0.8);
     transform: translateY(-1px);
   } 
+      /* Efecte Neon avansate pentru meniu și butoane */
+  .btn-neon-glow {
+    transition: all 0.3s ease;
+  }
+  .btn-neon-glow:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    border-color: rgba(6, 182, 212, 0.8);
+    transform: translateY(-1px);
+  }
+
+  /* Efect neon intens și pulsație pentru butoanele principale de generare */
+  @keyframes neonPulse {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+  }
+
+  .btn-primary-neon {
+    position: relative;
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    transition: all 0.3s ease;
+    animation: neonPulse 3s infinite;
+  }
+
+  .btn-primary-neon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(6, 182, 212, 0.9), 0 0 60px rgba(59, 130, 246, 0.5);
+  }  
 </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
@@ -280,7 +311,7 @@
         <!-- Dynamic Content Container -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
-           <!-- Tab 1: Chat General (Home / Tools Hub) -->
+        <!-- Tab 1: Chat General (Home / Tools Hub) -->
             <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-hidden p-3 space-y-2">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between mb-2 shrink-0">
@@ -342,7 +373,7 @@
                         <!-- Câmp scriere -->
                         <div class="flex space-x-2 items-end">
                             <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
-                            <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition shrink-0 mb-0.5" title="Atașează fișier">
+                            <button onclick="document.getElementById('chatFileInput-chat').click()" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-cyanNeon hover:border-cyanNeon px-3 py-2.5 rounded-xl text-xs cursor-pointer transition shrink-0 mb-0.5 btn-neon-glow" title="Atașează fișier">
                                 <i class="fa-solid fa-paperclip"></i>
                             </button>
                             
@@ -352,17 +383,18 @@
                                 onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat'); }"></textarea>
                             
                             <!-- Buton nou de Generare Vizuală Multimedia -->
-                            <button onclick="generateVisualForTab('chatInput', 'chatMessages', 'digital art, high quality, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition shrink-0 mb-0.5" title="Generează Vizual / Imagine">
+                            <button onclick="generateVisualForTab('chatInput', 'chatMessages', 'digital art, high quality, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition shrink-0 mb-0.5 btn-neon-glow" title="Generează Vizual / Imagine">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                             </button>
 
-                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition shrink-0 mb-0.5" title="Trimite mesaj text">
+                            <button onclick="sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat')" class="text-darkBg font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition shrink-0 mb-0.5 btn-primary-neon" title="Trimite mesaj text">
                                 <i class="fa-solid fa-paper-plane"></i>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- TAB UNIFICAT: Social & Creator Hub -->
             <div id="tab-socialHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
@@ -373,16 +405,16 @@
                         </div>
                         
                         <div class="flex items-center space-x-1 bg-gray-900 p-1 rounded-xl border border-gray-800">
-                            <button onclick="switchSocialPlatform('tiktok')" id="socBtn-tiktok" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1">
+                            <button onclick="switchSocialPlatform('tiktok')" id="socBtn-tiktok" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1 btn-neon-glow">
                                 <i class="fa-brands fa-tiktok"></i> TikTok
                             </button>
-                            <button onclick="switchSocialPlatform('insta')" id="socBtn-insta" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1">
+                            <button onclick="switchSocialPlatform('insta')" id="socBtn-insta" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1 btn-neon-glow">
                                 <i class="fa-brands fa-instagram text-instaColor"></i> Insta
                             </button>
-                            <button onclick="switchSocialPlatform('yt')" id="socBtn-yt" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1">
+                            <button onclick="switchSocialPlatform('yt')" id="socBtn-yt" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1 btn-neon-glow">
                                 <i class="fa-brands fa-youtube text-ytColor"></i> YouTube
                             </button>
-                            <button onclick="switchSocialPlatform('seo')" id="socBtn-seo" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1">
+                            <button onclick="switchSocialPlatform('seo')" id="socBtn-seo" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1 btn-neon-glow">
                                 <i class="fa-solid fa-hashtag text-violetPop"></i> SEO & Tag-uri
                             </button>
                         </div>
@@ -396,11 +428,11 @@
                         <textarea id="socialHubInput" rows="1" placeholder="Scrie cererea ta pentru rețeaua selectată..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-tiktokColor resize-none max-h-28" oninput="autoResizeTextarea(this)"></textarea>
                         
                         <!-- Buton de Generare Vizuală Multimedia pentru Social Hub -->
-                        <button onclick="generateVisualForTab('socialHubInput', 'socialHubMessages', 'social media viral graphic, vibrant, cinematic')" class="bg-gray-800 border border-tiktokColor/50 text-tiktokColor hover:bg-tiktokColor hover:text-white font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition shrink-0" title="Generează Vizual / Imagine Social Media">
+                        <button onclick="generateVisualForTab('socialHubInput', 'socialHubMessages', 'social media viral graphic, vibrant, cinematic')" class="bg-gray-800 border border-tiktokColor/50 text-tiktokColor hover:bg-tiktokColor hover:text-white font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition shrink-0 btn-neon-glow" title="Generează Vizual / Imagine Social Media">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
                         </button>
 
-                        <button onclick="sendSocialHubMessage()" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                        <button onclick="sendSocialHubMessage()" class="text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition btn-primary-neon"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -416,12 +448,12 @@
         
         <!-- Tab-uri Orizontale pentru Unelte -->
         <div class="flex items-center space-x-1 bg-gray-900 p-1 rounded-xl border border-gray-800 overflow-x-auto w-full md:w-auto">
-            <button onclick="switchQuickTool('promptEnhancer')" id="subnav-promptEnhancer" class="quick-sub-tab active px-3 py-1.5 rounded-lg text-xs font-medium text-cyanNeon bg-cyanNeon/10 border border-cyanNeon/30 whitespace-nowrap transition">Prompt AI</button>
-            <button onclick="switchQuickTool('webSearch')" id="subnav-webSearch" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition">Web Search</button>
-            <button onclick="switchQuickTool('summarizer')" id="subnav-summarizer" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition">Summarizer</button>
-            <button onclick="switchQuickTool('codeStudio')" id="subnav-codeStudio" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition">Code Studio</button>
-            <button onclick="switchQuickTool('docAnalyzer')" id="subnav-docAnalyzer" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition">PDF & Docs</button>
-            <button onclick="switchQuickTool('emailCopywriting')" id="subnav-emailCopywriting" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition">Copywriting</button>
+            <button onclick="switchQuickTool('promptEnhancer')" id="subnav-promptEnhancer" class="quick-sub-tab active px-3 py-1.5 rounded-lg text-xs font-medium text-cyanNeon bg-cyanNeon/10 border border-cyanNeon/30 whitespace-nowrap transition btn-neon-glow">Prompt AI</button>
+            <button onclick="switchQuickTool('webSearch')" id="subnav-webSearch" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition btn-neon-glow">Web Search</button>
+            <button onclick="switchQuickTool('summarizer')" id="subnav-summarizer" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition btn-neon-glow">Summarizer</button>
+            <button onclick="switchQuickTool('codeStudio')" id="subnav-codeStudio" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition btn-neon-glow">Code Studio</button>
+            <button onclick="switchQuickTool('docAnalyzer')" id="subnav-docAnalyzer" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition btn-neon-glow">PDF & Docs</button>
+            <button onclick="switchQuickTool('emailCopywriting')" id="subnav-emailCopywriting" class="quick-sub-tab px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white whitespace-nowrap transition btn-neon-glow">Copywriting</button>
         </div>
     </div>
 
@@ -436,14 +468,14 @@
                         <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-cyanNeon mr-1.5"></i>Prompt AI Enhancer</h2>
                         <p class="text-[10px] text-gray-400">Transformă prompt-uri simple în instrucțiuni AI sau vizualuri detaliate 🪄</p>
                     </div>
-                    <button onclick="clearTabChat('promptEnhancer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    <button onclick="clearTabChat('promptEnhancer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer btn-neon-glow">Curăță</button>
                 </div>
                 <div id="promptEnhancerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                     <div class="text-gray-400">Salut! Introdu mai jos ideea ta simplă de prompt sau vizual.</div>
                 </div>
                 <div class="flex space-x-2 items-center shrink-0">
                     <input type="text" id="promptEnhancerInput" placeholder="Ex: Scrie o postare sau descrie un vizual..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none">
-                    <button onclick="sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')" class="bg-cyanNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-paper-plane"></i> Mărește</button>
+                    <button onclick="sendChatMessage('promptEnhancerMessages', 'promptEnhancerInput', '[Prompt Enhancer]: ')" class="text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon"><i class="fa-solid fa-paper-plane"></i> Mărește</button>
                 </div>
             </div>
         </div>
@@ -456,14 +488,14 @@
                         <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-globe text-emeraldNeon mr-1.5"></i>Web Search AI</h2>
                         <p class="text-[10px] text-gray-400">Căutare de date live sau generare de elemente din web 🌐</p>
                     </div>
-                    <button onclick="clearTabChat('webSearch')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    <button onclick="clearTabChat('webSearch')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer btn-neon-glow">Curăță</button>
                 </div>
                 <div id="webSearchMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                     <div class="text-gray-400">Ce subiect dorești să cauți astăzi?</div>
                 </div>
                 <div class="flex space-x-2 items-center shrink-0">
                     <input type="text" id="webSearchInput" placeholder="Ex: Ultimele știri..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-emeraldNeon outline-none">
-                    <button onclick="sendChatMessage('webSearchMessages', 'webSearchInput', '[Web Search]: ')" class="bg-emeraldNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-magnifying-glass"></i> Caută</button>
+                    <button onclick="sendChatMessage('webSearchMessages', 'webSearchInput', '[Web Search]: ')" class="text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon"><i class="fa-solid fa-magnifying-glass"></i> Caută</button>
                 </div>
             </div>
         </div>
@@ -476,14 +508,14 @@
                         <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-contract text-amberGlow mr-1.5"></i>AI Summarizer</h2>
                         <p class="text-[10px] text-gray-400">Extractează idei principale sau rezumă texte 📝</p>
                     </div>
-                    <button onclick="clearTabChat('summarizer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    <button onclick="clearTabChat('summarizer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer btn-neon-glow">Curăță</button>
                 </div>
                 <div id="summarizerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                     <div class="text-gray-400">Lipește un articol sau text pentru rezumat.</div>
                 </div>
                 <div class="flex space-x-2 items-center shrink-0">
                     <input type="text" id="summarizerInput" placeholder="Lipește textul..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-amberGlow outline-none">
-                    <button onclick="sendChatMessage('summarizerMessages', 'summarizerInput', '[Summarizer]: ')" class="bg-amberGlow hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-bolt"></i> Rezumă</button>
+                    <button onclick="sendChatMessage('summarizerMessages', 'summarizerInput', '[Summarizer]: ')" class="text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon"><i class="fa-solid fa-bolt"></i> Rezumă</button>
                 </div>
             </div>
         </div>
@@ -496,14 +528,14 @@
                         <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-code text-purple-400 mr-1.5"></i>Code Studio</h2>
                         <p class="text-[10px] text-gray-400">Generare de cod și interfețe UI 💻</p>
                     </div>
-                    <button onclick="clearTabChat('codeStudio')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    <button onclick="clearTabChat('codeStudio')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer btn-neon-glow">Curăță</button>
                 </div>
                 <div id="codeStudioMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2 font-mono">
                     <div class="text-gray-400">// Descrie ce cod dorești să generezi...</div>
                 </div>
                 <div class="flex space-x-2 items-center shrink-0">
                     <input type="text" id="codeStudioInput" placeholder="Ex: Funcție JS..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-400 outline-none">
-                    <button onclick="sendChatMessage('codeStudioMessages', 'codeStudioInput', '[Code Studio]: ')" class="bg-purple-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-terminal"></i> Generează</button>
+                    <button onclick="sendChatMessage('codeStudioMessages', 'codeStudioInput', '[Code Studio]: ')" class="text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon"><i class="fa-solid fa-terminal"></i> Generează</button>
                 </div>
             </div>
         </div>
@@ -516,14 +548,14 @@
                         <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-file-pdf text-red-400 mr-1.5"></i>PDF & Doc Analyzer</h2>
                         <p class="text-[10px] text-gray-400">Analiză de fișiere și documente 📄</p>
                     </div>
-                    <button onclick="clearTabChat('docAnalyzer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    <button onclick="clearTabChat('docAnalyzer')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer btn-neon-glow">Curăță</button>
                 </div>
                 <div id="docAnalyzerMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                     <div class="text-gray-400">Lipește conținutul documentului pentru analiză.</div>
                 </div>
                 <div class="flex space-x-2 items-center shrink-0">
                     <input type="text" id="docAnalyzerInput" placeholder="Conținut document..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-red-400 outline-none">
-                    <button onclick="sendChatMessage('docAnalyzerMessages', 'docAnalyzerInput', '[Doc Analyzer]: ')" class="bg-red-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-magnifying-glass"></i> Analizează</button>
+                    <button onclick="sendChatMessage('docAnalyzerMessages', 'docAnalyzerInput', '[Doc Analyzer]: ')" class="text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon"><i class="fa-solid fa-magnifying-glass"></i> Analizează</button>
                 </div>
             </div>
         </div>
@@ -536,14 +568,14 @@
                         <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-envelope-open-text text-blue-400 mr-1.5"></i>Email & Copywriting Studio</h2>
                         <p class="text-[10px] text-gray-400">Generare de reclame și e-mailuri de vânzări ✉️</p>
                     </div>
-                    <button onclick="clearTabChat('emailCopywriting')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer">Curăță</button>
+                    <button onclick="clearTabChat('emailCopywriting')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded cursor-pointer btn-neon-glow">Curăță</button>
                 </div>
                 <div id="emailCopywritingMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                     <div class="text-gray-400">Descrie produsul sau oferta pentru copywriting.</div>
                 </div>
                 <div class="flex space-x-2 items-center shrink-0">
                     <input type="text" id="emailCopywritingInput" placeholder="Ex: Email promovare..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-blue-400 outline-none">
-                    <button onclick="sendChatMessage('emailCopywritingMessages', 'emailCopywritingInput', '[Copywriting]: ')" class="bg-blue-500 hover:opacity-90 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-pen-nib"></i> Scrie</button>
+                    <button onclick="sendChatMessage('emailCopywritingMessages', 'emailCopywritingInput', '[Copywriting]: ')" class="text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon"><i class="fa-solid fa-pen-nib"></i> Scrie</button>
                 </div>
             </div>
         </div>
@@ -564,19 +596,19 @@
 
         <!-- Meniu Tab-uri pe Niveluri -->
         <div class="flex flex-wrap justify-center gap-2 bg-slate-900/80 p-2 rounded-2xl border border-slate-700 backdrop-blur-md">
-            <button onclick="openLayersTab('agentic')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-indigo-400 hover:bg-indigo-950/50 active-layer-tab bg-slate-800" data-layer="agentic">
+            <button onclick="openLayersTab('agentic')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-indigo-400 hover:bg-indigo-950/50 active-layer-tab bg-slate-800 btn-neon-glow" data-layer="agentic">
                 🤖 Agentic AI
             </button>
-            <button onclick="openLayersTab('generative')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-pink-400 hover:bg-pink-950/50" data-layer="generative">
+            <button onclick="openLayersTab('generative')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-pink-400 hover:bg-pink-950/50 btn-neon-glow" data-layer="generative">
                 ✨ Generative AI
             </button>
-            <button onclick="openLayersTab('deeplearning')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-amber-400 hover:bg-amber-950/50" data-layer="deeplearning">
+            <button onclick="openLayersTab('deeplearning')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-amber-400 hover:bg-amber-950/50 btn-neon-glow" data-layer="deeplearning">
                 🧠 Deep Learning
             </button>
-            <button onclick="openLayersTab('neural')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-emerald-400 hover:bg-emerald-950/50" data-layer="neural">
+            <button onclick="openLayersTab('neural')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-emerald-400 hover:bg-emerald-950/50 btn-neon-glow" data-layer="neural">
                 🕸️ Neural Networks
             </button>
-            <button onclick="openLayersTab('ml')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-cyan-400 hover:bg-cyan-950/50" data-layer="ml">
+            <button onclick="openLayersTab('ml')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-cyan-400 hover:bg-cyan-950/50 btn-neon-glow" data-layer="ml">
                 📊 Machine Learning
             </button>
         </div>
@@ -592,7 +624,7 @@
                 <div class="space-y-3">
                     <label class="block text-xs font-medium text-slate-300">Obiectivul Agentului:</label>
                     <input type="text" id="agent-goal" placeholder="Ex: Analizează piața și trimite un raport detaliat" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500">
-                    <button onclick="executeAgent()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer">
+                    <button onclick="executeAgent()" class="px-5 py-2.5 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer btn-primary-neon">
                         Lansează Agent Autonom
                     </button>
                 </div>
@@ -606,7 +638,7 @@
                 <div class="space-y-3">
                     <label class="block text-xs font-medium text-slate-300">Prompt Generativ:</label>
                     <textarea id="gen-prompt" rows="3" placeholder="Scrie cererea ta pentru generare conținut..." class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-pink-500"></textarea>
-                    <button onclick="generateContent()" class="px-5 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer">
+                    <button onclick="generateContent()" class="px-5 py-2.5 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer btn-primary-neon">
                         Generează Conținut
                     </button>
                 </div>
@@ -651,145 +683,141 @@
     </div>
 </div>
             <!-- Tab: Calendar Editorial -->
-            <div id="tab-editorialStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4">
-                <div class="max-w-4xl mx-auto w-full space-y-4">
-                    <div class="p-3 bg-amber-950/30 border border-amberGlow/30 rounded-2xl">
-                        <h2 class="text-sm font-bold text-white flex items-center"><i class="fa-solid fa-calendar-days text-amberGlow mr-2"></i>Calendar Editorial & Planificator Vizual 📅</h2>
-                        <p class="text-[10px] text-gray-400">Planifică-ți postările pe zile și ore.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-panelBg border border-gray-800 p-4 rounded-2xl space-y-3">
-                            <h3 class="text-xs font-bold text-amberGlow uppercase">Adaugă Postare Nouă</h3>
-                            <div>
-                                <label class="text-[10px] text-gray-400 font-bold uppercase">Platformă</label>
-                                <select id="postPlatform" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-2 py-2 text-xs text-white outline-none">
-                                    <option value="TikTok">TikTok</option>
-                                    <option value="Instagram">Instagram</option>
-                                    <option value="YouTube">YouTube</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-gray-400 font-bold uppercase">Titlu / Descriere</label>
-                                <input type="text" id="postTitle" placeholder="Ex: Review noutate tech" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-gray-400 font-bold uppercase">Dată & Oră</label>
-                                <input type="datetime-local" id="postDate" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                            </div>
-                            <button onclick="addEditorialPost()" class="w-full bg-amberGlow hover:opacity-90 text-darkBg font-bold text-xs py-2 rounded-xl transition cursor-pointer shadow">
-                                Programează în Calendar
-                            </button>
-                        </div>
-                        <div class="md:col-span-2 bg-panelBg border border-gray-800 p-4 rounded-2xl flex flex-col space-y-3">
-                            <h3 class="text-xs font-bold text-white uppercase">Postări Programate</h3>
-                            <div id="editorialListContainer" class="space-y-2 overflow-y-auto max-h-72">
-                                <div class="text-xs text-gray-500 italic">Nicio postare programată în calendar.</div>
-                            </div>
-                        </div>
-                    </div>
+<div id="tab-editorialStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4">
+    <div class="max-w-4xl mx-auto w-full space-y-4">
+        <div class="p-3 bg-amber-950/30 border border-amberGlow/30 rounded-2xl">
+            <h2 class="text-sm font-bold text-white flex items-center"><i class="fa-solid fa-calendar-days text-amberGlow mr-2"></i>Calendar Editorial & Planificator Vizual 📅</h2>
+            <p class="text-[10px] text-gray-400">Planifică-ți postările pe zile și ore.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-panelBg border border-gray-800 p-4 rounded-2xl space-y-3">
+                <h3 class="text-xs font-bold text-amberGlow uppercase">Adaugă Postare Nouă</h3>
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold uppercase">Platformă</label>
+                    <select id="postPlatform" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-2 py-2 text-xs text-white outline-none">
+                        <option value="TikTok">TikTok</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="YouTube">YouTube</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold uppercase">Titlu / Descriere</label>
+                    <input type="text" id="postTitle" placeholder="Ex: Review noutate tech" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold uppercase">Dată & Oră</label>
+                    <input type="datetime-local" id="postDate" class="w-full mt-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                </div>
+                <button onclick="addEditorialPost()" class="w-full text-darkBg font-bold text-xs py-2 rounded-xl transition cursor-pointer shadow btn-primary-neon">
+                    Programează în Calendar
+                </button>
+            </div>
+            <div class="md:col-span-2 bg-panelBg border border-gray-800 p-4 rounded-2xl flex flex-col space-y-3">
+                <h3 class="text-xs font-bold text-white uppercase">Postări Programate</h3>
+                <div id="editorialListContainer" class="space-y-2 overflow-y-auto max-h-72">
+                    <div class="text-xs text-gray-500 italic">Nicio postare programată în calendar.</div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-          <!-- Tab: A/B Testing -->
-            <div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
-                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
-                    <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
-                        <div>
-                            <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-vials text-cyanNeon mr-2"></i> A/B Testing Titluri & Hook-uri AI</h2>
-                            <p class="text-[10px] text-gray-400">Chat dedicat pentru generare, testare și vizualuri comparative 🧪</p>
-                        </div>
-                        <button onclick="clearTabChat('ab')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
-                    </div>
-                    <div id="abMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Scrie ideea sau tema videoclipului pentru a genera variante A/B sau vizualuri.</div>
-                    </div>
-                    <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="abInput" placeholder="Ex: Generează variante A/B sau vizual pentru..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
-                        
-                        <!-- Buton Vizual A/B -->
-                        <button onclick="generateVisualForTab('abInput', 'abMessages', 'marketing banner, professional layout, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual A/B">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </button>
-
-                        <button onclick="sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                </div>
+<!-- Tab: A/B Testing -->
+<div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-cyanNeon/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-vials text-cyanNeon mr-2"></i> A/B Testing Titluri & Hook-uri AI</h2>
+                <p class="text-[10px] text-gray-400">Chat dedicat pentru generare, testare și vizualuri comparative 🧪</p>
             </div>
+            <button onclick="clearTabChat('ab')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer btn-neon-glow"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
+        </div>
+        <div id="abMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Scrie ideea sau tema videoclipului pentru a genera variante A/B sau vizualuri.</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="abInput" placeholder="Ex: Generează variante A/B sau vizual pentru..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
+            
+            <button onclick="generateVisualForTab('abInput', 'abMessages', 'marketing banner, professional layout, 8k')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition btn-neon-glow" title="Generează Vizual A/B">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </button>
 
-            <!-- Tab: Podcast Script -->
-            <div id="tab-podcastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
-                <div class="bg-panelBg border border-amberGlow/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
-                    <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
-                        <div>
-                            <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-podcast text-amberGlow mr-2"></i> Podcast Script & Q&A Assistant</h2>
-                            <p class="text-[10px] text-gray-400">Scenarii de podcast și generare de coperți/vizualuri 🎙️</p>
-                        </div>
-                        <button onclick="clearTabChat('podcast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
-                    </div>
-                    <div id="podcastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Introdu tema podcastului pentru a genera scenariu sau copertă vizuală.</div>
-                    </div>
-                    <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="podcastInput" placeholder="Ex: Scenariu sau copertă podcast despre..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow">
-                        
-                        <!-- Buton Vizual Podcast -->
-                        <button onclick="generateVisualForTab('podcastInput', 'podcastMessages', 'podcast cover art, studio microphone aesthetic, professional lighting')" class="bg-gray-800 border border-amberGlow/50 text-amberGlow hover:bg-amberGlow hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Copertă / Vizual">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </button>
+            <button onclick="sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')" class="text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition btn-primary-neon"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
 
-                        <button onclick="sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')" class="bg-amberGlow text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                </div>
+<!-- Tab: Podcast Script -->
+<div id="tab-podcastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-amberGlow/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-amberGlow/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-podcast text-amberGlow mr-2"></i> Podcast Script & Q&A Assistant</h2>
+                <p class="text-[10px] text-gray-400">Scenarii de podcast și generare de coperți/vizualuri 🎙️</p>
             </div>
+            <button onclick="clearTabChat('podcast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer btn-neon-glow"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
+        </div>
+        <div id="podcastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Introdu tema podcastului pentru a genera scenariu sau copertă vizuală.</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="podcastInput" placeholder="Ex: Scenariu sau copertă podcast despre..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-amberGlow">
+            
+            <button onclick="generateVisualForTab('podcastInput', 'podcastMessages', 'podcast cover art, studio microphone aesthetic, professional lighting')" class="bg-gray-800 border border-amberGlow/50 text-amberGlow hover:bg-amberGlow hover:text-darkBg font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition btn-neon-glow" title="Generează Copertă / Vizual">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </button>
 
-            <!-- Tab: AI Roast -->
-            <div id="tab-roastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
-                <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
-                    <div class="flex items-center justify-between pb-2 border-b border-tiktokColor/30 mb-2 shrink-0">
-                        <div>
-                            <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-fire text-tiktokColor mr-2"></i> AI Roast My Content</h2>
-                            <p class="text-[10px] text-gray-400">Analiză critică, meme-uri sau evaluare vizuală sarcastică 🔥</p>
-                        </div>
-                        <button onclick="clearTabChat('roast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
-                    </div>
-                    <div id="roastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
-                        <div class="text-gray-400">Lipește textul sau descrie un vizual pentru un roast complet!</div>
-                    </div>
-                    <div class="flex space-x-2 items-center shrink-0">
-                        <input type="text" id="roastInput" placeholder="Lipește textul pentru roast..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-tiktokColor">
-                        
-                        <!-- Buton Vizual Roast -->
-                        <button onclick="generateVisualForTab('roastInput', 'roastMessages', 'funny caricature style, vibrant, expressive')" class="bg-gray-800 border border-tiktokColor/50 text-tiktokColor hover:bg-tiktokColor hover:text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition" title="Generează Vizual Caricatură">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </button>
+            <button onclick="sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')" class="text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition btn-primary-neon"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
 
-                        <button onclick="sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')" class="bg-tiktokColor text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition"><i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                </div>
+<!-- Tab: AI Roast -->
+<div id="tab-roastStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
+    <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+        <div class="flex items-center justify-between pb-2 border-b border-tiktokColor/30 mb-2 shrink-0">
+            <div>
+                <h2 class="font-bold text-xs text-white flex items-center"><i class="fa-solid fa-fire text-tiktokColor mr-2"></i> AI Roast My Content</h2>
+                <p class="text-[10px] text-gray-400">Analiză critică, meme-uri sau evaluare vizuală sarcastică 🔥</p>
             </div>
+            <button onclick="clearTabChat('roast')" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-[10px] px-2 py-1 rounded-lg transition cursor-pointer btn-neon-glow"><i class="fa-solid fa-trash mr-1"></i> Golește Chat</button>
+        </div>
+        <div id="roastMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+            <div class="text-gray-400">Lipește textul sau descrie un vizual pentru un roast complet!</div>
+        </div>
+        <div class="flex space-x-2 items-center shrink-0">
+            <input type="text" id="roastInput" placeholder="Lipește textul pentru roast..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-tiktokColor">
+            
+            <button onclick="generateVisualForTab('roastInput', 'roastMessages', 'funny caricature style, vibrant, expressive')" class="bg-gray-800 border border-tiktokColor/50 text-tiktokColor hover:bg-tiktokColor hover:text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition btn-neon-glow" title="Generează Vizual Caricatură">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </button>
 
-            <!-- Tab: Text-to-Video Studio -->
-            <div id="tab-textToVideoStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
-                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto w-full">
-                    <h2 class="font-bold text-xs text-cyanNeon mb-1"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
-                    <p class="text-[10px] text-gray-400 mb-2">Introdu o descriere detaliată a scenei pentru randare vizuală sau video.</p>
-                    
-                    <div class="flex space-x-2 mb-2">
-                        <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu mașini zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon">
-                        
-                        <!-- Legătură directă la motorul universal pentru randare video/cinematică -->
-                        <button onclick="generateVisualForTab('textToVideoInput', 'textToVideoResult', 'cinematic motion shot, 4k resolution, hyperrealistic')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold text-xs px-3 py-2 rounded-xl cursor-pointer transition">
-                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Randare Vizuală
-                        </button>
+            <button onclick="sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')" class="text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition btn-primary-neon"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
 
-                        <button onclick="generateTextToVideo()" class="bg-cyanNeon text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 transition">Generează Video AI</button>
-                    </div>
+<!-- Tab: Text-to-Video Studio -->
+<div id="tab-textToVideoStudio" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
+    <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl max-w-3xl mx-auto w-full">
+        <h2 class="font-bold text-xs text-cyanNeon mb-1"><i class="fa-solid fa-clapperboard mr-2"></i> Text-to-Video AI Generator & Studio</h2>
+        <p class="text-[10px] text-gray-400 mb-2">Introdu o descriere detaliată a scenei pentru randare vizuală sau video.</p>
+        
+        <div class="flex space-x-2 mb-2">
+            <input type="text" id="textToVideoInput" placeholder="Ex: Un peisaj cyberpunk în ploaie cu mașini zburătoare..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon">
+            
+            <button onclick="generateVisualForTab('textToVideoInput', 'textToVideoResult', 'cinematic motion shot, 4k resolution, hyperrealistic')" class="bg-gray-800 border border-cyanNeon/50 text-cyanNeon hover:bg-cyanNeon hover:text-darkBg font-bold text-xs px-3 py-2 rounded-xl cursor-pointer transition btn-neon-glow">
+                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Randare Vizuală
+            </button>
 
-                    <div id="textToVideoResult" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 min-h-[140px] whitespace-pre-line mb-2 flex flex-col items-center justify-center text-center text-gray-500">
-                        Așteptare comenzi pentru generare video...
-                    </div>
-                </div>
-            </div>
+            <button onclick="generateTextToVideo()" class="text-darkBg font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition btn-primary-neon">Generează Video AI</button>
+        </div>
+
+        <div id="textToVideoResult" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 min-h-[140px] whitespace-pre-line mb-2 flex flex-col items-center justify-center text-center text-gray-500">
+            Așteptare comenzi pentru generare video...
+        </div>
+    </div>
+</div>
 
 <!-- TAB UNIFICAT: AI CREATIVE STUDIO (LOGOS, STICKERS & PROMPTS) -->
 <div id="tab-3d-visual" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
@@ -804,13 +832,13 @@
 
         <!-- Selector de Mod / Categorie -->
         <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="setCreativeMode('logo')" id="btn-mode-logo" class="py-2 px-2 rounded-xl text-xs font-medium bg-cyanNeon text-darkBg transition flex items-center justify-center gap-1.5 shadow-md">
+            <button type="button" onclick="setCreativeMode('logo')" id="btn-mode-logo" class="py-2 px-2 rounded-xl text-xs font-medium bg-cyanNeon text-darkBg transition flex items-center justify-center gap-1.5 shadow-md btn-neon-glow">
                 <i class="fa-solid fa-paintbrush"></i> Logo & Brand
             </button>
-            <button type="button" onclick="setCreativeMode('sticker')" id="btn-mode-sticker" class="py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5">
+            <button type="button" onclick="setCreativeMode('sticker')" id="btn-mode-sticker" class="py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5 btn-neon-glow">
                 <i class="fa-solid fa-face-smile"></i> Sticker & Meme
             </button>
-            <button type="button" onclick="setCreativeMode('enhancer')" id="btn-mode-enhancer" class="py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5">
+            <button type="button" onclick="setCreativeMode('enhancer')" id="btn-mode-enhancer" class="py-2 px-2 rounded-xl text-xs font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition flex items-center justify-center gap-1.5 btn-neon-glow">
                 <i class="fa-solid fa-bolt"></i> Prompt Lab
             </button>
         </div>
@@ -825,14 +853,14 @@
         <div>
             <span class="block text-[10px] text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">💡 Exemple rapide (Click pentru a testa):</span>
             <div id="quick-examples" class="flex flex-wrap gap-1.5">
-                <button type="button" onclick="setCreativePrompt('Minimalist tech startup logo, vibrant blue gradient, vector')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition">Logo Tech</button>
-                <button type="button" onclick="setCreativePrompt('Cute cyberpunk cat sticker, bold white outline, die-cut vector')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition">Sticker Cyber</button>
-                <button type="button" onclick="setCreativePrompt('Futuristic neon city background with cyberpunk neon lights')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition">Cyber Concept</button>
+                <button type="button" onclick="setCreativePrompt('Minimalist tech startup logo, vibrant blue gradient, vector')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition btn-neon-glow">Logo Tech</button>
+                <button type="button" onclick="setCreativePrompt('Cute cyberpunk cat sticker, bold white outline, die-cut vector')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition btn-neon-glow">Sticker Cyber</button>
+                <button type="button" onclick="setCreativePrompt('Futuristic neon city background with cyberpunk neon lights')" class="text-[10px] bg-gray-950 hover:bg-cyanNeon/10 text-cyanNeon border border-gray-800 px-2.5 py-1 rounded-lg transition btn-neon-glow">Cyber Concept</button>
             </div>
         </div>
 
         <!-- Butonul de Acțiune Principal -->
-        <button type="button" onclick="executeCreativeAction()" class="w-full bg-gradient-to-r from-cyanNeon to-blue-500 text-darkBg font-bold py-2.5 px-4 rounded-xl shadow-lg hover:opacity-90 transition flex items-center justify-center gap-2 text-xs">
+        <button type="button" onclick="executeCreativeAction()" class="w-full font-bold py-2.5 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs btn-primary-neon">
             <i class="fa-solid fa-play"></i> <span id="action-btn-text">Generează Logo & Brand</span>
         </button>
 
@@ -846,151 +874,154 @@
 
     </div>
 </div>
-            <!-- TAB UNIFICAT: Abonament & PRO -->
-            <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
-                <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
-                    <div class="text-center space-y-1">
-                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg">
-                            <i class="fa-solid fa-crown"></i>
-                        </div>
-                        <h2 class="text-lg font-bold text-white">Abonamente & Susținere Project</h2>
-                        <p class="text-[10px] text-gray-400">Alege modul tău de acces la Nexus AI Studio Pro.</p>
-                    </div>
-<!-- Card Câmp Activare Cheie Oficială PRO -->
-<div class="bg-gray-950 p-4 rounded-2xl border border-cyanNeon/40 max-w-xl mx-auto shadow-xl mb-4">
-    <label class="block text-xs font-semibold text-gray-300 mb-2"><i class="fa-solid fa-key text-cyanNeon mr-1"></i> Ai primit o cheie oficială de activare?</label>
-    <div class="flex space-x-2">
-        <input type="text" id="licenseKeyInput" placeholder="NEXUS-PRO-XXXX-YYYY" class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none font-mono uppercase">
-        <button onclick="activateLicenseKey()" class="bg-cyanNeon hover:opacity-90 text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer">
-            <i class="fa-solid fa-check"></i> Activează
-        </button>
-    </div>
-    <p id="licenseStatus" class="text-[10px] text-gray-400 mt-2">Introdu codul licenței pentru a debloca instant accesul complet VIP.</p>
-</div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Card 1: Acces Gratuit -->
-                        <div class="bg-panelBg border border-emeraldNeon/30 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-xs font-bold text-white">Acces Gratuit / Early Access</h3>
-                                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">Activ</span>
-                                </div>
-                                <div class="text-base font-extrabold text-emerald-400">0 RON <span class="text-[10px] font-normal text-gray-400">/ zi</span></div>
-                                <p class="text-[11px] text-gray-300">Testare zilnică pentru creatori la început de drum.</p>
-                                <ul class="text-[11px] text-gray-400 space-y-1 pt-1">
-                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> 10 mesaje gratuite pe zi</li>
-                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Acces la Chat General & Social Hub</li>
-                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Suport prin comunitate</li>
-                                </ul>
-                            </div>
-                            <div class="pt-2 text-center text-[10px] text-emerald-400 font-semibold bg-emerald-950/30 p-2 rounded-xl border border-emerald-500/20">
-                                Ai planul gratuit activat implicit!
-                            </div>
-                        </div>
 
-                        <!-- Card 2: Pachetul PRO VIP -->
-                        <div class="bg-panelBg border border-amberGlow/50 p-4 rounded-2xl space-y-3 shadow-xl flex flex-col justify-between relative overflow-hidden">
-                            <div class="absolute top-0 right-0 bg-amberGlow text-darkBg text-[8px] font-black uppercase px-3 py-0.5 rounded-bl-lg">Recomandat</div>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-xs font-bold text-white">Nexus Pro VIP</h3>
-                                </div>
-                                <div class="text-base font-extrabold text-amberGlow">49 RON <span class="text-[10px] font-normal text-gray-400">/ lună</span></div>
-                                <p class="text-[11px] text-gray-300">Generare nelimitată și viteză maximă de procesare.</p>
-                                <ul class="text-[11px] text-gray-400 space-y-1 pt-1">
-                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Mesaje & generări nelimitate</li>
-                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Toate uneltele & Social Hub deblocate</li>
-                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Viteze mari prin Gemini Pro</li>
-                                </ul>
-                            </div>
-                            <a href="https://buy.stripe.com/test_4gM14mdAW8Iz71e59K4ko00" target="_blank" class="w-full block text-center bg-gradient-to-r from-amberGlow to-orange-500 hover:opacity-90 text-darkBg font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer">
-                                Abonează-te Pro (49 RON)
-                            </a>
-                        </div>
+<!-- TAB UNIFICAT: Abonament & PRO -->
+<div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
+    <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
+        <div class="text-center space-y-1">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <h2 class="text-lg font-bold text-white">Abonamente & Susținere Project</h2>
+            <p class="text-[10px] text-gray-400">Alege modul tău de acces la Nexus AI Studio Pro.</p>
+        </div>
 
-                        <!-- Card 3: Susține Proiectul (Revolut Me) -->
-                        <div class="bg-panelBg border border-purple-500/40 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-xs font-bold text-white">Susține Proiectul ☕</h3>
-                                    <span class="text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-semibold">Donație</span>
-                                </div>
-                                <div class="text-base font-extrabold text-purple-400">O cafea virtuală</div>
-                                <p class="text-[11px] text-gray-300 leading-snug">Îți place platforma și vrei să susții dezvoltarea ei continuă? Orice contribuție ne ajută să acoperim serverele și să adăugăm unelte AI mai tari!</p>
-                            </div>
-                            <a href="https://revolut.me/valentihz6" target="_blank" class="w-full block text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer">
-                                <i class="fa-solid fa-heart mr-1 text-pink-400"></i> Trimite o cafea pe Revolut
-                            </a>
-                        </div>
-                    </div>
+        <!-- Card Câmp Activare Cheie Oficială PRO -->
+        <div class="bg-gray-950 p-4 rounded-2xl border border-cyanNeon/40 max-w-xl mx-auto shadow-xl mb-4">
+            <label class="block text-xs font-semibold text-gray-300 mb-2"><i class="fa-solid fa-key text-cyanNeon mr-1"></i> Ai primit o cheie oficială de activare?</label>
+            <div class="flex space-x-2">
+                <input type="text" id="licenseKeyInput" placeholder="NEXUS-PRO-XXXX-YYYY" class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:border-cyanNeon outline-none font-mono uppercase">
+                <button onclick="activateLicenseKey()" class="text-darkBg font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 cursor-pointer btn-primary-neon">
+                    <i class="fa-solid fa-check"></i> Activează
+                </button>
+            </div>
+            <p id="licenseStatus" class="text-[10px] text-gray-400 mt-2">Introdu codul licenței pentru a debloca instant accesul complet VIP.</p>
+        </div>
 
-                    <div class="text-center text-[11px] text-gray-500 space-y-1 pt-2">
-                        <p><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Plăți securizate 100% prin <strong>Stripe</strong> & <strong>Revolut</strong>. Datele sunt protejate.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Card 1: Acces Gratuit -->
+            <div class="bg-panelBg border border-emeraldNeon/30 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-white">Acces Gratuit / Early Access</h3>
+                        <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">Activ</span>
                     </div>
+                    <div class="text-base font-extrabold text-emerald-400">0 RON <span class="text-[10px] font-normal text-gray-400">/ zi</span></div>
+                    <p class="text-[11px] text-gray-300">Testare zilnică pentru creatori la început de drum.</p>
+                    <ul class="text-[11px] text-gray-400 space-y-1 pt-1">
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> 10 mesaje gratuite pe zi</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Acces la Chat General & Social Hub</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Suport prin comunitate</li>
+                    </ul>
+                </div>
+                <div class="pt-2 text-center text-[10px] text-emerald-400 font-semibold bg-emerald-950/30 p-2 rounded-xl border border-emerald-500/20">
+                    Ai planul gratuit activat implicit!
                 </div>
             </div>
 
-           <!-- Tab: Cont, Google & Înregistrare -->
-    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
-        <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
-            <div class="text-center space-y-1">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
-                <h2 class="text-lg font-bold text-white">Autentificare & Cont Personal</h2>
-                <p class="text-[10px] text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
-            </div>
-            
-            <!-- Butoane Social Login -->
-            <div class="grid grid-cols-2 gap-2 pt-1">
-               <button onclick="loginWithGoogle()" class="flex items-center justify-center space-x-2 py-2.5 bg-gray-900 border border-gray-700 rounded-xl hover:border-cyanNeon text-white text-xs transition cursor-pointer">
-                    <i class="fa-brands fa-google text-red-500"></i>
-                    <span>Google</span>
-                </button>
-                <button onclick="socialLogin('GitHub')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                    <i class="fa-brands fa-github text-white"></i> <span>GitHub</span>
-                </button>
-                <button onclick="socialLogin('Facebook')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                    <i class="fa-brands fa-facebook text-blue-500"></i> <span>Facebook</span>
-                </button>
-                <button onclick="socialLogin('Apple')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                    <i class="fa-brands fa-apple text-white"></i> <span>Apple</span>
-                </button>
+            <!-- Card 2: Pachetul PRO VIP -->
+            <div class="bg-panelBg border border-amberGlow/50 p-4 rounded-2xl space-y-3 shadow-xl flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-amberGlow text-darkBg text-[8px] font-black uppercase px-3 py-0.5 rounded-bl-lg">Recomandat</div>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-white">Nexus Pro VIP</h3>
+                    </div>
+                    <div class="text-base font-extrabold text-amberGlow">49 RON <span class="text-[10px] font-normal text-gray-400">/ lună</span></div>
+                    <p class="text-[11px] text-gray-300">Generare nelimitată și viteză maximă de procesare.</p>
+                    <ul class="text-[11px] text-gray-400 space-y-1 pt-1">
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Mesaje & generări nelimitate</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Toate uneltele & Social Hub deblocate</li>
+                        <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Viteze mari prin Gemini Pro</li>
+                    </ul>
+                </div>
+                <a href="https://buy.stripe.com/test_4gM14mdAW8Iz71e59K4ko00" target="_blank" class="w-full block text-center text-darkBg font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer btn-primary-neon">
+                    Abonează-te Pro (49 RON)
+                </a>
             </div>
 
-            <div class="flex items-center my-2 text-gray-500 text-[10px]">
-                <hr class="flex-1 border-gray-800">
-                <span class="px-2">SAU FORMULAR NOU</span>
-                <hr class="flex-1 border-gray-800">
+            <!-- Card 3: Susține Proiectul (Revolut Me) -->
+            <div class="bg-panelBg border border-purple-500/40 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-white">Susține Proiectul ☕</h3>
+                        <span class="text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-semibold">Donație</span>
+                    </div>
+                    <div class="text-base font-extrabold text-purple-400">O cafea virtuală</div>
+                    <p class="text-[11px] text-gray-300 leading-snug">Îți place platforma și vrei să susții dezvoltarea ei continuă? Orice contribuție ne ajută să acoperim serverele și să adăugăm unelte AI mai tari!</p>
+                </div>
+                <a href="https://revolut.me/valentihz6" target="_blank" class="w-full block text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer btn-neon-glow">
+                    <i class="fa-solid fa-heart mr-1 text-pink-400"></i> Trimite o cafea pe Revolut
+                </a>
             </div>
-            <div class="space-y-2.5">
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[9px] text-gray-400 font-bold uppercase">Nume Complet</label>
-                        <input type="text" id="regFullName" placeholder="Ion Popescu" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-gray-400 font-bold uppercase">Telefon</label>
-                        <input type="text" id="regPhone" placeholder="0712345678" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[9px] text-gray-400 font-bold uppercase">Email</label>
-                    <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[9px] text-gray-400 font-bold uppercase">Parolă</label>
-                        <input type="password" id="regPass" placeholder="••••••••" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-gray-400 font-bold uppercase">Oraș</label>
-                        <input type="text" id="regCity" placeholder="București" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
-                    </div>
-                </div>
-                <button onclick="registerCompleteUser()" class="w-full bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-1">Creează Cont</button>
-            </div>
-            <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-0.5"></div>
+        </div>
+
+        <div class="text-center text-[11px] text-gray-500 space-y-1 pt-2">
+            <p><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Plăți securizate 100% prin <strong>Stripe</strong> & <strong>Revolut</strong>. Datele sunt protejate.</p>
         </div>
     </div>
+</div>
+
+<!-- Tab: Cont, Google & Înregistrare -->
+<div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
+    <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
+        <div class="text-center space-y-1">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
+            <h2 class="text-lg font-bold text-white">Autentificare & Cont Personal</h2>
+            <p class="text-[10px] text-gray-400">Conectează-te rapid sau creează un cont nou.</p>
+        </div>
+        
+        <!-- Butoane Social Login -->
+        <div class="grid grid-cols-2 gap-2 pt-1">
+           <button onclick="loginWithGoogle()" class="flex items-center justify-center space-x-2 py-2.5 bg-gray-900 border border-gray-700 rounded-xl hover:border-cyanNeon text-white text-xs transition cursor-pointer btn-neon-glow">
+                <i class="fa-brands fa-google text-red-500"></i>
+                <span>Google</span>
+            </button>
+            <button onclick="socialLogin('GitHub')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition btn-neon-glow">
+                <i class="fa-brands fa-github text-white"></i> <span>GitHub</span>
+            </button>
+            <button onclick="socialLogin('Facebook')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition btn-neon-glow">
+                <i class="fa-brands fa-facebook text-blue-500"></i> <span>Facebook</span>
+            </button>
+            <button onclick="socialLogin('Apple')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition btn-neon-glow">
+                <i class="fa-brands fa-apple text-white"></i> <span>Apple</span>
+            </button>
+        </div>
+
+        <div class="flex items-center my-2 text-gray-500 text-[10px]">
+            <hr class="flex-1 border-gray-800">
+            <span class="px-2">SAU FORMULAR NOU</span>
+            <hr class="flex-1 border-gray-800">
+        </div>
+        <div class="space-y-2.5">
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[9px] text-gray-400 font-bold uppercase">Nume Complet</label>
+                    <input type="text" id="regFullName" placeholder="Ion Popescu" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                </div>
+                <div>
+                    <label class="text-[9px] text-gray-400 font-bold uppercase">Telefon</label>
+                    <input type="text" id="regPhone" placeholder="0712345678" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                </div>
+            </div>
+            <div>
+                <label class="text-[9px] text-gray-400 font-bold uppercase">Email</label>
+                <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[9px] text-gray-400 font-bold uppercase">Parolă</label>
+                    <input type="password" id="regPass" placeholder="••••••••" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                </div>
+                <div>
+                    <label class="text-[9px] text-gray-400 font-bold uppercase">Oraș</label>
+                    <input type="text" id="regCity" placeholder="București" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                </div>
+            </div>
+            <button onclick="registerCompleteUser()" class="w-full hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-1 btn-primary-neon">Creează Cont</button>
+        </div>
+        <div id="userAccountStatus" class="text-center text-xs text-emerald-400 font-medium pt-0.5"></div>
+    </div>
+</div>
 
             <!-- Tab: Suport & Asistență Clienți -->
             <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
