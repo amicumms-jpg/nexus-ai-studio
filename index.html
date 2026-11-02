@@ -1715,7 +1715,11 @@ window.executeCreativeAction = function() {
         style = "highly detailed cinematic masterclass, 8k resolution, ultra-realistic professional photography";
     }
 
-  // Funcția pentru generarea vizualelor/conținutului creativ
+    // Apelăm corect funcția de generare vizuală
+    generateVisualForTab('prompt-creative', 'result-creative-container', style);
+};
+
+// Funcția pentru generarea vizualelor/conținutului creativ
 function generateVisualForTab(promptInputId, containerId, style) {
     const promptElement = document.getElementById(promptInputId);
     const containerElement = document.getElementById(containerId);
