@@ -1822,31 +1822,24 @@ async function callNexusAI(payload, maxRetries = 2) {
         }
     }
 }
-       function switchQuickTool(toolId) {
-    // Ascundem toate sub-tab-urile din centru
-    document.querySelectorAll('.quick-sub-content').forEach(el => {
+      function switchTab(tabId, title) {
+    document.querySelectorAll('.tab-content').forEach(el => {
         el.classList.add('hidden');
+        el.classList.remove('flex');
     });
 
-    // Scoatem stilul activ de pe toate butoanele din bara orizontală
-    document.querySelectorAll('.quick-sub-tab').forEach(btn => {
-        btn.classList.remove('text-cyanNeon', 'bg-cyanNeon/10', 'border', 'border-cyanNeon/30');
-        btn.classList.add('text-gray-300');
-    });
-
-    // Afișăm sub-tab-ul selectat
-    const targetTab = document.getElementById('tab-' + toolId);
-    if (targetTab) {
-        targetTab.classList.remove('hidden');
+    const selectedTab = document.getElementById(tabId + '-tab');
+    if (selectedTab) {
+        selectedTab.classList.remove('hidden');
+        selectedTab.classList.add('flex');
+        
+        // DACĂ s-a deschis Centrul de Unelte Rapide, activăm din start Prompt AI
+        if (tabId === 'quickToolsHub') {
+            switchQuickTool('promptEnhancer');
+        }
     }
-
-    // Activăm butonul corespunzător din meniul orizontal de sus
-    const targetBtn = document.getElementById('subnav-' + toolId);
-    if (targetBtn) {
-        targetBtn.classList.remove('text-gray-300');
-        targetBtn.classList.add('text-cyanNeon', 'bg-cyanNeon/10', 'border', 'border-cyanNeon/30');
-    }
-} 
+    // ... restul logicii tale pentru butoane active din sidebar ...
+}
 </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
