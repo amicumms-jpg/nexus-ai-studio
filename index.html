@@ -1822,23 +1822,33 @@ async function callNexusAI(payload, maxRetries = 2) {
         }
     }
 }
-      function switchTab(tabId, title) {
-    document.querySelectorAll('.tab-content').forEach(el => {
+    function switchTab(tabId, title) {
+    // Ascundem toate tab-urile
+    document.querySelectorAll('.app-tab').forEach(el => {
         el.classList.add('hidden');
         el.classList.remove('flex');
     });
 
+    // Afișăm tab-ul selectat
     const selectedTab = document.getElementById(tabId + '-tab');
     if (selectedTab) {
         selectedTab.classList.remove('hidden');
         selectedTab.classList.add('flex');
         
-        // DACĂ s-a deschis Centrul de Unelte Rapide, activăm din start Prompt AI
+        // DACĂ am deschis Centrul Unelte Rapide, afișăm direct prima unealtă din interior!
         if (tabId === 'quickToolsHub') {
-            switchQuickTool('promptEnhancer');
+            switchQuickTool('promptEnhancer'); // <-- ADAUGĂ ACEASTĂ LINIE
         }
     }
-    // ... restul logicii tale pentru butoane active din sidebar ...
+
+    // Gestionarea claselor active pe butoanele din sidebar...
+    document.querySelectorAll('aside button').forEach(btn => {
+        btn.classList.remove('bg-gray-800', 'text-cyanNeon');
+    });
+    const activeNav = document.getElementById('nav-' + tabId);
+    if (activeNav) {
+        activeNav.classList.add('bg-gray-800', 'text-cyanNeon');
+    }
 }
 </script>
     <!-- Footer Ultra-Compact -->
