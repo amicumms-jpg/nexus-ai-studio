@@ -88,6 +88,15 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #374151;
   }
+       /* Efecte Neon pentru butoane */
+  .btn-neon-glow {
+    transition: all 0.3s ease;
+  }
+  .btn-neon-glow:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    border-color: rgba(6, 182, 212, 0.8);
+    transform: translateY(-1px);
+  } 
 </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
@@ -208,66 +217,66 @@
                 </div>
 <!-- Unelte Rapide Unificate în Sidebar -->
 <div class="text-[10px] font-bold text-gray-500 uppercase px-3 mt-3 mb-1">Unelte Rapide</div>
-<button onclick="switchTab('quickToolsHub', 'Centru Unelte Rapide')" id="nav-quickToolsHub" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
+<button onclick="switchTab('quickToolsHub', 'Centru Unelte Rapide')" id="nav-quickToolsHub" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
     <i class="fa-solid fa-bolt text-cyanNeon w-4"></i>
     <span>Centru Unelte Rapide</span>
 </button>
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('socialHub', 'Social & Creator Hub')" id="nav-socialHub" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-photo-film text-tiktokColor w-4"></i>
-                        <span>Social & Creator Hub</span>
-                    </button>
-                    <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-editorialStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-calendar-days text-amberGlow w-4"></i>
-                        <span>Calendar Editorial</span>
-                    </button>
-                    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" id="nav-textToVideoStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-clapperboard text-cyanNeon w-4"></i>
-                        <span>Text-to-Video Studio</span>
-                    </button>
-                </div>
+<span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Generare Conținut & Social</span>
+<div class="mt-1 space-y-1 text-xs">
+    <button onclick="switchTab('socialHub', 'Social & Creator Hub')" id="nav-socialHub" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-photo-film text-tiktokColor w-4"></i>
+        <span>Social & Creator Hub</span>
+    </button>
+    <button onclick="switchTab('editorialStudio', 'Calendar Editorial')" id="nav-editorialStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-calendar-days text-amberGlow w-4"></i>
+        <span>Calendar Editorial</span>
+    </button>
+    <button onclick="switchTab('textToVideoStudio', 'Text-to-Video Studio')" id="nav-textToVideoStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-clapperboard text-cyanNeon w-4"></i>
+        <span>Text-to-Video Studio</span>
+    </button>
+</div>
 <!-- Buton Meniu Lateral: AI Creative Studio -->
-<a href="#" onclick="switchTab('3d-visual')" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition">
+<a href="#" onclick="switchTab('3d-visual')" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition btn-neon-glow">
     <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon w-4 text-center"></i>
     <span>AI Creative Studio</span>
 </a>
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('abTestingStudio', 'A/B Testing Hook-uri')" id="nav-abTestingStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-vials text-cyanNeon w-4"></i>
-                        <span>A/B Testing Titluri</span>
-                    </button>
-                    <button onclick="switchTab('podcastStudio', 'Podcast & Q&A Studio')" id="nav-podcastStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-podcast text-amberGlow w-4"></i>
-                        <span>Podcast Script & Q&A</span>
-                    </button>
-                    <button onclick="switchTab('roastStudio', 'AI Roast My Content')" id="nav-roastStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-fire text-tiktokColor w-4"></i>
-                        <span>AI Roast My Content 🔥</span>
-                    </button>
-                </div>
+<span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Unelte Avansate</span>
+<div class="mt-1 space-y-1 text-xs">
+    <button onclick="switchTab('abTestingStudio', 'A/B Testing Hook-uri')" id="nav-abTestingStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-vials text-cyanNeon w-4"></i>
+        <span>A/B Testing Titluri</span>
+    </button>
+    <button onclick="switchTab('podcastStudio', 'Podcast & Q&A Studio')" id="nav-podcastStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-podcast text-amberGlow w-4"></i>
+        <span>Podcast Script & Q&A</span>
+    </button>
+    <button onclick="switchTab('roastStudio', 'AI Roast My Content')" id="nav-roastStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-fire text-tiktokColor w-4"></i>
+        <span>AI Roast My Content 🔥</span>
+    </button>
+</div>
 
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Setări & Cont</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('billingCard', 'Abonament & PRO')" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-crown text-amberGlow w-4"></i>
-                        <span>Abonament & PRO</span>
-                    </button>
-                    <button onclick="switchTab('authAccount', 'Cont, Google & Înregistrare')" id="nav-authAccount" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium">
-                        <i class="fa-solid fa-user-shield text-cyanNeon w-4"></i>
-                        <span>Cont, Google & Login</span>
-                    </button>
-                    <button onclick="switchTab('supportTab', 'Suport & Asistență Clienți')" id="nav-supportTab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center justify-between transition cursor-pointer group">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-headset text-amberGlow group-hover:scale-110 transition-transform"></i>
-                            <span class="text-xs font-semibold">Suport & Ajutor</span>
-                        </div>
-                        <span class="text-[9px] bg-amberGlow/20 text-amberGlow border border-amberGlow/40 px-1.5 py-0.5 rounded-full font-bold">LIVE</span>
-                    </button> 
-                </div> 
+<span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block">Setări & Cont</span>
+<div class="mt-1 space-y-1 text-xs">
+    <button onclick="switchTab('billingCard', 'Abonament & PRO')" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-crown text-amberGlow w-4"></i>
+        <span>Abonament & PRO</span>
+    </button>
+    <button onclick="switchTab('authAccount', 'Cont, Google & Înregistrare')" id="nav-authAccount" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+        <i class="fa-solid fa-user-shield text-cyanNeon w-4"></i>
+        <span>Cont, Google & Login</span>
+    </button>
+    <button onclick="switchTab('supportTab', 'Suport & Asistență Clienți')" id="nav-supportTab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center justify-between transition cursor-pointer group btn-neon-glow">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-headset text-amberGlow group-hover:scale-110 transition-transform"></i>
+            <span class="text-xs font-semibold">Suport & Ajutor</span>
+        </div>
+        <span class="text-[9px] bg-amberGlow/20 text-amberGlow border border-amberGlow/40 px-1.5 py-0.5 rounded-full font-bold">LIVE</span>
+    </button> 
+</div> 
 
-        </aside>
+</aside>
         <!-- Dynamic Content Container -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
