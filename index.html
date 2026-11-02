@@ -1199,45 +1199,37 @@
             let accumulatedText = "";
             let textBuffer = ""; // Buffer crucial pentru a nu pierde nicio frântură de JSON
 
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) {
-                    break; // Ieșim imediat ce stream-ul s-a terminat
-                }
+           while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break; // Ieșim imediat ce stream-ul s-a încheiat de la server
+            }
 
-                textBuffer += decoder.decode(value, { stream: true });
-                const lines = textBuffer.split("\n");
-                textBuffer = lines.pop(); 
-                
-                for (const line of lines) {
-                    const trimmedLine = line.trim();
-                    if (trimmedLine.startsWith("data:")) {
-                        try {
-                            const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
-                            if (!jsonStr) continue;
-                            
-                            // Dacă ajungem la semnalul de final de la Google Gemini
-                            if (jsonStr === "[DONE]") {
-                                break;
+            textBuffer += decoder.decode(value, { stream: true });
+            const lines = textBuffer.split("\n");
+            textBuffer = lines.pop(); 
+            
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (trimmedLine.startsWith("data:")) {
+                    try {
+                        const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
+                        if (!jsonStr) continue;
+                        
+                        const parsed = JSON.parse(jsonStr);
+                        const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                        
+                        if (piece) {
+                            accumulatedText += piece;
+                            if (onChunkReceived) {
+                                onChunkReceived(accumulatedText);
                             }
-                            
-                            const parsed = JSON.parse(jsonStr);
-                            const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                            
-                            if (piece) {
-                                accumulatedText += piece;
-                                if (onChunkReceived) {
-                                    onChunkReceived(accumulatedText);
-                                }
-                            }
-                        } catch (e) {
-                            // Ignorăm bucățile parțiale
                         }
+                    } catch (e) {
+                        // Ignorăm bucățile parțiale
                     }
                 }
             }
-
-            return accumulatedText || "Răspuns gol primit de la server.";
         }
 
      window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
