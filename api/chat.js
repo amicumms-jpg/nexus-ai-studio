@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active (Instant Streaming enabled).' });
+        return res.status(200).json({ status: 'Chat API endpoint is active (High-Speed Streaming enabled).' });
     }
 
     if (req.method !== 'POST') {
@@ -45,32 +45,20 @@ export default async function handler(req, res) {
             });
         }
 
-        let specializedRoleDescription = "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).";
+        let specializedRoleDescription = "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro). Fii extrem de concis și rapid în răspunsuri.";
 
         switch (toolType) {
             case 'chat':
-                specializedRoleDescription = "Ești un expert avansat în cercetare, logică și programare.";
+                specializedRoleDescription = "Ești un expert avansat în cercetare, logică și programare. Oferă răspunsuri directe și rapide.";
                 break;
             case 'imageGen':
-                specializedRoleDescription = "Ești un specialist în ingineria prompturilor vizuale pentru generare de imagini de înaltă calitate.";
+                specializedRoleDescription = "Ești un specialist în ingineria prompturilor vizuale. Generează prompturi clare și detaliate în engleză.";
                 break;
             case 'pdfTools':
-                specializedRoleDescription = "Ești un expert în analiza, extragerea și sinteza documentelor, contractelor și fișierelor PDF.";
-                break;
-            case 'slides':
-                specializedRoleDescription = "Ești un expert în crearea de pitch deck-uri și structuri de prezentări profesionale.";
+                specializedRoleDescription = "Ești un expert în analiza și sinteza documentelor PDF.";
                 break;
             case 'writing':
-                specializedRoleDescription = "Ești un copywriter profesionist și editor de text.";
-                break;
-            case 'automations':
-                specializedRoleDescription = "Ești un expert în automatizări de fluxuri de lucru și scripturi.";
-                break;
-            case 'design':
-                specializedRoleDescription = "Ești un designer UI/UX și specialist în elemente grafice rapide.";
-                break;
-            case 'videoGen':
-                specializedRoleDescription = "Ești un scenarist și expert în producție video scurtă.";
+                specializedRoleDescription = "Ești un copywriter profesionist. Redactează texte persuasive și curate.";
                 break;
             default:
                 break;
@@ -78,14 +66,14 @@ export default async function handler(req, res) {
 
         const systemInstruction = {
             parts: [{
-                text: `${specializedRoleDescription}
-Rolul tău secundar este să ajuți utilizatorii să navigheze pe platformă și să le oferi suport rapid.`
+                text: `${specializedRoleDescription} Răspunde direct, fără introduceri lungi, pentru a asigura viteză maximă de streaming.`
             }]
         };
 
-        // Folosim exact modelul trimis de frontend (ex: gemini-3.8-flash)
-        const activeModel = model || 'gemini-3.8-flash';
+        // Modelul cerut de frontend sau fallback stabil
+        const activeModel = model || 'gemini-1.5-flash';
 
+        // Antete critice pentru streaming instant fără lag pe Vercel
         res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache, no-transform');
         res.setHeader('Connection', 'keep-alive');
@@ -101,7 +89,12 @@ Rolul tău secundar este să ajuți utilizatorii să navigheze pe platformă și
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     systemInstruction: systemInstruction,
-                    contents: [{ parts: parts }]
+                    contents: [{ parts: parts }],
+                    // Parametri de viteză și eficiență pentru generare instantanee
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 2048,
+                    }
                 })
             });
 
@@ -109,7 +102,7 @@ Rolul tău secundar este să ajuți utilizatorii să navigheze pe platformă și
 
             if (apiResponse.status >= 500 && attempts < maxRetries) {
                 attempts++;
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 continue;
             }
 
@@ -131,6 +124,7 @@ Rolul tău secundar este să ajuți utilizatorii să navigheze pe platformă și
             const chunk = decoder.decode(value, { stream: true });
             res.write(chunk);
 
+            // Forțăm trimiterea imediată a pachetului spre client
             if (typeof res.flush === 'function') {
                 res.flush();
             }
