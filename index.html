@@ -46,89 +46,81 @@
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
-  /* Animație fină de apariție pentru tab-uri */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
+    /* Animație fină de apariție pentru tab-uri */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    /* Aplică animația pe conținutul tab-urilor */
+    .app-tab:not(.hidden) {
+        animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-  }
 
-  /* Aplică animația pe conținutul tab-urilor */
-  .app-tab:not(.hidden) {
-    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Efecte de strălucire Neon personalizate */
-  .neon-glow-cyan {
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.15), inset 0 0 10px rgba(0, 243, 255, 0.05);
-    transition: all 0.3s ease;
-  }
-  
-  .neon-glow-cyan:hover {
-    box-shadow: 0 0 25px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
-  }
-
-  /* Scrollbar fin și subțire */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #030712;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #1f2937;
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #374151;
-  }
-       /* Efecte Neon pentru butoane */
-  .btn-neon-glow {
-    transition: all 0.3s ease;
-  }
-  .btn-neon-glow:hover {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
-    border-color: rgba(6, 182, 212, 0.8);
-    transform: translateY(-1px);
-  } 
-      /* Efecte Neon avansate pentru meniu și butoane */
-  .btn-neon-glow {
-    transition: all 0.3s ease;
-  }
-  .btn-neon-glow:hover {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
-    border-color: rgba(6, 182, 212, 0.8);
-    transform: translateY(-1px);
-  }
-
-  /* Efect neon intens și pulsație pentru butoanele principale de generare */
-  @keyframes neonPulse {
-    0%, 100% {
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2);
+    /* Efecte de strălucire Neon personalizate */
+    .neon-glow-cyan {
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.15), inset 0 0 10px rgba(0, 243, 255, 0.05);
+        transition: all 0.3s ease;
     }
-    50% {
-      box-shadow: 0 0 25px rgba(6, 182, 212, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.4);
+    
+    .neon-glow-cyan:hover {
+        box-shadow: 0 0 25px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
     }
-  }
 
-  .btn-primary-neon {
-    position: relative;
-    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-    transition: all 0.3s ease;
-    animation: neonPulse 3s infinite;
-  }
+    /* Scrollbar fin și subțire */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #030712;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1f2937;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #374151;
+    }
 
-  .btn-primary-neon:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 35px rgba(6, 182, 212, 0.9), 0 0 60px rgba(59, 130, 246, 0.5);
-  }  
-</style>
+    /* Efecte Neon pentru meniu și butoane */
+    .btn-neon-glow {
+        transition: all 0.3s ease;
+    }
+    .btn-neon-glow:hover {
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        border-color: rgba(6, 182, 212, 0.8);
+        transform: translateY(-1px);
+    }
+
+    /* Efect neon intens și pulsație pentru butoanele principale de generare */
+    @keyframes neonPulse {
+        0%, 100% {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+        50% {
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+    }
+
+    .btn-primary-neon {
+        position: relative;
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        transition: all 0.3s ease;
+        animation: neonPulse 3s infinite;
+    }
+
+    .btn-primary-neon:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 35px rgba(6, 182, 212, 0.9), 0 0 60px rgba(59, 130, 246, 0.5);
+    }
+    </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
     <!-- Canvas pentru efectul Matrix Rain Continuu -->
