@@ -1715,7 +1715,7 @@ window.executeCreativeAction = function() {
         style = "highly detailed cinematic masterclass, 8k resolution, ultra-realistic professional photography";
     }
 
-   // Funcția pentru generarea vizualelor/conținutului creativ (adaptată pentru răspuns complet sau compatibilitate)
+  // Funcția pentru generarea vizualelor/conținutului creativ
 function generateVisualForTab(promptInputId, containerId, style) {
     const promptElement = document.getElementById(promptInputId);
     const containerElement = document.getElementById(containerId);
@@ -1736,7 +1736,6 @@ function generateVisualForTab(promptInputId, containerId, style) {
     .then(async res => {
         if (!res.ok) throw new Error("Eroare de la serverul AI.");
         
-        // Verificăm dacă este stream sau JSON simplu și extragem textul
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let fullText = "";
@@ -1762,7 +1761,7 @@ function generateVisualForTab(promptInputId, containerId, style) {
             }
         }
 
-        containerElement.innerHTML = `<div style="color: #fff; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;">${parseMarkdown ? parseMarkdown(fullText || 'Generat cu succes!') : (fullText || 'Generat cu succes!')}</div>`;
+        containerElement.innerHTML = `<div style="color: #fff; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;">${typeof parseMarkdown === 'function' ? parseMarkdown(fullText || 'Generat cu succes!') : (fullText || 'Generat cu succes!')}</div>`;
     })
     .catch(err => {
         containerElement.innerHTML = `<div style="color: #ff4d4d;">Eroare la generare: ${err.message}</div>`;
@@ -1773,7 +1772,7 @@ window.openFullscreen = function(url) {
     window.open(url, '_blank');
 };
 
-// Funcție sigură pentru deschiderea modalelor (evită orice avertisment dacă elementul nu există)
+// Funcție sigură pentru deschiderea modalelor
 window.openModal = function(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -1788,38 +1787,38 @@ window.closeModal = function(modalId) {
     }
 };
 
-// Helper universal pentru apeluri ultra-rapide cu auto-retry corectat la erori de trafic
-    async function callNexusAI(payload, maxRetries = 2) {
-        let attempts = 0;
-        while (attempts <= maxRetries) {
+// Helper universal pentru apeluri cu auto-retry
+async function callNexusAI(payload, maxRetries = 2) {
+    let attempts = 0;
+    while (attempts <= maxRetries) {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            let data = {};
             try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                data = await response.json();
+            } catch (e) {}
 
-                let data = {};
-                try {
-                    data = await response.json();
-                } catch (e) {}
+            if (response.ok) return data;
 
-                if (response.ok) return data;
-
-                if (attempts < maxRetries && (response.status >= 500 || (data.error && data.error.includes('demand')))) {
-                    attempts++;
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    continue;
-                }
-                
-                throw new Error(data.error || 'Eroare la procesare.');
-            } catch (err) {
-                if (attempts >= maxRetries) throw err;
+            if (attempts < maxRetries && (response.status >= 500 || (data.error && data.error.includes('demand')))) {
                 attempts++;
                 await new Promise(resolve => setTimeout(resolve, 1500));
+                continue;
             }
+            
+            throw new Error(data.error || 'Eroare la procesare.');
+        } catch (err) {
+            if (attempts >= maxRetries) throw err;
+            attempts++;
+            await new Promise(resolve => setTimeout(resolve, 1500));
         }
     }
+}
 </script>
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
