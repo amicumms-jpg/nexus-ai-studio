@@ -1085,149 +1085,144 @@
 
         let freeMessagesList = 10;
 
-        function showToast(msg, type='info') {
-            const container = document.getElementById('toastContainer');
-            if(!container) return;
-            const toast = document.createElement('div');
-            toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
-            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${msg}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+      function showToast(msg, type='info') {
+        const container = document.getElementById('toastContainer');
+        if(!container) return;
+        const toast = document.createElement('div');
+        toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
+        toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
+        setTimeout(() => {
+            toast.classList.add('translate-y-2', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
 
-        window.switchSocialPlatform = function(platform) {
-            ['tiktok', 'insta', 'yt', 'seo'].forEach(p => {
-                const btn = document.getElementById('socBtn-' + p);
-                if(btn) {
-                    btn.className = p === platform ? 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1' : 'px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1';
-                }
-            });
-            const msgs = document.getElementById('socialHubMessages');
-            if(msgs) {
-                msgs.innerHTML += `<div class="text-gray-400 text-[11px] mt-1">[Mod comutat pe: <b>${platform.toUpperCase()}</b>] Spune-mi ce dorești să generăm!</div>`;
-                msgs.scrollTop = msgs.scrollHeight;
+    window.switchSocialPlatform = function(platform) {
+        ['tiktok', 'insta', 'yt', 'seo'].forEach(p => {
+            const btn = document.getElementById('socBtn-' + p);
+            if(btn) {
+                btn.className = p === platform ? 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-tiktokColor text-white transition flex items-center gap-1' : 'px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 hover:text-white transition flex items-center gap-1';
             }
-        };
+        });
+        const msgs = document.getElementById('socialHubMessages');
+        if(msgs) {
+            msgs.innerHTML += `<div class="text-gray-400 text-[11px] mt-1">[Mod comutat pe: <b>${platform.toUpperCase()}</b>] Spune-mi ce dorești să generăm!</div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+    };
 
-     let attachedFiles = {};
+    let attachedFiles = {};
         
-        window.handleFileSelect = function(tabKey) {
-            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-            const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
-            if (fileInput && fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                attachedFiles[tabKey] = file;
-                if(nameSpan) nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                if(previewBox) {
-                    previewBox.classList.remove('hidden');
-                    previewBox.classList.add('flex');
-                }
-            }
-        };
-
-        window.removeAttachment = function(tabKey) {
-            const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
-            const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
-            if(fileInput) fileInput.value = '';
-            delete attachedFiles[tabKey];
+    window.handleFileSelect = function(tabKey) {
+        const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+        const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+        const nameSpan = document.getElementById(`chatAttachmentName-${tabKey}`);
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            attachedFiles[tabKey] = file;
+            if(nameSpan) nameSpan.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
             if(previewBox) {
-                previewBox.classList.remove('flex');
-                previewBox.classList.add('hidden');
+                previewBox.classList.remove('hidden');
+                previewBox.classList.add('flex');
             }
-        };
+        }
+    };
 
-        async function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const result = reader.result;
-                    const base64Index = result.indexOf(';base64,');
-                    if (base64Index !== -1) {
-                        resolve({ base64: result.substring(base64Index + 8), mimeType: result.substring(5, base64Index) });
-                    } else {
-                        reject(new Error("Format fișier invalid."));
-                    }
-                };
-                reader.onerror = error => reject(error);
-            });
+    window.removeAttachment = function(tabKey) {
+        const fileInput = document.getElementById(`chatFileInput-${tabKey}`);
+        const previewBox = document.getElementById(`chatAttachmentPreview-${tabKey}`);
+        if(fileInput) fileInput.value = '';
+        delete attachedFiles[tabKey];
+        if(previewBox) {
+            previewBox.classList.remove('flex');
+            previewBox.classList.add('hidden');
+        }
+    };
+
+    async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const result = reader.result;
+                const base64Index = result.indexOf(';base64,');
+                if (base64Index !== -1) {
+                    resolve({ base64: result.substring(base64Index + 8), mimeType: result.substring(5, base64Index) });
+                } else {
+                    reject(new Error("Format fișier invalid."));
+                }
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // Funcție principală corectată și optimizată pentru Streaming instant pe Vercel
+    async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+            throw new Error("Utilizatorul nu este autentificat!");
         }
 
-     // Funcție principală actualizată pentru Streaming instant pe Vercel (/api/chat)
-        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
-            const currentUser = auth.currentUser;
-            if (!currentUser) {
-                throw new Error("Utilizatorul nu este autentificat!");
+        const departmentSelect = document.getElementById('department-select');
+        const selectedDept = departmentSelect ? departmentSelect.value : 'general';
+
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                prompt: promptText, 
+                fileData: fileData, 
+                model: modelName,
+                department: selectedDept
+            })
+        });
+
+        if (!response.ok) {
+            let errorMsg = "Eroare de la serverul AI.";
+            try {
+                const errData = await response.json();
+                errorMsg = errData.error || errorMsg;
+            } catch(e) {}
+            
+            if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED') {
+                throw new Error('QUOTA_EXCEEDED');
             }
+            throw new Error(errorMsg);
+        }
 
-            const departmentSelect = document.getElementById('department-select');
-            const selectedDept = departmentSelect ? departmentSelect.value : 'general';
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let accumulatedText = "";
+        let textBuffer = "";
 
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    prompt: promptText, 
-                    fileData: fileData, 
-                    model: modelName,
-                    department: selectedDept
-                })
-            });
-
-            if (!response.ok) {
-                let errorMsg = "Eroare de la serverul AI.";
-                try {
-                    const errData = await response.json();
-                    errorMsg = errData.error || errorMsg;
-                } catch(e) {}
-                
-                if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED') {
-                    throw new Error('QUOTA_EXCEEDED');
-                }
-                throw new Error(errorMsg);
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
             }
-
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder("utf-8");
-            let accumulatedText = "";
-            let textBuffer = ""; // Buffer crucial pentru a nu pierde nicio frântură de JSON
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) {
-                    break; // Ieșim imediat ce stream-ul s-a terminat
-                }
-  textBuffer += decoder.decode(value, { stream: true });
-                const lines = textBuffer.split("\n");
-                textBuffer = lines.pop(); 
-                
-                for (const line of lines) {
-                    const trimmedLine = line.trim();
-                    if (trimmedLine.startsWith("data:")) {
-                        try {
-                            const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
-                            if (!jsonStr) continue;
-                            
-                            // Dacă ajungem la semnalul de final de la Google Gemini
-                            if (jsonStr === "[DONE]") {
-                                break;
+            textBuffer += decoder.decode(value, { stream: true });
+            const lines = textBuffer.split("\n");
+            textBuffer = lines.pop(); 
+            
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (trimmedLine.startsWith("data:")) {
+                    try {
+                        const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
+                        if (!jsonStr) continue;
+                        
+                        const parsed = JSON.parse(jsonStr);
+                        const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                        
+                        if (piece) {
+                            accumulatedText += piece;
+                            if (onChunkReceived) {
+                                onChunkReceived(accumulatedText);
                             }
-                            
-                            const parsed = JSON.parse(jsonStr);
-                            const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                            
-                            if (piece) {
-                                accumulatedText += piece;
-                                if (onChunkReceived) {
-                                    onChunkReceived(accumulatedText);
-                                }
                         }
                     } catch (e) {
                         // Ignorăm bucățile parțiale
@@ -1235,145 +1230,143 @@
                 }
             }
         }
-           
-            return accumulatedText || "Răspuns gol primit de la server.";
-        } 
+        
+        return accumulatedText || "Răspuns gol primit de la server.";
+    } 
 
-     window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
-            const inputEl = document.getElementById(inputId);
-            const msgBox = document.getElementById(messagesContainerId);
-            if (!inputEl || !msgBox) return;
-            const text = inputEl.value.trim();
-            const file = attachedFiles ? attachedFiles[tabKey] : null;
-            if (!text && !file) return;
+    window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
+        const inputEl = document.getElementById(inputId);
+        const msgBox = document.getElementById(messagesContainerId);
+        if (!inputEl || !msgBox) return;
+        const text = inputEl.value.trim();
+        const file = attachedFiles ? attachedFiles[tabKey] : null;
+        if (!text && !file) return;
 
-            if(tabKey === 'chat') {
-                if(typeof freeMessagesList !== 'undefined' && freeMessagesList <= 0) {
-                    showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO!', 'error');
-                    window.switchTab('billingCard', 'Abonament & PRO');
-                    return;
-                }
-                if(typeof freeMessagesList !== 'undefined') freeMessagesList--;
-                const freeCountDisplay = document.getElementById('freeCountDisplay');
-                if(freeCountDisplay) freeCountDisplay.innerText = freeMessagesList + '/10';
+        if(tabKey === 'chat') {
+            if(typeof freeMessagesList !== 'undefined' && freeMessagesList <= 0) {
+                showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO!', 'error');
+                window.switchTab('billingCard', 'Abonament & PRO');
+                return;
             }
+            if(typeof freeMessagesList !== 'undefined') freeMessagesList--;
+            const freeCountDisplay = document.getElementById('freeCountDisplay');
+            if(freeCountDisplay) freeCountDisplay.innerText = freeMessagesList + '/10';
+        }
 
-            let displayHtml = '';
-            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
-            if (text) displayHtml += `<div>${escapeHtml(text)}</div>`;
+        let displayHtml = '';
+        if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+        if (text) displayHtml += `<div>${escapeHtml(text)}</div>`;
 
-            msgBox.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${displayHtml}</div></div>`;
-            inputEl.value = '';
-            inputEl.style.height = 'auto';
-            if(typeof saveDraft === 'function') saveDraft('');
-            msgBox.scrollTop = msgBox.scrollHeight;
-            window.removeAttachment(tabKey);
+        msgBox.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${displayHtml}</div></div>`;
+        inputEl.value = '';
+        inputEl.style.height = 'auto';
+        if(typeof saveDraft === 'function') saveDraft('');
+        msgBox.scrollTop = msgBox.scrollHeight;
+        window.removeAttachment(tabKey);
 
-            // Creăm din prima căsuța unde va curge textul generat în timp real
-            const msgId = 'msg-' + Date.now();
-            msgBox.innerHTML += `
-                <div class="flex justify-start my-2">
-                    <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
-                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
-                            <span>Nexus AI Assistant</span>
-                            <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
+        const msgId = 'msg-' + Date.now();
+        msgBox.innerHTML += `
+            <div class="flex justify-start my-2">
+                <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                        <span>Nexus AI Assistant</span>
+                        <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
                     </div>
+                    <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
                 </div>
-            `;
-            msgBox.scrollTop = msgBox.scrollHeight;
-            const contentDiv = document.getElementById(msgId);
+            </div>
+        `;
+        msgBox.scrollTop = msgBox.scrollHeight;
+        const contentDiv = document.getElementById(msgId);
 
-            try {
-                let fileDataToSend = file ? await fileToBase64(file) : null;
-                const modelSelect = document.getElementById('aiModelSelect');
-                const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.8-flash';
-                
-                const departmentSelect = document.getElementById('department-select');
-                const selectedDept = departmentSelect ? departmentSelect.value : 'general';
-                const finalPrompt = `[Specialist: ${selectedDept}] ${text || "Analizează acest fișier:"}`;
-
-                // Apelăm fetchFromServer cu callback-ul de streaming
-                await fetchFromServer(finalPrompt, fileDataToSend, selectedModel, (currentText) => {
-                    contentDiv.innerHTML = parseMarkdown(currentText);
-                    if(typeof hljs !== 'undefined') hljs.highlightAll();
-                    msgBox.scrollTop = msgBox.scrollHeight;
-                });
-
-            } catch (err) {
-                if (err.message === 'QUOTA_EXCEEDED') {
-                    contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
-                } else {
-                    contentDiv.innerHTML = `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${escapeHtml(err.message)}</div>`;
-                }
-            }
-        };
-
-        window.sendChatMessage = async function(containerId, inputId, prefix) {
-            const input = document.getElementById(inputId);
-            const container = document.getElementById(containerId);
-            if(!input || !container) return;
-            const text = input.value.trim();
-            if(!text) return;
-            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
+        try {
+            let fileDataToSend = file ? await fileToBase64(file) : null;
+            const modelSelect = document.getElementById('aiModelSelect');
+            const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.8-flash';
             
-            const msgId = 'msg-' + Date.now();
-            container.innerHTML += `
-                <div class="flex justify-start my-2">
-                    <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
-                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
-                            <span>Nexus AI Assistant</span>
-                            <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
+            const departmentSelect = document.getElementById('department-select');
+            const selectedDept = departmentSelect ? departmentSelect.value : 'general';
+            const finalPrompt = `[Specialist: ${selectedDept}] ${text || "Analizează acest fișier:"}`;
+
+            await fetchFromServer(finalPrompt, fileDataToSend, selectedModel, (currentText) => {
+                contentDiv.innerHTML = parseMarkdown(currentText);
+                if(typeof hljs !== 'undefined') hljs.highlightAll();
+                msgBox.scrollTop = msgBox.scrollHeight;
+            });
+
+        } catch (err) {
+            if (err.message === 'QUOTA_EXCEEDED') {
+                contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
+            } else {
+                contentDiv.innerHTML = `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${escapeHtml(err.message)}</div>`;
+            }
+        }
+    };
+
+    window.sendChatMessage = async function(containerId, inputId, prefix) {
+        const input = document.getElementById(inputId);
+        const container = document.getElementById(containerId);
+        if(!input || !container) return;
+        const text = input.value.trim();
+        if(!text) return;
+        container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(text)}</div></div>`;
+        input.value = '';
+        container.scrollTop = container.scrollHeight;
+        
+        const msgId = 'msg-' + Date.now();
+        container.innerHTML += `
+            <div class="flex justify-start my-2">
+                <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                        <span>Nexus AI Assistant</span>
+                        <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
                     </div>
+                    <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
                 </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-            const contentDiv = document.getElementById(msgId);
+            </div>
+        `;
+        container.scrollTop = container.scrollHeight;
+        const contentDiv = document.getElementById(msgId);
 
-            try {
-                await fetchFromServer(prefix + text, null, 'gemini-3.8-flash', (currentText) => {
-                    contentDiv.innerHTML = parseMarkdown(currentText);
-                    if(typeof hljs !== 'undefined') hljs.highlightAll();
-                    container.scrollTop = container.scrollHeight;
-                });
-            } catch(e) {
-                contentDiv.innerHTML = `<div class="text-red-400 text-xs p-2">Eroare server: ${escapeHtml(e.message)}</div>`;
-            }
-        };
+        try {
+            await fetchFromServer(prefix + text, null, 'gemini-3.8-flash', (currentText) => {
+                contentDiv.innerHTML = parseMarkdown(currentText);
+                if(typeof hljs !== 'undefined') hljs.highlightAll();
+                container.scrollTop = container.scrollHeight;
+            });
+        } catch(e) {
+            contentDiv.innerHTML = `<div class="text-red-400 text-xs p-2">Eroare server: ${escapeHtml(e.message)}</div>`;
+        }
+    };
 
-        window.sendSocialHubMessage = function() {
-            window.sendChatMessage('socialHubMessages', 'socialHubInput', '[Social Hub AI]: ');
-        };
+    window.sendSocialHubMessage = function() {
+        window.sendChatMessage('socialHubMessages', 'socialHubInput', '[Social Hub AI]: ');
+    };
 
-        window.sendNexusRobotMessage = async function() {
-            const input = document.getElementById('nexus-robot-input');
-            const container = document.getElementById('nexus-robot-messages');
-            if(!input || !container) return;
-            const text = input.value.trim();
-            if(!text) return;
-            container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2 rounded-xl max-w-[85%] text-xs">${escapeHtml(text)}</div></div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-            
-            const msgId = 'robot-msg-' + Date.now();
-            container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%] text-xs text-slate-200"><b>Nexus AI:</b> <span id="${msgId}">Se generează...</span></div>`;
-            container.scrollTop = container.scrollHeight;
-            const contentDiv = document.getElementById(msgId);
+    window.sendNexusRobotMessage = async function() {
+        const input = document.getElementById('nexus-robot-input');
+        const container = document.getElementById('nexus-robot-messages');
+        if(!input || !container) return;
+        const text = input.value.trim();
+        if(!text) return;
+        container.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2 rounded-xl max-w-[85%] text-xs">${escapeHtml(text)}</div></div>`;
+        input.value = '';
+        container.scrollTop = container.scrollHeight;
+        
+        const msgId = 'robot-msg-' + Date.now();
+        container.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%] text-xs text-slate-200"><b>Nexus AI:</b> <span id="${msgId}">Se generează...</span></div>`;
+        container.scrollTop = container.scrollHeight;
+        const contentDiv = document.getElementById(msgId);
 
-            try {
-                await fetchFromServer(text, null, 'gemini-3.8-flash', (currentText) => {
-                    contentDiv.innerText = currentText;
-                    container.scrollTop = container.scrollHeight;
-                });
-            } catch(e) {
-                contentDiv.innerText = "Indisponibil.";
-            }
-        };
+        try {
+            await fetchFromServer(text, null, 'gemini-3.8-flash', (currentText) => {
+                contentDiv.innerText = currentText;
+                container.scrollTop = container.scrollHeight;
+            });
+        } catch(e) {
+            contentDiv.innerText = "Indisponibil.";
+        }
+    };
 
         window.speakText = function(elementId) {
             const el = document.getElementById(elementId);
@@ -1722,15 +1715,7 @@ window.executeCreativeAction = function() {
         style = "highly detailed cinematic masterclass, 8k resolution, ultra-realistic professional photography";
     }
 
-    // Apelăm motorul universal securizat
-    generateVisualForTab('prompt-creative', 'result-creative-container', style);
-};
-
-window.openFullscreen = function(url) {
-    window.open(url, '_blank');
-};
-
-// Funcția pentru generarea vizualelor/conținutului creativ
+   // Funcția pentru generarea vizualelor/conținutului creativ (adaptată pentru răspuns complet sau compatibilitate)
 function generateVisualForTab(promptInputId, containerId, style) {
     const promptElement = document.getElementById(promptInputId);
     const containerElement = document.getElementById(containerId);
@@ -1746,16 +1731,47 @@ function generateVisualForTab(promptInputId, containerId, style) {
     fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: `${userText} [Stil: ${style}]`, department: 'general' })
+        body: JSON.stringify({ prompt: `${userText} [Stil: ${style}]`, department: 'general', toolType: 'imageGen' })
     })
-    .then(res => res.json())
-    .then(data => {
-        containerElement.innerHTML = `<div style="color: #fff; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;">${data.text || data.reply || 'Generat cu succes!'}</div>`;
+    .then(async res => {
+        if (!res.ok) throw new Error("Eroare de la serverul AI.");
+        
+        // Verificăm dacă este stream sau JSON simplu și extragem textul
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split("\n");
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith("data:")) {
+                    try {
+                        const jsonStr = trimmed.replace(/^data:\s*/, "");
+                        if (!jsonStr) continue;
+                        const parsed = JSON.parse(jsonStr);
+                        const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                        fullText += piece;
+                    } catch (e) {}
+                }
+            }
+        }
+
+        containerElement.innerHTML = `<div style="color: #fff; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;">${parseMarkdown ? parseMarkdown(fullText || 'Generat cu succes!') : (fullText || 'Generat cu succes!')}</div>`;
     })
     .catch(err => {
         containerElement.innerHTML = `<div style="color: #ff4d4d;">Eroare la generare: ${err.message}</div>`;
     });
 }
+
+window.openFullscreen = function(url) {
+    window.open(url, '_blank');
+};
 
 // Funcție sigură pentru deschiderea modalelor (evită orice avertisment dacă elementul nu există)
 window.openModal = function(modalId) {
@@ -1771,7 +1787,8 @@ window.closeModal = function(modalId) {
         modal.classList.add('hidden');
     }
 };
-       // Helper universal pentru apeluri ultra-rapide cu auto-retry la erori de trafic
+
+// Helper universal pentru apeluri ultra-rapide cu auto-retry corectat la erori de trafic
 async function callNexusAI(payload, maxRetries = 2) {
     let attempts = 0;
     while (attempts <= maxRetries) {
@@ -1782,19 +1799,21 @@ async function callNexusAI(payload, maxRetries = 2) {
                 body: JSON.stringify(payload)
             });
 
-            const data = await response.json();
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (e) {}
 
             // Dacă este ok, returnăm răspunsul direct
             if (response.ok) return data;
 
-   // Blocul de încheiere și retry corectat
-        try {
             // Dacă Google indică supraîncărcare (503/500/High Demand), reîncercăm automat după 1.5 secunde
             if (attempts < maxRetries && (response.status >= 500 || (data.error && data.error.includes('demand')))) {
                 attempts++;
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 continue;
             }
+            
             throw new Error(data.error || 'Eroare la procesare.');
         } catch (err) {
             if (attempts >= maxRetries) throw err;
