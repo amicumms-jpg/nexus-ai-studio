@@ -171,21 +171,24 @@
                     <i class="fa-solid fa-bolt-lightning"></i>
                 </div>
                 <div>
-                    <!-- Buton Meniu Mobil (hamburger) -->
-                    <button onclick="event.stopPropagation(); toggleSidebar();" class="md:hidden text-cyanNeon p-1.5 hover:bg-gray-800 rounded-lg text-base focus:outline-none mr-1">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <div class="flex items-center space-x-2">
-                        <h1 class="font-bold text-xs text-white tracking-wide group-hover:text-cyanNeon transition">Nexus AI Studio Pro</h1>
-                        <span id="proBadge" class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-semibold">FREE</span>
-                    </div>
-                    <div class="text-[10px] text-gray-400 flex items-center space-x-1 mt-0.5">
-                        <span class="text-cyanNeon"><i class="fa-solid fa-house text-[9px] mr-1"></i> Hub</span>
-                        <span class="text-gray-600">/</span>
-                        <span id="breadcrumbCurrent" class="text-gray-200 font-medium">Home / Tools Hub</span>
-                    </div>
-                </div>
-            </div>
+                   <!-- Buton Meniu Mobil (hamburger) & Titlu Compact -->
+<div class="flex items-center space-x-2">
+    <button onclick="event.stopPropagation(); toggleSidebar();" class="md:hidden text-cyanNeon p-1 hover:bg-gray-800 rounded-lg text-sm focus:outline-none shrink-0" title="Deschide Meniul">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <div class="flex flex-col justify-center">
+        <div class="flex items-center space-x-1.5">
+            <h1 class="font-bold text-xs text-white tracking-wide group-hover:text-cyanNeon transition leading-none">Nexus AI Studio Pro</h1>
+            <span id="proBadge" class="text-[8px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded-full font-semibold leading-none">FREE</span>
+        </div>
+        <div class="text-[9px] text-gray-400 flex items-center space-x-1 mt-0.5">
+            <span class="text-cyanNeon"><i class="fa-solid fa-house text-[8px] mr-0.5"></i> Hub</span>
+            <span class="text-gray-600">/</span>
+            <span id="breadcrumbCurrent" class="text-gray-200 font-medium truncate max-w-[120px] sm:max-w-none">Home / Tools Hub</span>
+        </div>
+    </div>
+</div>
 
             <!-- Utilitare Sus -->
             <div class="flex flex-wrap items-center gap-2 text-xs">
