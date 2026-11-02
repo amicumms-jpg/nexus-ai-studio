@@ -45,6 +45,50 @@
         }
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
+    <style>
+  /* Animație fină de apariție pentru tab-uri */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Aplică animația pe conținutul tab-urilor */
+  .app-tab:not(.hidden) {
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Efecte de strălucire Neon personalizate */
+  .neon-glow-cyan {
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.15), inset 0 0 10px rgba(0, 243, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .neon-glow-cyan:hover {
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
+  }
+
+  /* Scrollbar fin și subțire */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #030712;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1f2937;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #374151;
+  }
+</style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
     <!-- Canvas pentru efectul Matrix Rain Continuu -->
