@@ -1822,7 +1822,8 @@ async function callNexusAI(payload, maxRetries = 2) {
         }
     }
 }
-   window.switchTab = function(tabId, title) {
+ // 1. Funcția principală de comutare a tab-urilor (dacă nu o ai deja completă)
+window.switchTab = function(tabId, title) {
     document.querySelectorAll('.app-tab').forEach(tab => {
         tab.classList.add('hidden');
         tab.classList.remove('flex');
@@ -1834,7 +1835,7 @@ async function callNexusAI(payload, maxRetries = 2) {
         target.classList.remove('hidden');
         target.classList.add('flex');
         
-        // Linia care activează automat prima unealtă din Centrul Unelte Rapide:
+        // Activează instantaneu primul sub-tab (Prompt AI) când deschizi Centrul Unelte Rapide
         if (tabId === 'quickToolsHub') {
             switchQuickTool('promptEnhancer');
         }
@@ -1846,6 +1847,44 @@ async function callNexusAI(payload, maxRetries = 2) {
     if(window.innerWidth < 768) {
         const sidebar = document.getElementById('appSidebar');
         if(sidebar) sidebar.classList.add('hidden');
+    }
+};
+
+// 2. Funcția care comută între unelte în interiorul Centrului Unelte Rapide
+window.switchQuickTool = function(toolId) {
+    // Ascunde toate conținuturile de sub-tab-uri
+    document.querySelectorAll('.quick-sub-content').forEach(el => {
+        el.classList.add('hidden');
+    });
+
+    // Resetează stilurile pe toate butoanele orizontale de sus
+    document.querySelectorAll('.quick-sub-tab').forEach(btn => {
+        btn.classList.remove('text-cyanNeon', 'bg-cyanNeon/10', 'border', 'border-cyanNeon/30');
+        btn.classList.add('text-gray-300');
+    });
+
+    // Afișează sub-tab-ul selectat
+    const targetTab = document.getElementById('tab-' + toolId);
+    if (targetTab) {
+        targetTab.classList.remove('hidden');
+    }
+
+    // Activează vizual butonul corespunzător din bara orizontală de sus
+    const targetBtn = document.getElementById('subnav-' + toolId);
+    if (targetBtn) {
+        targetBtn.classList.remove('text-gray-300');
+        targetBtn.classList.add('text-cyanNeon', 'bg-cyanNeon/10', 'border', 'border-cyanNeon/30');
+    }
+};
+
+// 3. Funcție pentru curățarea chat-ului dintr-o unealtă rapidă
+window.clearTabChat = function(tab) {
+    const container = document.getElementById(tab + 'Messages');
+    if(container) {
+        container.innerHTML = '<div class="text-gray-400 text-xs">Chat golit.</div>';
+    }
+    if(typeof showToast === 'function') {
+        showToast('Chat golit.', 'success');
     }
 };
 </script>
