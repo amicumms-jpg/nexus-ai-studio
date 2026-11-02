@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, message, fileData, model, department, toolType } = req.body;
+        const { prompt, message, fileData, department, toolType } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -54,28 +54,28 @@ export default async function handler(req, res) {
 
         switch (toolType) {
             case 'chat':
-                specializedRoleDescription = "Ești un expert avansat în cercetare, logică și programare (alternativă de top pentru DeepSeek).";
+                specializedRoleDescription = "Ești un expert avansat în cercetare, logică și programare.";
                 break;
             case 'imageGen':
-                specializedRoleDescription = "Ești un specialist în ingineria prompturilor vizuale pentru generare de imagini de înaltă calitate (stil Midjourney/Ideogram). Generează prompturi vizuale detaliate în engleză pe baza cererii utilizatorului.";
+                specializedRoleDescription = "Ești un specialist în ingineria prompturilor vizuale pentru generare de imagini de înaltă calitate. Generează prompturi vizuale detaliate în engleză pe baza cererii utilizatorului.";
                 break;
             case 'pdfTools':
                 specializedRoleDescription = "Ești un expert în analiza, extragerea și sinteza documentelor, contractelor și fișierelor PDF.";
                 break;
             case 'slides':
-                specializedRoleDescription = "Ești un expert în crearea de pitch deck-uri și structuri de prezentări profesionale (slide cu slide).";
+                specializedRoleDescription = "Ești un expert în crearea de pitch deck-uri și structuri de prezentări profesionale.";
                 break;
             case 'writing':
-                specializedRoleDescription = "Ești un copywriter profesionist și editor de text (stil ProWritingAid). Corectează, reformulează și optimizează stilul textului.";
+                specializedRoleDescription = "Ești un copywriter profesionist și editor de text. Corectează, reformulează și optimizează stilul textului.";
                 break;
             case 'automations':
-                specializedRoleDescription = "Ești un expert în automatizări de fluxuri de lucru, scripturi și integrare de API-uri (stil Bardeen).";
+                specializedRoleDescription = "Ești un expert în automatizări de fluxuri de lucru, scripturi și integrare de API-uri.";
                 break;
             case 'design':
-                specializedRoleDescription = "Ești un designer UI/UX și specialist în elemente grafice rapide. Generează cod HTML/CSS curat sau idei de layout pentru bannere și materiale vizuale.";
+                specializedRoleDescription = "Ești un designer UI/UX și specialist în elemente grafice rapide.";
                 break;
             case 'videoGen':
-                specializedRoleDescription = "Ești un scenarist și expert în producție video scurtă. Creează cadre, storyboard-uri și prompturi pentru instrumente de tip Runway/Pika.";
+                specializedRoleDescription = "Ești un scenarist și expert în producție video scurtă.";
                 break;
             default:
                 break;
@@ -87,18 +87,15 @@ export default async function handler(req, res) {
 Rolul tău secundar este să ajuți utilizatorii să navigheze pe platformă, să le oferi suport rapid și să le explici modelul de susținere a proiectului.
 
 REGULI ȘI GHIDAJ:
-1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite:
-   - Pentru rețele sociale: TikTok AI Creator, Instagram AI Creator, YouTube AI Scriptwriter.
-   - Pentru dezvoltare & cod: Code Studio.
-   - Pentru marketing & text: Copywriting, Hashtag & SEO Hub, A/B Testing Titluri.
-2. SUPORT & FAQ: Răspunde scurt și clar la întrebări despre funcționarea platformei. Menționează că platforma este în faza de testare/Early Access (100% gratuită). Pentru contact direct: contact@nexusaistudio.ro.
-3. SUSȚINERE & DONAȚII: Când utilizatorul întreabă despre pachetul PRO, opțiuni avansate sau cum poate ajuta proiectul, explică-i că platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
+1. GHIDAJ MODULE: Când utilizatorul întreabă ce poate face pe site, recomandă-i modulele potrivite.
+2. SUPORT & FAQ: Răspunde scurt și clar. Pentru contact direct: contact@nexusaistudio.ro.
+3. SUSȚINERE & DONAȚII: Platforma funcționează pe bază de donații voluntare (prin Revolut Me) pentru acoperirea costurilor de API și servere, iar susținătorii pot primi chei VIP de acces prioritare.
 4. TON DE COMUNICARE: Fii amabil, concis, profesionist și direct la subiect.`
             }]
         };
 
-        // Folosim direct modelul cerut sau varianta standard validă de flash
-        const activeModel = model && model.includes('flash') ? model : 'gemini-1.5-flash';
+        // Folosim modelul oficial stabil care funcționează impecabil cu noile chei generate
+        const activeModel = 'gemini-1.5-flash';
 
         // Setăm antetele critice pentru streaming IMEDIAT înainte de fetch
         res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
@@ -106,14 +103,32 @@ REGULI ȘI GHIDAJ:
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');
 
-        const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                systemInstruction: systemInstruction,
-                contents: [{ parts: parts }]
-            })
-        });
+        // Mecanism de auto-retry pentru a ocoli erorile temporare 503 / High Demand de la Google
+        let apiResponse;
+        let attempts = 0;
+        const maxRetries = 2;
+
+        while (attempts <= maxRetries) {
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:streamGenerateContent?alt=sse&key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    systemInstruction: systemInstruction,
+                    contents: [{ parts: parts }]
+                })
+            });
+
+            if (apiResponse.ok) break;
+
+            // Dacă primim eroare de server (503 sau 500), reîncercăm automat după 1.5 secunde
+            if (apiResponse.status >= 500 && attempts < maxRetries) {
+                attempts++;
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                continue;
+            }
+
+            break;
+        }
 
         if (!apiResponse.ok) {
             const errBody = await apiResponse.text();
