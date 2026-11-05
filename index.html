@@ -2089,9 +2089,8 @@ window.generateContent = function() {
     if(!prompt) { output.innerText = "Te rog introdu un prompt."; return; }
     output.innerText = `[Generative AI] Generare pentru: "${prompt}"...\nRezultat creat cu succes.`;
 } 
-       <!-- Conținutul anterior din pagina ta... -->
-
-    <!-- Codul pentru Modalul cu Unelte Gratuite -->
+    </script>
+       <!-- Codul pentru Modalul cu Unelte Gratuite -->
     <div id="toolsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
         <button onclick="toggleToolsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">✕</button>
@@ -2144,14 +2143,14 @@ window.generateContent = function() {
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Scriptul pentru deschiderea/închiderea modalului -->
+    </div> 
     <script>
-      function toggleToolsModal() {
+    function toggleToolsModal() {
         const modal = document.getElementById('toolsModal');
-        modal.classList.toggle('hidden');
-      }
+        if (modal) {
+          modal.classList.toggle('hidden');
+        }
+      }   
     </script>
 
     <!-- Footer Ultra-Compact -->
