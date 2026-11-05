@@ -265,6 +265,13 @@
         <span>Text-to-Video Studio</span>
     </button>
 </div>
+             <!-- Buton Lansare Hub Unelte Gratuite -->
+<button onclick="toggleToolsModal()" class="w-full mt-2 flex items-center justify-between px-3 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-400 hover:bg-emerald-500/20 transition text-sm font-medium">
+  <span class="flex items-center gap-2">
+    <span>🎁</span> Hub Unelte Gratuite
+  </span>
+  <span class="text-xs bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300">FREE</span>
+</button> 
 <!-- Buton Meniu Lateral: AI Creative Studio -->
 <a href="#" onclick="switchTab('3d-visual')" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition btn-neon-glow">
     <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon w-4 text-center"></i>
@@ -2082,7 +2089,71 @@ window.generateContent = function() {
     if(!prompt) { output.innerText = "Te rog introdu un prompt."; return; }
     output.innerText = `[Generative AI] Generare pentru: "${prompt}"...\nRezultat creat cu succes.`;
 } 
-</script>
+       <!-- Conținutul anterior din pagina ta... -->
+
+    <!-- Codul pentru Modalul cu Unelte Gratuite -->
+    <div id="toolsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+        <button onclick="toggleToolsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">✕</button>
+        
+        <h2 class="text-xl font-bold text-white mb-1 flex items-center gap-2">
+          🚀 Resurse & Alternative AI Gratuite
+        </h2>
+        <p class="text-xs text-gray-400 mb-6">Unelte externe recomandate pentru a-ți completa fluxul de lucru în Nexus.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Research & Chat -->
+          <div class="p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg">
+            <h4 class="text-xs font-semibold text-emerald-400 mb-2">🔍 Research & Chat</h4>
+            <a href="https://chat.deepseek.com" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition mb-1">
+              DeepSeek AI <span class="text-[10px] text-gray-400 block font-normal">Alternativă open-weight excelentă pentru analiză și cod</span>
+            </a>
+          </div>
+
+          <!-- Generare Imagini & Design -->
+          <div class="p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg">
+            <h4 class="text-xs font-semibold text-purple-400 mb-2">🖼️ Imagini & Design</h4>
+            <a href="https://leonardo.ai" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition mb-1">
+              Leonardo AI <span class="text-[10px] text-gray-400 block font-normal">Generare vizuală avansată și asset-uri grafice</span>
+            </a>
+            <a href="https://ideogram.ai" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition mb-1">
+              Ideogram AI <span class="text-[10px] text-gray-400 block font-normal">Generare de imagini cu text clar integrat</span>
+            </a>
+            <a href="https://www.media.io" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition">
+              Media.io <span class="text-[10px] text-gray-400 block font-normal">Editare foto & eliminare fundal / watermark</span>
+            </a>
+          </div>
+
+          <!-- Prezentări -->
+          <div class="p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg">
+            <h4 class="text-xs font-semibold text-blue-400 mb-2">📊 Prezentări & Doc</h4>
+            <a href="https://gamma.app" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition">
+              Gamma AI <span class="text-[10px] text-gray-400 block font-normal">Generare rapidă de prezentări și documente interactive</span>
+            </a>
+          </div>
+
+          <!-- Video, Scriere & Automatizare -->
+          <div class="p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg">
+            <h4 class="text-xs font-semibold text-pink-400 mb-2">🎬 Video & Scriere</h4>
+            <a href="https://pixverse.ai" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition mb-1">
+              Pixverse AI <span class="text-[10px] text-gray-400 block font-normal">Creează clipuri video scurte din text</span>
+            </a>
+            <a href="https://quillbot.com" target="_blank" rel="noopener noreferrer" class="block p-2 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-medium transition">
+              Quillbot AI <span class="text-[10px] text-gray-400 block font-normal">Parafrazare, scriere și corectură avansată de text</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scriptul pentru deschiderea/închiderea modalului -->
+    <script>
+      function toggleToolsModal() {
+        const modal = document.getElementById('toolsModal');
+        modal.classList.toggle('hidden');
+      }
+    </script>
+
     <!-- Footer Ultra-Compact -->
     <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
         <span>Plăți Securizate Stripe</span> &bull; 
