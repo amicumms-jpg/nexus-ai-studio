@@ -365,16 +365,15 @@
                             <span onclick="appendEmoji('🎬', this)" class="cursor-pointer hover:scale-125 transition px-1 py-0.5 rounded select-none">🎬</span>
                         </div>
 
-                     <!-- Selector Model AI -->
-                        <div class="mb-1 flex items-center space-x-2 px-1">
-                            <span class="text-xs text-gray-400 font-medium">Model AI:</span>
-                            <select id="aiModelSelect" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-3 py-1 border border-gray-700 outline-none focus:border-cyanNeon cursor-pointer">
-                                <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Implicit / Rapid)</option>
-                                <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
-                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite</option>
-                            </select>
-                        </div>
-
+                   <!-- Selector Model AI -->
+<div class="mb-1 flex items-center space-x-2 px-1">
+    <span class="text-xs text-gray-400 font-medium">Model AI:</span>
+    <select id="aiModelSelect" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-3 py-1 border border-gray-700 outline-none focus:border-cyanNeon cursor-pointer">
+        <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Implicit / Auto-Fallback)</option>
+        <option value="deepseek-chat">DeepSeek Chat (Backup 1)</option>
+        <option value="gpt-4o-mini">OpenAI GPT-4o-mini (Backup 2)</option>
+    </select>
+</div>
                         <!-- Câmp scriere -->
                         <div class="flex space-x-2 items-end">
                             <input type="file" id="chatFileInput-chat" class="hidden" accept="image/*,video/*,text/*,.txt" onchange="handleFileSelect('chat')">
@@ -1337,81 +1336,101 @@
         });
     }
 
-    // Funcție principală corectată și optimizată pentru Streaming instant pe Vercel
-    async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-            throw new Error("Utilizatorul nu este autentificat!");
-        }
+    // Funcție principală extinsă cu suport de Fallover/Backup automat
+async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+        throw new Error("Utilizatorul nu este autentificat!");
+    }
 
-        const departmentSelect = document.getElementById('department-select');
-        const selectedDept = departmentSelect ? departmentSelect.value : 'general';
+    const departmentSelect = document.getElementById('department-select');
+    const selectedDept = departmentSelect ? departmentSelect.value : 'general';
 
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                prompt: promptText, 
-                fileData: fileData, 
-                model: modelName,
-                department: selectedDept
-            })
-        });
+    // Lista ordonată de modele pentru fallback în caz de eroare
+    const modelPipeline = [modelName, 'deepseek-chat', 'gpt-4o-mini'].filter((v, i, a) => a.indexOf(v) === i);
+    let lastError = null;
 
-        if (!response.ok) {
-            let errorMsg = "Eroare de la serverul AI.";
-            try {
-                const errData = await response.json();
-                errorMsg = errData.error || errorMsg;
-            } catch(e) {}
+    for (const currentModel of modelPipeline) {
+        try {
+            console.log(`[Nexus AI] Se încearcă modelul: ${currentModel}`);
             
-            if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED') {
-                throw new Error('QUOTA_EXCEEDED');
-            }
-            throw new Error(errorMsg);
-        }
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    prompt: promptText, 
+                    fileData: fileData, 
+                    model: currentModel,
+                    department: selectedDept
+                })
+            });
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let accumulatedText = "";
-        let textBuffer = "";
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-                break;
+            if (!response.ok) {
+                let errorMsg = "Eroare de la serverul AI.";
+                try {
+                    const errData = await response.json();
+                    errorMsg = errData.error || errorMsg;
+                } catch(e) {}
+                
+                if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED') {
+                    throw new Error('QUOTA_EXCEEDED');
+                }
+                throw new Error(errorMsg);
             }
-            textBuffer += decoder.decode(value, { stream: true });
-            const lines = textBuffer.split("\n");
-            textBuffer = lines.pop(); 
-            
-            for (const line of lines) {
-                const trimmedLine = line.trim();
-                if (trimmedLine.startsWith("data:")) {
-                    try {
-                        const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
-                        if (!jsonStr) continue;
-                        
-                        const parsed = JSON.parse(jsonStr);
-                        const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                        
-                        if (piece) {
-                            accumulatedText += piece;
-                            if (onChunkReceived) {
-                                onChunkReceived(accumulatedText);
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let accumulatedText = "";
+            let textBuffer = "";
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                textBuffer += decoder.decode(value, { stream: true });
+                const lines = textBuffer.split("\n");
+                textBuffer = lines.pop(); 
+                
+                for (const line of lines) {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine.startsWith("data:")) {
+                        try {
+                            const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
+                            if (!jsonStr) continue;
+                            
+                            const parsed = JSON.parse(jsonStr);
+                            const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || parsed.choices?.[0]?.delta?.content || "";
+                            
+                            if (piece) {
+                                accumulatedText += piece;
+                                if (onChunkReceived) {
+                                    onChunkReceived(accumulatedText);
+                                }
                             }
+                        } catch (e) {
+                            // Ignorăm bucățile parțiale
                         }
-                    } catch (e) {
-                        // Ignorăm bucățile parțiale
                     }
                 }
             }
+            
+            // Dacă am primit text cu succes, ieșim din buclă
+            if (accumulatedText) return accumulatedText;
+
+        } catch (err) {
+            console.warn(`[Nexus AI] Modelul ${currentModel} a eșuat. Se încearcă următorul backup...`, err.message);
+            lastError = err;
+            if (err.message === 'QUOTA_EXCEEDED') break; // Dacă e limită de cotă, oprim fallback-ul să afișeze eroarea de upgrade
         }
-        
-        return accumulatedText || "Răspuns gol primit de la server.";
-    } 
+    }
+    
+    if (lastError && lastError.message === 'QUOTA_EXCEEDED') {
+        throw new Error('QUOTA_EXCEEDED');
+    }
+    throw new Error(lastError?.message || "Toți agenții din rețea au eșuat.");
+}
 
     window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
         const inputEl = document.getElementById(inputId);
