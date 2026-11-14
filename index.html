@@ -135,51 +135,38 @@
     </table>
 </div>
 
-  <!-- Top Navigation Bar Curățată (Fără butoane aglomerate sus) -->
-    <header class="bg-panelBg border-b border-cyanNeon/20 px-4 py-2 flex items-center justify-between shrink-0 shadow-lg z-20">
-        <div class="flex items-center space-x-3">
-            <div class="flex items-center space-x-2.5 cursor-pointer group" onclick="switchTab('nexusOS', 'Nexus Command OS')">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-sm group-hover:scale-105 transition">
+  <!-- Top Navigation Bar Foarte Curată (Fără butoane aglomerate sus) -->
+    <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 shadow-lg z-20">
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleSidebar()" class="text-cyanNeon p-2 hover:bg-gray-800 rounded-xl text-sm focus:outline-none shrink-0 cursor-pointer" title="Deschide Meniul">
+                <i class="fa-solid fa-bars text-base"></i>
+            </button>
+            <div class="flex items-center space-x-2 cursor-pointer group" onclick="switchTab('nexusOS', 'Nexus Command OS')">
+                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-xs group-hover:scale-105 transition">
                     <i class="fa-solid fa-bolt-lightning"></i>
                 </div>
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="event.stopPropagation(); toggleSidebar();" class="text-cyanNeon p-1.5 hover:bg-gray-800 rounded-lg text-sm focus:outline-none shrink-0 cursor-pointer" title="Deschide Meniul">
-                            <i class="fa-solid fa-bars text-base"></i>
-                        </button>
-                        <div class="flex flex-col justify-center">
-                            <div class="flex items-center space-x-1.5">
-                                <h1 class="font-bold text-xs text-white tracking-wide group-hover:text-cyanNeon transition leading-none">Nexus AI Studio Pro</h1>
-                                <span id="proBadge" class="text-[8px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded-full font-semibold leading-none">FREE</span>
-                            </div>
-                            <div class="text-[9px] text-gray-400 flex items-center space-x-1 mt-0.5">
-                                <span class="text-cyanNeon"><i class="fa-solid fa-house text-[8px] mr-0.5"></i> Hub</span>
-                                <span class="text-gray-600">/</span>
-                                <span id="breadcrumbCurrent" class="text-cyanNeon font-medium truncate max-w-[120px] sm:max-w-none">Nexus Command OS</span>
-                            </div>
-                        </div>
+                <div class="flex flex-col justify-center">
+                    <div class="flex items-center space-x-1">
+                        <h1 class="font-bold text-[11px] text-white tracking-wide group-hover:text-cyanNeon transition leading-tight">Nexus AI</h1>
+                        <span id="proBadge" class="text-[7px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1 py-0.2 rounded-full font-semibold leading-none">FREE</span>
                     </div>
                 </div>
             </div>
 
             <!-- Buton Înapoi Vizibil (Back Button UI) -->
-            <button id="uiBackBtn" onclick="goBackTab()" class="hidden items-center gap-1 bg-gray-900 hover:bg-gray-800 border border-cyanNeon/40 text-cyanNeon px-2.5 py-1 rounded-xl text-[11px] font-semibold transition cursor-pointer shadow" title="Înapoi la pagina anterioară">
-                <i class="fa-solid fa-arrow-left text-[10px]"></i> <span data-i18n="btnBack">Înapoi</span>
+            <button id="uiBackBtn" onclick="goBackTab()" class="hidden items-center gap-1 bg-gray-900 hover:bg-gray-800 border border-cyanNeon/40 text-cyanNeon px-2 py-1 rounded-lg text-[10px] font-semibold transition cursor-pointer shadow ml-1" title="Înapoi">
+                <i class="fa-solid fa-arrow-left text-[9px]"></i> <span data-i18n="btnBack">Înapoi</span>
             </button>
         </div>
 
         <!-- Utilitare Sus -->
-        <div class="flex items-center gap-2 text-xs">
-            <div id="freeMessagesBadge" class="hidden sm:flex items-center gap-1.5 bg-gray-900 border border-cyanNeon/30 px-2.5 py-0.5 rounded-xl text-[10px] text-gray-300">
-                <i class="fa-solid fa-bolt text-cyanNeon"></i>
-                <span data-i18n="freeBadge">Gratuit:</span> <strong id="freeCountDisplay" class="text-white">10/10</strong>
-            </div>
-            <div class="flex items-center gap-1.5 bg-gray-800/60 px-2.5 py-1 rounded-full text-xs text-cyan-400 border border-cyan-500/20">
-                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                <span id="visitor-count">14</span> <span class="hidden sm:inline" data-i18n="visitorsOnline">vizitatori online</span>
+        <div class="flex items-center gap-1.5 text-xs">
+            <div class="hidden sm:flex items-center gap-1 bg-gray-800/60 px-2 py-0.5 rounded-full text-[10px] text-cyan-400 border border-cyan-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                <span id="visitor-count">14</span> online
             </div>
             <div class="flex items-center">
-                <select id="languageSelect" onchange="setLanguage(this.value)" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-2 py-1 border border-gray-700 outline-none cursor-pointer">
+                <select id="languageSelect" onchange="setLanguage(this.value)" class="bg-gray-800 text-gray-200 text-[11px] rounded-lg px-1.5 py-1 border border-gray-700 outline-none cursor-pointer">
                     <option value="ro" selected>🇷🇴 RO</option>
                     <option value="en">🇬🇧 EN</option>
                     <option value="es">🇪🇸 ES</option>
@@ -192,29 +179,30 @@
     </header>
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10 relative">
-        <!-- Overlay pentru mobil când sidebar-ul este deschis -->
-        <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden md:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40 transition-opacity"></div>
+        <!-- Overlay Mobil Corectat (Afișează fundalul negru opac translucid când e activ) -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
 
         <!-- Sidebar Complet (Meniul Lateral cu Asistent AI, Nexus Command OS și Layers incluse) -->
-        <aside id="appSidebar" class="hidden md:flex fixed md:relative top-0 md:top-auto left-0 z-50 flex-col w-64 bg-panelBg border-r md:border border-gray-800 md:rounded-2xl shrink-0 p-3 h-full md:h-[65vh] max-h-full md:max-h-[65vh] overflow-y-auto shadow-2xl transition-transform duration-300">
+        <aside id="appSidebar" class="hidden md:flex fixed md:relative top-0 md:top-auto left-0 z-50 flex-col w-[80%] max-w-[280px] md:w-64 bg-panelBg border-r md:border border-gray-800 md:rounded-2xl shrink-0 p-3 h-full md:h-[65vh] max-h-full md:max-h-[65vh] overflow-y-auto shadow-2xl transition-transform duration-300">
             <!-- Buton închidere mobil în interiorul meniului -->
             <div class="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-gray-800">
                 <span class="text-xs font-bold text-cyanNeon flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> Meniu Navigare</span>
                 <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
 
+            <!-- BUTON ASISTENT AI (Mutat în Sidebar) -->
             <button onclick="toggleNexusRobot(); toggleSidebar();" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow-lg shadow-emerald-500/20">
                 <i class="fa-solid fa-robot font-bold text-sm"></i>
                 <span data-i18n="openAssistant">Deschide Asistent AI</span>
             </button>
             
-            <!-- Principal / Nexus Command OS -->
+            <!-- NEXUS COMMAND OS & LAYERS OF AI STUDIO (Mutate în Sidebar) -->
             <button onclick="switchTab('nexusOS', 'Nexus Command OS')" id="nav-nexusOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10">
-                <i class="fa-solid fa-network-wired text-cyanNeon w-4"></i>
+                <i class="fa-solid fa-network-wired text-cyanNeon w-4 text-center"></i>
                 <span class="text-cyanNeon font-bold">Nexus Command OS</span>
             </button>
             <button onclick="switchTab('layersAi', 'Layers of AI Studio')" id="nav-layersAi" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1">
-                <i class="fa-solid fa-layer-group text-violetPop w-4"></i>
+                <i class="fa-solid fa-layer-group text-violetPop w-4 text-center"></i>
                 <span data-i18n="navLayers">Layers of AI Studio</span>
             </button>
 
@@ -239,7 +227,7 @@
                     </button>
                 </div>
                 
-                <button onclick="switchTab('3d-visual', 'AI Creative Studio')" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition btn-neon-glow mt-1">
+                <button onclick="switchTab('3d-visual', 'AI Creative Studio')" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-gray-300 hover:text-cyanNeon hover:bg-cyanNeon/10 transition btn-neon-glow mt-1 cursor-pointer">
                     <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon w-4 text-center"></i>
                     <span data-i18n="navCreativeStudio">AI Creative Studio</span>
                 </button>
@@ -248,7 +236,7 @@
                 <div class="px-1 py-2 mt-3 border-t border-gray-800">
                     <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400 mb-1.5">
                         <span>🕒 Istoric Conversații</span>
-                        <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:underline">Șterge tot</button>
+                        <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:underline cursor-pointer">Șterge tot</button>
                     </div>
                     <div id="chatHistoryList" class="space-y-1 max-h-32 overflow-y-auto text-[11px]">
                         <p class="text-gray-500 text-[10px] italic px-1">Niciun istoric salvat.</p>
