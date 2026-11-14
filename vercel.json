@@ -1,69 +1,43 @@
 {
-
   "version": 2,
-
   "builds": [
-
     {
-
       "src": "api/chat.js",
-
       "use": "@vercel/node"
-
     },
-
     {
-
       "src": "api/telegram.js",
-
       "use": "@vercel/node"
-
     },
-
     {
-
       "src": "index.html",
-
       "use": "@vercel/static"
-
     }
-
   ],
-
   "routes": [
-
     {
-
       "src": "/api/generate",
-
       "dest": "/api/chat.js"
-
     },
-
     {
-
       "src": "/api/chat",
-
       "dest": "/api/chat.js"
-
     },
-
     {
-
       "src": "/api/telegram",
-
       "dest": "/api/telegram.js"
-
     },
-
     {
-
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/robots.txt"
+    },
+    {
       "src": "/(.*)",
-
       "dest": "/index.html"
-
     }
-
   ]
-
-} 
+}
