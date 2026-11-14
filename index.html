@@ -92,6 +92,11 @@
         transform: translateY(-2px);
         box-shadow: 0 0 35px rgba(6, 182, 212, 0.9), 0 0 60px rgba(59, 130, 246, 0.5);
     }
+    /* Stiluri noi pentru sferă și noduri Jarvis OS */
+    .jarvis-sphere {
+        background: radial-gradient(circle, rgba(6,182,212,0.4) 0%, rgba(9,13,22,0.9) 70%);
+        box-shadow: 0 0 40px rgba(6,182,212,0.3);
+    }
   </style>
 <link rel="manifest" href="./manifest.json" />
 <meta name="theme-color" content="#090d16" />
@@ -197,6 +202,10 @@
                 <i class="fa-solid fa-robot font-bold text-sm"></i>
                 <span data-i18n="openAssistant">Deschide Asistent AI</span>
             </button>
+            <button onclick="switchTab('jarvisOS', 'Jarvis Command OS')" id="nav-jarvisOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10">
+                <i class="fa-solid fa-network-wired text-cyanNeon w-4"></i>
+                <span class="text-cyanNeon font-bold">Jarvis Command OS</span>
+            </button>
             <button onclick="switchTab('layersAi', 'Layers of AI Studio')" id="nav-layersAi" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1">
                 <i class="fa-solid fa-layer-group text-cyanNeon w-4"></i>
                 <span data-i18n="navLayers">Layers of AI Studio</span>
@@ -237,6 +246,18 @@
                     <i class="fa-solid fa-wand-magic-sparkles text-cyanNeon w-4 text-center"></i>
                     <span data-i18n="navCreativeStudio">AI Creative Studio</span>
                 </a>
+                
+                <!-- Secțiunea Istoric Conversații în Meniu -->
+                <div class="px-1 py-2 mt-3 border-t border-gray-800">
+                    <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400 mb-1.5">
+                        <span>🕒 Istoric Conversații</span>
+                        <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:underline">Șterge tot</button>
+                    </div>
+                    <div id="chatHistoryList" class="space-y-1 max-h-32 overflow-y-auto text-[11px]">
+                        <p class="text-gray-500 text-[10px] italic px-1">Niciun istoric salvat.</p>
+                    </div>
+                </div>
+
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block" data-i18n="menuAdvancedTools">Unelte Avansate</span>
                 <div class="mt-1 space-y-1 text-xs">
                     <button onclick="switchTab('abTestingStudio', 'A/B Testing Hook-uri')" id="nav-abTestingStudio" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
@@ -275,8 +296,80 @@
         <!-- Main Content Container -->
         <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
             
+            <!-- TAB NOU: Jarvis Command OS / Founders OS Dashboard -->
+            <div id="tab-jarvisOS" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+                <div class="max-w-5xl mx-auto w-full space-y-4">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl shadow-xl">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emeraldNeon animate-pulse"></span>
+                                <h2 class="text-base font-bold text-white tracking-wide">Good afternoon, S.V@lentin.</h2>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">Private workspace. Only your real data appears here, and nothing is sample data.</p>
+                        </div>
+                        <div class="flex items-center space-x-2 mt-3 md:mt-0">
+                            <button onclick="switchTab('chat', 'Home / Tools Hub')" class="bg-cyanNeon/20 border border-cyanNeon text-cyanNeon hover:bg-cyanNeon hover:text-darkBg px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-microphone"></i> Talk to Jarvis
+                            </button>
+                            <button onclick="switchTab('chat', 'Home / Tools Hub')" class="bg-gray-900 border border-gray-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-magnifying-glass mr-1"></i> Ask a question
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- HUD Neural Central -->
+                    <div class="bg-panelBg border border-gray-800 rounded-3xl p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[380px]">
+                        <div class="absolute top-4 left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg">
+                            JARVIS CORE &bull; ACTIVE NEURAL MESH
+                        </div>
+                        <div class="absolute top-4 right-4 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> ONLINE
+                        </div>
+
+                        <!-- Sfera Centrală & Noduri Interactive -->
+                        <div class="relative w-full max-w-xl h-64 flex items-center justify-center my-6">
+                            <!-- Sfera Neurală -->
+                            <div class="w-36 h-36 rounded-full jarvis-sphere absolute flex items-center justify-center animate-pulse border border-cyanNeon/40 cursor-pointer" onclick="switchTab('chat', 'Home / Tools Hub')" title="Deschide Nucleul AI">
+                                <div class="w-16 h-16 rounded-full bg-cyanNeon/20 flex items-center justify-center text-cyanNeon text-xl shadow-[0_0_30px_rgba(6,182,212,0.8)]">
+                                    <i class="fa-solid fa-microchip"></i>
+                                </div>
+                            </div>
+
+                            <!-- Noduri Stânga -->
+                            <div class="absolute left-2 md:left-8 top-4 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('chat', 'Context Module')">
+                                <i class="fa-solid fa-brain text-purple-400 mr-1.5"></i> Context
+                            </div>
+                            <div class="absolute left-0 md:left-4 top-24 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('quickToolsHub', 'Leads Hub')">
+                                <i class="fa-solid fa-users text-cyanNeon mr-1.5"></i> Leads
+                            </div>
+                            <div class="absolute left-6 md:left-12 bottom-2 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('podcastStudio', 'Calls Module')">
+                                <i class="fa-solid fa-phone text-emeraldNeon mr-1.5"></i> Calls
+                            </div>
+
+                            <!-- Noduri Dreapta -->
+                            <div class="absolute right-2 md:right-8 top-4 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('socialHub', 'Content Module')">
+                                <i class="fa-solid fa-photo-film text-tiktokColor mr-1.5"></i> Content
+                            </div>
+                            <div class="absolute right-0 md:right-4 top-24 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('quickToolsHub', 'Funnels Module')">
+                                <i class="fa-solid fa-filter text-amberGlow mr-1.5"></i> Funnels
+                            </div>
+                            <div class="absolute right-4 md:right-10 bottom-12 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('quickToolsHub', 'Emails Module')">
+                                <i class="fa-solid fa-envelope text-blue-400 mr-1.5"></i> Emails
+                            </div>
+                            <div class="absolute right-12 md:right-24 bottom-2 bg-gray-900/90 border border-gray-700 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('layersAi', 'Agents Module')">
+                                <i class="fa-solid fa-robot text-indigo-400 mr-1.5"></i> Agents
+                            </div>
+                        </div>
+
+                        <div class="text-center text-xs text-gray-400 mt-2">
+                            Click pe orice nod sau pe nucleul central pentru a accesa instant modulele operaționale Nexus.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Tab 1: Chat General (Home / Tools Hub) -->
-            <div id="tab-chat" class="app-tab active-tab flex-1 flex flex-col h-full overflow-hidden p-3 space-y-2">
+            <div id="tab-chat" class="app-tab flex-1 flex flex-col h-full overflow-hidden p-3 space-y-2">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between mb-2 shrink-0">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> <span data-i18n="chatTitle">Nexus Neural Assistant - Home / Tools Hub</span></h2>
@@ -353,7 +446,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- TAB: Social & Creator Hub -->
             <div id="tab-socialHub" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
                 <div class="bg-panelBg border border-tiktokColor/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
@@ -611,7 +703,6 @@
             </div>
         </div>
     </div>
-
     <!-- Tab: A/B Testing -->
     <div id="tab-abTestingStudio" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3">
         <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
@@ -955,6 +1046,8 @@
         <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline" data-i18n="footerTerms">Termeni și Condiții</a> • 
         <span><span data-i18n="footerCreator">Creat de</span> <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
     </footer>
+
+    <!-- Scripturi & Logica Aplicației (inclusiv Sistemul de Istoric și Firebase) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
@@ -1005,8 +1098,63 @@
             localStorage.setItem('nexus_chat_draft', val);
         }
 
+        // --- SISTEM DE SALVARE ȘI GESTIONARE ISTORIC CONVERSAȚII ---
+        window.saveToHistory = function(title, messagesHtml) {
+            let history = JSON.parse(localStorage.getItem('nexus_chat_history') || '[]');
+            const newEntry = {
+                id: Date.now(),
+                title: title.length > 22 ? title.substring(0, 22) + '...' : title,
+                date: new Date().toLocaleDateString(),
+                content: messagesHtml
+            };
+            history.unshift(newEntry);
+            if (history.length > 15) history.pop();
+            localStorage.setItem('nexus_chat_history', JSON.stringify(history));
+            loadHistoryUI();
+        };
+
+        window.loadHistoryUI = function() {
+            const listEl = document.getElementById('chatHistoryList');
+            if (!listEl) return;
+            let history = JSON.parse(localStorage.getItem('nexus_chat_history') || '[]');
+            if (history.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500 text-[10px] italic px-1">Niciun istoric salvat.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-1.5 bg-gray-800/40 hover:bg-gray-800 rounded cursor-pointer transition text-gray-300";
+                div.innerHTML = `
+                    <span class="truncate pr-2" onclick="loadChatSession(${item.id})">${item.title}</span>
+                    <span class="text-[9px] text-gray-500">${item.date}</span>
+                `;
+                listEl.appendChild(div);
+            });
+        };
+
+        window.loadChatSession = function(id) {
+            let history = JSON.parse(localStorage.getItem('nexus_chat_history') || '[]');
+            const session = history.find(s => s.id === id);
+            if (session) {
+                const chatBox = document.getElementById('chatMessages');
+                if (chatBox) {
+                    chatBox.innerHTML = session.content;
+                    window.switchTab('chat', 'Home / Tools Hub');
+                    window.showToast('Conversație încărcată din istoric!', 'success');
+                }
+            }
+        };
+
+        window.clearHistory = function() {
+            localStorage.removeItem('nexus_chat_history');
+            loadHistoryUI();
+            window.showToast('Istoricul a fost șters.', 'info');
+        };
+
         window.addEventListener('DOMContentLoaded', () => {
             initMatrix();
+            loadHistoryUI();
             const savedDraft = localStorage.getItem('nexus_chat_draft');
             if(savedDraft && document.getElementById('chatInput')) {
                 document.getElementById('chatInput').value = savedDraft;
@@ -1303,6 +1451,11 @@
                     if(typeof hljs !== 'undefined') hljs.highlightAll();
                     msgBox.scrollTop = msgBox.scrollHeight;
                 });
+                
+                // Salvează în istoric după finalizare
+                if (tabKey === 'chat') {
+                    window.saveToHistory(text || 'Analiză Fișier', msgBox.innerHTML);
+                }
             } catch (err) {
                 if (err.message === 'QUOTA_EXCEEDED') {
                     contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
@@ -2279,3 +2432,4 @@
     </script>
 </body>
 </html>
+
