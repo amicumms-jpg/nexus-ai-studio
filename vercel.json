@@ -18,6 +18,14 @@
       "use": "@vercel/static"
     },
     {
+      "src": "public/manifest.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "public/icon.svg",
+      "use": "@vercel/static"
+    },
+    {
       "src": "index.html",
       "use": "@vercel/static"
     }
@@ -37,12 +45,19 @@
     },
     {
       "src": "/sitemap.xml",
-      "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml"
     },
     {
       "src": "/robots.txt",
       "dest": "/public/robots.txt"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/public/manifest.json"
+    },
+    {
+      "src": "/icon.svg",
+      "dest": "/public/icon.svg"
     },
     {
       "src": "/(.*)",
