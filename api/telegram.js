@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // Setează antetele CORS pentru siguranță
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -8,12 +7,10 @@ export default async function handler(req, res) {
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
 
-    // Tratare preflight OPTIONS
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    // Răspuns rapid pentru GET sau cereri fără mesaj valid de la Telegram
     if (req.method === 'GET' || !req.body || !req.body.message) {
         return res.status(200).json({ status: "Telegram webhook endpoint is active." });
     }
@@ -29,7 +26,6 @@ export default async function handler(req, res) {
     const chatId = req.body.message.chat.id;
     const userMessage = req.body.message.text || "";
 
-    // Dacă utilizatorul a trimis altceva în afară de text (ex: poză, sticker)
     if (!userMessage) {
         await sendTelegramMessage(token, chatId, "Te rog să trimiți un mesaj text pentru a putea discuta cu asistentul AI! 🤖");
         return res.status(200).json({ ok: true });
@@ -38,17 +34,12 @@ export default async function handler(req, res) {
     let replyText = "Întâmpin o mică problemă tehnică în comunicarea cu serverul AI. Te rog să încerci din nou!";
 
     try {
-        // Folosim exact modelul cerut de tine, compatibil cu cheile tale
         const activeModel = 'gemini-3.8-flash'; 
         
-        // Apel către Google Gemini API cu timeout mărit la 25 de secunde pentru a evita erorile de rețea
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 25000);
-
+        // Fără AbortController – lăsăm cererea să aștepte răspunsul direct de la Google
         const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
             body: JSON.stringify({
                 system_instruction: {
                     parts: [{
@@ -59,7 +50,6 @@ export default async function handler(req, res) {
             })
         });
 
-        clearTimeout(timeoutId);
         const data = await aiResponse.json();
 
         if (!aiResponse.ok) {
@@ -69,21 +59,14 @@ export default async function handler(req, res) {
         }
 
     } catch (apiErr) {
-        if (apiErr.name === 'AbortError') {
-            console.error("Eroare: Timpul de răspuns de la Gemini a expirat (Timeout).");
-            replyText = "Serverul AI a durat prea mult să răspundă. Te rog să revii cu o cerere.";
-        } else {
-            console.error("Eroare conexiune Gemini:", apiErr.message || apiErr);
-        }
+        console.error("Eroare conexiune Gemini:", apiErr.message || apiErr);
     }
 
-    // Trimitem răspunsul final înapoi către Telegram
     await sendTelegramMessage(token, chatId, replyText);
 
     return res.status(200).json({ ok: true });
 }
 
-// Funcție ajutătoare pentru trimiterea mesajelor pe Telegram
 async function sendTelegramMessage(token, chatId, text) {
     try {
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
