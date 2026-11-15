@@ -13,71 +13,89 @@ export default async function handler(req, res) {
         return res.status(200).end();
     }
 
+    // Răspuns rapid pentru GET sau cereri fără mesaj valid de la Telegram
+    if (req.method === 'GET' || !req.body || !req.body.message) {
+        return res.status(200).json({ status: "Telegram webhook endpoint is active." });
+    }
+
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+
+    if (!token || !geminiApiKey) {
+        console.error("Lipsește TELEGRAM_BOT_TOKEN sau GEMINI_API_KEY în variabilele de mediu.");
+        return res.status(200).json({ ok: false, error: "Missing environment variables" });
+    }
+
+    const chatId = req.body.message.chat.id;
+    const userMessage = req.body.message.text || "";
+
+    // Dacă utilizatorul a trimis altceva în afară de text (ex: poză, sticker)
+    if (!userMessage) {
+        await sendTelegramMessage(token, chatId, "Te rog să trimiți un mesaj text pentru a putea discuta cu asistentul AI! 🤖");
+        return res.status(200).json({ ok: true });
+    }
+
+    let replyText = "Întâmpin o mică problemă tehnică în comunicarea cu serverul AI. Te rog să încerci din nou!";
+
     try {
-        const update = req.body;
+        // Poți schimba modelul aici dacă este nevoie (ex: 'gemini-1.5-flash', 'gemini-2.0-flash' etc.)
+        const activeModel = 'gemini-1.5-flash'; 
+        
+        // Apel către Google Gemini API cu timeout de siguranță (10 secunde)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-        // Dacă este o verificare simplă din browser (GET)
-        if (req.method === 'GET' || !update || !update.message) {
-            return res.status(200).json({ status: "Telegram endpoint is active and waiting for POST updates." });
+        const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
+            body: JSON.stringify({
+                system_instruction: {
+                    parts: [{
+                        text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
+                    }]
+                },
+                contents: [{ parts: [{ text: userMessage }] }]
+            })
+        });
+
+        clearTimeout(timeoutId);
+        const data = await aiResponse.json();
+
+        if (!aiResponse.ok) {
+            console.error("Eroare Google Gemini API:", JSON.stringify(data));
+        } else if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+            replyText = data.candidates[0].content.parts[0].text;
         }
 
-        const chatId = update.message.chat.id;
-        const userMessage = update.message.text || "";
-        const token = process.env.TELEGRAM_BOT_TOKEN;
-        const geminiApiKey = process.env.GEMINI_API_KEY;
-
-        if (!token || !geminiApiKey) {
-            console.error("Lipsește TELEGRAM_BOT_TOKEN sau GEMINI_API_KEY.");
-            return res.status(200).json({ ok: true });
+    } catch (apiErr) {
+        if (apiErr.name === 'AbortError') {
+            console.error("Eroare: Timpul de răspuns de la Gemini a expirat (Timeout).");
+            replyText = "Serverul AI a durat prea mult să răspundă. Te rog să revii cu o cerere.";
+        } else {
+            console.error("Eroare conexiune Gemini:", apiErr.message || apiErr);
         }
+    }
 
-        let replyText = "Salut! Sunt asistentul tău Nexus AI Studio Pro. Cu ce te pot ajuta astăzi?";
+    // Trimitem răspunsul final înapoi către Telegram
+    await sendTelegramMessage(token, chatId, replyText);
 
-        if (userMessage) {
-            try {
-                const activeModel = 'gemini-3.8-flash';
-                const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        systemInstruction: {
-                            parts: [{
-                                text: `Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt și prietenos.`
-                            }]
-                        },
-                        contents: [{ parts: [{ text: userMessage }] }]
-                    })
-                });
+    return res.status(200).json({ ok: true });
+}
 
-                const data = await aiResponse.json();
-
-                // Verificăm dacă API-ul a returnat o eroare
-                if (!aiResponse.ok) {
-                    console.error("Eroare Google Gemini API:", JSON.stringify(data));
-                    replyText = "Întâmpin o mică problemă tehnică în comunicarea cu serverul AI. Te rog să încerci din nou!";
-                } else if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    replyText = data.candidates[0].content.parts[0].text;
-                }
-            } catch (apiErr) {
-                console.error("Eroare conexiune Gemini:", apiErr);
-                replyText = "A apărut o eroare de rețea la interogarea AI.";
-            }
-        }
-
-        // Trimitem răspunsul la Telegram
+// Funcție ajutătoare pentru trimiterea mesajelor pe Telegram
+async function sendTelegramMessage(token, chatId, text) {
+    try {
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: chatId,
-                text: replyText
+                text: text,
+                parse_mode: 'Markdown'
             })
         });
-
-        return res.status(200).json({ ok: true });
-
-    } catch (error) {
-        console.error("Eroare generală:", error);
-        return res.status(200).json({ ok: true });
+    } catch (err) {
+        console.error("Eroare la trimiterea mesajului pe Telegram:", err);
     }
 }
