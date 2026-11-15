@@ -38,8 +38,8 @@ export default async function handler(req, res) {
     let replyText = "Întâmpin o mică problemă tehnică în comunicarea cu serverul AI. Te rog să încerci din nou!";
 
     try {
-        // Poți schimba modelul aici dacă este nevoie (ex: 'gemini-1.5-flash', 'gemini-2.0-flash' etc.)
-        const activeModel = 'gemini-1.5-flash'; 
+        // Folosim exact modelul cerut de tine, compatibil cu cheile tale
+        const activeModel = 'gemini-3.8-flash'; 
         
         // Apel către Google Gemini API cu timeout de siguranță (10 secunde)
         const controller = new AbortController();
