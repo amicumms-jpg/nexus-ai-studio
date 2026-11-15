@@ -41,9 +41,9 @@ export default async function handler(req, res) {
         // Folosim exact modelul cerut de tine, compatibil cu cheile tale
         const activeModel = 'gemini-3.8-flash'; 
         
-        // Apel către Google Gemini API cu timeout de siguranță (10 secunde)
+        // Apel către Google Gemini API cu timeout mărit la 25 de secunde pentru a evita erorile de rețea
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
 
         const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`, {
             method: 'POST',
