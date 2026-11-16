@@ -81,12 +81,19 @@ export default async function handler(req, res) {
 
 async function sendTelegramMessage(token, chatId, text) {
     try {
+        // Curățăm și transformăm formatul Markdown în taguri HTML compatibile cu Telegram
+        const cleanText = text
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: chatId,
-                text: text
+                text: cleanText,
+                parse_mode: 'HTML',
+                disable_web_page_preview: false
             })
         });
     } catch (err) {
