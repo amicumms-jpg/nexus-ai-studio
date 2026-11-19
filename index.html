@@ -143,7 +143,7 @@
 <meta name="theme-color" content="#090d16" />
 <link rel="apple-touch-icon" href="./favicon.ico" />
 </head>
-<body class="bg-darkBg text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+<body class="bg-darkBg text-gray-100 font-sans h-dvh min-h-dvh w-full max-w-full flex flex-col overflow-x-hidden overflow-y-hidden">
     <!-- Canvas Matrix -->
     <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
     <!-- Toast Container -->
@@ -177,7 +177,7 @@
     </table>
 </div>
   <!-- Top Navigation Bar Foarte Curată -->
-    <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 shadow-lg z-20">
+    <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 w-full shadow-lg z-20">
         <div class="flex items-center space-x-2">
             <button onclick="toggleSidebar()" class="text-cyanNeon p-2 hover:bg-gray-800 rounded-xl text-sm focus:outline-none shrink-0 cursor-pointer" title="Deschide Meniul">
                 <i class="fa-solid fa-bars text-base"></i>
@@ -223,7 +223,7 @@
         </div>
     </header>
     <!-- Main Layout -->
-    <div class="flex flex-1 overflow-hidden z-10 relative">
+    <div class="flex flex-1 min-h-0 w-full overflow-hidden z-10 relative">
         <!-- Overlay Mobil Corectat -->
         <div id="sidebarOverlay" onclick="closeSidebarMobile()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
 
@@ -305,10 +305,10 @@
             </div>
         </aside>
         <!-- Main Content Container -->
-        <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative pb-14 md:pb-0">
+        <main class="flex-1 flex flex-col min-h-0 w-full bg-darkBg overflow-hidden relative pb-2 md:pb-0">
             
             <!-- TAB: Nexus Command OS (Dashboard cu tematică Cyan / Neural Pro) -->
-            <div id="tab-nexusOS" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:pb-4 space-y-4">
+            <div id="tab-nexusOS" class="app-tab flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 sm:p-4 pb-6 md:pb-4 space-y-4">
                 <div class="max-w-5xl mx-auto w-full space-y-4">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between bg-panelBg border border-cyanNeon/40 p-4 rounded-2xl shadow-xl">
                         <div>
@@ -329,11 +329,11 @@
                     </div>
 
                     <!-- HUD Neural Central -->
-                    <div class="bg-panelBg border border-cyanNeon/30 rounded-3xl p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[380px]">
-                        <div class="absolute top-4 left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg" data-i18n="hudCoreBadge">
+                    <div class="bg-panelBg border border-cyanNeon/30 rounded-3xl p-4 sm:p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[340px] sm:min-h-[380px]">
+                        <div class="absolute top-3 left-3 sm:top-4 sm:left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg" data-i18n="hudCoreBadge">
                             NEXUS CORE &bull; ACTIVE NEURAL MESH
                         </div>
-                        <div class="absolute top-4 right-4 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> <span data-i18n="hudOnlineBadge">ONLINE</span>
                         </div>
 
@@ -346,27 +346,27 @@
                             </div>
 
                             <!-- Noduri Stânga -->
-                            <div class="absolute left-2 md:left-8 top-4 bg-gray-900/90 border border-purple-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('chat', 'Context Module')">
+                            <div class="absolute left-1 sm:left-2 md:left-8 top-4 bg-gray-900/90 border border-purple-500/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('chat', 'Context Module')">
                                 <i class="fa-solid fa-brain text-purple-400 mr-1.5"></i> <span data-i18n="nodeContext">Context</span>
                             </div>
-                            <div class="absolute left-0 md:left-4 top-24 bg-gray-900/90 border border-cyanNeon/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('office3d', 'Birou Agenți 3D')">
+                            <div class="absolute left-1 sm:left-0 md:left-4 top-24 bg-gray-900/90 border border-cyanNeon/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('office3d', 'Birou Agenți 3D')">
                                 <i class="fa-solid fa-cubes text-emerald-400 mr-1.5"></i> <span data-i18n="btnOffice3DShort">Birou 3D</span>
                             </div>
-                            <div class="absolute left-6 md:left-12 bottom-2 bg-gray-900/90 border border-emerald-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('podcast')">
+                            <div class="absolute left-2 sm:left-6 md:left-12 bottom-2 bg-gray-900/90 border border-emerald-500/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('podcast')">
                                 <i class="fa-solid fa-podcast text-amberGlow mr-1.5"></i> <span data-i18n="nodePodcast">Podcast</span>
                             </div>
 
                             <!-- Noduri Dreapta -->
-                            <div class="absolute right-2 md:right-8 top-4 bg-gray-900/90 border border-tiktokColor/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('creative')">
+                            <div class="absolute right-1 sm:right-2 md:right-8 top-4 bg-gray-900/90 border border-tiktokColor/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('creative')">
                                 <i class="fa-solid fa-wand-magic-sparkles text-tiktokColor mr-1.5"></i> <span data-i18n="nodeCreative">Creative</span>
                             </div>
-                            <div class="absolute right-0 md:right-4 top-24 bg-gray-900/90 border border-amberGlow/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('calendar')">
+                            <div class="absolute right-1 sm:right-0 md:right-4 top-24 bg-gray-900/90 border border-amberGlow/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('calendar')">
                                 <i class="fa-solid fa-calendar-days text-amberGlow mr-1.5"></i> <span data-i18n="nodeCalendar">Calendar</span>
                             </div>
-                            <div class="absolute right-4 md:right-10 bottom-12 bg-gray-900/90 border border-blue-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('abtest')">
+                            <div class="absolute right-2 sm:right-4 md:right-10 bottom-12 bg-gray-900/90 border border-blue-500/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('abtest')">
                                 <i class="fa-solid fa-vials text-blue-400 mr-1.5"></i> <span data-i18n="nodeAbTest">A/B Test</span>
                             </div>
-                            <div class="absolute right-12 md:right-24 bottom-2 bg-gray-900/90 border border-indigo-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('layersAi', 'Agents Module')">
+                            <div class="absolute right-4 sm:right-12 md:right-24 bottom-2 bg-gray-900/90 border border-indigo-500/40 hover:border-cyanNeon p-2 sm:p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('layersAi', 'Agents Module')">
                                 <i class="fa-solid fa-robot text-indigo-400 mr-1.5"></i> <span data-i18n="nodeAgents">Agents</span>
                             </div>
                         </div>
@@ -378,7 +378,7 @@
                 </div>
             </div>
             <!-- TAB NOU: Birou Agenți 3D Izometric (Integrează Calendar, Video, Creative, A/B Test, Podcast & Roast) -->
-            <div id="tab-office3d" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-3 pb-20 md:p-4 md:pb-4 space-y-3">
+            <div id="tab-office3d" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 pb-6 md:p-4 md:pb-4 space-y-3">
                 <div class="max-w-6xl mx-auto w-full space-y-3">
                     <!-- Bară Fluxuri & Control -->
                     <div class="bg-panelBg border border-emeraldNeon/35 p-3 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-xl">
@@ -514,8 +514,8 @@
                 </div>
             </div>
             <!-- Tab 1: Chat General (Home / Tools Hub - Tematică Cyan/Blue Profesional) -->
-            <div id="tab-chat" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3 pb-16 md:pb-3 space-y-2">
-                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
+            <div id="tab-chat" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-hidden p-3 pb-4 md:pb-3 space-y-2">
+                <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col min-h-0 shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between mb-2 shrink-0">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> <span data-i18n="chatTitle">Nexus Neural Assistant - Home / Tools Hub</span></h2>
                     </div>
@@ -536,7 +536,7 @@
                         </select>
                     </div>
 
-                    <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                    <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 min-h-0 overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400" data-i18n="welcomeMsg">Salut! Sunt asistentul tău general. Cu ce începem?</div>
                     </div>
 
@@ -592,7 +592,7 @@
                 </div>
             </div>
     <!-- Tab: Layers of AI Studio (Tematică Violet / Indigo) -->
-    <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:pb-4 space-y-4">
+    <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
                 <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-pink-500" data-i18n="layersTitle">Layers of AI Creator</h1>
@@ -647,7 +647,7 @@
         </div>
     </div>
     <!-- TAB: Abonament & PRO -->
-    <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 items-center justify-center">
+    <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 items-center justify-center">
         <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg"><i class="fa-solid fa-crown"></i></div>
@@ -701,7 +701,7 @@
         </div>
     </div>
     <!-- TAB: Cont, Google & Înregistrare -->
-    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 items-center justify-center">
+    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 items-center justify-center">
         <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
             <div class="text-center space-y-1">
                 <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
@@ -757,7 +757,7 @@
     </div>
 
     <!-- TAB: Suport & Asistență Clienți -->
-    <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 space-y-4">
+    <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 space-y-4">
         <div class="bg-panelBg border border-amberGlow/30 p-5 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
                 <h2 class="text-lg font-bold text-amberGlow flex items-center gap-2" data-i18n="supportCenterTitle"><i class="fa-solid fa-headset"></i> Centrul de Suport & Asistență Clienți</h2>
@@ -797,7 +797,7 @@
 </main>
 </div>
 <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI (Poziționat sus față de butoanele de trimitere) -->
-    <div id="nexus-robot-widget" class="fixed bottom-36 sm:bottom-24 right-3 sm:right-4 z-50">
+    <div id="nexus-robot-widget" class="fixed bottom-12 sm:bottom-24 right-3 sm:right-4 z-50">
         <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
             <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
             <span class="absolute top-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
@@ -852,7 +852,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="w-full py-1 px-4 text-center text-[9px] text-gray-500 opacity-60 shrink-0 border-t border-gray-900/40 bg-darkBg/50 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
+    <footer class="w-full py-1.5 px-3 text-center text-[9px] text-gray-400 shrink-0 border-t border-gray-800/80 bg-panelBg/95 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
         <span data-i18n="footerStripe">Plăți Securizate Stripe</span> • 
         <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon/80" data-i18n="footerPrivacy">Politică Confidențialitate (GDPR)</a> • 
         <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline" data-i18n="footerTerms">Termeni și Condiții</a> • 
