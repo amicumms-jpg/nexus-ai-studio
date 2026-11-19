@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro" class="dark">
+<html lang="ro" dir="ltr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -36,7 +36,6 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -204,11 +203,11 @@
         <!-- Utilitare Sus -->
         <div class="flex items-center gap-1.5 text-xs">
             <button id="pwaInstallBtn" onclick="installNexusPwa()" class="hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer" title="Instalează Aplicația">
-                <i class="fa-solid fa-download text-[9px]"></i> <span>Instalează</span>
+                <i class="fa-solid fa-download text-[9px]"></i> <span data-i18n="btnInstallPwa">Instalează</span>
             </button>
             <div class="hidden sm:flex items-center gap-1 bg-gray-800/60 px-2 py-0.5 rounded-full text-[10px] text-cyan-400 border border-cyan-500/20">
                 <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-                <span id="visitor-count">14</span> online
+                <span id="visitor-count">14</span> <span data-i18n="onlineLabel">online</span>
             </div>
             <div class="flex items-center">
                 <select id="languageSelect" onchange="setLanguage(this.value)" class="bg-gray-800 text-gray-200 text-[11px] rounded-lg px-1.5 py-1 border border-gray-700 outline-none cursor-pointer">
@@ -218,6 +217,7 @@
                     <option value="fr">🇫🇷 FR</option>
                     <option value="de">🇩🇪 DE</option>
                     <option value="it">🇮🇹 IT</option>
+                    <option value="ar">🇸🇦 AR</option>
                 </select>
             </div>
         </div>
@@ -231,14 +231,14 @@
         <aside id="appSidebar" class="hidden md:flex fixed md:relative top-0 md:top-auto left-0 z-50 flex-col w-[80%] max-w-[280px] md:w-64 bg-panelBg border-r md:border border-gray-800 md:rounded-2xl shrink-0 p-3 h-full md:h-[65vh] max-h-full md:max-h-[65vh] overflow-y-auto shadow-2xl transition-transform duration-300">
             <!-- Buton închidere mobil în interiorul meniului -->
             <div class="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-gray-800">
-                <span class="text-xs font-bold text-cyanNeon flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> Meniu Navigare</span>
+                <span class="text-xs font-bold text-cyanNeon flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> <span data-i18n="mobileNavTitle">Meniu Navigare</span></span>
                 <button onclick="closeSidebarMobile()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
 
             <!-- BUTON INSTALARE PWA ÎN MENIU (Vizibil când e instalabil) -->
             <button id="sidebarInstallBtn" onclick="closeSidebarMobile(); installNexusPwa();" class="hidden w-full py-2 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emeraldNeon/50 text-emerald-300 text-xs font-bold rounded-xl items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer transition">
                 <i class="fa-solid fa-mobile-screen-button text-sm"></i>
-                <span>Instalează Aplicația</span>
+                <span data-i18n="btnInstallPwaFull">Instalează Aplicația</span>
             </button>
 
             <!-- BUTON ASISTENT AI -->
@@ -250,7 +250,7 @@
             <!-- NEXUS COMMAND OS, BIROU AGENȚI 3D & LAYERS OF AI STUDIO -->
             <button onclick="switchTab('nexusOS', 'Nexus Command OS'); closeSidebarMobile();" id="nav-nexusOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10">
                 <i class="fa-solid fa-network-wired text-cyanNeon w-4 text-center"></i>
-                <span class="text-cyanNeon font-bold">Nexus Command OS</span>
+                <span class="text-cyanNeon font-bold" data-i18n="navNexusOS">Nexus Command OS</span>
             </button>
             <button onclick="switchTab('office3d', 'Birou Agenți 3D'); closeSidebarMobile();" id="nav-office3d" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center justify-between transition cursor-pointer font-medium mb-1 border border-emeraldNeon/30 bg-emeraldNeon/10 btn-neon-glow">
                 <div class="flex items-center space-x-2.5">
@@ -276,11 +276,11 @@
                 <!-- Secțiunea Istoric Conversații în Meniu -->
                 <div class="px-1 py-2 mt-3 border-t border-gray-800">
                     <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400 mb-1.5">
-                        <span>🕒 Istoric Conversații</span>
-                        <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:underline cursor-pointer">Șterge tot</button>
+                        <span data-i18n="historyTitle">🕒 Istoric Conversații</span>
+                        <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:underline cursor-pointer" data-i18n="btnClearAll">Șterge tot</button>
                     </div>
                     <div id="chatHistoryList" class="space-y-1 max-h-32 overflow-y-auto text-[11px]">
-                        <p class="text-gray-500 text-[10px] italic px-1">Niciun istoric salvat.</p>
+                        <p class="text-gray-500 text-[10px] italic px-1" data-i18n="noHistorySaved">Niciun istoric salvat.</p>
                     </div>
                 </div>
 
@@ -314,27 +314,27 @@
                         <div>
                             <div class="flex items-center space-x-2">
                                 <span class="w-2.5 h-2.5 rounded-full bg-emeraldNeon animate-pulse"></span>
-                                <h2 class="text-base font-bold text-white tracking-wide">Good afternoon, S.V@lentin.</h2>
+                                <h2 class="text-base font-bold text-white tracking-wide" data-i18n="osGreeting">Good afternoon, S.V@lentin.</h2>
                             </div>
-                            <p class="text-xs text-gray-400 mt-1">Private workspace. Only your real data appears here, and nothing is sample data.</p>
+                            <p class="text-xs text-gray-400 mt-1" data-i18n="osPrivateWorkspace">Private workspace. Only your real data appears here, and nothing is sample data.</p>
                         </div>
                         <div class="flex items-center space-x-2 mt-3 md:mt-0">
                             <button onclick="switchTab('office3d', 'Birou Agenți 3D')" class="bg-emeraldNeon/20 border border-emeraldNeon text-emerald-300 hover:bg-emeraldNeon hover:text-darkBg px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-                                <i class="fa-solid fa-cubes"></i> Birou 3D
+                                <i class="fa-solid fa-cubes"></i> <span data-i18n="btnOffice3DShort">Birou 3D</span>
                             </button>
                             <button onclick="switchTab('chat', 'Home / Tools Hub')" class="bg-cyanNeon/20 border border-cyanNeon text-cyanNeon hover:bg-cyanNeon hover:text-darkBg px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.3)] cursor-pointer">
-                                <i class="fa-solid fa-microphone"></i> Talk to Nexus
+                                <i class="fa-solid fa-microphone"></i> <span data-i18n="btnTalkToNexus">Talk to Nexus</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- HUD Neural Central -->
                     <div class="bg-panelBg border border-cyanNeon/30 rounded-3xl p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[380px]">
-                        <div class="absolute top-4 left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg">
+                        <div class="absolute top-4 left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg" data-i18n="hudCoreBadge">
                             NEXUS CORE &bull; ACTIVE NEURAL MESH
                         </div>
                         <div class="absolute top-4 right-4 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> ONLINE
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> <span data-i18n="hudOnlineBadge">ONLINE</span>
                         </div>
 
                         <!-- Sfera Centrală & Noduri Interactive -->
@@ -347,31 +347,31 @@
 
                             <!-- Noduri Stânga -->
                             <div class="absolute left-2 md:left-8 top-4 bg-gray-900/90 border border-purple-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('chat', 'Context Module')">
-                                <i class="fa-solid fa-brain text-purple-400 mr-1.5"></i> Context
+                                <i class="fa-solid fa-brain text-purple-400 mr-1.5"></i> <span data-i18n="nodeContext">Context</span>
                             </div>
                             <div class="absolute left-0 md:left-4 top-24 bg-gray-900/90 border border-cyanNeon/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('office3d', 'Birou Agenți 3D')">
-                                <i class="fa-solid fa-cubes text-emerald-400 mr-1.5"></i> Birou 3D
+                                <i class="fa-solid fa-cubes text-emerald-400 mr-1.5"></i> <span data-i18n="btnOffice3DShort">Birou 3D</span>
                             </div>
                             <div class="absolute left-6 md:left-12 bottom-2 bg-gray-900/90 border border-emerald-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('podcast')">
-                                <i class="fa-solid fa-podcast text-amberGlow mr-1.5"></i> Podcast
+                                <i class="fa-solid fa-podcast text-amberGlow mr-1.5"></i> <span data-i18n="nodePodcast">Podcast</span>
                             </div>
 
                             <!-- Noduri Dreapta -->
                             <div class="absolute right-2 md:right-8 top-4 bg-gray-900/90 border border-tiktokColor/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('creative')">
-                                <i class="fa-solid fa-wand-magic-sparkles text-tiktokColor mr-1.5"></i> Creative
+                                <i class="fa-solid fa-wand-magic-sparkles text-tiktokColor mr-1.5"></i> <span data-i18n="nodeCreative">Creative</span>
                             </div>
                             <div class="absolute right-0 md:right-4 top-24 bg-gray-900/90 border border-amberGlow/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('calendar')">
-                                <i class="fa-solid fa-calendar-days text-amberGlow mr-1.5"></i> Calendar
+                                <i class="fa-solid fa-calendar-days text-amberGlow mr-1.5"></i> <span data-i18n="nodeCalendar">Calendar</span>
                             </div>
                             <div class="absolute right-4 md:right-10 bottom-12 bg-gray-900/90 border border-blue-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="selectOffice3DAgent('abtest')">
-                                <i class="fa-solid fa-vials text-blue-400 mr-1.5"></i> A/B Test
+                                <i class="fa-solid fa-vials text-blue-400 mr-1.5"></i> <span data-i18n="nodeAbTest">A/B Test</span>
                             </div>
                             <div class="absolute right-12 md:right-24 bottom-2 bg-gray-900/90 border border-indigo-500/40 hover:border-cyanNeon p-2.5 rounded-xl text-xs text-gray-200 cursor-pointer transition shadow-lg" onclick="switchTab('layersAi', 'Agents Module')">
-                                <i class="fa-solid fa-robot text-indigo-400 mr-1.5"></i> Agents
+                                <i class="fa-solid fa-robot text-indigo-400 mr-1.5"></i> <span data-i18n="nodeAgents">Agents</span>
                             </div>
                         </div>
 
-                        <div class="text-center text-xs text-gray-400 mt-2">
+                        <div class="text-center text-xs text-gray-400 mt-2" data-i18n="hudHintText">
                             Click pe orice nod, pe nucleul central sau intră în <button onclick="switchTab('office3d', 'Birou Agenți 3D')" class="text-emerald-400 underline cursor-pointer">Birou Agenți 3D</button> pentru a controla roboții AI.
                         </div>
                     </div>
@@ -390,12 +390,12 @@
                             <p class="text-[10px] text-gray-400" data-i18n="office3dSub">Atinge un robot pe harta 3D sau alege un flux rapid pentru a lucra cu agentul respectiv.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
-                            <button onclick="selectOffice3DAgent('calendar')" id="pill-calendar" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-amberGlow/40 text-amberGlow font-bold cursor-pointer transition hover:bg-amberGlow hover:text-darkBg">📅 Calendar</button>
-                            <button onclick="selectOffice3DAgent('video')" id="pill-video" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-cyanNeon/40 text-cyanNeon font-bold cursor-pointer transition hover:bg-cyanNeon hover:text-darkBg">🎬 Video AI</button>
-                            <button onclick="selectOffice3DAgent('creative')" id="pill-creative" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-pink-500/40 text-pink-400 font-bold cursor-pointer transition hover:bg-pink-500 hover:text-white">✨ Creative</button>
-                            <button onclick="selectOffice3DAgent('abtest')" id="pill-abtest" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-sky-500/40 text-sky-400 font-bold cursor-pointer transition hover:bg-sky-500 hover:text-darkBg">🧪 A/B Test</button>
-                            <button onclick="selectOffice3DAgent('podcast')" id="pill-podcast" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-purple-500/40 text-purple-300 font-bold cursor-pointer transition hover:bg-purple-500 hover:text-white">🎙️ Podcast</button>
-                            <button onclick="selectOffice3DAgent('roast')" id="pill-roast" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-tiktokColor/40 text-tiktokColor font-bold cursor-pointer transition hover:bg-tiktokColor hover:text-white">🔥 Roast</button>
+                            <button onclick="selectOffice3DAgent('calendar')" id="pill-calendar" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-amberGlow/40 text-amberGlow font-bold cursor-pointer transition hover:bg-amberGlow hover:text-darkBg" data-i18n="pillCalendar">📅 Calendar</button>
+                            <button onclick="selectOffice3DAgent('video')" id="pill-video" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-cyanNeon/40 text-cyanNeon font-bold cursor-pointer transition hover:bg-cyanNeon hover:text-darkBg" data-i18n="pillVideo">🎬 Video AI</button>
+                            <button onclick="selectOffice3DAgent('creative')" id="pill-creative" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-pink-500/40 text-pink-400 font-bold cursor-pointer transition hover:bg-pink-500 hover:text-white" data-i18n="pillCreative">✨ Creative</button>
+                            <button onclick="selectOffice3DAgent('abtest')" id="pill-abtest" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-sky-500/40 text-sky-400 font-bold cursor-pointer transition hover:bg-sky-500 hover:text-darkBg" data-i18n="pillAbTest">🧪 A/B Test</button>
+                            <button onclick="selectOffice3DAgent('podcast')" id="pill-podcast" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-purple-500/40 text-purple-300 font-bold cursor-pointer transition hover:bg-purple-500 hover:text-white" data-i18n="pillPodcast">🎙️ Podcast</button>
+                            <button onclick="selectOffice3DAgent('roast')" id="pill-roast" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-tiktokColor/40 text-tiktokColor font-bold cursor-pointer transition hover:bg-tiktokColor hover:text-white" data-i18n="pillRoast">🔥 Roast</button>
                         </div>
                     </div>
 
@@ -406,75 +406,75 @@
                             <div id="office3d-labels"></div>
                             <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[10px] text-gray-300 bg-gray-950/80 border border-gray-800 px-3 py-1.5 rounded-xl backdrop-blur-sm z-20">
                                 <span id="office3dStatusText" class="font-semibold text-emerald-400">Agent activ: 📅 Calendar Editorial</span>
-                                <button onclick="resetOffice3DCamera()" class="text-cyanNeon hover:underline cursor-pointer">Resetează unghi</button>
+                                <button onclick="resetOffice3DCamera()" class="text-cyanNeon hover:underline cursor-pointer" data-i18n="btnResetCamera">Resetează unghi</button>
                             </div>
                         </div>
 
                         <div class="lg:col-span-5 bg-panelBg border border-gray-800 rounded-2xl p-3.5 pr-12 sm:pr-3.5 flex flex-col justify-between shadow-xl min-h-[290px]">
                             <div id="office3d-panel-calendar" class="office-agent-panel space-y-2.5">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-                                    <h3 class="text-xs font-bold text-amberGlow"><i class="fa-solid fa-calendar-days mr-1.5"></i>Agent Calendar Editorial</h3>
-                                    <span class="text-[9px] bg-amberGlow/15 text-amberGlow px-2 py-0.5 rounded-full">PLANIFICATOR</span>
+                                    <h3 class="text-xs font-bold text-amberGlow" data-i18n="calAgentTitle"><i class="fa-solid fa-calendar-days mr-1.5"></i>Agent Calendar Editorial</h3>
+                                    <span class="text-[9px] bg-amberGlow/15 text-amberGlow px-2 py-0.5 rounded-full" data-i18n="badgePlanner">PLANIFICATOR</span>
                                 </div>
                                 <select id="postPlatform" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
                                     <option value="TikTok">TikTok</option>
                                     <option value="Instagram">Instagram</option>
                                     <option value="YouTube">YouTube</option>
                                 </select>
-                                <input type="text" id="postTitle" placeholder="Ex: Video scurt despre automatizări AI" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                                <input type="text" id="postTitle" placeholder="Ex: Video scurt despre automatizări AI" data-i18n-placeholder="calTitlePlaceholder" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
                                 <input type="datetime-local" id="postDate" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
-                                <button onclick="addEditorialPost()" class="w-full bg-amberGlow text-darkBg font-bold text-xs py-2 rounded-xl cursor-pointer hover:opacity-90 transition">Programează Postarea</button>
+                                <button onclick="addEditorialPost()" class="w-full bg-amberGlow text-darkBg font-bold text-xs py-2 rounded-xl cursor-pointer hover:opacity-90 transition" data-i18n="btnSchedulePost">Programează Postarea</button>
                                 <div id="editorialListContainer" class="space-y-1.5 max-h-28 overflow-y-auto pt-1">
-                                    <div class="text-[11px] text-gray-500 italic">Nicio postare programată în calendar.</div>
+                                    <div class="text-[11px] text-gray-500 italic" data-i18n="noScheduledPosts">Nicio postare programată în calendar.</div>
                                 </div>
                             </div>
 
                             <div id="office3d-panel-video" class="office-agent-panel hidden space-y-2.5 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-                                    <h3 class="text-xs font-bold text-cyanNeon"><i class="fa-solid fa-clapperboard mr-1.5"></i>Agent Text-to-Video Studio</h3>
-                                    <span class="text-[9px] bg-cyanNeon/15 text-cyanNeon px-2 py-0.5 rounded-full">SCENARII & VIZUAL</span>
+                                    <h3 class="text-xs font-bold text-cyanNeon" data-i18n="vidAgentTitle"><i class="fa-solid fa-clapperboard mr-1.5"></i>Agent Text-to-Video Studio</h3>
+                                    <span class="text-[9px] bg-cyanNeon/15 text-cyanNeon px-2 py-0.5 rounded-full" data-i18n="badgeScriptsVisuals">SCENARII & VIZUAL</span>
                                 </div>
-                                <input type="text" id="textToVideoInput" placeholder="Ex: Scenă cyberpunk pe ploaie, lumini neon..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-2 text-xs text-white outline-none">
+                                <input type="text" id="textToVideoInput" placeholder="Ex: Scenă cyberpunk pe ploaie, lumini neon..." data-i18n-placeholder="vidInputPlaceholder" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-2 text-xs text-white outline-none">
                                 <div class="flex gap-2">
-                                    <button onclick="generateVisualForTab('textToVideoInput', 'textToVideoResult', 'cinematic motion shot, 4k resolution, hyperrealistic')" class="flex-1 bg-gray-800 border border-cyanNeon/40 text-cyanNeon font-bold text-[11px] py-2 rounded-xl cursor-pointer hover:bg-cyanNeon hover:text-darkBg transition">Randare Vizuală</button>
-                                    <button onclick="generateTextToVideo()" class="flex-1 bg-cyanNeon text-darkBg font-bold text-[11px] py-2 rounded-xl cursor-pointer hover:opacity-90 transition">Generează Video AI</button>
+                                    <button onclick="generateVisualForTab('textToVideoInput', 'textToVideoResult', 'cinematic motion shot, 4k resolution, hyperrealistic')" class="flex-1 bg-gray-800 border border-cyanNeon/40 text-cyanNeon font-bold text-[11px] py-2 rounded-xl cursor-pointer hover:bg-cyanNeon hover:text-darkBg transition" data-i18n="btnVisualRender">Randare Vizuală</button>
+                                    <button onclick="generateTextToVideo()" class="flex-1 bg-cyanNeon text-darkBg font-bold text-[11px] py-2 rounded-xl cursor-pointer hover:opacity-90 transition" data-i18n="btnGenVideoAi">Generează Video AI</button>
                                 </div>
-                                <div id="textToVideoResult" class="bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-300 flex-1 overflow-y-auto max-h-40 whitespace-pre-line">Așteptare comandă pentru scenariu sau vizual video...</div>
+                                <div id="textToVideoResult" class="bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-300 flex-1 overflow-y-auto max-h-40 whitespace-pre-line" data-i18n="vidWaitingText">Așteptare comandă pentru scenariu sau vizual video...</div>
                             </div>
                             <div id="office3d-panel-creative" class="office-agent-panel hidden space-y-2.5 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-                                    <h3 class="text-xs font-bold text-pink-400"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Agent AI Creative Studio</h3>
-                                    <span class="text-[9px] bg-pink-500/15 text-pink-400 px-2 py-0.5 rounded-full">BRAND & PROMPT</span>
+                                    <h3 class="text-xs font-bold text-pink-400" data-i18n="creAgentTitle"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Agent AI Creative Studio</h3>
+                                    <span class="text-[9px] bg-pink-500/15 text-pink-400 px-2 py-0.5 rounded-full" data-i18n="badgeBrandPrompt">BRAND & PROMPT</span>
                                 </div>
                                 <div class="grid grid-cols-3 gap-1.5">
-                                    <button type="button" onclick="setCreativeMode('logo')" id="btn-mode-logo" class="py-1.5 px-2 rounded-xl text-[10px] font-bold bg-cyanNeon text-darkBg cursor-pointer">Logo & Brand</button>
-                                    <button type="button" onclick="setCreativeMode('sticker')" id="btn-mode-sticker" class="py-1.5 px-1 rounded-xl text-[10px] font-bold bg-gray-800 text-gray-300 cursor-pointer">Sticker</button>
-                                    <button type="button" onclick="setCreativeMode('enhancer')" id="btn-mode-enhancer" class="py-1.5 px-1 rounded-xl text-[10px] font-bold bg-gray-800 text-gray-300 cursor-pointer">Prompt Lab</button>
+                                    <button type="button" onclick="setCreativeMode('logo')" id="btn-mode-logo" class="py-1.5 px-2 rounded-xl text-[10px] font-bold bg-cyanNeon text-darkBg cursor-pointer" data-i18n="modeLogoBrand">Logo & Brand</button>
+                                    <button type="button" onclick="setCreativeMode('sticker')" id="btn-mode-sticker" class="py-1.5 px-1 rounded-xl text-[10px] font-bold bg-gray-800 text-gray-300 cursor-pointer" data-i18n="modeSticker">Sticker</button>
+                                    <button type="button" onclick="setCreativeMode('enhancer')" id="btn-mode-enhancer" class="py-1.5 px-1 rounded-xl text-[10px] font-bold bg-gray-800 text-gray-300 cursor-pointer" data-i18n="modePromptLab">Prompt Lab</button>
                                 </div>
-                                <textarea id="prompt-creative" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon" placeholder="Ex: Logo minimalist pentru studio AI..."></textarea>
+                                <textarea id="prompt-creative" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2 text-xs text-white outline-none focus:border-cyanNeon" placeholder="Ex: Logo minimalist pentru studio AI..." data-i18n-placeholder="creInputPlaceholder"></textarea>
                                 <div class="flex flex-wrap gap-1">
-                                    <button type="button" onclick="setCreativePrompt('Minimalist tech startup logo, vibrant blue gradient, vector')" class="text-[9px] bg-gray-950 text-cyanNeon border border-gray-800 px-2 py-0.5 rounded-lg cursor-pointer">Logo Tech</button>
-                                    <button type="button" onclick="setCreativePrompt('Cute cyberpunk cat sticker, bold white outline, die-cut vector')" class="text-[9px] bg-gray-950 text-cyanNeon border border-gray-800 px-2 py-0.5 rounded-lg cursor-pointer">Sticker Cyber</button>
-                                    <button type="button" onclick="setCreativePrompt('Futuristic neon city background with cyberpunk neon lights')" class="text-[9px] bg-gray-950 text-cyanNeon border border-gray-800 px-2 py-0.5 rounded-lg cursor-pointer">Cyber Concept</button>
+                                    <button type="button" onclick="setCreativePrompt('Minimalist tech startup logo, vibrant blue gradient, vector')" class="text-[9px] bg-gray-950 text-cyanNeon border border-gray-800 px-2 py-0.5 rounded-lg cursor-pointer" data-i18n="presetLogoTech">Logo Tech</button>
+                                    <button type="button" onclick="setCreativePrompt('Cute cyberpunk cat sticker, bold white outline, die-cut vector')" class="text-[9px] bg-gray-950 text-cyanNeon border border-gray-800 px-2 py-0.5 rounded-lg cursor-pointer" data-i18n="presetStickerCyber">Sticker Cyber</button>
+                                    <button type="button" onclick="setCreativePrompt('Futuristic neon city background with cyberpunk neon lights')" class="text-[9px] bg-gray-950 text-cyanNeon border border-gray-800 px-2 py-0.5 rounded-lg cursor-pointer" data-i18n="presetCyberConcept">Cyber Concept</button>
                                 </div>
                                 <button type="button" onclick="executeCreativeAction()" class="w-full font-bold py-2 px-3 rounded-xl text-xs bg-cyanNeon text-darkBg hover:opacity-90 cursor-pointer">
-                                    <i class="fa-solid fa-play mr-1"></i> <span id="action-btn-text">Generează Logo & Brand</span>
+                                    <i class="fa-solid fa-play mr-1"></i> <span id="action-btn-text" data-i18n="btnGenLogoBrand">Generează Logo & Brand</span>
                                 </button>
-                                <div id="result-creative-container" class="bg-gray-950 p-2.5 rounded-xl border border-gray-800 max-h-32 overflow-y-auto text-xs text-gray-400 text-center">
+                                <div id="result-creative-container" class="bg-gray-950 p-2.5 rounded-xl border border-gray-800 max-h-32 overflow-y-auto text-xs text-gray-400 text-center" data-i18n="creResultPlaceholder">
                                     Rezultatul va apărea aici.
                                 </div>
                             </div>
 
                             <div id="office3d-panel-abtest" class="office-agent-panel hidden space-y-2 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-                                    <h3 class="text-xs font-bold text-sky-400"><i class="fa-solid fa-vials mr-1.5"></i>Agent A/B Testing Titluri</h3>
-                                    <button onclick="clearTabChat('ab')" class="text-[9px] text-red-400 hover:underline cursor-pointer">Golește</button>
+                                    <h3 class="text-xs font-bold text-sky-400" data-i18n="abAgentTitle"><i class="fa-solid fa-vials mr-1.5"></i>Agent A/B Testing Titluri</h3>
+                                    <button onclick="clearTabChat('ab')" class="text-[9px] text-red-400 hover:underline cursor-pointer" data-i18n="btnClear">Golește</button>
                                 </div>
                                 <div id="abMessages" class="bg-gray-950 p-2.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 max-h-40">
-                                    <div class="text-gray-400 text-[11px]">Scrie tema videoclipului pentru variante A/B de titluri și hook-uri.</div>
+                                    <div class="text-gray-400 text-[11px]" data-i18n="abHintText">Scrie tema videoclipului pentru variante A/B de titluri și hook-uri.</div>
                                 </div>
                                 <div class="flex gap-1.5">
-                                    <input type="text" id="abInput" placeholder="Ex: Variante titlu pentru video AI..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
+                                    <input type="text" id="abInput" placeholder="Ex: Variante titlu pentru video AI..." data-i18n-placeholder="abInputPlaceholder" class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')">
                                     <button onclick="generateVisualForTab('abInput', 'abMessages', 'marketing banner, professional layout, 8k')" class="bg-gray-800 text-sky-400 px-2.5 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
                                     <button onclick="sendChatMessage('abMessages', 'abInput', '[A/B Testing Specialist]: ')" class="bg-sky-500 text-darkBg font-bold px-3 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
                                 </div>
@@ -482,14 +482,14 @@
 
                             <div id="office3d-panel-podcast" class="office-agent-panel hidden space-y-2 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-                                    <h3 class="text-xs font-bold text-purple-300"><i class="fa-solid fa-podcast mr-1.5"></i>Agent Podcast Script & Q&A</h3>
-                                    <button onclick="clearTabChat('podcast')" class="text-[9px] text-red-400 hover:underline cursor-pointer">Golește</button>
+                                    <h3 class="text-xs font-bold text-purple-300" data-i18n="podAgentTitle"><i class="fa-solid fa-podcast mr-1.5"></i>Agent Podcast Script & Q&A</h3>
+                                    <button onclick="clearTabChat('podcast')" class="text-[9px] text-red-400 hover:underline cursor-pointer" data-i18n="btnClear">Golește</button>
                                 </div>
                                 <div id="podcastMessages" class="bg-gray-950 p-2.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 max-h-40">
-                                    <div class="text-gray-400 text-[11px]">Introdu tema podcastului pentru scenariu și întrebări Q&A.</div>
+                                    <div class="text-gray-400 text-[11px]" data-i18n="podHintText">Introdu tema podcastului pentru scenariu și întrebări Q&A.</div>
                                 </div>
                                 <div class="flex gap-1.5">
-                                    <input type="text" id="podcastInput" placeholder="Ex: Scenariu podcast despre productivitate..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')">
+                                    <input type="text" id="podcastInput" placeholder="Ex: Scenariu podcast despre productivitate..." data-i18n-placeholder="podInputPlaceholder" class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')">
                                     <button onclick="generateVisualForTab('podcastInput', 'podcastMessages', 'podcast cover art, studio microphone aesthetic, professional lighting')" class="bg-gray-800 text-purple-300 px-2.5 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
                                     <button onclick="sendChatMessage('podcastMessages', 'podcastInput', '[Podcast Scriptwriter AI]: ')" class="bg-purple-500 text-white font-bold px-3 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
                                 </div>
@@ -497,14 +497,14 @@
 
                             <div id="office3d-panel-roast" class="office-agent-panel hidden space-y-2 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-                                    <h3 class="text-xs font-bold text-tiktokColor"><i class="fa-solid fa-fire mr-1.5"></i>Agent AI Roast My Content</h3>
-                                    <button onclick="clearTabChat('roast')" class="text-[9px] text-red-400 hover:underline cursor-pointer">Golește</button>
+                                    <h3 class="text-xs font-bold text-tiktokColor" data-i18n="roastAgentTitle"><i class="fa-solid fa-fire mr-1.5"></i>Agent AI Roast My Content</h3>
+                                    <button onclick="clearTabChat('roast')" class="text-[9px] text-red-400 hover:underline cursor-pointer" data-i18n="btnClear">Golește</button>
                                 </div>
                                 <div id="roastMessages" class="bg-gray-950 p-2.5 rounded-xl text-xs text-gray-200 flex-1 overflow-y-auto space-y-2 border border-gray-800 max-h-40">
-                                    <div class="text-gray-400 text-[11px]">Lipește textul sau ideea ta pentru un roast direct și constructiv.</div>
+                                    <div class="text-gray-400 text-[11px]" data-i18n="roastHintText">Lipește textul sau ideea ta pentru un roast direct și constructiv.</div>
                                 </div>
                                 <div class="flex gap-1.5">
-                                    <input type="text" id="roastInput" placeholder="Lipește textul pentru roast..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')">
+                                    <input type="text" id="roastInput" placeholder="Lipește textul pentru roast..." data-i18n-placeholder="roastInputPlaceholder" class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none" onkeydown="if(event.key==='Enter') sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')">
                                     <button onclick="generateVisualForTab('roastInput', 'roastMessages', 'funny caricature style, vibrant, expressive')" class="bg-gray-800 text-tiktokColor px-2.5 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
                                     <button onclick="sendChatMessage('roastMessages', 'roastInput', '[Sarcastic AI Roaster]: ')" class="bg-tiktokColor text-white font-bold px-3 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
                                 </div>
@@ -595,53 +595,53 @@
     <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
-                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-pink-500">Layers of AI Creator</h1>
-                <p class="text-slate-300 text-xs mt-1">Construiește și testează instrumente pe toate nivelurile Inteligenței Artificiale</p>
+                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-pink-500" data-i18n="layersTitle">Layers of AI Creator</h1>
+                <p class="text-slate-300 text-xs mt-1" data-i18n="layersSub">Construiește și testează instrumente pe toate nivelurile Inteligenței Artificiale</p>
             </header>
             <div class="flex flex-wrap justify-center gap-2 bg-slate-900/80 p-2 rounded-2xl border border-slate-700 backdrop-blur-md">
-                <button onclick="openLayersTab('agentic')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-indigo-400 hover:bg-indigo-950/50 active-layer-tab bg-slate-800 btn-neon-glow cursor-pointer" data-layer="agentic">🤖 Agentic AI</button>
-                <button onclick="openLayersTab('generative')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-pink-400 hover:bg-pink-950/50 btn-neon-glow cursor-pointer" data-layer="generative">✨ Generative AI</button>
-                <button onclick="openLayersTab('deeplearning')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-amber-400 hover:bg-amber-950/50 btn-neon-glow cursor-pointer" data-layer="deeplearning">🧠 Deep Learning</button>
-                <button onclick="openLayersTab('neural')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-emerald-400 hover:bg-emerald-950/50 btn-neon-glow cursor-pointer" data-layer="neural">🕸️ Neural Networks</button>
-                <button onclick="openLayersTab('ml')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-cyan-400 hover:bg-cyan-950/50 btn-neon-glow cursor-pointer" data-layer="ml">📊 Machine Learning</button>
+                <button onclick="openLayersTab('agentic')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-indigo-400 hover:bg-indigo-950/50 active-layer-tab bg-slate-800 btn-neon-glow cursor-pointer" data-layer="agentic" data-i18n="layerBtnAgentic">🤖 Agentic AI</button>
+                <button onclick="openLayersTab('generative')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-pink-400 hover:bg-pink-950/50 btn-neon-glow cursor-pointer" data-layer="generative" data-i18n="layerBtnGenerative">✨ Generative AI</button>
+                <button onclick="openLayersTab('deeplearning')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-amber-400 hover:bg-amber-950/50 btn-neon-glow cursor-pointer" data-layer="deeplearning" data-i18n="layerBtnDeep">🧠 Deep Learning</button>
+                <button onclick="openLayersTab('neural')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-emerald-400 hover:bg-emerald-950/50 btn-neon-glow cursor-pointer" data-layer="neural" data-i18n="layerBtnNeural">🕸️ Neural Networks</button>
+                <button onclick="openLayersTab('ml')" class="layer-tab-btn px-3 py-1.5 rounded-xl text-xs font-medium transition text-cyan-400 hover:bg-cyan-950/50 btn-neon-glow cursor-pointer" data-layer="ml" data-i18n="layerBtnMl">📊 Machine Learning</button>
             </div>
             <div class="bg-slate-900/90 border border-violet-500/30 rounded-2xl p-5 shadow-2xl backdrop-blur-xl">
                 <div id="layer-agentic" class="layer-content space-y-4">
-                    <h2 class="text-xl font-bold text-indigo-400 mb-1">Agentic AI Studio</h2>
-                    <p class="text-slate-300 text-xs mb-3">Creează agenți autonomi capabili de planificare, utilizare de unelte și execuție de sarcini complexe.</p>
+                    <h2 class="text-xl font-bold text-indigo-400 mb-1" data-i18n="layerAgenticTitle">Agentic AI Studio</h2>
+                    <p class="text-slate-300 text-xs mb-3" data-i18n="layerAgenticDesc">Creează agenți autonomi capabili de planificare, utilizare de unelte și execuție de sarcini complexe.</p>
                     <div class="space-y-3">
-                        <label class="block text-xs font-medium text-slate-300">Obiectivul Agentului:</label>
-                        <input type="text" id="agent-goal" placeholder="Ex: Analizează piața și trimite un raport detaliat" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500">
-                        <button onclick="executeAgent()" class="px-5 py-2.5 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer bg-indigo-600 hover:opacity-90">Lansează Agent Autonom</button>
+                        <label class="block text-xs font-medium text-slate-300" data-i18n="layerGoalLabel">Obiectivul Agentului:</label>
+                        <input type="text" id="agent-goal" placeholder="Ex: Analizează piața și trimite un raport detaliat" data-i18n-placeholder="layerGoalPlaceholder" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <button onclick="executeAgent()" class="px-5 py-2.5 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer bg-indigo-600 hover:opacity-90" data-i18n="btnLaunchAgent">Lansează Agent Autonom</button>
                     </div>
                 </div>
                 <div id="layer-generative" class="layer-content hidden space-y-4">
-                    <h2 class="text-xl font-bold text-pink-400 mb-1">Generative AI Studio</h2>
-                    <p class="text-slate-300 text-xs mb-3">Generează text, imagini, cod sau conținut multimodal utilizând modele LLM și Diffusion.</p>
+                    <h2 class="text-xl font-bold text-pink-400 mb-1" data-i18n="layerGenTitle">Generative AI Studio</h2>
+                    <p class="text-slate-300 text-xs mb-3" data-i18n="layerGenDesc">Generează text, imagini, cod sau conținut multimodal utilizând modele LLM și Diffusion.</p>
                     <div class="space-y-3">
-                        <label class="block text-xs font-medium text-slate-300">Prompt Generativ:</label>
-                        <textarea id="gen-prompt" rows="3" placeholder="Scrie cererea ta pentru generare conținut..." class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-pink-500"></textarea>
-                        <button onclick="generateContent()" class="px-5 py-2.5 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer bg-pink-600 hover:opacity-90">Generează Conținut</button>
+                        <label class="block text-xs font-medium text-slate-300" data-i18n="layerGenPromptLabel">Prompt Generativ:</label>
+                        <textarea id="gen-prompt" rows="3" placeholder="Scrie cererea ta pentru generare conținut..." data-i18n-placeholder="layerGenPlaceholder" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-pink-500"></textarea>
+                        <button onclick="generateContent()" class="px-5 py-2.5 text-white font-bold text-xs rounded-xl shadow-lg transition cursor-pointer bg-pink-600 hover:opacity-90" data-i18n="btnGenContent">Generează Conținut</button>
                     </div>
                 </div>
                 <div id="layer-deeplearning" class="layer-content hidden space-y-3">
-                    <h2 class="text-xl font-bold text-amber-400 mb-1">Deep Learning & Transformers</h2>
-                    <p class="text-slate-300 text-xs mb-3">Configurează arhitecturi complexe (Transformers, CNNs, LSTMs).</p>
-                    <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-slate-400 text-xs">Setări pentru rețele adânci.</div>
+                    <h2 class="text-xl font-bold text-amber-400 mb-1" data-i18n="layerDeepTitle">Deep Learning & Transformers</h2>
+                    <p class="text-slate-300 text-xs mb-3" data-i18n="layerDeepDesc">Configurează arhitecturi complexe (Transformers, CNNs, LSTMs).</p>
+                    <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-slate-400 text-xs" data-i18n="layerDeepBox">Setări pentru rețele adânci.</div>
                 </div>
                 <div id="layer-neural" class="layer-content hidden space-y-3">
-                    <h2 class="text-xl font-bold text-emerald-400 mb-1">Rețele Neuronale</h2>
-                    <p class="text-slate-300 text-xs mb-3">Ajustează funcțiile de activare și Backpropagation.</p>
-                    <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-slate-400 text-xs">Panou perceptroni.</div>
+                    <h2 class="text-xl font-bold text-emerald-400 mb-1" data-i18n="layerNeuralTitle">Rețele Neuronale</h2>
+                    <p class="text-slate-300 text-xs mb-3" data-i18n="layerNeuralDesc">Ajustează funcțiile de activare și Backpropagation.</p>
+                    <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-slate-400 text-xs" data-i18n="layerNeuralBox">Panou perceptroni.</div>
                 </div>
                 <div id="layer-ml" class="layer-content hidden space-y-3">
-                    <h2 class="text-xl font-bold text-cyan-400 mb-1">Machine Learning Clasic</h2>
-                    <p class="text-slate-300 text-xs mb-3">Modele de Clasificare, Regresie, Supervised și Unsupervised Learning.</p>
-                    <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-slate-400 text-xs">Încarcă setul de date (.csv).</div>
+                    <h2 class="text-xl font-bold text-cyan-400 mb-1" data-i18n="layerMlTitle">Machine Learning Clasic</h2>
+                    <p class="text-slate-300 text-xs mb-3" data-i18n="layerMlDesc">Modele de Clasificare, Regresie, Supervised și Unsupervised Learning.</p>
+                    <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-slate-400 text-xs" data-i18n="layerMlBox">Încarcă setul de date (.csv).</div>
                 </div>
                 <div class="mt-5 pt-4 border-t border-slate-800">
-                    <h3 class="text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Rezultat Generat / Output:</h3>
-                    <div id="layersOutputBox" class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 min-h-[90px] font-mono text-xs whitespace-pre-line">Așteptare comandă...</div>
+                    <h3 class="text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider" data-i18n="layerOutputTitle">Rezultat Generat / Output:</h3>
+                    <div id="layersOutputBox" class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 min-h-[90px] font-mono text-xs whitespace-pre-line" data-i18n="layerOutputWaiting">Așteptare comandă...</div>
                 </div>
             </div>
         </div>
@@ -729,7 +729,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[9px] text-gray-400 font-bold uppercase" data-i18n="labelFullName">Nume Complet</label>
-                        <input type="text" id="regFullName" placeholder="Ion Popescu" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                        <input type="text" id="regFullName" placeholder="Ion Popescu" data-i18n-placeholder="placeholderFullName" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
                     </div>
                     <div>
                         <label class="text-[9px] text-gray-400 font-bold uppercase" data-i18n="labelPhone">Telefon</label>
@@ -738,7 +738,7 @@
                 </div>
                 <div>
                     <label class="text-[9px] text-gray-400 font-bold uppercase" data-i18n="labelEmail">Email</label>
-                    <input type="email" id="regEmail" placeholder="nume@exemplu.ro" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                    <input type="email" id="regEmail" placeholder="nume@exemplu.ro" data-i18n-placeholder="placeholderEmail" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -747,7 +747,7 @@
                     </div>
                     <div>
                         <label class="text-[9px] text-gray-400 font-bold uppercase" data-i18n="labelCity">Oraș</label>
-                        <input type="text" id="regCity" placeholder="București" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
+                        <input type="text" id="regCity" placeholder="București" data-i18n-placeholder="placeholderCity" class="w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none focus:border-cyanNeon">
                     </div>
                 </div>
                 <button onclick="registerCompleteUser()" class="w-full hover:opacity-90 text-darkBg font-bold text-xs py-2.5 rounded-xl transition shadow cursor-pointer mt-1 bg-cyanNeon" data-i18n="btnCreateAccount">Creează Cont</button>
@@ -806,16 +806,16 @@
             <div class="flex items-center justify-between px-3 py-2 bg-slate-800 border-b border-slate-700">
                 <div class="flex items-center space-x-2">
                     <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
-                    <span class="font-bold text-xs text-white">Nexus Gemini Bot</span>
+                    <span class="font-bold text-xs text-white" data-i18n="robotTitle">Nexus Gemini Bot</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition" title="Deschide în Telegram"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition" title="Deschide în Telegram"><i class="fa-brands fa-telegram"></i> <span data-i18n="btnTelegram">Telegram</span></a>
                     <button onclick="toggleNexusRobot()" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
                 </div>
             </div>
             <div id="nexus-robot-messages" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs text-slate-200">
                 <div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700 max-w-[85%]">
-                    <b>Nexus AI:</b> <span data-i18n="robotWelcome">Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!</span>
+                    <b data-i18n="robotSenderName">Nexus AI:</b> <span data-i18n="robotWelcome">Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!</span>
                 </div>
             </div>
             <div class="p-2.5 bg-slate-800 border-t border-slate-700 flex flex-col space-y-1.5">
@@ -858,6 +858,7 @@
         <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline" data-i18n="footerTerms">Termeni și Condiții</a> • 
         <span><span data-i18n="footerCreator">Creat de</span> <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
     </footer>
+
     <!-- Scripturi & Logica Aplicației -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -987,7 +988,8 @@
             if (!listEl) return;
             let history = JSON.parse(localStorage.getItem('nexus_chat_history') || '[]');
             if (history.length === 0) {
-                listEl.innerHTML = '<p class="text-gray-500 text-[10px] italic px-1">Niciun istoric salvat.</p>';
+                const emptyText = i18nDictionary[currentLang]?.noHistorySaved || "Niciun istoric salvat.";
+                listEl.innerHTML = `<p class="text-gray-500 text-[10px] italic px-1">${escapeHtml(emptyText)}</p>`;
                 return;
             }
             listEl.innerHTML = '';
@@ -1208,6 +1210,15 @@
             office3D.camera.lookAt(0, 0.4, 0);
         };
 
+        function updateOffice3DStatusLabel() {
+            const found = office3DAgentsMeta.find(m => m.id === office3D.activeId);
+            const statusEl = document.getElementById('office3dStatusText');
+            if (statusEl && found) {
+                const prefix = i18nDictionary[currentLang]?.activeAgentPrefix || "Agent activ: ";
+                statusEl.innerText = prefix + found.label;
+            }
+        }
+
         window.selectOffice3DAgent = function(agentId, openTab = true) {
             office3D.activeId = agentId;
             if (openTab) {
@@ -1222,11 +1233,7 @@
             const activePill = document.getElementById('pill-' + agentId);
             if (activePill) activePill.classList.add('ring-2', 'ring-white');
 
-            const found = office3DAgentsMeta.find(m => m.id === agentId);
-            const statusEl = document.getElementById('office3dStatusText');
-            if (statusEl && found) {
-                statusEl.innerText = 'Agent activ: ' + found.label;
-            }
+            updateOffice3DStatusLabel();
 
             if (office3D.initialized) {
                 const wrap = document.getElementById('office3d-canvas-wrap');
@@ -1378,10 +1385,10 @@
             updateBackButtonUI();
 
             const savedLang = localStorage.getItem('nexus_language');
-            if (savedLang) {
+            if (savedLang && i18nDictionary[savedLang]) {
                 window.setLanguage(savedLang);
             } else {
-                const browserLang = navigator.language.slice(0, 2).toLowerCase();
+                const browserLang = (navigator.language || 'ro').slice(0, 2).toLowerCase();
                 window.setLanguage(i18nDictionary[browserLang] ? browserLang : 'ro');
             }
         });
@@ -1506,7 +1513,7 @@
                     const response = await fetch('/api/chat', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: promptText, fileData: fileData, model: currentModel, department: selectedDept })
+                        body: JSON.stringify({ prompt: promptText, fileData: fileData, model: currentModel, department: selectedDept, lang: currentLang })
                     });
 
                     if (!response.ok) {
@@ -1558,6 +1565,15 @@
             throw new Error(lastError?.message || "Toți agenții din rețea au eșuat.");
         }
 
+        window.copyElementText = function(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const txt = el.innerText || '';
+            if (navigator.clipboard && txt) {
+                navigator.clipboard.writeText(txt).then(() => window.showToast('Copiat în clipboard!', 'success')).catch(() => {});
+            }
+        };
+
         window.sendChatMessageWithAttachment = async function(messagesContainerId, inputId, tabKey) {
             const inputEl = document.getElementById(inputId);
             const msgBox = document.getElementById(messagesContainerId);
@@ -1592,9 +1608,12 @@
             msgBox.innerHTML += `
                 <div class="flex justify-start my-2">
                     <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
-                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold gap-3">
                             <span>Nexus AI Assistant</span>
-                            <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="copyElementText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Copiază"><i class="fa-regular fa-copy"></i></button>
+                                <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
                         </div>
                         <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
                     </div>
@@ -1609,7 +1628,7 @@
                 const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.8-flash';
                 const departmentSelect = document.getElementById('department-select');
                 const selectedDept = departmentSelect ? departmentSelect.value : 'general';
-                const finalPrompt = `[Specialist: ${selectedDept}] ${text || "Analizează acest fișier:"}`;
+                const finalPrompt = `[Specialist: ${selectedDept}] [Language: ${currentLang}] ${text || "Analizează acest fișier:"}`;
 
                 await fetchFromServer(finalPrompt, fileDataToSend, selectedModel, (currentText) => {
                     contentDiv.innerHTML = parseMarkdown(currentText);
@@ -1643,9 +1662,12 @@
             container.innerHTML += `
                 <div class="flex justify-start my-2">
                     <div class="bg-panelBg border border-gray-800 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 space-y-2 shadow">
-                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-1 text-[10px] text-cyanNeon font-bold gap-3">
                             <span>Nexus AI Assistant</span>
-                            <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="copyElementText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Copiază"><i class="fa-regular fa-copy"></i></button>
+                                <button onclick="speakText('${msgId}')" class="text-gray-400 hover:text-white cursor-pointer" title="Ascultă cu voce tare"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
                         </div>
                         <div id="${msgId}" class="markdown-content leading-relaxed"><span class="text-gray-500 animate-pulse">Se generează...</span></div>
                     </div>
@@ -1655,7 +1677,7 @@
             const contentDiv = document.getElementById(msgId);
 
             try {
-                await fetchFromServer(prefix + text, null, 'gemini-3.8-flash', (currentText) => {
+                await fetchFromServer(`${prefix}[Language: ${currentLang}] ${text}`, null, 'gemini-3.8-flash', (currentText) => {
                     contentDiv.innerHTML = parseMarkdown(currentText);
                     if(typeof hljs !== 'undefined') hljs.highlightAll();
                     container.scrollTop = container.scrollHeight;
@@ -1681,7 +1703,7 @@
             const contentDiv = document.getElementById(msgId);
 
             try {
-                await fetchFromServer(text, null, 'gemini-3.8-flash', (currentText) => {
+                await fetchFromServer(`[Language: ${currentLang}] ${text}`, null, 'gemini-3.8-flash', (currentText) => {
                     contentDiv.innerText = currentText;
                     container.scrollTop = container.scrollHeight;
                 });
@@ -1690,12 +1712,22 @@
             }
         };
 
+        const speechLangMap = {
+            ro: 'ro-RO',
+            en: 'en-US',
+            es: 'es-ES',
+            fr: 'fr-FR',
+            de: 'de-DE',
+            it: 'it-IT',
+            ar: 'ar-SA'
+        };
+
         window.speakText = function(elementId) {
             const el = document.getElementById(elementId);
             if(!el) return;
             if('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(el.innerText);
-                utterance.lang = 'ro-RO';
+                utterance.lang = speechLangMap[currentLang] || 'ro-RO';
                 window.speechSynthesis.speak(utterance);
                 window.showToast('Se citește textul...', 'info');
             }
@@ -1705,7 +1737,7 @@
             if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
-                recognition.lang = 'ro-RO';
+                recognition.lang = speechLangMap[currentLang] || 'ro-RO';
                 recognition.onresult = (event) => {
                     const robotInput = document.getElementById('nexus-robot-input');
                     if(robotInput) robotInput.value = event.results[0][0].transcript;
@@ -1756,7 +1788,7 @@
             if(!inputEl || !inputEl.value) { window.showToast('Introdu descrierea!', 'error'); return; }
             if(result) result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariu video AI...</div>';
             try {
-                const res = await fetchFromServer(`Creează scenariu video: "${inputEl.value}"`);
+                const res = await fetchFromServer(`[Language: ${currentLang}] Creează scenariu video: "${inputEl.value}"`);
                 if(result) result.innerText = res;
                 window.showToast('Generat!', 'success');
             } catch(e) { if(result) result.innerText = 'Eroare la generare.'; }
@@ -1836,7 +1868,7 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const userName = escapeHtml(user.displayName || user.email);
+                const userName = escapeHtml(user.displayName || user.email || 'Utilizator');
                 const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
                 const parentEl = document.getElementById('tab-authAccount');
                 const container = parentEl ? parentEl.querySelector('.max-w-md') : null;
@@ -1857,10 +1889,12 @@
         window.loginWithGoogle = async function() {
             try {
                 const result = await signInWithPopup(auth, googleProvider);
-                const userName = escapeHtml(user.displayName || result.user.email);
+                const signedUser = result.user;
+                const userName = escapeHtml((signedUser && (signedUser.displayName || signedUser.email)) || 'Utilizator');
                 window.showToast("Autentificat cu succes: " + userName, "success");
             } catch (error) {
-                alert("Eroare la autentificare: " + error.message);
+                const errMsg = error && error.message ? error.message : "Eroare necunoscută";
+                alert("Eroare la autentificare: " + errMsg);
             }
         };
 
@@ -1890,8 +1924,8 @@
         window.logoutUser = async function() {
             try {
                 await signOut(auth);
-                location.reload();
             } catch (error) {}
+            location.reload();
         };
 
         let currentDepartment = 'documents';
@@ -1909,10 +1943,11 @@
                 }
             });
             const btnText = document.getElementById('action-btn-text');
+            const dict = i18nDictionary[currentLang] || baseRo;
             if(btnText) {
-                if(mode === 'logo') btnText.innerText = "Generează Logo & Brand";
-                if(mode === 'sticker') btnText.innerText = "Generează Sticker / Meme";
-                if(mode === 'enhancer') btnText.innerText = "Optimizează & Generează Prompt";
+                if(mode === 'logo') btnText.innerText = dict.btnGenLogoBrand;
+                if(mode === 'sticker') btnText.innerText = dict.btnGenSticker;
+                if(mode === 'enhancer') btnText.innerText = dict.btnGenPrompt;
             }
         };
 
@@ -1949,7 +1984,7 @@
             fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: `${userText} [Stil: ${style}]`, department: 'general', toolType: 'imageGen' })
+                body: JSON.stringify({ prompt: `[Language: ${currentLang}] ${userText} [Stil: ${style}]`, department: 'general', toolType: 'imageGen' })
             })
             .then(async res => {
                 if (!res.ok) throw new Error("Eroare de la serverul AI.");
@@ -1995,7 +2030,7 @@
             if(!goal) { output.innerText = "Te rog introdu un obiectiv."; return; }
             output.innerText = `[Agentic AI] Inițializare planificare pentru: "${goal}"...`;
             try {
-                const res = await fetchFromServer(`[Agentic AI - Plan & Execuție]: ${goal}`);
+                const res = await fetchFromServer(`[Language: ${currentLang}] [Agentic AI - Plan & Execuție]: ${goal}`);
                 output.innerText = res;
             } catch (e) {
                 output.innerText = `[Agentic AI] Obiectiv: ${goal}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
@@ -2009,7 +2044,7 @@
             if(!prompt) { output.innerText = "Te rog introdu un prompt."; return; }
             output.innerText = `[Generative AI] Generare pentru: "${prompt}"...`;
             try {
-                const res = await fetchFromServer(`[Generative AI]: ${prompt}`);
+                const res = await fetchFromServer(`[Language: ${currentLang}] [Generative AI]: ${prompt}`);
                 output.innerText = res;
             } catch (e) {
                 output.innerText = `[Generative AI] Prompt: ${prompt}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
@@ -2018,21 +2053,112 @@
 
         const baseRo = {
             btnBack: "Înapoi",
+            btnInstallPwa: "Instalează",
+            btnInstallPwaFull: "Instalează Aplicația",
+            onlineLabel: "online",
+            mobileNavTitle: "Meniu Navigare",
             openAssistant: "Asistent AI",
+            navNexusOS: "Nexus Command OS",
             navOffice3D: "Birou Agenți 3D",
-            office3dTitle: "Nexus 3D HQ — Birou Agenți AI",
-            office3dSub: "Atinge un robot pe harta 3D sau alege un flux rapid pentru a lucra cu agentul respectiv.",
             navLayers: "Layers of AI Studio",
             menuMainPanel: "PANOU PRINCIPAL",
             navHomeHub: "Home / Tools Hub",
+            historyTitle: "🕒 Istoric Conversații",
+            btnClearAll: "Șterge tot",
+            noHistorySaved: "Niciun istoric salvat.",
             menuSettingsAccount: "Setări & Cont",
             navBilling: "Abonament & PRO",
             navAuth: "Cont, Google & Login",
             navSupport: "Suport & Ajutor",
+            osGreeting: "Good afternoon, S.V@lentin.",
+            osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
+            btnOffice3DShort: "Birou 3D",
+            btnTalkToNexus: "Talk to Nexus",
+            hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+            hudOnlineBadge: "ONLINE",
+            nodeContext: "Context",
+            nodePodcast: "Podcast",
+            nodeCreative: "Creative",
+            nodeCalendar: "Calendar",
+            nodeAbTest: "A/B Test",
+            nodeAgents: "Agents",
+            hudHintText: "Click pe orice nod, pe nucleul central sau intră în <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Birou Agenți 3D</button> pentru a controla roboții AI.",
+            office3dTitle: "Nexus 3D HQ — Birou Agenți AI",
+            office3dSub: "Atinge un robot pe harta 3D sau alege un flux rapid pentru a lucra cu agentul respectiv.",
+            pillCalendar: "📅 Calendar",
+            pillVideo: "🎬 Video AI",
+            pillCreative: "✨ Creative",
+            pillAbTest: "🧪 A/B Test",
+            pillPodcast: "🎙️ Podcast",
+            pillRoast: "🔥 Roast",
+            activeAgentPrefix: "Agent activ: ",
+            btnResetCamera: "Resetează unghi",
+            calAgentTitle: "<i class=\"fa-solid fa-calendar-days mr-1.5\"></i>Agent Calendar Editorial",
+            badgePlanner: "PLANIFICATOR",
+            calTitlePlaceholder: "Ex: Video scurt despre automatizări AI",
+            btnSchedulePost: "Programează Postarea",
+            noScheduledPosts: "Nicio postare programată în calendar.",
+            vidAgentTitle: "<i class=\"fa-solid fa-clapperboard mr-1.5\"></i>Agent Text-to-Video Studio",
+            badgeScriptsVisuals: "SCENARII & VIZUAL",
+            vidInputPlaceholder: "Ex: Scenă cyberpunk pe ploaie, lumini neon...",
+            btnVisualRender: "Randare Vizuală",
+            btnGenVideoAi: "Generează Video AI",
+            vidWaitingText: "Așteptare comandă pentru scenariu sau vizual video...",
+            creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles mr-1.5\"></i>Agent AI Creative Studio",
+            badgeBrandPrompt: "BRAND & PROMPT",
+            modeLogoBrand: "Logo & Brand",
+            modeSticker: "Sticker",
+            modePromptLab: "Prompt Lab",
+            creInputPlaceholder: "Ex: Logo minimalist pentru studio AI...",
+            presetLogoTech: "Logo Tech",
+            presetStickerCyber: "Sticker Cyber",
+            presetCyberConcept: "Cyber Concept",
+            btnGenLogoBrand: "Generează Logo & Brand",
+            btnGenSticker: "Generează Sticker / Meme",
+            btnGenPrompt: "Optimizează & Generează Prompt",
+            creResultPlaceholder: "Rezultatul va apărea aici.",
+            abAgentTitle: "<i class=\"fa-solid fa-vials mr-1.5\"></i>Agent A/B Testing Titluri",
+            btnClear: "Golește",
+            abHintText: "Scrie tema videoclipului pentru variante A/B de titluri și hook-uri.",
+            abInputPlaceholder: "Ex: Variante titlu pentru video AI...",
+            podAgentTitle: "<i class=\"fa-solid fa-podcast mr-1.5\"></i>Agent Podcast Script & Q&A",
+            podHintText: "Introdu tema podcastului pentru scenariu și întrebări Q&A.",
+            podInputPlaceholder: "Ex: Scenariu podcast despre productivitate...",
+            roastAgentTitle: "<i class=\"fa-solid fa-fire mr-1.5\"></i>Agent AI Roast My Content",
+            roastHintText: "Lipește textul sau ideea ta pentru un roast direct și constructiv.",
+            roastInputPlaceholder: "Lipește textul pentru roast...",
             chatTitle: "Nexus Neural Assistant - Home / Tools Hub",
             welcomeMsg: "Salut! Sunt asistentul tău general. Cu ce începem?",
             aiModelLabel: "Model AI:",
             inputPlaceholder: "Scrie mesajul tău sau descrie un vizual...",
+            layersTitle: "Layers of AI Creator",
+            layersSub: "Construiește și testează instrumente pe toate nivelurile Inteligenței Artificiale",
+            layerBtnAgentic: "🤖 Agentic AI",
+            layerBtnGenerative: "✨ Generative AI",
+            layerBtnDeep: "🧠 Deep Learning",
+            layerBtnNeural: "🕸️ Neural Networks",
+            layerBtnMl: "📊 Machine Learning",
+            layerAgenticTitle: "Agentic AI Studio",
+            layerAgenticDesc: "Creează agenți autonomi capabili de planificare, utilizare de unelte și execuție de sarcini complexe.",
+            layerGoalLabel: "Obiectivul Agentului:",
+            layerGoalPlaceholder: "Ex: Analizează piața și trimite un raport detaliat",
+            btnLaunchAgent: "Lansează Agent Autonom",
+            layerGenTitle: "Generative AI Studio",
+            layerGenDesc: "Generează text, imagini, cod sau conținut multimodal utilizând modele LLM și Diffusion.",
+            layerGenPromptLabel: "Prompt Generativ:",
+            layerGenPlaceholder: "Scrie cererea ta pentru generare conținut...",
+            btnGenContent: "Generează Conținut",
+            layerDeepTitle: "Deep Learning & Transformers",
+            layerDeepDesc: "Configurează arhitecturi complexe (Transformers, CNNs, LSTMs).",
+            layerDeepBox: "Setări pentru rețele adânci.",
+            layerNeuralTitle: "Rețele Neuronale",
+            layerNeuralDesc: "Ajustează funcțiile de activare și Backpropagation.",
+            layerNeuralBox: "Panou perceptroni.",
+            layerMlTitle: "Machine Learning Clasic",
+            layerMlDesc: "Modele de Clasificare, Regresie, Supervised și Unsupervised Learning.",
+            layerMlBox: "Încarcă setul de date (.csv).",
+            layerOutputTitle: "Rezultat Generat / Output:",
+            layerOutputWaiting: "Așteptare comandă...",
             billingTitle: "Abonamente & Susținere Project",
             billingSub: "Alege modul tău de acces la Nexus AI Studio Pro.",
             licenseKeyPrompt: "Ai primit o cheie oficială de activare?",
@@ -2057,10 +2183,13 @@
             authSub: "Conectează-te rapid sau creează un cont nou.",
             orNewForm: "SAU FORMULAR NOU",
             labelFullName: "Nume Complet",
+            placeholderFullName: "Ion Popescu",
             labelPhone: "Telefon",
             labelEmail: "Email",
+            placeholderEmail: "nume@exemplu.ro",
             labelPassword: "Parolă",
             labelCity: "Oraș",
+            placeholderCity: "București",
             btnCreateAccount: "Creează Cont",
             supportCenterTitle: "Centrul de Suport & Asistență Clienți",
             supportCenterSub: "Ai o întrebare sau ai întâmpinat o problemă? Suntem aici să te ajutăm rapid!",
@@ -2075,6 +2204,9 @@
             userGuideTitle: "Ghid Utilizare",
             userGuideDesc: "Învață cum să obții cele mai bune rezultate.",
             openChatLink: "Deschide Chat & Încearcă acum →",
+            robotTitle: "Nexus Gemini Bot",
+            btnTelegram: "Telegram",
+            robotSenderName: "Nexus AI:",
             robotWelcome: "Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!",
             speechReady: "Gata de ascultare",
             audioOn: "Audio ON",
@@ -2095,22 +2227,113 @@
             en: {
                 ...baseRo,
                 btnBack: "Back",
+                btnInstallPwa: "Install",
+                btnInstallPwaFull: "Install App",
+                onlineLabel: "online",
+                mobileNavTitle: "Navigation Menu",
                 openAssistant: "AI Assistant",
+                navNexusOS: "Nexus Command OS",
                 navOffice3D: "3D Agents Office",
-                office3dTitle: "Nexus 3D HQ — AI Agents Office",
-                office3dSub: "Tap a robot on the 3D map or pick a quick flow to work with that agent.",
                 navLayers: "Layers of AI Studio",
                 menuMainPanel: "MAIN PANEL",
                 navHomeHub: "Home / Tools Hub",
+                historyTitle: "🕒 Chat History",
+                btnClearAll: "Clear all",
+                noHistorySaved: "No saved history.",
                 menuSettingsAccount: "Settings & Account",
                 navBilling: "Subscription & PRO",
                 navAuth: "Account, Google & Login",
                 navSupport: "Support & Help",
+                osGreeting: "Good afternoon, S.V@lentin.",
+                osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
+                btnOffice3DShort: "3D Office",
+                btnTalkToNexus: "Talk to Nexus",
+                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudOnlineBadge: "ONLINE",
+                nodeContext: "Context",
+                nodePodcast: "Podcast",
+                nodeCreative: "Creative",
+                nodeCalendar: "Calendar",
+                nodeAbTest: "A/B Test",
+                nodeAgents: "Agents",
+                hudHintText: "Click any node, the central core, or enter <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">3D Agents Office</button> to control the AI robots.",
+                office3dTitle: "Nexus 3D HQ — AI Agents Office",
+                office3dSub: "Tap a robot on the 3D map or pick a quick flow to work with that agent.",
+                pillCalendar: "📅 Calendar",
+                pillVideo: "🎬 Video AI",
+                pillCreative: "✨ Creative",
+                pillAbTest: "🧪 A/B Test",
+                pillPodcast: "🎙️ Podcast",
+                pillRoast: "🔥 Roast",
+                activeAgentPrefix: "Active agent: ",
+                btnResetCamera: "Reset view",
+                calAgentTitle: "<i class=\"fa-solid fa-calendar-days mr-1.5\"></i>Editorial Calendar Agent",
+                badgePlanner: "PLANNER",
+                calTitlePlaceholder: "Ex: Short video about AI automations",
+                btnSchedulePost: "Schedule Post",
+                noScheduledPosts: "No posts scheduled in the calendar.",
+                vidAgentTitle: "<i class=\"fa-solid fa-clapperboard mr-1.5\"></i>Text-to-Video Studio Agent",
+                badgeScriptsVisuals: "SCRIPTS & VISUALS",
+                vidInputPlaceholder: "Ex: Cyberpunk scene in the rain, neon lights...",
+                btnVisualRender: "Visual Render",
+                btnGenVideoAi: "Generate AI Video",
+                vidWaitingText: "Waiting for command for video script or visual...",
+                creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles mr-1.5\"></i>AI Creative Studio Agent",
+                badgeBrandPrompt: "BRAND & PROMPT",
+                modeLogoBrand: "Logo & Brand",
+                modeSticker: "Sticker",
+                modePromptLab: "Prompt Lab",
+                creInputPlaceholder: "Ex: Minimalist logo for an AI studio...",
+                presetLogoTech: "Tech Logo",
+                presetStickerCyber: "Cyber Sticker",
+                presetCyberConcept: "Cyber Concept",
+                btnGenLogoBrand: "Generate Logo & Brand",
+                btnGenSticker: "Generate Sticker / Meme",
+                btnGenPrompt: "Optimize & Generate Prompt",
+                creResultPlaceholder: "The result will appear here.",
+                abAgentTitle: "<i class=\"fa-solid fa-vials mr-1.5\"></i>Title A/B Testing Agent",
+                btnClear: "Clear",
+                abHintText: "Enter the video topic for A/B title and hook variations.",
+                abInputPlaceholder: "Ex: Title variants for an AI video...",
+                podAgentTitle: "<i class=\"fa-solid fa-podcast mr-1.5\"></i>Podcast Script & Q&A Agent",
+                podHintText: "Enter the podcast topic for a script and Q&A questions.",
+                podInputPlaceholder: "Ex: Podcast script about productivity...",
+                roastAgentTitle: "<i class=\"fa-solid fa-fire mr-1.5\"></i>AI Roast My Content Agent",
+                roastHintText: "Paste your text or idea for a direct and constructive roast.",
+                roastInputPlaceholder: "Paste text for a roast...",
                 chatTitle: "Nexus Neural Assistant - Home / Tools Hub",
                 welcomeMsg: "Hello! I am your general assistant. Where shall we start?",
                 aiModelLabel: "AI Model:",
                 inputPlaceholder: "Type your message or describe a visual...",
-                billingTitle: "Subscriptions & Support",
+                layersTitle: "Layers of AI Creator",
+                layersSub: "Build and test tools across all layers of Artificial Intelligence",
+                layerBtnAgentic: "🤖 Agentic AI",
+                layerBtnGenerative: "✨ Generative AI",
+                layerBtnDeep: "🧠 Deep Learning",
+                layerBtnNeural: "🕸️ Neural Networks",
+                layerBtnMl: "📊 Machine Learning",
+                layerAgenticTitle: "Agentic AI Studio",
+                layerAgenticDesc: "Create autonomous agents capable of planning, tool use, and complex task execution.",
+                layerGoalLabel: "Agent Objective:",
+                layerGoalPlaceholder: "Ex: Analyze the market and send a detailed report",
+                btnLaunchAgent: "Launch Autonomous Agent",
+                layerGenTitle: "Generative AI Studio",
+                layerGenDesc: "Generate text, images, code, or multimodal content using LLM and Diffusion models.",
+                layerGenPromptLabel: "Generative Prompt:",
+                layerGenPlaceholder: "Write your request for content generation...",
+                btnGenContent: "Generate Content",
+                layerDeepTitle: "Deep Learning & Transformers",
+                layerDeepDesc: "Configure complex architectures (Transformers, CNNs, LSTMs).",
+                layerDeepBox: "Settings for deep neural networks.",
+                layerNeuralTitle: "Neural Networks",
+                layerNeuralDesc: "Tune activation functions and Backpropagation.",
+                layerNeuralBox: "Perceptron control panel.",
+                layerMlTitle: "Classical Machine Learning",
+                layerMlDesc: "Classification, Regression, Supervised and Unsupervised Learning models.",
+                layerMlBox: "Upload dataset (.csv).",
+                layerOutputTitle: "Generated Result / Output:",
+                layerOutputWaiting: "Waiting for command...",
+                billingTitle: "Subscriptions & Project Support",
                 billingSub: "Choose your access mode to Nexus AI Studio Pro.",
                 licenseKeyPrompt: "Did you receive an official activation key?",
                 btnActivate: "Activate",
@@ -2134,10 +2357,13 @@
                 authSub: "Log in quickly or create a new account.",
                 orNewForm: "OR NEW FORM",
                 labelFullName: "Full Name",
+                placeholderFullName: "John Doe",
                 labelPhone: "Phone",
                 labelEmail: "Email",
+                placeholderEmail: "name@example.com",
                 labelPassword: "Password",
                 labelCity: "City",
+                placeholderCity: "Bucharest",
                 btnCreateAccount: "Create Account",
                 supportCenterTitle: "Customer Support Center",
                 supportCenterSub: "Have a question or ran into an issue? We are here to help quickly!",
@@ -2152,6 +2378,9 @@
                 userGuideTitle: "User Guide",
                 userGuideDesc: "Learn how to get the best results.",
                 openChatLink: "Open Chat & Try now →",
+                robotTitle: "Nexus Gemini Bot",
+                btnTelegram: "Telegram",
+                robotSenderName: "Nexus AI:",
                 robotWelcome: "Hello! I am your quick Gemini assistant. You can use the microphone 🎙️ or send a message!",
                 speechReady: "Ready to listen",
                 audioOn: "Audio ON",
@@ -2166,32 +2395,896 @@
                 footerTerms: "Terms & Conditions",
                 footerCreator: "Created by"
             },
-            es: { ...baseRo, btnBack: "Atrás", openAssistant: "Asistente AI", navHomeHub: "Inicio / Herramientas", btnCreateAccount: "Crear Cuenta" },
-            fr: { ...baseRo, btnBack: "Retour", openAssistant: "Assistant AI", navHomeHub: "Accueil / Outils", btnCreateAccount: "Créer un compte" },
-            de: { ...baseRo, btnBack: "Zurück", openAssistant: "AI-Assistent", navHomeHub: "Start / Tools", btnCreateAccount: "Konto erstellen" },
-            it: { ...baseRo, btnBack: "Indietro", openAssistant: "Assistente AI", navHomeHub: "Home / Strumenti", btnCreateAccount: "Crea account" }
+            es: {
+                ...baseRo,
+                btnBack: "Atrás",
+                btnInstallPwa: "Instalar",
+                btnInstallPwaFull: "Instalar Aplicación",
+                onlineLabel: "en línea",
+                mobileNavTitle: "Menú de Navegación",
+                openAssistant: "Asistente AI",
+                navNexusOS: "Nexus Command OS",
+                navOffice3D: "Oficina 3D de Agentes",
+                navLayers: "Layers of AI Studio",
+                menuMainPanel: "PANEL PRINCIPAL",
+                navHomeHub: "Inicio / Herramientas",
+                historyTitle: "🕒 Historial de Chat",
+                btnClearAll: "Borrar todo",
+                noHistorySaved: "No hay historial guardado.",
+                menuSettingsAccount: "Ajustes y Cuenta",
+                navBilling: "Suscripción y PRO",
+                navAuth: "Cuenta, Google y Login",
+                navSupport: "Soporte y Ayuda",
+                osGreeting: "Buenas tardes, S.V@lentin.",
+                osPrivateWorkspace: "Espacio de trabajo privado. Solo aparecen tus datos reales, sin datos de prueba.",
+                btnOffice3DShort: "Oficina 3D",
+                btnTalkToNexus: "Hablar con Nexus",
+                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudOnlineBadge: "EN LÍNEA",
+                nodeContext: "Contexto",
+                nodePodcast: "Podcast",
+                nodeCreative: "Creativo",
+                nodeCalendar: "Calendario",
+                nodeAbTest: "Prueba A/B",
+                nodeAgents: "Agentes",
+                hudHintText: "Haz clic en cualquier nodo, en el núcleo central o entra en <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Oficina 3D de Agentes</button> para controlar los robots AI.",
+                office3dTitle: "Nexus 3D HQ — Oficina de Agentes AI",
+                office3dSub: "Toca un robot en el mapa 3D o elige un flujo rápido para trabajar con ese agente.",
+                pillCalendar: "📅 Calendario",
+                pillVideo: "🎬 Video AI",
+                pillCreative: "✨ Creativo",
+                pillAbTest: "🧪 Prueba A/B",
+                pillPodcast: "🎙️ Podcast",
+                pillRoast: "🔥 Roast",
+                activeAgentPrefix: "Agente activo: ",
+                btnResetCamera: "Restablecer vista",
+                calAgentTitle: "<i class=\"fa-solid fa-calendar-days mr-1.5\"></i>Agente de Calendario Editorial",
+                badgePlanner: "PLANIFICADOR",
+                calTitlePlaceholder: "Ej: Video corto sobre automatizaciones AI",
+                btnSchedulePost: "Programar Publicación",
+                noScheduledPosts: "No hay publicaciones programadas en el calendario.",
+                vidAgentTitle: "<i class=\"fa-solid fa-clapperboard mr-1.5\"></i>Agente Text-to-Video Studio",
+                badgeScriptsVisuals: "GUIONES Y VISUALES",
+                vidInputPlaceholder: "Ej: Escena cyberpunk bajo la lluvia, luces de neón...",
+                btnVisualRender: "Render Visual",
+                btnGenVideoAi: "Generar Video AI",
+                vidWaitingText: "Esperando orden para guion o visual de video...",
+                creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles mr-1.5\"></i>Agente AI Creative Studio",
+                badgeBrandPrompt: "MARCA Y PROMPT",
+                modeLogoBrand: "Logo y Marca",
+                modeSticker: "Sticker",
+                modePromptLab: "Prompt Lab",
+                creInputPlaceholder: "Ej: Logo minimalista para estudio AI...",
+                presetLogoTech: "Logo Tech",
+                presetStickerCyber: "Sticker Cyber",
+                presetCyberConcept: "Concepto Cyber",
+                btnGenLogoBrand: "Generar Logo y Marca",
+                btnGenSticker: "Generar Sticker / Meme",
+                btnGenPrompt: "Optimizar y Generar Prompt",
+                creResultPlaceholder: "El resultado aparecerá aquí.",
+                abAgentTitle: "<i class=\"fa-solid fa-vials mr-1.5\"></i>Agente de Pruebas A/B de Títulos",
+                btnClear: "Limpiar",
+                abHintText: "Escribe el tema del video para variantes A/B de títulos y ganchos.",
+                abInputPlaceholder: "Ej: Variantes de título para video AI...",
+                podAgentTitle: "<i class=\"fa-solid fa-podcast mr-1.5\"></i>Agente de Guion de Podcast y Q&A",
+                podHintText: "Introduce el tema del podcast para guion y preguntas Q&A.",
+                podInputPlaceholder: "Ej: Guion de podcast sobre productividad...",
+                roastAgentTitle: "<i class=\"fa-solid fa-fire mr-1.5\"></i>Agente AI Roast My Content",
+                roastHintText: "Pega tu texto o idea para un roast directo y constructivo.",
+                roastInputPlaceholder: "Pega el texto para el roast...",
+                chatTitle: "Nexus Neural Assistant - Inicio / Herramientas",
+                welcomeMsg: "¡Hola! Soy tu asistente general. ¿Por dónde empezamos?",
+                aiModelLabel: "Modelo AI:",
+                inputPlaceholder: "Escribe tu mensaje o describe una imagen...",
+                layersTitle: "Layers of AI Creator",
+                layersSub: "Crea y prueba herramientas en todos los niveles de la Inteligencia Artificial",
+                layerBtnAgentic: "🤖 Agentic AI",
+                layerBtnGenerative: "✨ Generative AI",
+                layerBtnDeep: "🧠 Deep Learning",
+                layerBtnNeural: "🕸️ Redes Neuronales",
+                layerBtnMl: "📊 Machine Learning",
+                layerAgenticTitle: "Agentic AI Studio",
+                layerAgenticDesc: "Crea agentes autónomos capaces de planificar, usar herramientas y ejecutar tareas complejas.",
+                layerGoalLabel: "Objetivo del Agente:",
+                layerGoalPlaceholder: "Ej: Analiza el mercado y envía un informe detallado",
+                btnLaunchAgent: "Lanzar Agente Autónomo",
+                layerGenTitle: "Generative AI Studio",
+                layerGenDesc: "Genera texto, imágenes, código o contenido multimodal con modelos LLM y Diffusion.",
+                layerGenPromptLabel: "Prompt Generativo:",
+                layerGenPlaceholder: "Escribe tu solicitud para generar contenido...",
+                btnGenContent: "Generar Contenido",
+                layerDeepTitle: "Deep Learning y Transformers",
+                layerDeepDesc: "Configura arquitecturas complejas (Transformers, CNNs, LSTMs).",
+                layerDeepBox: "Ajustes para redes profundas.",
+                layerNeuralTitle: "Redes Neuronales",
+                layerNeuralDesc: "Ajusta las funciones de activación y Backpropagation.",
+                layerNeuralBox: "Panel de perceptrones.",
+                layerMlTitle: "Machine Learning Clásico",
+                layerMlDesc: "Modelos de Clasificación, Regresión, Aprendizaje Supervisado y No Supervisado.",
+                layerMlBox: "Sube el conjunto de datos (.csv).",
+                layerOutputTitle: "Resultado Generado / Output:",
+                layerOutputWaiting: "Esperando orden...",
+                billingTitle: "Suscripciones y Apoyo al Proyecto",
+                billingSub: "Elige tu modo de acceso a Nexus AI Studio Pro.",
+                licenseKeyPrompt: "¿Recibiste una clave oficial de activación?",
+                btnActivate: "Activar",
+                licenseStatusDefault: "Introduce el código de licencia para desbloquear al instante el acceso VIP completo.",
+                planFreeTitle: "Acceso Gratuito / Early Access",
+                badgeActive: "Activo",
+                perDay: "/ día",
+                planFreeDesc: "Pruebas diarias para creadores que empiezan.",
+                planFreeActiveNotice: "¡Tienes el plan gratuito activado por defecto!",
+                badgeRecommended: "Recomendado",
+                perMonth: "/ mes",
+                planProDesc: "Generación ilimitada y máxima velocidad de procesamiento.",
+                btnSubscribePro: "Suscribirse a Pro (49 RON)",
+                planDonateTitle: "Apoya el Proyecto ☕",
+                badgeDonation: "Donación",
+                donationSubtitle: "Un café virtual",
+                donationDesc: "¿Te gusta la plataforma y quieres apoyar su desarrollo continuo?",
+                btnRevolut: "Enviar un café en Revolut",
+                securePaymentsText: "Pagos 100% seguros mediante <strong>Stripe</strong> y <strong>Revolut</strong>.",
+                authTitle: "Autenticación y Cuenta Personal",
+                authSub: "Inicia sesión rápido o crea una cuenta nueva.",
+                orNewForm: "O NUEVO FORMULARIO",
+                labelFullName: "Nombre Completo",
+                placeholderFullName: "Juan Pérez",
+                labelPhone: "Teléfono",
+                labelEmail: "Correo electrónico",
+                placeholderEmail: "nombre@ejemplo.com",
+                labelPassword: "Contraseña",
+                labelCity: "Ciudad",
+                placeholderCity: "Madrid",
+                btnCreateAccount: "Crear Cuenta",
+                supportCenterTitle: "Centro de Soporte y Atención al Cliente",
+                supportCenterSub: "¿Tienes una pregunta o un problema? ¡Estamos aquí para ayudarte rápido!",
+                btnSendSupportEmail: "Enviar Correo de Soporte",
+                directContactTitle: "Contacto Directo",
+                directContactDesc: "Para dudas sobre pagos, facturación o la cuenta PRO.",
+                responseTime: "Respuesta en máx. 24 horas",
+                systemStatusTitle: "Estado del Sistema",
+                systemStatusDesc: "Todos nuestros sistemas funcionan en parámetros óptimos.",
+                geminiEngineLabel: "Motor Gemini AI:",
+                active100: "Activo 100%",
+                userGuideTitle: "Guía de Uso",
+                userGuideDesc: "Aprende cómo obtener los mejores resultados.",
+                openChatLink: "Abrir Chat y Probar ahora →",
+                robotTitle: "Nexus Gemini Bot",
+                btnTelegram: "Telegram",
+                robotSenderName: "Nexus AI:",
+                robotWelcome: "¡Hola! Soy tu asistente rápido Gemini. Puedes usar el micrófono 🎙️ o enviar un mensaje.",
+                speechReady: "Listo para escuchar",
+                audioOn: "Audio ON",
+                robotInputPlaceholder: "Escribe o habla...",
+                privacyModalTitle: "Política de Privacidad (GDPR)",
+                privacyText1: "Respetamos la privacidad de tus datos. Todos los datos introducidos en la plataforma se procesan con máxima seguridad según el RGPD vigente.",
+                privacyText2: "Puedes solicitar en cualquier momento la eliminación de los datos de tu cuenta contactándonos por correo.",
+                termsModalTitle: "Términos y Condiciones",
+                termsText1: "Al usar la plataforma Nexus AI Studio Pro, aceptas los términos y condiciones establecidos. Nuestros servicios se ofrecen \"tal cual\" para creadores y empresas.",
+                footerStripe: "Pagos Seguros con Stripe",
+                footerPrivacy: "Política de Privacidad (GDPR)",
+                footerTerms: "Términos y Condiciones",
+                footerCreator: "Creado por"
+            },
+            fr: {
+                ...baseRo,
+                btnBack: "Retour",
+                btnInstallPwa: "Installer",
+                btnInstallPwaFull: "Installer l'Application",
+                onlineLabel: "en ligne",
+                mobileNavTitle: "Menu de Navigation",
+                openAssistant: "Assistant AI",
+                navNexusOS: "Nexus Command OS",
+                navOffice3D: "Bureau 3D d'Agents",
+                navLayers: "Layers of AI Studio",
+                menuMainPanel: "PANNEAU PRINCIPAL",
+                navHomeHub: "Accueil / Outils",
+                historyTitle: "🕒 Historique du Chat",
+                btnClearAll: "Tout effacer",
+                noHistorySaved: "Aucun historique enregistré.",
+                menuSettingsAccount: "Paramètres & Compte",
+                navBilling: "Abonnement & PRO",
+                navAuth: "Compte, Google & Connexion",
+                navSupport: "Support & Aide",
+                osGreeting: "Bon après-midi, S.V@lentin.",
+                osPrivateWorkspace: "Espace de travail privé. Seules vos données réelles apparaissent ici, sans données fictives.",
+                btnOffice3DShort: "Bureau 3D",
+                btnTalkToNexus: "Parler à Nexus",
+                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudOnlineBadge: "EN LIGNE",
+                nodeContext: "Contexte",
+                nodePodcast: "Podcast",
+                nodeCreative: "Créatif",
+                nodeCalendar: "Calendrier",
+                nodeAbTest: "Test A/B",
+                nodeAgents: "Agents",
+                hudHintText: "Cliquez sur un nœud, sur le noyau central ou entrez dans <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Bureau 3D d'Agents</button> pour contrôler les robots AI.",
+                office3dTitle: "Nexus 3D HQ — Bureau d'Agents AI",
+                office3dSub: "Touchez un robot sur la carte 3D ou choisissez un flux rapide pour travailler avec cet agent.",
+                pillCalendar: "📅 Calendrier",
+                pillVideo: "🎬 Vidéo AI",
+                pillCreative: "✨ Créatif",
+                pillAbTest: "🧪 Test A/B",
+                pillPodcast: "🎙️ Podcast",
+                pillRoast: "🔥 Roast",
+                activeAgentPrefix: "Agent actif : ",
+                btnResetCamera: "Réinitialiser la vue",
+                calAgentTitle: "<i class=\"fa-solid fa-calendar-days mr-1.5\"></i>Agent Calendrier Éditorial",
+                badgePlanner: "PLANIFICATEUR",
+                calTitlePlaceholder: "Ex : Vidéo courte sur les automatisations AI",
+                btnSchedulePost: "Programmer la Publication",
+                noScheduledPosts: "Aucune publication programmée dans le calendrier.",
+                vidAgentTitle: "<i class=\"fa-solid fa-clapperboard mr-1.5\"></i>Agent Text-to-Video Studio",
+                badgeScriptsVisuals: "SCÉNARIOS & VISUELS",
+                vidInputPlaceholder: "Ex : Scène cyberpunk sous la pluie, néons...",
+                btnVisualRender: "Rendu Visuel",
+                btnGenVideoAi: "Générer Vidéo AI",
+                vidWaitingText: "En attente d'une commande pour scénario ou visuel vidéo...",
+                creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles mr-1.5\"></i>Agent AI Creative Studio",
+                badgeBrandPrompt: "MARQUE & PROMPT",
+                modeLogoBrand: "Logo & Marque",
+                modeSticker: "Sticker",
+                modePromptLab: "Prompt Lab",
+                creInputPlaceholder: "Ex : Logo minimaliste pour studio AI...",
+                presetLogoTech: "Logo Tech",
+                presetStickerCyber: "Sticker Cyber",
+                presetCyberConcept: "Concept Cyber",
+                btnGenLogoBrand: "Générer Logo & Marque",
+                btnGenSticker: "Générer Sticker / Meme",
+                btnGenPrompt: "Optimiser & Générer Prompt",
+                creResultPlaceholder: "Le résultat apparaîtra ici.",
+                abAgentTitle: "<i class=\"fa-solid fa-vials mr-1.5\"></i>Agent Test A/B de Titres",
+                btnClear: "Effacer",
+                abHintText: "Saisissez le sujet de la vidéo pour des variantes A/B de titres et d'accroches.",
+                abInputPlaceholder: "Ex : Variantes de titre pour vidéo AI...",
+                podAgentTitle: "<i class=\"fa-solid fa-podcast mr-1.5\"></i>Agent Script Podcast & Q&A",
+                podHintText: "Entrez le sujet du podcast pour un script et des questions Q&A.",
+                podInputPlaceholder: "Ex : Script de podcast sur la productivité...",
+                roastAgentTitle: "<i class=\"fa-solid fa-fire mr-1.5\"></i>Agent AI Roast My Content",
+                roastHintText: "Collez votre texte ou idée pour un roast direct et constructif.",
+                roastInputPlaceholder: "Collez le texte pour le roast...",
+                chatTitle: "Nexus Neural Assistant - Accueil / Outils",
+                welcomeMsg: "Bonjour ! Je suis votre assistant général. Par où commençons-nous ?",
+                aiModelLabel: "Modèle AI :",
+                inputPlaceholder: "Écrivez votre message ou décrivez un visuel...",
+                layersTitle: "Layers of AI Creator",
+                layersSub: "Créez et testez des outils à tous les niveaux de l'Intelligence Artificielle",
+                layerBtnAgentic: "🤖 Agentic AI",
+                layerBtnGenerative: "✨ Generative AI",
+                layerBtnDeep: "🧠 Deep Learning",
+                layerBtnNeural: "🕸️ Réseaux Neuronaux",
+                layerBtnMl: "📊 Machine Learning",
+                layerAgenticTitle: "Agentic AI Studio",
+                layerAgenticDesc: "Créez des agents autonomes capables de planifier, d'utiliser des outils et d'exécuter des tâches complexes.",
+                layerGoalLabel: "Objectif de l'Agent :",
+                layerGoalPlaceholder: "Ex : Analyser le marché et envoyer un rapport détaillé",
+                btnLaunchAgent: "Lancer l'Agent Autonome",
+                layerGenTitle: "Generative AI Studio",
+                layerGenDesc: "Générez du texte, des images, du code ou du contenu multimodal avec des modèles LLM et Diffusion.",
+                layerGenPromptLabel: "Prompt Génératif :",
+                layerGenPlaceholder: "Écrivez votre demande de génération de contenu...",
+                btnGenContent: "Générer du Contenu",
+                layerDeepTitle: "Deep Learning & Transformers",
+                layerDeepDesc: "Configurez des architectures complexes (Transformers, CNNs, LSTMs).",
+                layerDeepBox: "Paramètres pour réseaux profonds.",
+                layerNeuralTitle: "Réseaux Neuronaux",
+                layerNeuralDesc: "Ajustez les fonctions d'activation et la rétropropagation.",
+                layerNeuralBox: "Panneau perceptrons.",
+                layerMlTitle: "Machine Learning Classique",
+                layerMlDesc: "Modèles de Classification, Régression, Apprentissage Supervisé et Non Supervisé.",
+                layerMlBox: "Importez le jeu de données (.csv).",
+                layerOutputTitle: "Résultat Généré / Output :",
+                layerOutputWaiting: "En attente d'une commande...",
+                billingTitle: "Abonnements & Soutien au Projet",
+                billingSub: "Choisissez votre mode d'accès à Nexus AI Studio Pro.",
+                licenseKeyPrompt: "Avez-vous reçu une clé d'activation officielle ?",
+                btnActivate: "Activer",
+                licenseStatusDefault: "Entrez votre code de licence pour débloquer instantanément l'accès VIP complet.",
+                planFreeTitle: "Accès Gratuit / Early Access",
+                badgeActive: "Actif",
+                perDay: "/ jour",
+                planFreeDesc: "Tests quotidiens pour créateurs débutants.",
+                planFreeActiveNotice: "Votre forfait gratuit est activé par défaut !",
+                badgeRecommended: "Recommandé",
+                perMonth: "/ mois",
+                planProDesc: "Génération illimitée et vitesse de traitement maximale.",
+                btnSubscribePro: "S'abonner à Pro (49 RON)",
+                planDonateTitle: "Soutenir le Projet ☕",
+                badgeDonation: "Don",
+                donationSubtitle: "Un café virtuel",
+                donationDesc: "Vous aimez la plateforme et souhaitez soutenir son développement continu ?",
+                btnRevolut: "Envoyer un café sur Revolut",
+                securePaymentsText: "Paiements 100 % sécurisés via <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                authTitle: "Authentification & Compte Personnel",
+                authSub: "Connectez-vous rapidement ou créez un nouveau compte.",
+                orNewForm: "OU NOUVEAU FORMULAIRE",
+                labelFullName: "Nom Complet",
+                placeholderFullName: "Jean Dupont",
+                labelPhone: "Téléphone",
+                labelEmail: "E-mail",
+                placeholderEmail: "nom@exemple.fr",
+                labelPassword: "Mot de passe",
+                labelCity: "Ville",
+                placeholderCity: "Paris",
+                btnCreateAccount: "Créer un compte",
+                supportCenterTitle: "Centre de Support & Assistance Client",
+                supportCenterSub: "Vous avez une question ou un problème ? Nous sommes là pour vous aider rapidement !",
+                btnSendSupportEmail: "Envoyer un E-mail Support",
+                directContactTitle: "Contact Direct",
+                directContactDesc: "Pour les questions liées aux paiements, à la facturation ou au compte PRO.",
+                responseTime: "Réponse sous 24 h max.",
+                systemStatusTitle: "État du Système",
+                systemStatusDesc: "Tous nos systèmes fonctionnent à des paramètres optimaux.",
+                geminiEngineLabel: "Moteur Gemini AI :",
+                active100: "Actif 100 %",
+                userGuideTitle: "Guide d'Utilisation",
+                userGuideDesc: "Apprenez à obtenir les meilleurs résultats.",
+                openChatLink: "Ouvrir le Chat & Essayer maintenant →",
+                robotTitle: "Nexus Gemini Bot",
+                btnTelegram: "Telegram",
+                robotSenderName: "Nexus AI :",
+                robotWelcome: "Bonjour ! Je suis votre assistant rapide Gemini. Vous pouvez utiliser le micro 🎙️ ou envoyer un message !",
+                speechReady: "Prêt à écouter",
+                audioOn: "Audio ON",
+                robotInputPlaceholder: "Écrivez ou parlez...",
+                privacyModalTitle: "Politique de Confidentialité (RGPD)",
+                privacyText1: "Nous respectons la confidentialité de vos données. Toutes les données saisies sur la plateforme sont traitées en toute sécurité conformément au RGPD en vigueur.",
+                privacyText2: "Vous pouvez demander à tout moment la suppression des données de votre compte en nous contactant par e-mail.",
+                termsModalTitle: "Conditions Générales",
+                termsText1: "En utilisant la plateforme Nexus AI Studio Pro, vous acceptez les conditions établies. Nos services sont fournis \"en l'état\" pour les créateurs et entreprises.",
+                footerStripe: "Paiements Sécurisés Stripe",
+                footerPrivacy: "Politique de Confidentialité (RGPD)",
+                footerTerms: "Conditions Générales",
+                footerCreator: "Créé par"
+            },
+            de: {
+                ...baseRo,
+                btnBack: "Zurück",
+                btnInstallPwa: "Installieren",
+                btnInstallPwaFull: "App Installieren",
+                onlineLabel: "online",
+                mobileNavTitle: "Navigationsmenü",
+                openAssistant: "AI-Assistent",
+                navNexusOS: "Nexus Command OS",
+                navOffice3D: "3D-Agentenbüro",
+                navLayers: "Layers of AI Studio",
+                menuMainPanel: "HAUPTBEREICH",
+                navHomeHub: "Start / Tools",
+                historyTitle: "🕒 Chatverlauf",
+                btnClearAll: "Alles löschen",
+                noHistorySaved: "Kein Verlauf gespeichert.",
+                menuSettingsAccount: "Einstellungen & Konto",
+                navBilling: "Abo & PRO",
+                navAuth: "Konto, Google & Login",
+                navSupport: "Support & Hilfe",
+                osGreeting: "Guten Nachmittag, S.V@lentin.",
+                osPrivateWorkspace: "Privater Arbeitsbereich. Nur deine echten Daten werden hier angezeigt, keine Beispieldaten.",
+                btnOffice3DShort: "3D-Büro",
+                btnTalkToNexus: "Mit Nexus sprechen",
+                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudOnlineBadge: "ONLINE",
+                nodeContext: "Kontext",
+                nodePodcast: "Podcast",
+                nodeCreative: "Kreativ",
+                nodeCalendar: "Kalender",
+                nodeAbTest: "A/B-Test",
+                nodeAgents: "Agenten",
+                hudHintText: "Klicke auf einen Knoten, den zentralen Kern oder öffne das <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">3D-Agentenbüro</button>, um die AI-Roboter zu steuern.",
+                office3dTitle: "Nexus 3D HQ — AI-Agentenbüro",
+                office3dSub: "Tippe auf der 3D-Karte auf einen Roboter oder wähle einen schnellen Workflow für diesen Agenten.",
+                pillCalendar: "📅 Kalender",
+                pillVideo: "🎬 Video AI",
+                pillCreative: "✨ Kreativ",
+                pillAbTest: "🧪 A/B-Test",
+                pillPodcast: "🎙️ Podcast",
+                pillRoast: "🔥 Roast",
+                activeAgentPrefix: "Aktiver Agent: ",
+                btnResetCamera: "Ansicht zurücksetzen",
+                calAgentTitle: "<i class=\"fa-solid fa-calendar-days mr-1.5\"></i>Redaktionskalender-Agent",
+                badgePlanner: "PLANER",
+                calTitlePlaceholder: "z. B. Kurzvideo über AI-Automatisierungen",
+                btnSchedulePost: "Beitrag Planen",
+                noScheduledPosts: "Keine Beiträge im Kalender geplant.",
+                vidAgentTitle: "<i class=\"fa-solid fa-clapperboard mr-1.5\"></i>Text-to-Video Studio-Agent",
+                badgeScriptsVisuals: "SKRIPTE & VISUALS",
+                vidInputPlaceholder: "z. B. Cyberpunk-Szene im Regen, Neonlichter...",
+                btnVisualRender: "Visuelles Rendering",
+                btnGenVideoAi: "AI-Video Erstellen",
+                vidWaitingText: "Warte auf Befehl für Videoskript oder Visual...",
+                creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles mr-1.5\"></i>AI Creative Studio-Agent",
+                badgeBrandPrompt: "MARKE & PROMPT",
+                modeLogoBrand: "Logo & Marke",
+                modeSticker: "Sticker",
+                modePromptLab: "Prompt Lab",
+                creInputPlaceholder: "z. B. Minimalistisches Logo für ein AI-Studio...",
+                presetLogoTech: "Tech-Logo",
+                presetStickerCyber: "Cyber-Sticker",
+                presetCyberConcept: "Cyber-Konzept",
+                btnGenLogoBrand: "Logo & Marke Erstellen",
+                btnGenSticker: "Sticker / Meme Erstellen",
+                btnGenPrompt: "Prompt Optimieren & Erstellen",
+                creResultPlaceholder: "Das Ergebnis erscheint hier.",
+                abAgentTitle: "<i class=\"fa-solid fa-vials mr-1.5\"></i>Titel-A/B-Testing-Agent",
+                btnClear: "Leeren",
+                abHintText: "Gib das Videothema für A/B-Varianten von Titeln und Hooks ein.",
+                abInputPlaceholder: "z. B. Titelvarianten für ein AI-Video...",
+                podAgentTitle: "<i class=\"fa-solid fa-podcast mr-1.5\"></i>Podcast-Skript & Q&A-Agent",
+                podHintText: "Gib das Podcast-Thema für Skript und Q&A-Fragen ein.",
+                podInputPlaceholder: "z. B. Podcast-Skript über Produktivität...",
+                roastAgentTitle: "<i class=\"fa-solid fa-fire mr-1.5\"></i>AI Roast My Content-Agent",
+                roastHintText: "Füge deinen Text oder deine Idee für einen direkten, konstruktiven Roast ein.",
+                roastInputPlaceholder: "Text für den Roast einfügen...",
+                chatTitle: "Nexus Neural Assistant - Start / Tools",
+                welcomeMsg: "Hallo! Ich bin dein allgemeiner Assistent. Womit fangen wir an?",
+                aiModelLabel: "AI-Modell:",
+                inputPlaceholder: "Schreibe deine Nachricht oder beschreibe ein Motiv...",
+                layersTitle: "Layers of AI Creator",
+                layersSub: "Erstelle und teste Tools auf allen Ebenen der Künstlichen Intelligenz",
+                layerBtnAgentic: "🤖 Agentic AI",
+                layerBtnGenerative: "✨ Generative AI",
+                layerBtnDeep: "🧠 Deep Learning",
+                layerBtnNeural: "🕸️ Neuronale Netze",
+                layerBtnMl: "📊 Machine Learning",
+                layerAgenticTitle: "Agentic AI Studio",
+                layerAgenticDesc: "Erstelle autonome Agenten zur Planung, Werkzeugnutzung und Ausführung komplexer Aufgaben.",
+                layerGoalLabel: "Ziel des Agenten:",
+                layerGoalPlaceholder: "z. B. Markt analysieren und ausführlichen Bericht senden",
+                btnLaunchAgent: "Autonomen Agenten Starten",
+                layerGenTitle: "Generative AI Studio",
+                layerGenDesc: "Generiere Text, Bilder, Code oder multimodale Inhalte mit LLM- und Diffusion-Modellen.",
+                layerGenPromptLabel: "Generativer Prompt:",
+                layerGenPlaceholder: "Schreibe deine Anfrage zur Inhaltserstellung...",
+                btnGenContent: "Inhalt Generieren",
+                layerDeepTitle: "Deep Learning & Transformers",
+                layerDeepDesc: "Konfiguriere komplexe Architekturen (Transformers, CNNs, LSTMs).",
+                layerDeepBox: "Einstellungen für tiefe neuronale Netze.",
+                layerNeuralTitle: "Neuronale Netze",
+                layerNeuralDesc: "Passe Aktivierungsfunktionen und Backpropagation an.",
+                layerNeuralBox: "Perzeptron-Steuerung.",
+                layerMlTitle: "Klassisches Machine Learning",
+                layerMlDesc: "Klassifikations-, Regressions-, Supervised- und Unsupervised-Modelle.",
+                layerMlBox: "Datensatz (.csv) hochladen.",
+                layerOutputTitle: "Generiertes Ergebnis / Output:",
+                layerOutputWaiting: "Warte auf Befehl...",
+                billingTitle: "Abonnements & Projektunterstützung",
+                billingSub: "Wähle deinen Zugangsmodus für Nexus AI Studio Pro.",
+                licenseKeyPrompt: "Hast du einen offiziellen Aktivierungsschlüssel erhalten?",
+                btnActivate: "Aktivieren",
+                licenseStatusDefault: "Gib deinen Lizenzcode ein, um sofort vollen VIP-Zugang freizuschalten.",
+                planFreeTitle: "Kostenloser Zugang / Early Access",
+                badgeActive: "Aktiv",
+                perDay: "/ Tag",
+                planFreeDesc: "Tägliches Testen für Einsteiger und Creator.",
+                planFreeActiveNotice: "Der kostenlose Tarif ist standardmäßig aktiv!",
+                badgeRecommended: "Empfohlen",
+                perMonth: "/ Monat",
+                planProDesc: "Unbegrenzte Generierung und maximale Verarbeitungsgeschwindigkeit.",
+                btnSubscribePro: "Pro Abonnieren (49 RON)",
+                planDonateTitle: "Projekt Unterstützen ☕",
+                badgeDonation: "Spende",
+                donationSubtitle: "Ein virtueller Kaffee",
+                donationDesc: "Gefällt dir die Plattform und möchtest du ihre Weiterentwicklung unterstützen?",
+                btnRevolut: "Kaffee über Revolut senden",
+                securePaymentsText: "100 % sichere Zahlungen über <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                authTitle: "Authentifizierung & Persönliches Konto",
+                authSub: "Schnell anmelden oder ein neues Konto erstellen.",
+                orNewForm: "ODER NEUES FORMULAR",
+                labelFullName: "Vollständiger Name",
+                placeholderFullName: "Max Mustermann",
+                labelPhone: "Telefon",
+                labelEmail: "E-Mail",
+                placeholderEmail: "name@beispiel.de",
+                labelPassword: "Passwort",
+                labelCity: "Stadt",
+                placeholderCity: "Berlin",
+                btnCreateAccount: "Konto erstellen",
+                supportCenterTitle: "Support-Center & Kundenhilfe",
+                supportCenterSub: "Hast du eine Frage oder ein Problem? Wir helfen dir schnell weiter!",
+                btnSendSupportEmail: "Support-E-Mail Senden",
+                directContactTitle: "Direkter Kontakt",
+                directContactDesc: "Bei Fragen zu Zahlungen, Abrechnung oder dem PRO-Konto.",
+                responseTime: "Antwort in max. 24 Stunden",
+                systemStatusTitle: "Systemstatus",
+                systemStatusDesc: "Alle unsere Systeme laufen mit optimalen Parametern.",
+                geminiEngineLabel: "Gemini AI-Engine:",
+                active100: "100 % Aktiv",
+                userGuideTitle: "Benutzerhandbuch",
+                userGuideDesc: "Erfahre, wie du die besten Ergebnisse erzielst.",
+                openChatLink: "Chat Öffnen & Jetzt Testen →",
+                robotTitle: "Nexus Gemini Bot",
+                btnTelegram: "Telegram",
+                robotSenderName: "Nexus AI:",
+                robotWelcome: "Hallo! Ich bin dein schneller Gemini-Assistent. Nutze das Mikrofon 🎙️ oder sende eine Nachricht!",
+                speechReady: "Bereit zum Zuhören",
+                audioOn: "Audio AN",
+                robotInputPlaceholder: "Schreiben oder sprechen...",
+                privacyModalTitle: "Datenschutzerklärung (DSGVO)",
+                privacyText1: "Wir respektieren den Schutz deiner Daten. Alle auf der Plattform eingegebenen Daten werden gemäß DSGVO sicher verarbeitet.",
+                privacyText2: "Du kannst jederzeit per E-Mail die Löschung deiner Kontodaten anfordern.",
+                termsModalTitle: "Allgemeine Geschäftsbedingungen",
+                termsText1: "Mit der Nutzung von Nexus AI Studio Pro erklärst du dich mit den festgelegten Bedingungen einverstanden. Unsere Dienste werden \"wie besehen\" bereitgestellt.",
+                footerStripe: "Sichere Stripe-Zahlungen",
+                footerPrivacy: "Datenschutzerklärung (DSGVO)",
+                footerTerms: "AGB",
+                footerCreator: "Erstellt von"
+            },
+            it: {
+                ...baseRo,
+                btnBack: "Indietro",
+                btnInstallPwa: "Installa",
+                btnInstallPwaFull: "Installa App",
+                onlineLabel: "online",
+                mobileNavTitle: "Menu di Navigazione",
+                openAssistant: "Assistente AI",
+                navNexusOS: "Nexus Command OS",
+                navOffice3D: "Ufficio Agenti 3D",
+                navLayers: "Layers of AI Studio",
+                menuMainPanel: "PANNELLO PRINCIPALE",
+                navHomeHub: "Home / Strumenti",
+                historyTitle: "🕒 Cronologia Chat",
+                btnClearAll: "Elimina tutto",
+                noHistorySaved: "Nessuna cronologia salvata.",
+                menuSettingsAccount: "Impostazioni & Account",
+                navBilling: "Abbonamento & PRO",
+                navAuth: "Account, Google & Login",
+                navSupport: "Supporto & Aiuto",
+                osGreeting: "Buon pomeriggio, S.V@lentin.",
+                osPrivateWorkspace: "Spazio di lavoro privato. Qui appaiono solo i tuoi dati reali, senza dati di esempio.",
+                btnOffice3DShort: "Ufficio 3D",
+                btnTalkToNexus: "Parla con Nexus",
+                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudOnlineBadge: "ONLINE",
+                nodeContext: "Contesto",
+                nodePodcast: "Podcast",
+                nodeCreative: "Creativo",
+                nodeCalendar: "Calendario",
+                nodeAbTest: "Test A/B",
+                nodeAgents: "Agenti",
+                hudHintText: "Clicca su qualsiasi nodo, sul nucleo centrale o entra in <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Ufficio Agenti 3D</button> per controllare i robot AI.",
+                office3dTitle: "Nexus 3D HQ — Ufficio Agenti AI",
+                office3dSub: "Tocca un robot sulla mappa 3D o scegli un flusso rapido per lavorare con quell'agente.",
+                pillCalendar: "📅 Calendario",
+                pillVideo: "🎬 Video AI",
+                pillCreative: "✨ Creativo",
+                pillAbTest: "🧪 Test A/B",
+                pillPodcast: "🎙️ Podcast",
+                pillRoast: "🔥 Roast",
+                activeAgentPrefix: "Agente attivo: ",
+                btnResetCamera: "Reimposta visuale",
+                calAgentTitle: "<i class=\"fa-solid fa-calendar-days mr-1.5\"></i>Agente Calendario Editoriale",
+                badgePlanner: "PIANIFICATORE",
+                calTitlePlaceholder: "Es: Video breve sulle automazioni AI",
+                btnSchedulePost: "Programma Post",
+                noScheduledPosts: "Nessun post programmato nel calendario.",
+                vidAgentTitle: "<i class=\"fa-solid fa-clapperboard mr-1.5\"></i>Agente Text-to-Video Studio",
+                badgeScriptsVisuals: "SCRIPT & VISUAL",
+                vidInputPlaceholder: "Es: Scena cyberpunk sotto la pioggia, luci al neon...",
+                btnVisualRender: "Rendering Visual",
+                btnGenVideoAi: "Genera Video AI",
+                vidWaitingText: "In attesa di un comando per script o visual video...",
+                creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles mr-1.5\"></i>Agente AI Creative Studio",
+                badgeBrandPrompt: "BRAND & PROMPT",
+                modeLogoBrand: "Logo & Brand",
+                modeSticker: "Sticker",
+                modePromptLab: "Prompt Lab",
+                creInputPlaceholder: "Es: Logo minimalista per studio AI...",
+                presetLogoTech: "Logo Tech",
+                presetStickerCyber: "Sticker Cyber",
+                presetCyberConcept: "Concept Cyber",
+                btnGenLogoBrand: "Genera Logo & Brand",
+                btnGenSticker: "Genera Sticker / Meme",
+                btnGenPrompt: "Ottimizza & Genera Prompt",
+                creResultPlaceholder: "Il risultato apparirà qui.",
+                abAgentTitle: "<i class=\"fa-solid fa-vials mr-1.5\"></i>Agente A/B Testing Titoli",
+                btnClear: "Svuota",
+                abHintText: "Scrivi l'argomento del video per varianti A/B di titoli e hook.",
+                abInputPlaceholder: "Es: Varianti titolo per video AI...",
+                podAgentTitle: "<i class=\"fa-solid fa-podcast mr-1.5\"></i>Agente Script Podcast & Q&A",
+                podHintText: "Inserisci l'argomento del podcast per script e domande Q&A.",
+                podInputPlaceholder: "Es: Script podcast sulla produttività...",
+                roastAgentTitle: "<i class=\"fa-solid fa-fire mr-1.5\"></i>Agente AI Roast My Content",
+                roastHintText: "Incolla il tuo testo o idea per un roast diretto e costruttivo.",
+                roastInputPlaceholder: "Incolla il testo per il roast...",
+                chatTitle: "Nexus Neural Assistant - Home / Strumenti",
+                welcomeMsg: "Ciao! Sono il tuo assistente generale. Da dove iniziamo?",
+                aiModelLabel: "Modello AI:",
+                inputPlaceholder: "Scrivi il tuo messaggio o descrivi un visual...",
+                layersTitle: "Layers of AI Creator",
+                layersSub: "Crea e testa strumenti su tutti i livelli dell'Intelligenza Artificiale",
+                layerBtnAgentic: "🤖 Agentic AI",
+                layerBtnGenerative: "✨ Generative AI",
+                layerBtnDeep: "🧠 Deep Learning",
+                layerBtnNeural: "🕸️ Reti Neurali",
+                layerBtnMl: "📊 Machine Learning",
+                layerAgenticTitle: "Agentic AI Studio",
+                layerAgenticDesc: "Crea agenti autonomi capaci di pianificare, usare strumenti ed eseguire compiti complessi.",
+                layerGoalLabel: "Obiettivo dell'Agente:",
+                layerGoalPlaceholder: "Es: Analizza il mercato e invia un report dettagliato",
+                btnLaunchAgent: "Avvia Agente Autonomo",
+                layerGenTitle: "Generative AI Studio",
+                layerGenDesc: "Genera testo, immagini, codice o contenuti multimodali con modelli LLM e Diffusion.",
+                layerGenPromptLabel: "Prompt Generativo:",
+                layerGenPlaceholder: "Scrivi la tua richiesta per generare contenuti...",
+                btnGenContent: "Genera Contenuto",
+                layerDeepTitle: "Deep Learning & Transformers",
+                layerDeepDesc: "Configura architetture complesse (Transformers, CNNs, LSTMs).",
+                layerDeepBox: "Impostazioni per reti profonde.",
+                layerNeuralTitle: "Reti Neurali",
+                layerNeuralDesc: "Regola le funzioni di attivazione e il Backpropagation.",
+                layerNeuralBox: "Pannello percettroni.",
+                layerMlTitle: "Machine Learning Classico",
+                layerMlDesc: "Modelli di Classificazione, Regressione, Apprendimento Supervisionato e Non Supervisionato.",
+                layerMlBox: "Carica il dataset (.csv).",
+                layerOutputTitle: "Risultato Generato / Output:",
+                layerOutputWaiting: "In attesa di comando...",
+                billingTitle: "Abbonamenti & Supporto Progetto",
+                billingSub: "Scegli la tua modalità di accesso a Nexus AI Studio Pro.",
+                licenseKeyPrompt: "Hai ricevuto una chiave ufficiale di attivazione?",
+                btnActivate: "Attiva",
+                licenseStatusDefault: "Inserisci il codice licenza per sbloccare subito l'accesso VIP completo.",
+                planFreeTitle: "Accesso Gratuito / Early Access",
+                badgeActive: "Attivo",
+                perDay: "/ giorno",
+                planFreeDesc: "Test giornalieri per creator alle prime armi.",
+                planFreeActiveNotice: "Hai il piano gratuito attivo per impostazione predefinita!",
+                badgeRecommended: "Consigliato",
+                perMonth: "/ mese",
+                planProDesc: "Generazione illimitata e massima velocità di elaborazione.",
+                btnSubscribePro: "Abbonati a Pro (49 RON)",
+                planDonateTitle: "Sostieni il Progetto ☕",
+                badgeDonation: "Donazione",
+                donationSubtitle: "Un caffè virtuale",
+                donationDesc: "Ti piace la piattaforma e vuoi sostenerne lo sviluppo continuo?",
+                btnRevolut: "Invia un caffè su Revolut",
+                securePaymentsText: "Pagamenti sicuri al 100% tramite <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                authTitle: "Autenticazione & Account Personale",
+                authSub: "Accedi velocemente o crea un nuovo account.",
+                orNewForm: "OPPURE NUOVO MODULO",
+                labelFullName: "Nome Completo",
+                placeholderFullName: "Mario Rossi",
+                labelPhone: "Telefono",
+                labelEmail: "Email",
+                placeholderEmail: "nome@esempio.it",
+                labelPassword: "Password",
+                labelCity: "Città",
+                placeholderCity: "Roma",
+                btnCreateAccount: "Crea account",
+                supportCenterTitle: "Centro Supporto & Assistenza Clienti",
+                supportCenterSub: "Hai una domanda o un problema? Siamo qui per aiutarti rapidamente!",
+                btnSendSupportEmail: "Invia Email Supporto",
+                directContactTitle: "Contatto Diretto",
+                directContactDesc: "Per problemi relativi a pagamenti, fatturazione o account PRO.",
+                responseTime: "Risposta entro max. 24 ore",
+                systemStatusTitle: "Stato Sistema",
+                systemStatusDesc: "Tutti i nostri sistemi funzionano a parametri ottimali.",
+                geminiEngineLabel: "Motore Gemini AI:",
+                active100: "Attivo 100%",
+                userGuideTitle: "Guida all'Uso",
+                userGuideDesc: "Scopri come ottenere i risultati migliori.",
+                openChatLink: "Apri Chat & Prova ora →",
+                robotTitle: "Nexus Gemini Bot",
+                btnTelegram: "Telegram",
+                robotSenderName: "Nexus AI:",
+                robotWelcome: "Ciao! Sono il tuo assistente rapido Gemini. Puoi usare il microfono 🎙️ o inviare un messaggio!",
+                speechReady: "Pronto all'ascolto",
+                audioOn: "Audio ON",
+                robotInputPlaceholder: "Scrivi o parla...",
+                privacyModalTitle: "Informativa sulla Privacy (GDPR)",
+                privacyText1: "Rispettiamo la privacy dei tuoi dati. Tutti i dati inseriti nella piattaforma sono trattati in sicurezza secondo il GDPR vigente.",
+                privacyText2: "Puoi richiedere in qualsiasi momento la cancellazione dei dati del tuo account contattandoci via email.",
+                termsModalTitle: "Termini e Condizioni",
+                termsText1: "Utilizzando la piattaforma Nexus AI Studio Pro, accetti i termini e le condizioni stabiliti. I nostri servizi sono offerti \"così come sono\".",
+                footerStripe: "Pagamenti Sicuri Stripe",
+                footerPrivacy: "Informativa sulla Privacy (GDPR)",
+                footerTerms: "Termini e Condizioni",
+                footerCreator: "Creato da"
+            },
+            ar: {
+                btnBack: "رجوع",
+                btnInstallPwa: "تثبيت",
+                btnInstallPwaFull: "تثبيت التطبيق",
+                onlineLabel: "متصل",
+                mobileNavTitle: "قائمة التنقل",
+                openAssistant: "مساعد الذكاء الاصطناعي",
+                navNexusOS: "Nexus Command OS",
+                navOffice3D: "مكتب الوكلاء ثلاثي الأبعاد",
+                navLayers: "Layers of AI Studio",
+                menuMainPanel: "اللوحة الرئيسية",
+                navHomeHub: "الرئيسية / مركز الأدوات",
+                historyTitle: "🕒 سجل المحادثات",
+                btnClearAll: "مسح الكل",
+                noHistorySaved: "لا يوجد سجل محفوظ.",
+                menuSettingsAccount: "الإعدادات والحساب",
+                navBilling: "الاشتراك و PRO",
+                navAuth: "الحساب، Google وتسجيل الدخول",
+                navSupport: "الدعم والمساعدة",
+                osGreeting: "مساء الخير، S.V@lentin.",
+                osPrivateWorkspace: "مساحة عمل خاصة. تظهر هنا بياناتك الحقيقية فقط دون بيانات تجريبية.",
+                btnOffice3DShort: "مكتب 3D",
+                btnTalkToNexus: "تحدث مع Nexus",
+                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudOnlineBadge: "متصل",
+                nodeContext: "السياق",
+                nodePodcast: "بودكاست",
+                nodeCreative: "إبداعي",
+                nodeCalendar: "التقويم",
+                nodeAbTest: "اختبار A/B",
+                nodeAgents: "الوكلاء",
+                hudHintText: "انقر على أي عقدة أو على النواة المركزية أو ادخل إلى <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">مكتب الوكلاء ثلاثي الأبعاد</button> للتحكم في روبوتات AI.",
+                office3dTitle: "Nexus 3D HQ — مكتب وكلاء الذكاء الاصطناعي",
+                office3dSub: "اضغط على روبوت في الخريطة ثلاثية الأبعاد أو اختر مسارًا سريعًا للعمل مع هذا الوكيل.",
+                pillCalendar: "📅 التقويم",
+                pillVideo: "🎬 فيديو AI",
+                pillCreative: "✨ إبداعي",
+                pillAbTest: "🧪 اختبار A/B",
+                pillPodcast: "🎙️ بودكاست",
+                pillRoast: "🔥 نقد ساخر",
+                activeAgentPrefix: "الوكيل النشط: ",
+                btnResetCamera: "إعادة ضبط الزاوية",
+                calAgentTitle: "<i class=\"fa-solid fa-calendar-days ml-1.5\"></i>وكيل التقويم التحريري",
+                badgePlanner: "مخطط",
+                calTitlePlaceholder: "مثال: فيديو قصير عن أتمتة الذكاء الاصطناعي",
+                btnSchedulePost: "جدولة المنشور",
+                noScheduledPosts: "لا توجد منشورات مجدولة في التقويم.",
+                vidAgentTitle: "<i class=\"fa-solid fa-clapperboard ml-1.5\"></i>وكيل استوديو تحويل النص إلى فيديو",
+                badgeScriptsVisuals: "نصوص وبصريات",
+                vidInputPlaceholder: "مثال: مشهد سايبربانك تحت المطر وأضواء النيون...",
+                btnVisualRender: "عرض بصري",
+                btnGenVideoAi: "توليد فيديو AI",
+                vidWaitingText: "بانتظار الأمر لإنشاء سيناريو أو مشهد فيديو...",
+                creAgentTitle: "<i class=\"fa-solid fa-wand-magic-sparkles ml-1.5\"></i>وكيل استوديو الإبداع AI",
+                badgeBrandPrompt: "العلامة والأمر",
+                modeLogoBrand: "شعار وهوية",
+                modeSticker: "ملصق",
+                modePromptLab: "مختبر الأوامر",
+                creInputPlaceholder: "مثال: شعار بسيط لاستوديو ذكاء اصطناعي...",
+                presetLogoTech: "شعار تقني",
+                presetStickerCyber: "ملصق سايبربانك",
+                presetCyberConcept: "مفهوم سايبربانك",
+                btnGenLogoBrand: "توليد شعار وهوية",
+                btnGenSticker: "توليد ملصق / ميم",
+                btnGenPrompt: "تحسين وتوليد الأمر",
+                creResultPlaceholder: "ستظهر النتيجة هنا.",
+                abAgentTitle: "<i class=\"fa-solid fa-vials ml-1.5\"></i>وكيل اختبار العناوين A/B",
+                btnClear: "مسح",
+                abHintText: "اكتب موضوع الفيديو للحصول على بدائل A/B للعناوين والمقدمات.",
+                abInputPlaceholder: "مثال: بدائل عناوين لفيديو ذكاء اصطناعي...",
+                podAgentTitle: "<i class=\"fa-solid fa-podcast ml-1.5\"></i>وكيل نص البودكاست والأسئلة",
+                podHintText: "أدخل موضوع البودكاست للحصول على نص وأسئلة وأجوبة.",
+                podInputPlaceholder: "مثال: نص بودكاست حول الإنتاجية...",
+                roastAgentTitle: "<i class=\"fa-solid fa-fire ml-1.5\"></i>وكيل النقد الساخر للمحتوى AI",
+                roastHintText: "الصق نصك أو فكرتك للحصول على نقد مباشر وبنّاء.",
+                roastInputPlaceholder: "الصق النص للنقد الساخر...",
+                chatTitle: "Nexus Neural Assistant - الرئيسية / مركز الأدوات",
+                welcomeMsg: "مرحبًا! أنا مساعدك العام. بماذا نبدأ؟",
+                aiModelLabel: "نموذج الذكاء الاصطناعي:",
+                inputPlaceholder: "اكتب رسالتك أو صف مشهدًا بصريًا...",
+                layersTitle: "Layers of AI Creator",
+                layersSub: "ابنِ واختبر الأدوات عبر جميع طبقات الذكاء الاصطناعي",
+                layerBtnAgentic: "🤖 Agentic AI",
+                layerBtnGenerative: "✨ Generative AI",
+                layerBtnDeep: "🧠 Deep Learning",
+                layerBtnNeural: "🕸️ الشبكات العصبية",
+                layerBtnMl: "📊 Machine Learning",
+                layerAgenticTitle: "Agentic AI Studio",
+                layerAgenticDesc: "أنشئ وكلاء مستقلين قادرين على التخطيط واستخدام الأدوات وتنفيذ المهام المعقدة.",
+                layerGoalLabel: "هدف الوكيل:",
+                layerGoalPlaceholder: "مثال: تحليل السوق وإرسال تقرير مفصل",
+                btnLaunchAgent: "إطلاق وكيل مستقل",
+                layerGenTitle: "Generative AI Studio",
+                layerGenDesc: "ولّد نصوصًا أو صورًا أو أكوادًا أو محتوى متعدد الوسائط باستخدام نماذج LLM وDiffusion.",
+                layerGenPromptLabel: "أمر التوليد:",
+                layerGenPlaceholder: "اكتب طلبك لتوليد المحتوى...",
+                btnGenContent: "توليد المحتوى",
+                layerDeepTitle: "Deep Learning وTransformers",
+                layerDeepDesc: "اضبط البنى المعقدة (Transformers وCNNs وLSTMs).",
+                layerDeepBox: "إعدادات الشبكات العميقة.",
+                layerNeuralTitle: "الشبكات العصبية",
+                layerNeuralDesc: "اضبط دوال التفعيل والانتشار العكسي Backpropagation.",
+                layerNeuralBox: "لوحة تحكم الخلايا العصبية.",
+                layerMlTitle: "Machine Learning الكلاسيكي",
+                layerMlDesc: "نماذج التصنيف والانحدار والتعلم الخاضع وغير الخاضع للإشراف.",
+                layerMlBox: "ارفع مجموعة البيانات (.csv).",
+                layerOutputTitle: "النتيجة المولّدة / المخرجات:",
+                layerOutputWaiting: "بانتظار الأمر...",
+                billingTitle: "الاشتراكات ودعم المشروع",
+                billingSub: "اختر وضع وصولك إلى Nexus AI Studio Pro.",
+                licenseKeyPrompt: "هل حصلت على مفتاح تفعيل رسمي؟",
+                btnActivate: "تفعيل",
+                licenseStatusDefault: "أدخل رمز الترخيص لفتح وصول VIP الكامل فورًا.",
+                planFreeTitle: "وصول مجاني / وصول مبكر",
+                badgeActive: "نشط",
+                perDay: "/ يوم",
+                planFreeDesc: "اختبار يومي لصناع المحتوى في البداية.",
+                planFreeActiveNotice: "الخطة المجانية مفعّلة افتراضيًا!",
+                badgeRecommended: "موصى به",
+                perMonth: "/ شهر",
+                planProDesc: "توليد غير محدود وأقصى سرعة معالجة.",
+                btnSubscribePro: "اشترك في Pro (49 RON)",
+                planDonateTitle: "ادعم المشروع ☕",
+                badgeDonation: "تبرع",
+                donationSubtitle: "قهوة افتراضية",
+                donationDesc: "هل تعجبك المنصة وترغب في دعم تطويرها المستمر؟",
+                btnRevolut: "أرسل قهوة عبر Revolut",
+                securePaymentsText: "مدفوعات آمنة 100% عبر <strong>Stripe</strong> و<strong>Revolut</strong>.",
+                authTitle: "المصادقة والحساب الشخصي",
+                authSub: "سجّل دخولك بسرعة أو أنشئ حسابًا جديدًا.",
+                orNewForm: "أو نموذج جديد",
+                labelFullName: "الاسم الكامل",
+                placeholderFullName: "أحمد محمد",
+                labelPhone: "الهاتف",
+                labelEmail: "البريد الإلكتروني",
+                placeholderEmail: "name@example.com",
+                labelPassword: "كلمة المرور",
+                labelCity: "المدينة",
+                placeholderCity: "الرياض",
+                btnCreateAccount: "إنشاء حساب",
+                supportCenterTitle: "مركز الدعم ومساعدة العملاء",
+                supportCenterSub: "هل لديك سؤال أو واجهت مشكلة؟ نحن هنا لمساعدتك بسرعة!",
+                btnSendSupportEmail: "إرسال بريد للدعم",
+                directContactTitle: "تواصل مباشر",
+                directContactDesc: "للمشاكل المتعلقة بالمدفوعات أو الفوترة أو حساب PRO.",
+                responseTime: "الرد خلال 24 ساعة كحد أقصى",
+                systemStatusTitle: "حالة النظام",
+                systemStatusDesc: "جميع أنظمتنا تعمل بالمعايير المثلى.",
+                geminiEngineLabel: "محرك Gemini AI:",
+                active100: "نشط 100%",
+                userGuideTitle: "دليل الاستخدام",
+                userGuideDesc: "تعلّم كيف تحصل على أفضل النتائج.",
+                openChatLink: "افتح المحادثة وجرّب الآن ←",
+                robotTitle: "Nexus Gemini Bot",
+                btnTelegram: "تيليجرام",
+                robotSenderName: "Nexus AI:",
+                robotWelcome: "مرحبًا! أنا مساعدك السريع Gemini. يمكنك استخدام الميكروفون 🎙️ أو إرسال رسالة!",
+                speechReady: "جاهز للاستماع",
+                audioOn: "الصوت مفعل",
+                robotInputPlaceholder: "اكتب أو تحدث...",
+                privacyModalTitle: "سياسة الخصوصية (GDPR)",
+                privacyText1: "نحن نحترم خصوصية بياناتك. تتم معالجة جميع البيانات المدخلة في المنصة بأقصى درجات الأمان وفق لوائح GDPR المعمول بها.",
+                privacyText2: "يمكنك طلب حذف بيانات حسابك في أي وقت عبر التواصل معنا بالبريد الإلكتروني.",
+                termsModalTitle: "الشروط والأحكام",
+                termsText1: "باستخدام منصة Nexus AI Studio Pro، فإنك توافق على الشروط والأحكام المعتمدة. تُقدّم خدماتنا \"كما هي\" لصناع المحتوى والشركات.",
+                footerStripe: "مدفوعات Stripe الآمنة",
+                footerPrivacy: "سياسة الخصوصية (GDPR)",
+                footerTerms: "الشروط والأحكام",
+                footerCreator: "تم الإنشاء بواسطة"
+            }
         };
+
+        let currentLang = 'ro';
 
         window.setLanguage = function(lang) {
             if (!i18nDictionary[lang]) lang = 'ro';
+            currentLang = lang;
             localStorage.setItem('nexus_language', lang);
+
+            const isRtl = lang === 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+            document.body.dir = isRtl ? 'rtl' : 'ltr';
             
             const selectEl = document.getElementById('languageSelect');
             if (selectEl) selectEl.value = lang;
 
+            const dict = i18nDictionary[lang];
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (i18nDictionary[lang] && i18nDictionary[lang][key]) {
-                    el.innerHTML = i18nDictionary[lang][key];
+                if (Object.prototype.hasOwnProperty.call(dict, key)) {
+                    el.innerHTML = dict[key];
                 }
             });
 
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
-                if (i18nDictionary[lang] && i18nDictionary[lang][key]) {
-                    el.placeholder = i18nDictionary[lang][key];
+                if (Object.prototype.hasOwnProperty.call(dict, key)) {
+                    el.placeholder = dict[key];
                 }
             });
+
+            window.setCreativeMode(currentCreativeMode);
+            updateOffice3DStatusLabel();
+            loadHistoryUI();
         };
     </script>
 </body>
