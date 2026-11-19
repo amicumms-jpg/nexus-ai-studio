@@ -2,7 +2,11 @@
 <html lang="ro" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nexus AI">
     
     <!-- Google tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-W0PJNEF4S5"></script>
@@ -42,7 +46,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <!-- Three.js pentru Birou Agenți 3D Izometric -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -201,6 +204,9 @@
 
         <!-- Utilitare Sus -->
         <div class="flex items-center gap-1.5 text-xs">
+            <button id="pwaInstallBtn" onclick="installNexusPwa()" class="hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer" title="Instalează Aplicația">
+                <i class="fa-solid fa-download text-[9px]"></i> <span>Instalează</span>
+            </button>
             <div class="hidden sm:flex items-center gap-1 bg-gray-800/60 px-2 py-0.5 rounded-full text-[10px] text-cyan-400 border border-cyan-500/20">
                 <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
                 <span id="visitor-count">14</span> online
@@ -229,6 +235,12 @@
                 <span class="text-xs font-bold text-cyanNeon flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> Meniu Navigare</span>
                 <button onclick="closeSidebarMobile()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
+
+            <!-- BUTON INSTALARE PWA ÎN MENIU (Vizibil când e instalabil) -->
+            <button id="sidebarInstallBtn" onclick="closeSidebarMobile(); installNexusPwa();" class="hidden w-full py-2 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emeraldNeon/50 text-emerald-300 text-xs font-bold rounded-xl items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer transition">
+                <i class="fa-solid fa-mobile-screen-button text-sm"></i>
+                <span>Instalează Aplicația</span>
+            </button>
 
             <!-- BUTON ASISTENT AI -->
             <button onclick="closeSidebarMobile(); toggleNexusRobot();" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow-lg shadow-emerald-500/20">
@@ -366,7 +378,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- TAB NOU: Birou Agenți 3D Izometric (Integrează Calendar, Video, Creative, A/B Test, Podcast & Roast) -->
             <div id="tab-office3d" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-3 pb-20 md:p-4 md:pb-4 space-y-3">
                 <div class="max-w-6xl mx-auto w-full space-y-3">
@@ -581,7 +592,6 @@
                     </div>
                 </div>
             </div>
-
     <!-- Tab: Layers of AI Studio (Tematică Violet / Indigo) -->
     <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
@@ -672,7 +682,7 @@
                         <div class="text-base font-extrabold text-amberGlow">49 RON <span class="text-[10px] font-normal text-gray-400" data-i18n="perMonth">/ lună</span></div>
                         <p class="text-[11px] text-gray-300" data-i18n="planProDesc">Generare nelimitată și viteză maximă de procesare.</p>
                     </div>
-                    <a href="https://buy.stripe.com/test_4gM14mdAW8Iz71e59K4ko00" target="_blank" class="w-full block text-center text-darkBg font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer bg-amberGlow hover:opacity-90" data-i18n="btnSubscribePro">Abonează-te Pro (49 RON)</a>
+                    <a href="https://buy.stripe.com/test_4gM14mdAW8Iz71e59K4ko00" target="_blank" rel="noopener noreferrer" class="w-full block text-center text-darkBg font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer bg-amberGlow hover:opacity-90" data-i18n="btnSubscribePro">Abonează-te Pro (49 RON)</a>
                 </div>
                 <div class="bg-panelBg border border-purple-500/40 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
                     <div class="space-y-2">
@@ -683,7 +693,7 @@
                         <div class="text-base font-extrabold text-purple-400" data-i18n="donationSubtitle">O cafea virtuală</div>
                         <p class="text-[11px] text-gray-300 leading-snug" data-i18n="donationDesc">Îți place platforma și vrei să susții dezvoltarea ei continuă?</p>
                     </div>
-                    <a href="https://revolut.me/valentihz6" target="_blank" class="w-full block text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer btn-neon-glow" data-i18n="btnRevolut">Trimite o cafea pe Revolut</a>
+                    <a href="https://revolut.me/valentihz6" target="_blank" rel="noopener noreferrer" class="w-full block text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer btn-neon-glow" data-i18n="btnRevolut">Trimite o cafea pe Revolut</a>
                 </div>
             </div>
             <div class="text-center text-[11px] text-gray-500 space-y-1 pt-2">
@@ -691,7 +701,6 @@
             </div>
         </div>
     </div>
-
     <!-- TAB: Cont, Google & Înregistrare -->
     <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 items-center justify-center">
         <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
@@ -802,7 +811,7 @@
                     <span class="font-bold text-xs text-white">Nexus Gemini Bot</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition" title="Deschide în Telegram"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition" title="Deschide în Telegram"><i class="fa-brands fa-telegram"></i> Telegram</a>
                     <button onclick="toggleNexusRobot()" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
                 </div>
             </div>
@@ -855,7 +864,67 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-       
+
+        // --- PWA SERVICE WORKER & INSTALL PROMPT ---
+        let deferredPwaPrompt = null;
+
+        function updatePwaInstallButtons(show) {
+            const topBtn = document.getElementById('pwaInstallBtn');
+            const sideBtn = document.getElementById('sidebarInstallBtn');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const shouldShow = Boolean(show && !isStandalone);
+
+            if (topBtn) {
+                topBtn.classList.toggle('hidden', !shouldShow);
+                topBtn.classList.toggle('flex', shouldShow);
+            }
+            if (sideBtn) {
+                sideBtn.classList.toggle('hidden', !shouldShow);
+                sideBtn.classList.toggle('flex', shouldShow);
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            updatePwaInstallButtons(true);
+        });
+
+        window.installNexusPwa = async function() {
+            if (!deferredPwaPrompt) {
+                window.showToast('Folosește meniul browserului (⋮) -> Instalează aplicația / Add to Home screen.', 'info');
+                return;
+            }
+            deferredPwaPrompt.prompt();
+            const choiceResult = await deferredPwaPrompt.userChoice;
+            if (choiceResult && choiceResult.outcome === 'accepted') {
+                window.showToast('Nexus AI se instalează pe ecranul principal!', 'success');
+            }
+            deferredPwaPrompt = null;
+            updatePwaInstallButtons(false);
+        };
+
+        window.addEventListener('appinstalled', () => {
+            deferredPwaPrompt = null;
+            updatePwaInstallButtons(false);
+            window.showToast('Nexus AI este instalat ca aplicație!', 'success');
+        });
+
+        function registerPwaServiceWorker() {
+            if (!('serviceWorker' in navigator)) return;
+            const swCandidates = ['./sw.js', '/sw.js', './service-worker.js', '/service-worker.js'];
+            (async () => {
+                for (const swUrl of swCandidates) {
+                    try {
+                        const reg = await navigator.serviceWorker.register(swUrl, { scope: '/' });
+                        if (reg) break;
+                    } catch (err) {
+                        // Încearcă următoarea cale candidat
+                    }
+                }
+            })();
+        }
+
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
         let drops = [];
@@ -1176,6 +1245,7 @@
                 updateOffice3DLabels(wrap ? wrap.clientWidth : 400, wrap ? wrap.clientHeight : 300);
             }
         };
+
         // --- SISTEM COMPLET DE NAVIGARE & BUTON BACK (BROWSER + UI) ---
         let tabHistoryStack = [];
 
@@ -1304,6 +1374,8 @@
         });
 
         window.addEventListener('DOMContentLoaded', () => {
+            registerPwaServiceWorker();
+            updatePwaInstallButtons(Boolean(deferredPwaPrompt));
             initMatrix();
             loadHistoryUI();
             const savedDraft = localStorage.getItem('nexus_chat_draft');
@@ -1395,7 +1467,7 @@
             if(!container) return;
             const toast = document.createElement('div');
             toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
-            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${msg}`;
+            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${escapeHtml(msg)}`;
             container.appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
             setTimeout(() => {
@@ -1533,7 +1605,7 @@
             }
 
             let displayHtml = '';
-            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${file.name}</div>`;
+            if (file) displayHtml += `<div class="text-[11px] text-cyanNeon mb-1"><i class="fa-solid fa-paperclip mr-1"></i> Fișier: ${escapeHtml(file.name)}</div>`;
             if (text) displayHtml += `<div>${escapeHtml(text)}</div>`;
 
             msgBox.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${displayHtml}</div></div>`;
@@ -1672,7 +1744,11 @@
         window.toggleRobotAudio = function() { window.showToast('Audio comutat.', 'info'); };
 
         function escapeHtml(text) {
-            return String(text).replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+            return String(text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
         }
 
         function parseMarkdown(text) {
@@ -1696,7 +1772,7 @@
             const container = document.getElementById('editorialListContainer');
             if(container && container.innerHTML.includes('Nicio postare')) container.innerHTML = '';
             if(container) {
-                container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${platformEl.value}]</span> <span class="text-white">${escapeHtml(titleEl.value)}</span><div class="text-[10px] text-gray-400">${dateEl.value}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
+                container.innerHTML += `<div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-amberGlow">[${escapeHtml(platformEl.value)}]</span> <span class="text-white">${escapeHtml(titleEl.value)}</span><div class="text-[10px] text-gray-400">${escapeHtml(dateEl.value)}</div></div><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">Programat</span></div>`;
             }
             window.showToast('Postare programată!', 'success');
         };
@@ -1739,7 +1815,8 @@
 
         window.openGoogleMapsLocation = function() {
             if (currentCoords) {
-                window.open(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`, '_blank');
+                const url = `https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`;
+                window.location.assign(url);
             } else {
                 autoDetectUserLocation();
                 window.showToast('Se preia locația...', 'info');
@@ -1796,7 +1873,7 @@
                         <div class="text-center space-y-4 py-6">
                             <img src="${userPhoto}" alt="Avatar" class="w-20 h-20 rounded-full mx-auto border-2 border-cyanNeon shadow-lg object-cover">
                             <h3 class="text-lg font-bold text-white">Bun venit, ${userName}!</h3>
-                            <p class="text-xs text-gray-400">${user.email}</p>
+                            <p class="text-xs text-gray-400">${escapeHtml(user.email || '')}</p>
                             <div class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold inline-block">Cont Conectat & Verificat ✅</div>
                             <div class="pt-4"><button onclick="logoutUser()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">Deconectare / Schimbă Contul</button></div>
                         </div>
@@ -1896,7 +1973,7 @@
             if (!promptElement || !containerElement) return;
 
             const userText = promptElement.value || "Generează conținut creativ";
-            containerElement.innerHTML = `<div style="color: #00ffff; padding: 10px;">Se generează conținutul (${style})... Vă rugăm așteptați...</div>`;
+            containerElement.innerHTML = `<div style="color: #00ffff; padding: 10px;">Se generează conținutul (${escapeHtml(style)})... Vă rugăm așteptați...</div>`;
 
             fetch('/api/chat', {
                 method: 'POST',
