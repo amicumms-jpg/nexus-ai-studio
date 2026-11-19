@@ -220,35 +220,35 @@
     <!-- Main Layout -->
     <div class="flex flex-1 overflow-hidden z-10 relative">
         <!-- Overlay Mobil Corectat -->
-        <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
+        <div id="sidebarOverlay" onclick="closeSidebarMobile()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
 
         <!-- Sidebar Curățat (Fără tab-urile mutate în Biroul Agenți 3D) -->
         <aside id="appSidebar" class="hidden md:flex fixed md:relative top-0 md:top-auto left-0 z-50 flex-col w-[80%] max-w-[280px] md:w-64 bg-panelBg border-r md:border border-gray-800 md:rounded-2xl shrink-0 p-3 h-full md:h-[65vh] max-h-full md:max-h-[65vh] overflow-y-auto shadow-2xl transition-transform duration-300">
             <!-- Buton închidere mobil în interiorul meniului -->
             <div class="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-gray-800">
                 <span class="text-xs font-bold text-cyanNeon flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> Meniu Navigare</span>
-                <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
+                <button onclick="closeSidebarMobile()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
 
             <!-- BUTON ASISTENT AI -->
-            <button onclick="toggleNexusRobot(); toggleSidebar();" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow-lg shadow-emerald-500/20">
+            <button onclick="closeSidebarMobile(); toggleNexusRobot();" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow-lg shadow-emerald-500/20">
                 <i class="fa-solid fa-robot font-bold text-sm"></i>
                 <span data-i18n="openAssistant">Deschide Asistent AI</span>
             </button>
             
             <!-- NEXUS COMMAND OS, BIROU AGENȚI 3D & LAYERS OF AI STUDIO -->
-            <button onclick="switchTab('nexusOS', 'Nexus Command OS')" id="nav-nexusOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10">
+            <button onclick="switchTab('nexusOS', 'Nexus Command OS'); closeSidebarMobile();" id="nav-nexusOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10">
                 <i class="fa-solid fa-network-wired text-cyanNeon w-4 text-center"></i>
                 <span class="text-cyanNeon font-bold">Nexus Command OS</span>
             </button>
-            <button onclick="switchTab('office3d', 'Birou Agenți 3D')" id="nav-office3d" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center justify-between transition cursor-pointer font-medium mb-1 border border-emeraldNeon/30 bg-emeraldNeon/10 btn-neon-glow">
+            <button onclick="switchTab('office3d', 'Birou Agenți 3D'); closeSidebarMobile();" id="nav-office3d" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center justify-between transition cursor-pointer font-medium mb-1 border border-emeraldNeon/30 bg-emeraldNeon/10 btn-neon-glow">
                 <div class="flex items-center space-x-2.5">
                     <i class="fa-solid fa-cubes text-emeraldNeon w-4 text-center"></i>
                     <span class="text-emerald-300 font-bold" data-i18n="navOffice3D">Birou Agenți 3D</span>
                 </div>
                 <span class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded-full font-bold">6 AI</span>
             </button>
-            <button onclick="switchTab('layersAi', 'Layers of AI Studio')" id="nav-layersAi" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1">
+            <button onclick="switchTab('layersAi', 'Layers of AI Studio'); closeSidebarMobile();" id="nav-layersAi" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1">
                 <i class="fa-solid fa-layer-group text-violetPop w-4 text-center"></i>
                 <span data-i18n="navLayers">Layers of AI Studio</span>
             </button>
@@ -256,7 +256,7 @@
             <div class="flex-1 space-y-1 overflow-y-auto max-h-[75vh] md:max-h-full pr-1 pb-12" style="scrollbar-width: thin; -webkit-overflow-scrolling: touch;">
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2" data-i18n="menuMainPanel">PANOU PRINCIPAL</span>
                 <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('chat', 'Home / Tools Hub');" id="nav-chat" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-2 cursor-pointer transition">
+                    <button onclick="switchTab('chat', 'Home / Tools Hub'); closeSidebarMobile();" id="nav-chat" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-2 cursor-pointer transition">
                         <i class="fa-solid fa-house text-cyanNeon w-4 text-center"></i>
                         <span class="text-xs font-semibold" data-i18n="navHomeHub">Home / Tools Hub</span>
                     </button>
@@ -275,15 +275,15 @@
 
                 <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block" data-i18n="menuSettingsAccount">Setări & Cont</span>
                 <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('billingCard', 'Abonament & PRO')" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+                    <button onclick="switchTab('billingCard', 'Abonament & PRO'); closeSidebarMobile();" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
                         <i class="fa-solid fa-crown text-amberGlow w-4 text-center"></i>
                         <span data-i18n="navBilling">Abonament & PRO</span>
                     </button>
-                    <button onclick="switchTab('authAccount', 'Cont, Google & Înregistrare')" id="nav-authAccount" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+                    <button onclick="switchTab('authAccount', 'Cont, Google & Înregistrare'); closeSidebarMobile();" id="nav-authAccount" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
                         <i class="fa-solid fa-user-shield text-cyanNeon w-4 text-center"></i>
                         <span data-i18n="navAuth">Cont, Google & Login</span>
                     </button>
-                    <button onclick="switchTab('supportTab', 'Suport & Asistență Clienți')" id="nav-supportTab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center justify-between transition cursor-pointer group btn-neon-glow">
+                    <button onclick="switchTab('supportTab', 'Suport & Asistență Clienți'); closeSidebarMobile();" id="nav-supportTab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center justify-between transition cursor-pointer group btn-neon-glow">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-headset text-amberGlow group-hover:scale-110 transition-transform w-4 text-center"></i>
                             <span class="text-xs font-semibold" data-i18n="navSupport">Suport & Ajutor</span>
@@ -294,10 +294,10 @@
             </div>
         </aside>
         <!-- Main Content Container -->
-        <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative">
+        <main class="flex-1 flex flex-col bg-darkBg overflow-hidden relative pb-14 md:pb-0">
             
             <!-- TAB: Nexus Command OS (Dashboard cu tematică Cyan / Neural Pro) -->
-            <div id="tab-nexusOS" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+            <div id="tab-nexusOS" class="app-tab flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:pb-4 space-y-4">
                 <div class="max-w-5xl mx-auto w-full space-y-4">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between bg-panelBg border border-cyanNeon/40 p-4 rounded-2xl shadow-xl">
                         <div>
@@ -368,7 +368,7 @@
             </div>
 
             <!-- TAB NOU: Birou Agenți 3D Izometric (Integrează Calendar, Video, Creative, A/B Test, Podcast & Roast) -->
-            <div id="tab-office3d" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-3 md:p-4 space-y-3">
+            <div id="tab-office3d" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-3 pb-20 md:p-4 md:pb-4 space-y-3">
                 <div class="max-w-6xl mx-auto w-full space-y-3">
                     <!-- Bară Fluxuri & Control -->
                     <div class="bg-panelBg border border-emeraldNeon/35 p-3 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-xl">
@@ -400,7 +400,7 @@
                             </div>
                         </div>
 
-                        <div class="lg:col-span-5 bg-panelBg border border-gray-800 rounded-2xl p-3.5 flex flex-col justify-between shadow-xl min-h-[290px]">
+                        <div class="lg:col-span-5 bg-panelBg border border-gray-800 rounded-2xl p-3.5 pr-12 sm:pr-3.5 flex flex-col justify-between shadow-xl min-h-[290px]">
                             <div id="office3d-panel-calendar" class="office-agent-panel space-y-2.5">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
                                     <h3 class="text-xs font-bold text-amberGlow"><i class="fa-solid fa-calendar-days mr-1.5"></i>Agent Calendar Editorial</h3>
@@ -504,7 +504,7 @@
                 </div>
             </div>
             <!-- Tab 1: Chat General (Home / Tools Hub - Tematică Cyan/Blue Profesional) -->
-            <div id="tab-chat" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3 space-y-2">
+            <div id="tab-chat" class="app-tab hidden flex-1 flex-col h-full overflow-hidden p-3 pb-16 md:pb-3 space-y-2">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between mb-2 shrink-0">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> <span data-i18n="chatTitle">Nexus Neural Assistant - Home / Tools Hub</span></h2>
@@ -530,7 +530,7 @@
                         <div class="text-gray-400" data-i18n="welcomeMsg">Salut! Sunt asistentul tău general. Cu ce începem?</div>
                     </div>
 
-                    <div class="flex flex-col space-y-1.5 shrink-0">
+                    <div class="flex flex-col space-y-1.5 shrink-0 pr-12 sm:pr-0">
                         <div id="chatAttachmentPreview-chat" class="hidden items-center space-x-2 bg-gray-900 border border-gray-700 px-3 py-1 rounded-lg text-xs w-max">
                             <i class="fa-solid fa-paperclip text-cyanNeon"></i>
                             <span id="chatAttachmentName-chat" class="text-gray-200"></span>
@@ -583,7 +583,7 @@
             </div>
 
     <!-- Tab: Layers of AI Studio (Tematică Violet / Indigo) -->
-    <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+    <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
                 <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-pink-500">Layers of AI Creator</h1>
@@ -638,7 +638,7 @@
         </div>
     </div>
     <!-- TAB: Abonament & PRO -->
-    <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
+    <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 items-center justify-center">
         <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg"><i class="fa-solid fa-crown"></i></div>
@@ -693,7 +693,7 @@
     </div>
 
     <!-- TAB: Cont, Google & Înregistrare -->
-    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 items-center justify-center">
+    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 items-center justify-center">
         <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
             <div class="text-center space-y-1">
                 <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
@@ -749,7 +749,7 @@
     </div>
 
     <!-- TAB: Suport & Asistență Clienți -->
-    <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 space-y-4">
+    <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col h-full overflow-y-auto p-4 pb-16 md:p-4 space-y-4">
         <div class="bg-panelBg border border-amberGlow/30 p-5 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
                 <h2 class="text-lg font-bold text-amberGlow flex items-center gap-2" data-i18n="supportCenterTitle"><i class="fa-solid fa-headset"></i> Centrul de Suport & Asistență Clienți</h2>
@@ -789,13 +789,13 @@
 </main>
 </div>
 
-<!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI -->
-    <div id="nexus-robot-widget" class="fixed bottom-24 right-4 z-50">
-        <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
-            <i class="fa-solid fa-robot text-sm"></i>
-            <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
+<!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI (Poziționat sus față de butoanele de trimitere) -->
+    <div id="nexus-robot-widget" class="fixed bottom-36 sm:bottom-24 right-3 sm:right-4 z-50">
+        <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
+            <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
         </button>
-        <div id="nexus-robot-window" class="hidden flex flex-col absolute bottom-12 right-0 w-[90vw] sm:w-[380px] h-[480px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
+        <div id="nexus-robot-window" class="hidden flex flex-col absolute bottom-10 sm:bottom-12 right-0 w-[90vw] sm:w-[380px] h-[440px] sm:h-[480px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
             <div class="flex items-center justify-between px-3 py-2 bg-slate-800 border-b border-slate-700">
                 <div class="flex items-center space-x-2">
                     <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
@@ -1107,7 +1107,7 @@
         function updateOffice3DLabels(width, height) {
             office3D.robotMeshes.forEach((item) => {
                 if (!item.tagEl) return;
-                const pos = new THREE.Vector3(item.baseX, item.group.position.y + 1.62, item.baseZ);
+                const pos = new THREE.Vector3(item.baseX, item.group.position.y + 1.95, item.baseZ);
                 pos.project(office3D.camera);
                 const x = (pos.x * 0.5 + 0.5) * width;
                 const y = (-(pos.y * 0.5) + 0.5) * height;
@@ -1179,6 +1179,21 @@
         // --- SISTEM COMPLET DE NAVIGARE & BUTON BACK (BROWSER + UI) ---
         let tabHistoryStack = [];
 
+        window.closeSidebarMobile = function() {
+            const sidebar = document.getElementById('appSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+            if (sidebar) {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('hidden');
+                } else {
+                    sidebar.classList.remove('hidden');
+                }
+            }
+        };
+
         function updateBackButtonUI() {
             const backBtn = document.getElementById('uiBackBtn');
             if (!backBtn) return;
@@ -1235,10 +1250,7 @@
 
             // Închide sidebar-ul pe mobil automat după click
             if (window.innerWidth < 768) {
-                const sidebar = document.getElementById('appSidebar');
-                const overlay = document.getElementById('sidebarOverlay');
-                if (sidebar) sidebar.classList.add('hidden');
-                if (overlay) overlay.classList.add('hidden');
+                window.closeSidebarMobile();
             }
         }
 
