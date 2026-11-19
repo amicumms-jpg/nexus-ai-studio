@@ -177,7 +177,6 @@
         </tbody>
     </table>
 </div>
-
   <!-- Top Navigation Bar Foarte Curată -->
     <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 shadow-lg z-20">
         <div class="flex items-center space-x-2">
@@ -642,7 +641,7 @@
                 </div>
                 <div class="mt-5 pt-4 border-t border-slate-800">
                     <h3 class="text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Rezultat Generat / Output:</h3>
-                    <div id="layersOutputBox" class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 min-h-[90px] font-mono text-xs">Așteptare comandă...</div>
+                    <div id="layersOutputBox" class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 min-h-[90px] font-mono text-xs whitespace-pre-line">Așteptare comandă...</div>
                 </div>
             </div>
         </div>
@@ -797,7 +796,6 @@
     </div>
 </main>
 </div>
-
 <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI (Poziționat sus față de butoanele de trimitere) -->
     <div id="nexus-robot-widget" class="fixed bottom-36 sm:bottom-24 right-3 sm:right-4 z-50">
         <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
@@ -918,9 +916,7 @@
                     try {
                         const reg = await navigator.serviceWorker.register(swUrl, { scope: '/' });
                         if (reg) break;
-                    } catch (err) {
-                        // Încearcă următoarea cale candidat
-                    }
+                    } catch (err) {}
                 }
             })();
         }
@@ -935,7 +931,7 @@
             canvas.height = window.innerHeight;
             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-/<>?';
             const fontSize = 12;
-            const columns = canvas.width / fontSize;
+            const columns = Math.floor(canvas.width / fontSize);
             drops = [];
             for(let i = 0; i < columns; i++) drops[i] = 1;
 
@@ -966,11 +962,11 @@
             if(!textarea) return;
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
-        }
+        };
 
         window.saveDraft = function(val){
             localStorage.setItem('nexus_chat_draft', val);
-        }
+        };
 
         window.saveToHistory = function(title, messagesHtml) {
             let history = JSON.parse(localStorage.getItem('nexus_chat_history') || '[]');
@@ -999,8 +995,8 @@
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between p-1.5 bg-gray-800/40 hover:bg-gray-800 rounded cursor-pointer transition text-gray-300";
                 div.innerHTML = `
-                    <span class="truncate pr-2" onclick="loadChatSession(${item.id})">${item.title}</span>
-                    <span class="text-[9px] text-gray-500">${item.date}</span>
+                    <span class="truncate pr-2" onclick="loadChatSession(${item.id})">${escapeHtml(item.title)}</span>
+                    <span class="text-[9px] text-gray-500">${escapeHtml(item.date)}</span>
                 `;
                 listEl.appendChild(div);
             });
@@ -1025,7 +1021,6 @@
             window.showToast('Istoricul a fost șters.', 'info');
         };
 
-        // --- BIROU AGENȚI 3D IZOMETRIC (THREE.JS) ---
         const office3DAgentsMeta = [
             { id: 'calendar', label: '📅 Calendar', color: 0xf59e0b, x: -3.2, z: -2.2 },
             { id: 'video', label: '🎬 Video AI', color: 0x06b6d4, x: 0.0, z: -2.2 },
@@ -1070,17 +1065,15 @@
             wrap.innerHTML = '';
             wrap.appendChild(renderer.domElement);
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.85);
-            scene.add(ambient);
-
+            scene.add(new THREE.AmbientLight(0xffffff, 0.85));
             const dirLight = new THREE.DirectionalLight(0x67e8f9, 0.9);
             dirLight.position.set(6, 12, 8);
             scene.add(dirLight);
 
-            // Podea 3D HQ
-            const floorGeo = new THREE.BoxGeometry(10.6, 0.45, 8.2);
-            const floorMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
-            const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+            const floorMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(10.6, 0.45, 8.2),
+                new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 })
+            );
             floorMesh.position.set(0, -0.25, 0);
             scene.add(floorMesh);
 
@@ -1092,35 +1085,35 @@
             office3D.robotMeshes = [];
 
             office3DAgentsMeta.forEach((meta) => {
-                // Pad luminos pe podea
-                const padGeo = new THREE.BoxGeometry(2.3, 0.08, 2.3);
-                const padMat = new THREE.MeshStandardMaterial({ color: meta.color, emissive: meta.color, emissiveIntensity: 0.22 });
-                const padMesh = new THREE.Mesh(padGeo, padMat);
+                const padMesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(2.3, 0.08, 2.3),
+                    new THREE.MeshStandardMaterial({ color: meta.color, emissive: meta.color, emissiveIntensity: 0.22 })
+                );
                 padMesh.position.set(meta.x, 0.02, meta.z);
                 scene.add(padMesh);
 
-                // Grup robot
                 const robotGroup = new THREE.Group();
                 robotGroup.position.set(meta.x, 0.06, meta.z);
                 robotGroup.userData.agentId = meta.id;
 
-                const bodyGeo = new THREE.CylinderGeometry(0.45, 0.55, 0.95, 16);
-                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.2, roughness: 0.35 });
-                const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+                const bodyMesh = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.45, 0.55, 0.95, 16),
+                    new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.2, roughness: 0.35 })
+                );
                 bodyMesh.position.y = 0.48;
                 bodyMesh.userData.agentId = meta.id;
                 robotGroup.add(bodyMesh);
 
-                const headGeo = new THREE.BoxGeometry(0.76, 0.52, 0.66);
-                const headMat = new THREE.MeshStandardMaterial({ color: meta.color, emissive: meta.color, emissiveIntensity: 0.35 });
-                const headMesh = new THREE.Mesh(headGeo, headMat);
+                const headMesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.76, 0.52, 0.66),
+                    new THREE.MeshStandardMaterial({ color: meta.color, emissive: meta.color, emissiveIntensity: 0.35 })
+                );
                 headMesh.position.y = 1.24;
                 headMesh.userData.agentId = meta.id;
                 robotGroup.add(headMesh);
 
                 scene.add(robotGroup);
 
-                // Etichetă HTML peste robot
                 const tagEl = document.createElement('button');
                 tagEl.type = 'button';
                 tagEl.className = 'agent-3d-tag';
@@ -1152,8 +1145,7 @@
                 office3D.pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
                 office3D.pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
                 office3D.raycaster.setFromCamera(office3D.pointer, office3D.camera);
-                const targets = office3D.robotMeshes.map(r => r.group);
-                const hits = office3D.raycaster.intersectObjects(targets, true);
+                const hits = office3D.raycaster.intersectObjects(office3D.robotMeshes.map(r => r.group), true);
                 if (hits.length > 0) {
                     const hitAgentId = hits[0].object.userData.agentId;
                     if (hitAgentId) window.selectOffice3DAgent(hitAgentId);
@@ -1182,11 +1174,7 @@
                 const y = (-(pos.y * 0.5) + 0.5) * height;
                 item.tagEl.style.left = x + 'px';
                 item.tagEl.style.top = y + 'px';
-                if (item.id === office3D.activeId) {
-                    item.tagEl.classList.add('active-agent-tag');
-                } else {
-                    item.tagEl.classList.remove('active-agent-tag');
-                }
+                item.tagEl.classList.toggle('active-agent-tag', item.id === office3D.activeId);
             });
         }
 
@@ -1246,15 +1234,12 @@
             }
         };
 
-        // --- SISTEM COMPLET DE NAVIGARE & BUTON BACK (BROWSER + UI) ---
         let tabHistoryStack = [];
 
         window.closeSidebarMobile = function() {
             const sidebar = document.getElementById('appSidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            if (overlay) {
-                overlay.classList.add('hidden');
-            }
+            if (overlay) overlay.classList.add('hidden');
             if (sidebar) {
                 if (window.innerWidth < 768) {
                     sidebar.classList.add('hidden');
@@ -1282,7 +1267,7 @@
                 tab.classList.remove('flex');
             });
 
-            let targetId = tabId.startsWith('tab-') ? tabId : 'tab-' + tabId;
+            const targetId = tabId.startsWith('tab-') ? tabId : 'tab-' + tabId;
             const target = document.getElementById(targetId);
             if (target) {
                 target.classList.remove('hidden');
@@ -1296,7 +1281,6 @@
             const bc = document.getElementById('breadcrumbCurrent');
             if (bc && title) bc.innerText = title;
 
-            // Evidențiere în meniul lateral
             const navNexus = document.getElementById('nav-nexusOS');
             const navLayers = document.getElementById('nav-layersAi');
             const navOffice = document.getElementById('nav-office3d');
@@ -1318,7 +1302,6 @@
             localStorage.setItem('nexus_last_tab', tabId);
             localStorage.setItem('nexus_last_title', title || 'Nexus Hub');
 
-            // Închide sidebar-ul pe mobil automat după click
             if (window.innerWidth < 768) {
                 window.closeSidebarMobile();
             }
@@ -1326,14 +1309,11 @@
 
         window.switchTab = function(tabId, title, isPopState = false) {
             renderTabInternal(tabId, title);
-
             if (!isPopState) {
                 const currentTop = tabHistoryStack[tabHistoryStack.length - 1];
                 if (!currentTop || currentTop.tabId !== tabId) {
                     tabHistoryStack.push({ tabId, title });
-                    try {
-                        history.pushState({ tabId, title }, title, '#' + tabId);
-                    } catch (e) {}
+                    try { history.pushState({ tabId, title }, title, '#' + tabId); } catch (e) {}
                 }
             }
             updateBackButtonUI();
@@ -1345,9 +1325,7 @@
                 const prev = tabHistoryStack[tabHistoryStack.length - 1];
                 renderTabInternal(prev.tabId, prev.title);
                 updateBackButtonUI();
-                try {
-                    history.replaceState({ tabId: prev.tabId, title: prev.title }, prev.title, '#' + prev.tabId);
-                } catch (e) {}
+                try { history.replaceState({ tabId: prev.tabId, title: prev.title }, prev.title, '#' + prev.tabId); } catch (e) {}
             } else {
                 window.switchTab('nexusOS', 'Nexus Command OS');
             }
@@ -1355,21 +1333,15 @@
 
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.tabId) {
-                if (tabHistoryStack.length > 1) {
-                    tabHistoryStack.pop();
-                }
+                if (tabHistoryStack.length > 1) tabHistoryStack.pop();
                 renderTabInternal(event.state.tabId, event.state.title);
                 updateBackButtonUI();
-            } else {
-                if (tabHistoryStack.length > 1) {
-                    tabHistoryStack.pop();
-                    const prev = tabHistoryStack[tabHistoryStack.length - 1];
-                    renderTabInternal(prev.tabId, prev.title);
-                    updateBackButtonUI();
-                    try {
-                        history.pushState({ tabId: prev.tabId, title: prev.title }, prev.title, '#' + prev.tabId);
-                    } catch (e) {}
-                }
+            } else if (tabHistoryStack.length > 1) {
+                tabHistoryStack.pop();
+                const prev = tabHistoryStack[tabHistoryStack.length - 1];
+                renderTabInternal(prev.tabId, prev.title);
+                updateBackButtonUI();
+                try { history.pushState({ tabId: prev.tabId, title: prev.title }, prev.title, '#' + prev.tabId); } catch (e) {}
             }
         });
 
@@ -1399,9 +1371,7 @@
                 } catch (e) {}
             } else {
                 tabHistoryStack = [{ tabId: 'nexusOS', title: 'Nexus Command OS' }];
-                try {
-                    history.replaceState({ tabId: 'nexusOS', title: 'Nexus Command OS' }, 'Nexus Command OS', '#nexusOS');
-                } catch (e) {}
+                try { history.replaceState({ tabId: 'nexusOS', title: 'Nexus Command OS' }, 'Nexus Command OS', '#nexusOS'); } catch (e) {}
             }
             
             renderTabInternal(lastTab, lastTitle);
@@ -1412,7 +1382,7 @@
                 window.setLanguage(savedLang);
             } else {
                 const browserLang = navigator.language.slice(0, 2).toLowerCase();
-                window.setLanguage(i18nDictionary[browserLang] ? browserLang : 'en');
+                window.setLanguage(i18nDictionary[browserLang] ? browserLang : 'ro');
             }
         });
 
@@ -1432,11 +1402,14 @@
         window.toggleSidebar = function() {
             const sb = document.getElementById('appSidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            if(sb) {
+            if (!sb) return;
+            if (window.innerWidth < 768) {
                 sb.classList.toggle('hidden');
-            }
-            if(overlay) {
-                overlay.classList.toggle('hidden');
+                if (overlay) overlay.classList.toggle('hidden');
+            } else {
+                const isHidden = sb.classList.contains('md:hidden');
+                sb.classList.toggle('md:hidden', !isHidden);
+                sb.classList.toggle('md:flex', isHidden);
             }
         };
 
@@ -1474,7 +1447,7 @@
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
-        }
+        };
 
         let attachedFiles = {};
         
@@ -1781,12 +1754,12 @@
             const inputEl = document.getElementById('textToVideoInput');
             const result = document.getElementById('textToVideoResult');
             if(!inputEl || !inputEl.value) { window.showToast('Introdu descrierea!', 'error'); return; }
-            if(result) result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează video AI...</div>';
+            if(result) result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariu video AI...</div>';
             try {
                 const res = await fetchFromServer(`Creează scenariu video: "${inputEl.value}"`);
                 if(result) result.innerText = res;
                 window.showToast('Generat!', 'success');
-            } catch(e) { if(result) result.innerText = 'Eroare.'; }
+            } catch(e) { if(result) result.innerText = 'Eroare la generare.'; }
         };
 
         let currentCoords = null;
@@ -1800,7 +1773,7 @@
                     const data = await res.json();
                     if(label) label.innerText = data.address.city || data.address.town || data.address.village || "GPS Activ";
                 } catch(e) { if(label) label.innerText = "GPS Activ ✅"; }
-            }, (err) => {
+            }, () => {
                 if(label) label.innerText = "GPS Indisponibil";
             });
         }
@@ -1815,8 +1788,7 @@
 
         window.openGoogleMapsLocation = function() {
             if (currentCoords) {
-                const url = `https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`;
-                window.location.assign(url);
+                window.location.assign(`https://www.google.com/maps?q=${currentCoords.lat},${currentCoords.lon}`);
             } else {
                 autoDetectUserLocation();
                 window.showToast('Se preia locația...', 'info');
@@ -1885,8 +1857,7 @@
         window.loginWithGoogle = async function() {
             try {
                 const result = await signInWithPopup(auth, googleProvider);
-                const user = result.user;
-                const userName = escapeHtml(user.displayName || user.email);
+                const userName = escapeHtml(user.displayName || result.user.email);
                 window.showToast("Autentificat cu succes: " + userName, "success");
             } catch (error) {
                 alert("Eroare la autentificare: " + error.message);
@@ -1990,16 +1961,14 @@
                     const { done, value } = await reader.read();
                     if (done) break;
                     const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split("\n");
-                    for (const line of lines) {
+                    for (const line of chunk.split("\n")) {
                         const trimmed = line.trim();
                         if (trimmed.startsWith("data:")) {
                             try {
                                 const jsonStr = trimmed.replace(/^data:\s*/, "");
                                 if (!jsonStr) continue;
                                 const parsed = JSON.parse(jsonStr);
-                                const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                                fullText += piece;
+                                fullText += parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
                             } catch (e) {}
                         }
                     }
@@ -2019,95 +1988,112 @@
             if(activeBtn) activeBtn.classList.add('bg-slate-800');
         };
 
-        window.executeAgent = function() {
-            const goal = document.getElementById('agent-goal').value;
+        window.executeAgent = async function() {
+            const goal = document.getElementById('agent-goal')?.value.trim();
             const output = document.getElementById('layersOutputBox');
+            if(!output) return;
             if(!goal) { output.innerText = "Te rog introdu un obiectiv."; return; }
-            output.innerText = `[Agentic AI] Inițializare planificare...\n- Obiectiv: ${escapeHtml(goal)}\n- Rezultat: Sarcină procesată cu succes.`;
+            output.innerText = `[Agentic AI] Inițializare planificare pentru: "${goal}"...`;
+            try {
+                const res = await fetchFromServer(`[Agentic AI - Plan & Execuție]: ${goal}`);
+                output.innerText = res;
+            } catch (e) {
+                output.innerText = `[Agentic AI] Obiectiv: ${goal}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
+            }
         };
 
-        window.generateContent = function() {
-            const prompt = document.getElementById('gen-prompt').value;
+        window.generateContent = async function() {
+            const prompt = document.getElementById('gen-prompt')?.value.trim();
             const output = document.getElementById('layersOutputBox');
+            if(!output) return;
             if(!prompt) { output.innerText = "Te rog introdu un prompt."; return; }
-            output.innerText = `[Generative AI] Generare pentru: "${escapeHtml(prompt)}"\nRezultat creat cu succes.`;
+            output.innerText = `[Generative AI] Generare pentru: "${prompt}"...`;
+            try {
+                const res = await fetchFromServer(`[Generative AI]: ${prompt}`);
+                output.innerText = res;
+            } catch (e) {
+                output.innerText = `[Generative AI] Prompt: ${prompt}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
+            }
+        };
+
+        const baseRo = {
+            btnBack: "Înapoi",
+            openAssistant: "Asistent AI",
+            navOffice3D: "Birou Agenți 3D",
+            office3dTitle: "Nexus 3D HQ — Birou Agenți AI",
+            office3dSub: "Atinge un robot pe harta 3D sau alege un flux rapid pentru a lucra cu agentul respectiv.",
+            navLayers: "Layers of AI Studio",
+            menuMainPanel: "PANOU PRINCIPAL",
+            navHomeHub: "Home / Tools Hub",
+            menuSettingsAccount: "Setări & Cont",
+            navBilling: "Abonament & PRO",
+            navAuth: "Cont, Google & Login",
+            navSupport: "Suport & Ajutor",
+            chatTitle: "Nexus Neural Assistant - Home / Tools Hub",
+            welcomeMsg: "Salut! Sunt asistentul tău general. Cu ce începem?",
+            aiModelLabel: "Model AI:",
+            inputPlaceholder: "Scrie mesajul tău sau descrie un vizual...",
+            billingTitle: "Abonamente & Susținere Project",
+            billingSub: "Alege modul tău de acces la Nexus AI Studio Pro.",
+            licenseKeyPrompt: "Ai primit o cheie oficială de activare?",
+            btnActivate: "Activează",
+            licenseStatusDefault: "Introdu codul licenței pentru a debloca instant accesul complet VIP.",
+            planFreeTitle: "Acces Gratuit / Early Access",
+            badgeActive: "Activ",
+            perDay: "/ zi",
+            planFreeDesc: "Testare zilnică pentru creatori la început de drum.",
+            planFreeActiveNotice: "Ai planul gratuit activat implicit!",
+            badgeRecommended: "Recomandat",
+            perMonth: "/ lună",
+            planProDesc: "Generare nelimitată și viteză maximă de procesare.",
+            btnSubscribePro: "Abonează-te Pro (49 RON)",
+            planDonateTitle: "Susține Proiectul ☕",
+            badgeDonation: "Donație",
+            donationSubtitle: "O cafea virtuală",
+            donationDesc: "Îți place platforma și vrei să susții dezvoltarea ei continuă?",
+            btnRevolut: "Trimite o cafea pe Revolut",
+            securePaymentsText: "Plăți securizate 100% prin <strong>Stripe</strong> & <strong>Revolut</strong>.",
+            authTitle: "Autentificare & Cont Personal",
+            authSub: "Conectează-te rapid sau creează un cont nou.",
+            orNewForm: "SAU FORMULAR NOU",
+            labelFullName: "Nume Complet",
+            labelPhone: "Telefon",
+            labelEmail: "Email",
+            labelPassword: "Parolă",
+            labelCity: "Oraș",
+            btnCreateAccount: "Creează Cont",
+            supportCenterTitle: "Centrul de Suport & Asistență Clienți",
+            supportCenterSub: "Ai o întrebare sau ai întâmpinat o problemă? Suntem aici să te ajutăm rapid!",
+            btnSendSupportEmail: "Trimite Email Suport",
+            directContactTitle: "Contact Direct",
+            directContactDesc: "Pentru probleme legate de plăți, facturare sau contul PRO.",
+            responseTime: "Răspuns în max. 24 ore",
+            systemStatusTitle: "Stare Sistem",
+            systemStatusDesc: "Toate sistemele noastre funcționează la parametrii optimi.",
+            geminiEngineLabel: "Motor Gemini AI:",
+            active100: "Activ 100%",
+            userGuideTitle: "Ghid Utilizare",
+            userGuideDesc: "Învață cum să obții cele mai bune rezultate.",
+            openChatLink: "Deschide Chat & Încearcă acum →",
+            robotWelcome: "Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!",
+            speechReady: "Gata de ascultare",
+            audioOn: "Audio ON",
+            robotInputPlaceholder: "Scrie sau vorbește...",
+            privacyModalTitle: "Politică de Confidențialitate (GDPR)",
+            privacyText1: "Respectăm confidențialitatea datelor dumneavoastră. Toate datele introduse în platformă sunt prelucrate în condiții de securitate maximă conform reglementărilor GDPR în vigoare.",
+            privacyText2: "Puteți solicita oricând ștergerea datelor contului dumneavoastră contactându-ne pe e-mail.",
+            termsModalTitle: "Termeni și Condiții",
+            termsText1: "Prin utilizarea platformei Nexus AI Studio Pro, sunteți de acord cu termenii și condițiile stabilite. Serviciile noastre sunt oferite \"ca atare\" pentru creatori și afaceri.",
+            footerStripe: "Plăți Securizate Stripe",
+            footerPrivacy: "Politică Confidențialitate (GDPR)",
+            footerTerms: "Termeni și Condiții",
+            footerCreator: "Creat de"
         };
 
         const i18nDictionary = {
-            ro: {
-                btnBack: "Înapoi",
-                openAssistant: "Asistent AI",
-                navOffice3D: "Birou Agenți 3D",
-                office3dTitle: "Nexus 3D HQ — Birou Agenți AI",
-                office3dSub: "Atinge un robot pe harta 3D sau alege un flux rapid pentru a lucra cu agentul respectiv.",
-                navLayers: "Layers of AI Studio",
-                menuMainPanel: "PANOU PRINCIPAL",
-                navHomeHub: "Home / Tools Hub",
-                menuSettingsAccount: "Setări & Cont",
-                navBilling: "Abonament & PRO",
-                navAuth: "Cont, Google & Login",
-                navSupport: "Suport & Ajutor",
-                chatTitle: "Nexus Neural Assistant - Home / Tools Hub",
-                welcomeMsg: "Salut! Sunt asistentul tău general. Cu ce începem?",
-                aiModelLabel: "Model AI:",
-                inputPlaceholder: "Scrie mesajul tău sau descrie un vizual...",
-                billingTitle: "Abonamente & Susținere Project",
-                billingSub: "Alege modul tău de acces la Nexus AI Studio Pro.",
-                licenseKeyPrompt: "Ai primit o cheie oficială de activare?",
-                btnActivate: "Activează",
-                licenseStatusDefault: "Introdu codul licenței pentru a debloca instant accesul complet VIP.",
-                planFreeTitle: "Acces Gratuit / Early Access",
-                badgeActive: "Activ",
-                perDay: "/ zi",
-                planFreeDesc: "Testare zilnică pentru creatori la început de drum.",
-                planFreeActiveNotice: "Ai planul gratuit activat implicit!",
-                badgeRecommended: "Recomandat",
-                perMonth: "/ lună",
-                planProDesc: "Generare nelimitată și viteză maximă de procesare.",
-                btnSubscribePro: "Abonează-te Pro (49 RON)",
-                planDonateTitle: "Susține Proiectul ☕",
-                badgeDonation: "Donație",
-                donationSubtitle: "O cafea virtuală",
-                donationDesc: "Îți place platforma și vrei să susții dezvoltarea ei continuă?",
-                btnRevolut: "Trimite o cafea pe Revolut",
-                securePaymentsText: "Plăți securizate 100% prin <strong>Stripe</strong> & <strong>Revolut</strong>.",
-                authTitle: "Autentificare & Cont Personal",
-                authSub: "Conectează-te rapid sau creează un cont nou.",
-                orNewForm: "SAU FORMULAR NOU",
-                labelFullName: "Nume Complet",
-                labelPhone: "Telefon",
-                labelEmail: "Email",
-                labelPassword: "Parolă",
-                labelCity: "Oraș",
-                btnCreateAccount: "Creează Cont",
-                supportCenterTitle: "Centrul de Suport & Asistență Clienți",
-                supportCenterSub: "Ai o întrebare sau ai întâmpinat o problemă? Suntem aici să te ajutăm rapid!",
-                btnSendSupportEmail: "Trimite Email Suport",
-                directContactTitle: "Contact Direct",
-                directContactDesc: "Pentru probleme legate de plăți, facturare sau contul PRO.",
-                responseTime: "Răspuns în max. 24 ore",
-                systemStatusTitle: "Stare Sistem",
-                systemStatusDesc: "Toate sistemele noastre funcționează la parametrii optimi.",
-                geminiEngineLabel: "Motor Gemini AI:",
-                active100: "Activ 100%",
-                userGuideTitle: "Ghid Utilizare",
-                userGuideDesc: "Învață cum să obții cele mai bune rezultate.",
-                openChatLink: "Deschide Chat & Încearcă acum →",
-                robotWelcome: "Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!",
-                speechReady: "Gata de ascultare",
-                audioOn: "Audio ON",
-                robotInputPlaceholder: "Scrie sau vorbește...",
-                privacyModalTitle: "Politică de Confidențialitate (GDPR)",
-                privacyText1: "Respectăm confidențialitatea datelor dumneavoastră. Toate datele introduse în platformă sunt prelucrate în condiții de securitate maximă conform reglementărilor GDPR în vigoare.",
-                privacyText2: "Puteți solicita oricând ștergerea datelor contului dumneavoastră contactându-ne pe e-mail.",
-                termsModalTitle: "Termeni și Condiții",
-                termsText1: "Prin utilizarea platformei Nexus AI Studio Pro, sunteți de acord cu termenii și condițiile stabilite. Serviciile noastre sunt oferite \"ca atare\" pentru creatori și afaceri.",
-                footerStripe: "Plăți Securizate Stripe",
-                footerPrivacy: "Politică Confidențialitate (GDPR)",
-                footerTerms: "Termeni și Condiții",
-                footerCreator: "Creat de"
-            },
+            ro: baseRo,
             en: {
+                ...baseRo,
                 btnBack: "Back",
                 openAssistant: "AI Assistant",
                 navOffice3D: "3D Agents Office",
@@ -2179,11 +2165,15 @@
                 footerPrivacy: "Privacy Policy (GDPR)",
                 footerTerms: "Terms & Conditions",
                 footerCreator: "Created by"
-            }
+            },
+            es: { ...baseRo, btnBack: "Atrás", openAssistant: "Asistente AI", navHomeHub: "Inicio / Herramientas", btnCreateAccount: "Crear Cuenta" },
+            fr: { ...baseRo, btnBack: "Retour", openAssistant: "Assistant AI", navHomeHub: "Accueil / Outils", btnCreateAccount: "Créer un compte" },
+            de: { ...baseRo, btnBack: "Zurück", openAssistant: "AI-Assistent", navHomeHub: "Start / Tools", btnCreateAccount: "Konto erstellen" },
+            it: { ...baseRo, btnBack: "Indietro", openAssistant: "Assistente AI", navHomeHub: "Home / Strumenti", btnCreateAccount: "Crea account" }
         };
 
         window.setLanguage = function(lang) {
-            if (!i18nDictionary[lang]) lang = 'en';
+            if (!i18nDictionary[lang]) lang = 'ro';
             localStorage.setItem('nexus_language', lang);
             
             const selectEl = document.getElementById('languageSelect');
