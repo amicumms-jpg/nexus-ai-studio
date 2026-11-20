@@ -1,91 +1,53 @@
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+window.generateTextToVideo = async function() {
+    const inputEl = document.getElementById('textToVideoInput');
+    const result = document.getElementById('textToVideoResult');
+    const prompt = inputEl ? inputEl.value.trim() : '';
 
-  try {
-    const {
-      prompt,
-      duration = 5,
-      aspectRatio = '16:9',
-      model = 'kling'
-    } = req.body || {};
-
-    if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
-      return res.status(400).json({ error: 'Promptul video este obligatoriu.' });
+    if (!prompt) {
+        window.showToast('Introdu descrierea!', 'error');
+        return;
     }
 
-    const apiKey = process.env.FAL_KEY;
-    if (!apiKey) {
-      return res.status(500).json({
-        error: 'Lipsește variabila de mediu FAL_KEY pe server.'
-      });
+    if (result) {
+        result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se trimite cererea către /api/video...</div>';
     }
 
-    const cleanPrompt = prompt.trim();
-    const safeDuration = Number(duration) === 10 ? '10' : '5';
-    const safeAspectRatio = ['9:16', '1:1', '16:9'].includes(aspectRatio) ? aspectRatio : '16:9';
+    try {
+        const res = await fetch('/api/video', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt,
+                model: 'kling',
+                aspectRatio: '16:9',
+                duration: 5
+            })
+        });
 
-    // Modele text-to-video pe fal.ai
-    const modelEndpoints = {
-      default: 'fal-ai/kling-video/v1/standard/text-to-video',
-      kling: 'fal-ai/kling-video/v1/standard/text-to-video',
-      luma: 'fal-ai/luma-dream-machine'
-    };
+        const data = await res.json().catch(() => ({}));
 
-    const selectedModelKey = String(model || 'kling').toLowerCase();
-    const endpointPath = modelEndpoints[selectedModelKey] || modelEndpoints.default;
-    const falUrl = `https://fal.run/${endpointPath}`;
+        if (!res.ok) {
+            throw new Error(data.error || `Eroare HTTP ${res.status}`);
+        }
 
-    const payload =
-      selectedModelKey === 'luma'
-        ? { prompt: cleanPrompt, aspect_ratio: safeAspectRatio }
-        : { prompt: cleanPrompt, aspect_ratio: safeAspectRatio, duration: safeDuration };
+        if (data.videoUrl) {
+            result.innerHTML = `
+                <div class="space-y-2">
+                    <div class="text-emerald-400 font-bold">Video generat (${escapeHtml(data.model || 'video')})</div>
+                    <video src="${escapeHtml(data.videoUrl)}" controls class="w-full rounded-xl border border-gray-700"></video>
+                </div>
+            `;
+            window.showToast('Video generat!', 'success');
+            return;
+        }
 
-    const falRes = await fetch(falUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Key ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await falRes.json().catch(() => ({}));
-
-    if (!falRes.ok) {
-      return res.status(falRes.status).json({
-        error: data.detail || data.error || `Eroare de la providerul video (${falRes.status}).`
-      });
+        result.innerText = data.jobId
+            ? `Cererea este în curs de procesare (Job ID: ${data.jobId}).`
+            : 'Cererea video a fost trimisă cu succes.';
+        window.showToast('Cerere trimisă!', 'info');
+    } catch (e) {
+        if (result) {
+            result.innerHTML = `<div class="text-red-400">Eroare la generare: ${escapeHtml(e.message)}</div>`;
+        }
     }
-
-    const videoUrl =
-      data?.video?.url ||
-      data?.data?.video?.url ||
-      data?.output?.url ||
-      data?.video_url ||
-      null;
-
-    if (videoUrl) {
-      return res.status(200).json({
-        status: 'completed',
-        provider: 'fal.ai',
-        model: selectedModelKey,
-        videoUrl
-      });
-    }
-
-    const jobId = data?.request_id || data?.jobId || null;
-    return res.status(202).json({
-      status: data?.status || 'processing',
-      provider: 'fal.ai',
-      model: selectedModelKey,
-      jobId,
-      raw: data
-    });
-  } catch (err) {
-    return res.status(500).json({
-      error: err.message || 'Eroare la procesarea cererii video.'
-    });
-  }
-}
+};
