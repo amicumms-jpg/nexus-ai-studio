@@ -31,7 +31,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    let replyText = "Sistemul AI este momentan suprasolicitat. Te rog să reîncerci în câteva secunde!";
+    let replyText = "⚠️ Gemini (503) este momentan suprasolicitat. Te rog să mai trimiți mesajul o dată peste câteva secunde!";
     const activeModel = 'gemini-3.8-flash';
     const maxRetries = 3;
 
@@ -63,14 +63,14 @@ export default async function handler(req, res) {
             console.error(`Încercarea ${attempt} eșuată (${aiResponse.status}):`, JSON.stringify(data));
 
             if (aiResponse.status === 503 && attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
                 continue;
             }
             break;
         } catch (apiErr) {
             console.error(`Eroare conexiune la încercarea ${attempt}:`, apiErr.message || apiErr);
             if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
             }
         }
     }
@@ -88,7 +88,6 @@ function escapeTelegramHtml(str) {
 }
 
 function formatForTelegramHtml(text) {
-    // Escapăm HTML-ul brut, apoi convertim **bold** și [text](url) în siguranță
     let safe = escapeTelegramHtml(text);
     safe = safe.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
     safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
@@ -111,7 +110,6 @@ async function sendTelegramMessage(token, chatId, text) {
 
         const tgData = await tgRes.json();
         if (!tgRes.ok || !tgData.ok) {
-            // Fallback fără parse_mode dacă HTML-ul este respins de Telegram
             await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
