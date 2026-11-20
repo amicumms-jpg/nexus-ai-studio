@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       prompt,
       duration = 5,
       aspectRatio = '16:9',
-      model = 'default'
+      model = 'kling'
     } = req.body || {};
 
     if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
@@ -23,26 +23,24 @@ export default async function handler(req, res) {
     }
 
     const cleanPrompt = prompt.trim();
-    const safeDuration = Number(duration) || 5;
-    const safeAspectRatio = aspectRatio === '9:16' || aspectRatio === '1:1' ? aspectRatio : '16:9';
+    const safeDuration = Number(duration) === 10 ? '10' : '5';
+    const safeAspectRatio = ['9:16', '1:1', '16:9'].includes(aspectRatio) ? aspectRatio : '16:9';
 
-    // Mapare modele pe fal.ai (poți ajusta ușor după preferință)
+    // Modele text-to-video pe fal.ai
     const modelEndpoints = {
-      default: 'fal-ai/fast-svd',
-      fast: 'fal-ai/fast-svd',
+      default: 'fal-ai/kling-video/v1/standard/text-to-video',
       kling: 'fal-ai/kling-video/v1/standard/text-to-video',
       luma: 'fal-ai/luma-dream-machine'
     };
 
-    const selectedModelKey = String(model || 'default').toLowerCase();
+    const selectedModelKey = String(model || 'kling').toLowerCase();
     const endpointPath = modelEndpoints[selectedModelKey] || modelEndpoints.default;
     const falUrl = `https://fal.run/${endpointPath}`;
 
-    const payload = {
-      prompt: cleanPrompt,
-      aspect_ratio: safeAspectRatio,
-      duration: String(safeDuration)
-    };
+    const payload =
+      selectedModelKey === 'luma'
+        ? { prompt: cleanPrompt, aspect_ratio: safeAspectRatio }
+        : { prompt: cleanPrompt, aspect_ratio: safeAspectRatio, duration: safeDuration };
 
     const falRes = await fetch(falUrl, {
       method: 'POST',
@@ -61,7 +59,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Caută URL-ul video în formatele uzuale returnate de fal.ai
     const videoUrl =
       data?.video?.url ||
       data?.data?.video?.url ||
@@ -78,7 +75,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Dacă răspunsul este asincron (conține request_id / jobId)
     const jobId = data?.request_id || data?.jobId || null;
     return res.status(202).json({
       status: data?.status || 'processing',
