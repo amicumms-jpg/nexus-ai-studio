@@ -31,46 +31,55 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    const activeModel = 'gemini-3.8-flash';
-    let replyText = "⚠️ Serviciul AI este momentan ocupat sau a atins limita temporară. Te rog să reîncerci peste câteva secunde!";
+    const modelsToTry = ['gemini-3.8-flash', 'gemini-3.8', 'gemini-flash-latest'];
+    let replyText = null;
+    let lastStatus = null;
 
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
+    for (const modelName of modelsToTry) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 9000);
 
-        const aiResponse = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                signal: controller.signal,
-                body: JSON.stringify({
-                    system_instruction: {
-                        parts: [{
-                            text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
-                        }]
-                    },
-                    contents: [{ parts: [{ text: userMessage }] }]
-                })
+            const aiResponse = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        system_instruction: {
+                            parts: [{
+                                text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
+                            }]
+                        },
+                        contents: [{ parts: [{ text: userMessage }] }]
+                    })
+                }
+            );
+
+            clearTimeout(timeoutId);
+            lastStatus = aiResponse.status;
+            const data = await aiResponse.json();
+
+            if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                replyText = data.candidates[0].content.parts[0].text;
+                break;
             }
-        );
 
-        clearTimeout(timeoutId);
-        const data = await aiResponse.json();
-
-        if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-            replyText = data.candidates[0].content.parts[0].text;
-        } else {
-            console.error(`Răspuns Gemini (${aiResponse.status}):`, JSON.stringify(data));
-            if (aiResponse.status === 429) {
-                replyText = "⏳ Ai atins limita temporară de cereri (429). Încearcă din nou într-un minut!";
-            } else if (aiResponse.status === 503) {
-                replyText = "⚠️ Gemini este momentan suprasolicitat (503). Mai încearcă o dată peste câteva secunde!";
-            }
+            console.error(`Modelul ${modelName} a eșuat (${aiResponse.status}):`, JSON.stringify(data));
+        } catch (apiErr) {
+            console.error(`Eroare la modelul ${modelName}:`, apiErr.message || apiErr);
         }
-    } catch (apiErr) {
-        console.error("Eroare apel Gemini:", apiErr.message || apiErr);
-        replyText = "⚠️ Conexiunea la AI a durat prea mult sau a picat. Mai încearcă o dată!";
+    }
+
+    if (!replyText) {
+        if (lastStatus === 429) {
+            replyText = "⏳ Ai atins limita temporară de cereri (429). Încearcă din nou într-un minut!";
+        } else if (lastStatus === 503) {
+            replyText = "⚠️ Serverele AI sunt momentan suprasolicitate (503). Mai încearcă o dată peste câteva secunde!";
+        } else {
+            replyText = "⚠️ Serviciul AI este momentan indisponibil. Te rog să reîncerci în câteva secunde!";
+        }
     }
 
     await sendTelegramMessage(token, chatId, replyText);
