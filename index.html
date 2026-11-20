@@ -331,7 +331,7 @@
                     <!-- HUD Neural Central -->
                     <div class="bg-panelBg border border-cyanNeon/30 rounded-3xl p-4 sm:p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[340px] sm:min-h-[380px]">
                         <div class="absolute top-3 left-3 sm:top-4 sm:left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg" data-i18n="hudCoreBadge">
-                            NEXUS CORE &bull; ACTIVE NEURAL MESH
+                            NEXUS CORE • ACTIVE NEURAL MESH
                         </div>
                         <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> <span data-i18n="hudOnlineBadge">ONLINE</span>
@@ -441,7 +441,7 @@
                                 </div>
                                 <div id="textToVideoResult" class="bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-gray-300 flex-1 overflow-y-auto max-h-40 whitespace-pre-line" data-i18n="vidWaitingText">Așteptare comandă pentru scenariu sau vizual video...</div>
                             </div>
-                            <div id="office3d-panel-creative" class="office-agent-panel hidden space-y-2.5 flex-1 flex flex-col">
+                           <div id="office3d-panel-creative" class="office-agent-panel hidden space-y-2.5 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
                                     <h3 class="text-xs font-bold text-pink-400" data-i18n="creAgentTitle"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Agent AI Creative Studio</h3>
                                     <span class="text-[9px] bg-pink-500/15 text-pink-400 px-2 py-0.5 rounded-full" data-i18n="badgeBrandPrompt">BRAND & PROMPT</span>
@@ -575,7 +575,7 @@
                                 <i class="fa-solid fa-paperclip"></i>
                             </button>
                             
-                            <textarea id="chatInput" rows="1" placeholder="Scrie mesajul tău sau descrie un vizual..." data-i18n-placeholder="inputPlaceholder"
+                            <textarea id="chatInput" rows="1" placeholder="Scrie mesajul tău, /img prompt sau descrie un vizual..." data-i18n-placeholder="inputPlaceholder"
                                 class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyanNeon resize-none max-h-36 overflow-y-auto"
                                 oninput="autoResizeTextarea(this); saveDraft(this.value);"
                                 onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendChatMessageWithAttachment('chatMessages', 'chatInput', 'chat'); }"></textarea>
@@ -591,7 +591,7 @@
                     </div>
                 </div>
             </div>
-    <!-- Tab: Layers of AI Studio (Tematică Violet / Indigo) -->
+            <!-- Tab: Layers of AI Studio (Tematică Violet / Indigo) -->
     <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
@@ -858,7 +858,6 @@
         <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline" data-i18n="footerTerms">Termeni și Condiții</a> • 
         <span><span data-i18n="footerCreator">Creat de</span> <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
     </footer>
-
     <!-- Scripturi & Logica Aplicației -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -1441,6 +1440,7 @@
         };
 
         let freeMessagesList = 10;
+        let robotAudioEnabled = true;
 
         window.showToast = function(msg, type='info') {
             const container = document.getElementById('toastContainer');
@@ -1455,6 +1455,109 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         };
+
+        // --- ENDPOINTS DEDICATE: /api/image & /api/video ---
+        window.requestNexusImage = async function({ prompt, width = 1024, height = 1024, model = 'flux' } = {}) {
+            const cleanPrompt = String(prompt || '').trim();
+            if (!cleanPrompt) {
+                throw new Error('Promptul pentru imagine este obligatoriu.');
+            }
+            const res = await fetch('/api/image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: cleanPrompt,
+                    width: Number(width) || 1024,
+                    height: Number(height) || 1024,
+                    model
+                })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.imageUrl) {
+                throw new Error(data.error || 'Eroare la generarea imaginii prin /api/image.');
+            }
+            return data;
+        };
+
+        window.requestNexusVideo = async function({ prompt, duration = 5, aspectRatio = '16:9', model = 'default' } = {}) {
+            const cleanPrompt = String(prompt || '').trim();
+            if (!cleanPrompt) {
+                throw new Error('Promptul pentru video este obligatoriu.');
+            }
+            const res = await fetch('/api/video', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: cleanPrompt,
+                    duration: Number(duration) || 5,
+                    aspectRatio,
+                    model
+                })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(data.error || `Eroare /api/video (${res.status}).`);
+            }
+            return data;
+        };
+
+        function renderImageCardHtml(imageUrl, promptText, seed = '') {
+            const safeUrl = escapeHtml(imageUrl);
+            const safePrompt = escapeHtml(promptText);
+            return `
+                <div class="bg-gray-900/90 border border-cyanNeon/30 rounded-xl p-2.5 space-y-2 text-left">
+                    <div class="text-[10px] text-cyanNeon font-mono truncate">${safePrompt}${seed ? ` • seed #${escapeHtml(seed)}` : ''}</div>
+                    <img src="${safeUrl}" alt="${safePrompt}" loading="lazy" class="w-full max-h-72 object-contain rounded-lg bg-black/50 border border-gray-800" />
+                    <div class="flex items-center justify-between text-[10px]">
+                        <span class="text-emerald-400 font-semibold">Pollinations /api/image</span>
+                        <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="text-cyanNeon hover:underline font-bold">Deschide / Descarcă ↗</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleSlashImageInChat(rawText, msgBox) {
+            const prompt = rawText.replace(/^\/img\s*/i, '').trim();
+            if (!prompt) {
+                window.showToast('Scrie ceva după /img, ex: /img apus peste munți', 'error');
+                return true;
+            }
+
+            msgBox.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-950 text-cyan-200 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow">${escapeHtml(rawText)}</div></div>`;
+            const pendingId = 'img-pending-' + Date.now();
+            msgBox.innerHTML += `
+                <div id="${pendingId}" class="flex justify-start my-2">
+                    <div class="bg-panelBg border border-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-cyanNeon animate-pulse">
+                        Se generează imaginea prin /api/image...
+                    </div>
+                </div>
+            `;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                const data = await window.requestNexusImage({ prompt, width: 1024, height: 1024, model: 'flux' });
+                const pendingEl = document.getElementById(pendingId);
+                if (pendingEl) {
+                    pendingEl.classList.remove('animate-pulse');
+                    pendingEl.innerHTML = `
+                        <div class="bg-panelBg border border-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 shadow">
+                            ${renderImageCardHtml(data.imageUrl, data.prompt || prompt, data.seed || '')}
+                        </div>
+                    `;
+                }
+                window.saveToHistory('/img ' + prompt, msgBox.innerHTML);
+                window.showToast('Imagine generată!', 'success');
+            } catch (err) {
+                const pendingEl = document.getElementById(pendingId);
+                if (pendingEl) {
+                    pendingEl.classList.remove('animate-pulse');
+                    pendingEl.innerHTML = `<div class="bg-red-950/40 border border-red-500/40 text-red-300 p-2.5 rounded-xl text-xs"><b>Eroare imagine:</b> ${escapeHtml(err.message)}</div>`;
+                }
+                window.showToast(err.message, 'error');
+            }
+            msgBox.scrollTop = msgBox.scrollHeight;
+            return true;
+        }
 
         let attachedFiles = {};
         
@@ -1528,6 +1631,13 @@
                         throw new Error(errorMsg);
                     }
 
+                    if (!response.body) {
+                        const fallbackJson = await response.json().catch(() => ({}));
+                        const textOut = fallbackJson.text || fallbackJson.reply || "";
+                        if (textOut && onChunkReceived) onChunkReceived(textOut);
+                        return textOut;
+                    }
+
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder("utf-8");
                     let accumulatedText = "";
@@ -1544,9 +1654,9 @@
                             if (trimmedLine.startsWith("data:")) {
                                 try {
                                     const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
-                                    if (!jsonStr) continue;
+                                    if (!jsonStr || jsonStr === "[DONE]") continue;
                                     const parsed = JSON.parse(jsonStr);
-                                    const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || parsed.choices?.[0]?.delta?.content || "";
+                                    const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || parsed.choices?.[0]?.delta?.content || parsed.text || "";
                                     if (piece) {
                                         accumulatedText += piece;
                                         if (onChunkReceived) onChunkReceived(accumulatedText);
@@ -1581,6 +1691,14 @@
             const text = inputEl.value.trim();
             const file = attachedFiles ? attachedFiles[tabKey] : null;
             if (!text && !file) return;
+
+            if (!file && /^\/img\b/i.test(text)) {
+                inputEl.value = '';
+                inputEl.style.height = 'auto';
+                window.saveDraft('');
+                await handleSlashImageInChat(text, msgBox);
+                return;
+            }
 
             if(tabKey === 'chat') {
                 if(freeMessagesList <= 0) {
@@ -1631,8 +1749,10 @@
                 const finalPrompt = `[Specialist: ${selectedDept}] [Language: ${currentLang}] ${text || "Analizează acest fișier:"}`;
 
                 await fetchFromServer(finalPrompt, fileDataToSend, selectedModel, (currentText) => {
-                    contentDiv.innerHTML = parseMarkdown(currentText);
-                    if(typeof hljs !== 'undefined') hljs.highlightAll();
+                    if (contentDiv) {
+                        contentDiv.innerHTML = parseMarkdown(currentText);
+                        if(typeof hljs !== 'undefined') hljs.highlightAll();
+                    }
                     msgBox.scrollTop = msgBox.scrollHeight;
                 });
                 
@@ -1640,6 +1760,7 @@
                     window.saveToHistory(text || 'Analiză Fișier', msgBox.innerHTML);
                 }
             } catch (err) {
+                if (!contentDiv) return;
                 if (err.message === 'QUOTA_EXCEEDED') {
                     contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
                 } else {
@@ -1678,12 +1799,16 @@
 
             try {
                 await fetchFromServer(`${prefix}[Language: ${currentLang}] ${text}`, null, 'gemini-3.8-flash', (currentText) => {
-                    contentDiv.innerHTML = parseMarkdown(currentText);
-                    if(typeof hljs !== 'undefined') hljs.highlightAll();
+                    if (contentDiv) {
+                        contentDiv.innerHTML = parseMarkdown(currentText);
+                        if(typeof hljs !== 'undefined') hljs.highlightAll();
+                    }
                     container.scrollTop = container.scrollHeight;
                 });
             } catch(e) {
-                contentDiv.innerHTML = `<div class="text-red-400 text-xs p-2">Eroare server: ${escapeHtml(e.message)}</div>`;
+                if (contentDiv) {
+                    contentDiv.innerHTML = `<div class="text-red-400 text-xs p-2">Eroare server: ${escapeHtml(e.message)}</div>`;
+                }
             }
         };
 
@@ -1703,12 +1828,19 @@
             const contentDiv = document.getElementById(msgId);
 
             try {
+                let finalReply = "";
                 await fetchFromServer(`[Language: ${currentLang}] ${text}`, null, 'gemini-3.8-flash', (currentText) => {
-                    contentDiv.innerText = currentText;
+                    finalReply = currentText;
+                    if (contentDiv) contentDiv.innerText = currentText;
                     container.scrollTop = container.scrollHeight;
                 });
+                if (robotAudioEnabled && finalReply && 'speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(finalReply);
+                    utterance.lang = speechLangMap[currentLang] || 'ro-RO';
+                    window.speechSynthesis.speak(utterance);
+                }
             } catch(e) {
-                contentDiv.innerText = "Indisponibil.";
+                if (contentDiv) contentDiv.innerText = "Indisponibil.";
             }
         };
 
@@ -1723,9 +1855,14 @@
         };
 
         window.speakText = function(elementId) {
+            if (!robotAudioEnabled) {
+                window.showToast('Audio este oprit. Activează Audio ON din widget.', 'info');
+                return;
+            }
             const el = document.getElementById(elementId);
             if(!el) return;
             if('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(el.innerText);
                 utterance.lang = speechLangMap[currentLang] || 'ro-RO';
                 window.speechSynthesis.speak(utterance);
@@ -1738,22 +1875,43 @@
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
                 recognition.lang = speechLangMap[currentLang] || 'ro-RO';
+                const statusEl = document.getElementById('speechStatus');
+                if (statusEl) statusEl.innerText = 'Ascult...';
                 recognition.onresult = (event) => {
                     const robotInput = document.getElementById('nexus-robot-input');
                     if(robotInput) robotInput.value = event.results[0][0].transcript;
+                    if (statusEl) statusEl.innerText = i18nDictionary[currentLang]?.speechReady || 'Gata de ascultare';
+                };
+                recognition.onerror = () => {
+                    if (statusEl) statusEl.innerText = i18nDictionary[currentLang]?.speechReady || 'Gata de ascultare';
+                };
+                recognition.onend = () => {
+                    if (statusEl) statusEl.innerText = i18nDictionary[currentLang]?.speechReady || 'Gata de ascultare';
                 };
                 recognition.start();
             }
         };
 
-        window.toggleRobotAudio = function() { window.showToast('Audio comutat.', 'info'); };
+        window.toggleRobotAudio = function() {
+            robotAudioEnabled = !robotAudioEnabled;
+            if (!robotAudioEnabled && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            const btn = document.getElementById('robotAudioToggleBtn');
+            if (btn) {
+                btn.innerHTML = robotAudioEnabled
+                    ? `<i class="fa-solid fa-volume-high text-cyan-400"></i> <span>Audio ON</span>`
+                    : `<i class="fa-solid fa-volume-xmark text-red-400"></i> <span>Audio OFF</span>`;
+            }
+            window.showToast(robotAudioEnabled ? 'Audio activat.' : 'Audio oprit.', 'info');
+        };
 
         function escapeHtml(text) {
             return String(text)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;");
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, """);
         }
 
         function parseMarkdown(text) {
@@ -1785,13 +1943,47 @@
         window.generateTextToVideo = async function() {
             const inputEl = document.getElementById('textToVideoInput');
             const result = document.getElementById('textToVideoResult');
-            if(!inputEl || !inputEl.value) { window.showToast('Introdu descrierea!', 'error'); return; }
-            if(result) result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariu video AI...</div>';
+            if(!inputEl || !inputEl.value.trim()) {
+                window.showToast('Introdu descrierea!', 'error');
+                return;
+            }
+            const rawPrompt = inputEl.value.trim();
+            if(result) result.innerHTML = '<div class="text-cyanNeon animate-pulse">Se generează scenariu & cerere video AI...</div>';
+
+            let scriptText = '';
             try {
-                const res = await fetchFromServer(`[Language: ${currentLang}] Creează scenariu video: "${inputEl.value}"`);
-                if(result) result.innerText = res;
-                window.showToast('Generat!', 'success');
-            } catch(e) { if(result) result.innerText = 'Eroare la generare.'; }
+                await fetchFromServer(`[Language: ${currentLang}] Creează scenariu video scurt și prompt vizual detaliat pentru: "${rawPrompt}"`, null, 'gemini-3.8-flash', (chunk) => {
+                    scriptText = chunk;
+                    if (result) result.innerText = chunk;
+                });
+            } catch(e) {
+                scriptText = `Scenariu fallback pentru: ${rawPrompt}`;
+            }
+
+            try {
+                const vidData = await window.requestNexusVideo({
+                    prompt: rawPrompt,
+                    duration: 5,
+                    aspectRatio: '16:9',
+                    model: 'default'
+                });
+
+                if (result) {
+                    let extraHtml = '';
+                    if (vidData.videoUrl) {
+                        const safeVid = escapeHtml(vidData.videoUrl);
+                        extraHtml = `<div class="mt-2"><video src="${safeVid}" controls class="w-full max-h-40 rounded-lg border border-cyanNeon/30"></video><a href="${safeVid}" target="_blank" rel="noopener noreferrer" class="text-[10px] text-cyanNeon hover:underline block mt-1">Deschide video ↗</a></div>`;
+                    } else {
+                        extraHtml = `<div class="mt-2 p-2 rounded-lg bg-gray-900 border border-amberGlow/30 text-[10px] text-amber-300">Endpoint /api/video răspuns (${escapeHtml(vidData.jobId || 'ready')}): ${escapeHtml(vidData.status || 'Pregătit pentru provider video')}</div>`;
+                    }
+                    result.innerHTML = `<div class="whitespace-pre-line">${escapeHtml(scriptText)}</div>${extraHtml}`;
+                }
+                window.showToast('Video AI procesat!', 'success');
+            } catch (vidErr) {
+                if (result) {
+                    result.innerHTML = `<div class="whitespace-pre-line">${escapeHtml(scriptText)}</div><div class="mt-2 p-2 rounded-lg bg-gray-900 border border-gray-700 text-[10px] text-gray-400"><b>/api/video:</b> ${escapeHtml(vidErr.message)}</div>`;
+                }
+            }
         };
 
         let currentCoords = null;
@@ -1906,6 +2098,8 @@
             const email = document.getElementById("regEmail")?.value.trim();
             const password = document.getElementById("regPass")?.value.trim();
             const fullName = document.getElementById("regFullName")?.value.trim();
+            const phone = document.getElementById("regPhone")?.value.trim();
+            const city = document.getElementById("regCity")?.value.trim();
             const statusEl = document.getElementById('userAccountStatus');
 
             if (!email || !password) {
@@ -1914,8 +2108,9 @@
             }
             try {
                 const res = await createUserWithEmailAndPassword(auth, email, password);
+                const extras = [fullName, city, phone].filter(Boolean).join(' • ');
                 alert("Cont creat cu succes pentru: " + res.user.email);
-                if (statusEl) statusEl.innerText = `Cont creat pentru ${escapeHtml(fullName || res.user.email)} ✅`;
+                if (statusEl) statusEl.innerText = `Cont creat pentru ${escapeHtml(extras || res.user.email)} ✅`;
             } catch (err) {
                 alert("Eroare la crearea contului: " + err.message);
             }
@@ -1973,46 +2168,71 @@
             window.generateVisualForTab('prompt-creative', 'result-creative-container', style);
         };
 
-        window.generateVisualForTab = function(promptInputId, containerId, style) {
+        window.generateVisualForTab = async function(promptInputId, containerId, style) {
             const promptElement = document.getElementById(promptInputId);
             const containerElement = document.getElementById(containerId);
             if (!promptElement || !containerElement) return;
 
-            const userText = promptElement.value || "Generează conținut creativ";
-            containerElement.innerHTML = `<div style="color: #00ffff; padding: 10px;">Se generează conținutul (${escapeHtml(style)})... Vă rugăm așteptați...</div>`;
+            const userText = (promptElement.value || '').trim();
+            if (!userText) {
+                window.showToast('Scrie o descriere pentru imagine!', 'error');
+                return;
+            }
 
-            fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: `[Language: ${currentLang}] ${userText} [Stil: ${style}]`, department: 'general', toolType: 'imageGen' })
-            })
-            .then(async res => {
-                if (!res.ok) throw new Error("Eroare de la serverul AI.");
-                const reader = res.body.getReader();
-                const decoder = new TextDecoder();
-                let fullText = "";
+            const combinedPrompt = style ? `${userText}, ${style}` : userText;
+            const isChatFeed = containerId === 'chatMessages' || containerId === 'abMessages' || containerId === 'podcastMessages' || containerId === 'roastMessages';
+            const loadingId = 'vis-load-' + Date.now();
 
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    const chunk = decoder.decode(value, { stream: true });
-                    for (const line of chunk.split("\n")) {
-                        const trimmed = line.trim();
-                        if (trimmed.startsWith("data:")) {
-                            try {
-                                const jsonStr = trimmed.replace(/^data:\s*/, "");
-                                if (!jsonStr) continue;
-                                const parsed = JSON.parse(jsonStr);
-                                fullText += parsed.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                            } catch (e) {}
-                        }
+            if (isChatFeed) {
+                containerElement.innerHTML += `
+                    <div id="${loadingId}" class="flex justify-start my-2">
+                        <div class="bg-panelBg border border-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-cyanNeon animate-pulse">
+                            Se generează imaginea (${escapeHtml(style || 'AI')})...
+                        </div>
+                    </div>
+                `;
+            } else {
+                containerElement.innerHTML = `<div style="color: #00ffff; padding: 10px;">Se generează imaginea (${escapeHtml(style || 'AI')})... Vă rugăm așteptați...</div>`;
+            }
+            containerElement.scrollTop = containerElement.scrollHeight;
+
+            try {
+                const data = await window.requestNexusImage({
+                    prompt: combinedPrompt,
+                    width: 1024,
+                    height: 1024,
+                    model: 'flux'
+                });
+
+                const cardHtml = renderImageCardHtml(data.imageUrl, data.prompt || combinedPrompt, data.seed || '');
+
+                if (isChatFeed) {
+                    const loadEl = document.getElementById(loadingId);
+                    if (loadEl) {
+                        loadEl.classList.remove('animate-pulse');
+                        loadEl.innerHTML = `<div class="bg-panelBg border border-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs text-gray-200 shadow">${cardHtml}</div>`;
                     }
+                    if (containerId === 'chatMessages') {
+                        window.saveToHistory('/img ' + userText, containerElement.innerHTML);
+                    }
+                } else {
+                    containerElement.innerHTML = cardHtml;
                 }
-                containerElement.innerHTML = `<div style="color: #fff; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;">${parseMarkdown(fullText || 'Generat cu succes!')}</div>`;
-            })
-            .catch(err => {
-                containerElement.innerHTML = `<div style="color: #ff4d4d;">Eroare la generare: ${escapeHtml(err.message)}</div>`;
-            });
+                window.showToast('Imagine generată!', 'success');
+            } catch (err) {
+                const errHtml = `<div style="color: #ff4d4d; padding: 8px;">Eroare la generarea imaginii: ${escapeHtml(err.message)}</div>`;
+                if (isChatFeed) {
+                    const loadEl = document.getElementById(loadingId);
+                    if (loadEl) {
+                        loadEl.classList.remove('animate-pulse');
+                        loadEl.innerHTML = errHtml;
+                    }
+                } else {
+                    containerElement.innerHTML = errHtml;
+                }
+                window.showToast(err.message, 'error');
+            }
+            containerElement.scrollTop = containerElement.scrollHeight;
         };
 
         window.openLayersTab = function(layerName) {
@@ -2030,8 +2250,9 @@
             if(!goal) { output.innerText = "Te rog introdu un obiectiv."; return; }
             output.innerText = `[Agentic AI] Inițializare planificare pentru: "${goal}"...`;
             try {
-                const res = await fetchFromServer(`[Language: ${currentLang}] [Agentic AI - Plan & Execuție]: ${goal}`);
-                output.innerText = res;
+                await fetchFromServer(`[Language: ${currentLang}] [Agentic AI - Plan & Execuție]: ${goal}`, null, 'gemini-3.8-flash', (currentText) => {
+                    output.innerText = currentText;
+                });
             } catch (e) {
                 output.innerText = `[Agentic AI] Obiectiv: ${goal}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
             }
@@ -2044,8 +2265,9 @@
             if(!prompt) { output.innerText = "Te rog introdu un prompt."; return; }
             output.innerText = `[Generative AI] Generare pentru: "${prompt}"...`;
             try {
-                const res = await fetchFromServer(`[Language: ${currentLang}] [Generative AI]: ${prompt}`);
-                output.innerText = res;
+                await fetchFromServer(`[Language: ${currentLang}] [Generative AI]: ${prompt}`, null, 'gemini-3.8-flash', (currentText) => {
+                    output.innerText = currentText;
+                });
             } catch (e) {
                 output.innerText = `[Generative AI] Prompt: ${prompt}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
             }
@@ -2074,7 +2296,7 @@
             osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
             btnOffice3DShort: "Birou 3D",
             btnTalkToNexus: "Talk to Nexus",
-            hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+            hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
             hudOnlineBadge: "ONLINE",
             nodeContext: "Context",
             nodePodcast: "Podcast",
@@ -2130,7 +2352,7 @@
             chatTitle: "Nexus Neural Assistant - Home / Tools Hub",
             welcomeMsg: "Salut! Sunt asistentul tău general. Cu ce începem?",
             aiModelLabel: "Model AI:",
-            inputPlaceholder: "Scrie mesajul tău sau descrie un vizual...",
+            inputPlaceholder: "Scrie mesajul tău, /img prompt sau descrie un vizual...",
             layersTitle: "Layers of AI Creator",
             layersSub: "Construiește și testează instrumente pe toate nivelurile Inteligenței Artificiale",
             layerBtnAgentic: "🤖 Agentic AI",
@@ -2248,7 +2470,7 @@
                 osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
                 btnOffice3DShort: "3D Office",
                 btnTalkToNexus: "Talk to Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Context",
                 nodePodcast: "Podcast",
@@ -2304,7 +2526,7 @@
                 chatTitle: "Nexus Neural Assistant - Home / Tools Hub",
                 welcomeMsg: "Hello! I am your general assistant. Where shall we start?",
                 aiModelLabel: "AI Model:",
-                inputPlaceholder: "Type your message or describe a visual...",
+                inputPlaceholder: "Type your message, /img prompt or describe a visual...",
                 layersTitle: "Layers of AI Creator",
                 layersSub: "Build and test tools across all layers of Artificial Intelligence",
                 layerBtnAgentic: "🤖 Agentic AI",
@@ -2419,7 +2641,7 @@
                 osPrivateWorkspace: "Espacio de trabajo privado. Solo aparecen tus datos reales, sin datos de prueba.",
                 btnOffice3DShort: "Oficina 3D",
                 btnTalkToNexus: "Hablar con Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "EN LÍNEA",
                 nodeContext: "Contexto",
                 nodePodcast: "Podcast",
@@ -2590,7 +2812,7 @@
                 osPrivateWorkspace: "Espace de travail privé. Seules vos données réelles apparaissent ici, sans données fictives.",
                 btnOffice3DShort: "Bureau 3D",
                 btnTalkToNexus: "Parler à Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "EN LIGNE",
                 nodeContext: "Contexte",
                 nodePodcast: "Podcast",
@@ -2761,7 +2983,7 @@
                 osPrivateWorkspace: "Privater Arbeitsbereich. Nur deine echten Daten werden hier angezeigt, keine Beispieldaten.",
                 btnOffice3DShort: "3D-Büro",
                 btnTalkToNexus: "Mit Nexus sprechen",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Kontext",
                 nodePodcast: "Podcast",
@@ -2932,7 +3154,7 @@
                 osPrivateWorkspace: "Spazio di lavoro privato. Qui appaiono solo i tuoi dati reali, senza dati di esempio.",
                 btnOffice3DShort: "Ufficio 3D",
                 btnTalkToNexus: "Parla con Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Contesto",
                 nodePodcast: "Podcast",
@@ -3102,7 +3324,7 @@
                 osPrivateWorkspace: "مساحة عمل خاصة. تظهر هنا بياناتك الحقيقية فقط دون بيانات تجريبية.",
                 btnOffice3DShort: "مكتب 3D",
                 btnTalkToNexus: "تحدث مع Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "متصل",
                 nodeContext: "السياق",
                 nodePodcast: "بودكاست",
