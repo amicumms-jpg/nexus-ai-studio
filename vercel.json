@@ -10,6 +10,10 @@
       "use": "@vercel/node"
     },
     {
+      "src": "api/video.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "public/sitemap.xml",
       "use": "@vercel/static"
     },
@@ -23,6 +27,10 @@
     },
     {
       "src": "public/icon.svg",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
       "use": "@vercel/static"
     },
     {
@@ -44,6 +52,10 @@
       "dest": "/api/telegram.js"
     },
     {
+      "src": "/api/video",
+      "dest": "/api/video.js"
+    },
+    {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml"
     },
@@ -58,6 +70,10 @@
     {
       "src": "/icon.svg",
       "dest": "/public/icon.svg"
+    },
+    {
+      "src": "/([^/]+\\.js)$",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
