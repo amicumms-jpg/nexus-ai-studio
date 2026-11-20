@@ -31,48 +31,46 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    let replyText = "⚠️ Gemini (503) este momentan suprasolicitat. Te rog să mai trimiți mesajul o dată peste câteva secunde!";
     const activeModel = 'gemini-3.8-flash';
-    const maxRetries = 3;
+    let replyText = "⚠️ Serviciul AI este momentan ocupat sau a atins limita temporară. Te rog să reîncerci peste câteva secunde!";
 
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            const aiResponse = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        system_instruction: {
-                            parts: [{
-                                text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
-                            }]
-                        },
-                        contents: [{ parts: [{ text: userMessage }] }]
-                    })
-                }
-            );
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-            const data = await aiResponse.json();
-
-            if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                replyText = data.candidates[0].content.parts[0].text;
-                break;
+        const aiResponse = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${geminiApiKey}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
+                body: JSON.stringify({
+                    system_instruction: {
+                        parts: [{
+                            text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
+                        }]
+                    },
+                    contents: [{ parts: [{ text: userMessage }] }]
+                })
             }
+        );
 
-            console.error(`Încercarea ${attempt} eșuată (${aiResponse.status}):`, JSON.stringify(data));
+        clearTimeout(timeoutId);
+        const data = await aiResponse.json();
 
-            if (aiResponse.status === 503 && attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
-                continue;
-            }
-            break;
-        } catch (apiErr) {
-            console.error(`Eroare conexiune la încercarea ${attempt}:`, apiErr.message || apiErr);
-            if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
+        if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+            replyText = data.candidates[0].content.parts[0].text;
+        } else {
+            console.error(`Răspuns Gemini (${aiResponse.status}):`, JSON.stringify(data));
+            if (aiResponse.status === 429) {
+                replyText = "⏳ Ai atins limita temporară de cereri (429). Încearcă din nou într-un minut!";
+            } else if (aiResponse.status === 503) {
+                replyText = "⚠️ Gemini este momentan suprasolicitat (503). Mai încearcă o dată peste câteva secunde!";
             }
         }
+    } catch (apiErr) {
+        console.error("Eroare apel Gemini:", apiErr.message || apiErr);
+        replyText = "⚠️ Conexiunea la AI a durat prea mult sau a picat. Mai încearcă o dată!";
     }
 
     await sendTelegramMessage(token, chatId, replyText);
