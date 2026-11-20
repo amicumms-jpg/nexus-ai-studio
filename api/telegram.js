@@ -1,3 +1,5 @@
+export const maxDuration = 30;
+
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -36,40 +38,58 @@ export default async function handler(req, res) {
     let lastStatus = null;
 
     for (const modelName of modelsToTry) {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 7000);
+        let succeeded = false;
 
-            const aiResponse = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    signal: controller.signal,
-                    body: JSON.stringify({
-                        system_instruction: {
-                            parts: [{
-                                text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
-                            }]
-                        },
-                        contents: [{ parts: [{ text: userMessage }] }]
-                    })
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 7000);
+
+                const aiResponse = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal,
+                        body: JSON.stringify({
+                            system_instruction: {
+                                parts: [{
+                                    text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
+                                }]
+                            },
+                            contents: [{ parts: [{ text: userMessage }] }]
+                        })
+                    }
+                );
+
+                clearTimeout(timeoutId);
+                lastStatus = aiResponse.status;
+                const data = await aiResponse.json();
+
+                if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    replyText = data.candidates[0].content.parts[0].text;
+                    succeeded = true;
+                    break;
                 }
-            );
 
-            clearTimeout(timeoutId);
-            lastStatus = aiResponse.status;
-            const data = await aiResponse.json();
+                console.error(`Modelul ${modelName} (încercarea ${attempt}) a eșuat (${aiResponse.status}):`, JSON.stringify(data));
 
-            if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                replyText = data.candidates[0].content.parts[0].text;
-                break;
+                if (aiResponse.status === 429) {
+                    break;
+                }
+
+                if (aiResponse.status === 503 && attempt < 2) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            } catch (apiErr) {
+                console.error(`Eroare la modelul ${modelName} (încercarea ${attempt}):`, apiErr.message || apiErr);
+                if (attempt < 2) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
             }
-
-            console.error(`Modelul ${modelName} a eșuat (${aiResponse.status}):`, JSON.stringify(data));
-        } catch (apiErr) {
-            console.error(`Eroare la modelul ${modelName}:`, apiErr.message || apiErr);
         }
+
+        if (succeeded) break;
     }
 
     if (!replyText) {
