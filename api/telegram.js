@@ -31,14 +31,14 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    const modelsToTry = ['gemini-3.8-flash', 'gemini-3.8', 'gemini-flash-latest'];
+    const modelsToTry = ['gemini-3.8-flash', 'gemini-flash-latest'];
     let replyText = null;
     let lastStatus = null;
 
     for (const modelName of modelsToTry) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 9000);
+            const timeoutId = setTimeout(() => controller.abort(), 7000);
 
             const aiResponse = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
