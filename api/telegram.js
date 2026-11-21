@@ -29,7 +29,20 @@ export default async function handler(req, res) {
     const userMessage = (req.body.message.text || "").trim();
 
     if (!userMessage) {
-        await sendTelegramMessage(token, chatId, "Te rog să trimiți un mesaj text pentru a putea discuta cu asistentul AI! 🤖");
+        await sendTelegramMessage(
+            token,
+            chatId,
+            "Te rog să trimiți un mesaj text pentru a putea discuta cu asistentul AI! 🤖"
+        );
+        return res.status(200).json({ ok: true });
+    }
+
+    if (userMessage === '/start' || userMessage === '/help') {
+        await sendTelegramMessage(
+            token,
+            chatId,
+            "Salut! Sunt asistentul oficial **Nexus AI Studio Pro** (nexusaistudio.ro). Scrie-mi orice întrebare sau idee și îți răspund rapid!"
+        );
         return res.status(200).json({ ok: true });
     }
 
@@ -43,7 +56,7 @@ export default async function handler(req, res) {
         for (let attempt = 1; attempt <= 2; attempt++) {
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 7000);
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
 
                 const aiResponse = await fetch(
                     `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
@@ -118,9 +131,25 @@ function escapeTelegramHtml(str) {
 }
 
 function formatForTelegramHtml(text) {
-    let safe = escapeTelegramHtml(text);
+    const links = [];
+    let withPlaceholders = String(text).replace(
+        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        (_, label, url) => {
+            const idx = links.length;
+            links.push({ label, url });
+            return `@@TGLINK_${idx}@@`;
+        }
+    );
+
+    let safe = escapeTelegramHtml(withPlaceholders);
     safe = safe.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+
+    links.forEach((item, idx) => {
+        const cleanHref = item.url.replace(/"/g, '&quot;');
+        const cleanLabel = escapeTelegramHtml(item.label);
+        safe = safe.replace(`@@TGLINK_${idx}@@`, `<a href="${cleanHref}">${cleanLabel}</a>`);
+    });
+
     return safe.slice(0, 4000);
 }
 
@@ -138,7 +167,7 @@ async function sendTelegramMessage(token, chatId, text) {
             })
         });
 
-        const tgData = await tgRes.json();
+        const tgData = await tgRes.json().catch(() => ({}));
         if (!tgRes.ok || !tgData.ok) {
             await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                 method: 'POST',
