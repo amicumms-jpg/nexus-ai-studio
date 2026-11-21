@@ -35,7 +35,9 @@ export default async function handler(req, res) {
             .sort(() => Math.random() - 0.5);
 
         if (apiKeys.length === 0) {
-            return streamTextAsSse(res, '⚠️ Cheia API Gemini lipsește din setările serverului.');
+            return res.status(500).json({
+                error: 'Cheia API Gemini lipsește din setările serverului.'
+            });
         }
 
         const userPrompt = prompt || message || "Analizează acest fișier:";
@@ -86,27 +88,32 @@ export default async function handler(req, res) {
         // Stabilim modelul principal din seria 3.8+
         const primaryGemini = lowerModel.includes('lite')
             ? 'gemini-3.8-flash-lite'
-            : (lowerModel.includes('gemini-3.8') ? rawModel : 'gemini-3.8-flash');
+            : (lowerModel.includes('gemini-3.8') && !/1\.5|2\.0|2\.5/.test(lowerModel) ? rawModel : 'gemini-3.8-flash');
 
-        // Cascadă exclusivă pe modele de la 3.8 în sus
+        // Cascadă pe modelele 3.8 (fără versiuni vechi 1.5/2.5)
         const fallbackChain = [
             primaryGemini,
-            'gemini-3.8-flash-lite',
             'gemini-3.8-flash',
-            'gemini-3.8-pro'
+            'gemini-3.8-flash-lite'
         ];
 
         const geminiModelsToTry = [...new Set(fallbackChain)];
         let lastStatus = 503;
+        const startTime = Date.now();
+        const maxTotalBudgetMs = 24000;
 
         for (const currentGeminiModel of geminiModelsToTry) {
+            if (Date.now() - startTime > maxTotalBudgetMs) break;
+
             for (let keyIdx = 0; keyIdx < apiKeys.length; keyIdx++) {
+                if (Date.now() - startTime > maxTotalBudgetMs) break;
+
                 const currentKey = apiKeys[keyIdx];
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 16000);
+                const timeoutId = setTimeout(() => controller.abort(), 8500);
 
                 try {
-                    const apiUrl = `https://googleapis.com{encodeURIComponent(currentGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
 
                     const apiResponse = await fetch(apiUrl, {
                         method: 'POST',
@@ -159,23 +166,23 @@ export default async function handler(req, res) {
 
                     // La 503 (supraîncărcare), mică pauză înainte de următoarea încercare
                     if (apiResponse.status === 503) {
-                        await new Promise(r => setTimeout(r, 1000));
+                        await new Promise(r => setTimeout(r, 400));
                     }
                 } catch (err) {
                     clearTimeout(timeoutId);
                     lastStatus = 503;
                     const reason = err?.name === 'AbortError' ? `Timeout la ${currentGeminiModel}` : (err?.message || 'Eroare Gemini');
                     console.error(`Excepție la ${currentGeminiModel} [Cheia #${keyIdx + 1}]:`, reason);
-                    await new Promise(r => setTimeout(r, 1000));
+                    await new Promise(r => setTimeout(r, 400));
                 }
             }
         }
 
         if (lastStatus === 429) {
-            return streamTextAsSse(
-                res,
-                '⚠️ Limita zilnică gratuită a fost atinsă pe toate cheile și modelele disponibile. Te rog reîncearcă mai târziu.'
-            );
+            return res.status(429).json({
+                error: 'QUOTA_EXCEEDED',
+                message: 'Limita zilnică gratuită a fost atinsă pe toate cheile și modelele disponibile.'
+            });
         }
 
         return streamTextAsSse(
