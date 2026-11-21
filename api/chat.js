@@ -28,6 +28,7 @@ export default async function handler(req, res) {
         const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
         const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
         const openaiApiKey = process.env.OPENAI_API_KEY;
+        const falKey = process.env.FAL_KEY;
 
         const userPrompt = prompt || message || "Analizează acest fișier:";
         const parts = [{ text: userPrompt }];
@@ -74,34 +75,25 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        let primaryModel = 'gemini-3.8-flash';
-        if (lowerModel.includes('deepseek') || lowerModel.includes('backup 1')) {
-            primaryModel = 'deepseek-chat';
-        } else if (lowerModel.includes('gpt') || lowerModel.includes('openai') || lowerModel.includes('backup 2')) {
-            primaryModel = 'gpt-4o-mini';
-        } else if (lowerModel.includes('gemini')) {
-            primaryModel = rawModel;
-        }
+        // Doar modele Gemini de la 3.8 în sus (fără 1.5 / 2.0 / 2.5)
+        const selectedGemini = lowerModel.includes('gemini') && !/1\.5|2\.0|2\.5/.test(lowerModel)
+            ? rawModel
+            : 'gemini-3.8-flash';
 
-        const queue = [...new Set([
-            primaryModel,
+        const geminiCandidates = [...new Set([
+            selectedGemini,
             'gemini-3.8-flash',
-            'deepseek-chat',
-            'gpt-4o-mini'
+            'gemini-3.8-pro'
         ])];
 
-        let hitQuota = false;
-        let lastError = 'Niciun model nu a putut răspunde.';
+        let hitQuotaOrDemand = false;
+        let lastError = 'Serviciul AI este temporar indisponibil.';
 
-        for (const currentModel of queue) {
-            const cLower = currentModel.toLowerCase();
-
-            if (cLower.includes('gemini')) {
-                if (!geminiApiKey) continue;
-
+        if (geminiApiKey) {
+            for (const gModel of geminiCandidates) {
                 try {
                     const apiResponse = await fetch(
-                        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(geminiApiKey)}`,
+                        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(gModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(geminiApiKey)}`,
                         {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -109,7 +101,7 @@ export default async function handler(req, res) {
                                 systemInstruction,
                                 contents: [{ parts }]
                             }),
-                            signal: AbortSignal.timeout(8000)
+                            signal: AbortSignal.timeout(5500)
                         }
                     );
 
@@ -132,66 +124,81 @@ export default async function handler(req, res) {
                     }
 
                     const errText = await apiResponse.text().catch(() => '');
-                    lastError = errText || `Eroare ${currentModel} (${apiResponse.status})`;
-                    if (apiResponse.status === 429 || /429|quota|resource_exhausted/i.test(errText)) {
-                        hitQuota = true;
+                    lastError = errText || `Eroare ${gModel} (${apiResponse.status})`;
+                    if (apiResponse.status === 429 || apiResponse.status === 503 || /429|503|quota|high demand|resource_exhausted/i.test(errText)) {
+                        hitQuotaOrDemand = true;
                     }
                 } catch (err) {
-                    lastError = err?.name === 'TimeoutError'
-                        ? `Timeout la ${currentModel}`
-                        : (err?.message || 'Eroare de rețea Gemini.');
+                    hitQuotaOrDemand = true;
+                    lastError = err?.name === 'TimeoutError' ? `Timeout la ${gModel}` : (err?.message || 'Eroare Gemini');
                 }
-                continue;
-            }
-
-            if (cLower.includes('deepseek')) {
-                if (!deepseekApiKey) continue;
-                try {
-                    const dsText = await callOpenAiCompatible(
-                        'https://api.deepseek.com/chat/completions',
-                        deepseekApiKey,
-                        'deepseek-chat',
-                        systemPromptText,
-                        userPrompt
-                    );
-                    if (dsText) return streamTextAsSse(res, dsText);
-                } catch (err) {
-                    lastError = err?.name === 'TimeoutError' ? 'Timeout la DeepSeek' : (err?.message || 'Eroare DeepSeek.');
-                }
-                continue;
-            }
-
-            if (cLower.includes('gpt') || cLower.includes('openai')) {
-                if (!openaiApiKey) continue;
-                try {
-                    const oaiText = await callOpenAiCompatible(
-                        'https://api.openai.com/v1/chat/completions',
-                        openaiApiKey,
-                        'gpt-4o-mini',
-                        systemPromptText,
-                        userPrompt
-                    );
-                    if (oaiText) return streamTextAsSse(res, oaiText);
-                } catch (err) {
-                    lastError = err?.name === 'TimeoutError' ? 'Timeout la OpenAI' : (err?.message || 'Eroare OpenAI.');
-                }
-                continue;
             }
         }
 
-        if (hitQuota) {
+        if ((lowerModel.includes('deepseek') || lowerModel.includes('backup 1')) && deepseekApiKey) {
+            try {
+                const dsText = await callOpenAiCompatible(
+                    'https://api.deepseek.com/chat/completions',
+                    deepseekApiKey,
+                    'deepseek-chat',
+                    systemPromptText,
+                    userPrompt
+                );
+                if (dsText) return streamTextAsSse(res, dsText);
+            } catch (err) {
+                lastError = err?.message || 'Eroare DeepSeek';
+            }
+        }
+
+        if ((lowerModel.includes('gpt') || lowerModel.includes('openai') || lowerModel.includes('backup 2')) && openaiApiKey) {
+            try {
+                const oaiText = await callOpenAiCompatible(
+                    'https://api.openai.com/v1/chat/completions',
+                    openaiApiKey,
+                    'gpt-4o-mini',
+                    systemPromptText,
+                    userPrompt
+                );
+                if (oaiText) return streamTextAsSse(res, oaiText);
+            } catch (err) {
+                lastError = err?.message || 'Eroare OpenAI';
+            }
+        }
+
+        if (falKey) {
+            try {
+                const falRes = await fetch('https://fal.run/fal-ai/any-llm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Key ${falKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'google/gemini-3.8-flash',
+                        system_prompt: systemPromptText,
+                        prompt: userPrompt
+                    }),
+                    signal: AbortSignal.timeout(6000)
+                });
+                const falData = await falRes.json().catch(() => ({}));
+                const falText = falData?.output || falData?.text || falData?.response || '';
+                if (falRes.ok && falText) {
+                    return streamTextAsSse(res, String(falText));
+                }
+            } catch (_) {
+                // ignorăm dacă nu are credit/acces
+            }
+        }
+
+        if (hitQuotaOrDemand) {
             return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
         }
 
-        return res.status(502).json({ error: lastError });
+        return res.status(200).json({ error: lastError });
     } catch (error) {
         console.error("Eroare server API chat:", error);
         if (!res.headersSent) {
-            const errMessage = error?.message || 'Eroare internă de server.';
-            if (errMessage.toLowerCase().includes('quota') || errMessage.includes('429')) {
-                return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
-            }
-            return res.status(500).json({ error: errMessage });
+            return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
         }
         res.end();
     }
@@ -212,7 +219,7 @@ async function callOpenAiCompatible(endpoint, apiKey, model, systemPrompt, userT
             ],
             stream: false
         }),
-        signal: AbortSignal.timeout(8000)
+        signal: AbortSignal.timeout(4500)
     });
 
     const data = await response.json().catch(() => ({}));
