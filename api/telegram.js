@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
-    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
     if (!token || !geminiApiKey) {
         console.error("Lipsește TELEGRAM_BOT_TOKEN sau GEMINI_API_KEY în variabilele de mediu.");
@@ -33,9 +33,10 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    const modelsToTry = ['gemini-3.8-flash', 'gemini-flash-latest'];
+    const modelsToTry = ['gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'];
     let replyText = null;
     let lastStatus = null;
+    let lastErrorMessage = '';
 
     for (const modelName of modelsToTry) {
         let succeeded = false;
@@ -64,7 +65,7 @@ export default async function handler(req, res) {
 
                 clearTimeout(timeoutId);
                 lastStatus = aiResponse.status;
-                const data = await aiResponse.json();
+                const data = await aiResponse.json().catch(() => ({}));
 
                 if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
                     replyText = data.candidates[0].content.parts[0].text;
@@ -72,17 +73,22 @@ export default async function handler(req, res) {
                     break;
                 }
 
+                lastErrorMessage = data?.error?.message || `HTTP ${aiResponse.status}`;
                 console.error(`Modelul ${modelName} (încercarea ${attempt}) a eșuat (${aiResponse.status}):`, JSON.stringify(data));
 
-                if (aiResponse.status === 429) {
+                // La 429 sau operație nesuportată trecem direct la următorul model
+                if (aiResponse.status === 429 || /not supported|unsupported|quota|resource_exhausted/i.test(lastErrorMessage)) {
                     break;
                 }
 
                 if (aiResponse.status === 503 && attempt < 2) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
+                } else {
+                    break;
                 }
             } catch (apiErr) {
-                console.error(`Eroare la modelul ${modelName} (încercarea ${attempt}):`, apiErr.message || apiErr);
+                lastErrorMessage = apiErr?.message || String(apiErr);
+                console.error(`Eroare la modelul ${modelName} (încercarea ${attempt}):`, lastErrorMessage);
                 if (attempt < 2) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 }
@@ -94,11 +100,11 @@ export default async function handler(req, res) {
 
     if (!replyText) {
         if (lastStatus === 429) {
-            replyText = "⏳ Ai atins limita temporară de cereri (429). Încearcă din nou într-un minut!";
+            replyText = `⏳ Limita de cereri (429) a fost atinsă pe modelele încercate.\nDetalii: ${lastErrorMessage.slice(0, 180)}`;
         } else if (lastStatus === 503) {
             replyText = "⚠️ Serverele AI sunt momentan suprasolicitate (503). Mai încearcă o dată peste câteva secunde!";
         } else {
-            replyText = "⚠️ Serviciul AI este momentan indisponibil. Te rog să reîncerci în câteva secunde!";
+            replyText = `⚠️ Serviciul AI a întâmpinat o eroare (${lastStatus || 'network'}): ${lastErrorMessage.slice(0, 180) || 'Reîncearcă în câteva secunde.'}`;
         }
     }
 
