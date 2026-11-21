@@ -1,15 +1,19 @@
 {
   "name": "Nexus AI Studio Pro",
   "short_name": "Nexus AI",
+  "description": "Nexus AI Studio Pro — Asistent AI, Birou Agenți 3D și instrumente creative.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "icons": [
     {
       "src": "/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
