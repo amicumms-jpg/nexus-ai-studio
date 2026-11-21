@@ -25,10 +25,18 @@ export default async function handler(req, res) {
 
     try {
         const { prompt, message, fileData, model, toolType, department, lang } = req.body || {};
-        const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-        const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
-        const openaiApiKey = process.env.OPENAI_API_KEY;
-        const falKey = process.env.FAL_KEY;
+        
+        // Citim toate cheile separate prin virgulă și le amestecăm aleatoriu
+        const rawKeys = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+        const apiKeys = rawKeys
+            .split(',')
+            .map(k => k.trim())
+            .filter(Boolean)
+            .sort(() => Math.random() - 0.5);
+
+        if (apiKeys.length === 0) {
+            return streamTextAsSse(res, '⚠️ Cheia API Gemini lipsește din setările serverului.');
+        }
 
         const userPrompt = prompt || message || "Analizează acest fișier:";
         const parts = [{ text: userPrompt }];
@@ -75,18 +83,30 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        const targetGeminiModel = lowerModel.includes('gemini') && !/1\.5|2\.0|2\.5|pro/.test(lowerModel)
-            ? rawModel
-            : 'gemini-3.8-flash';
+        const primaryGemini = lowerModel.includes('lite')
+            ? 'gemini-3.8-flash-lite'
+            : (lowerModel.includes('gemini') && !/1\.5|2\.0|2\.5|pro/.test(lowerModel) ? rawModel : 'gemini-3.8-flash');
 
+        const fallbackChain = [
+            primaryGemini,
+            'gemini-3.8-flash-lite',
+            'gemini-2.5-flash',
+            'gemini-2.5-flash-lite'
+        ];
+
+        const geminiModelsToTry = [...new Set(fallbackChain)];
         let lastStatus = 503;
 
-        if (geminiApiKey) {
-            const maxAttempts = 2;
-            for (let i = 0; i < maxAttempts; i++) {
+        // Iterăm prin modele și prin toate cheile disponibile
+        for (const currentGeminiModel of geminiModelsToTry) {
+            for (let keyIdx = 0; keyIdx < apiKeys.length; keyIdx++) {
+                const currentKey = apiKeys[keyIdx];
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 16000);
+
                 try {
                     const apiResponse = await fetch(
-                        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(targetGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(geminiApiKey)}`,
+                        `https://googleapis.com{encodeURIComponent(currentGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`,
                         {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -94,9 +114,11 @@ export default async function handler(req, res) {
                                 systemInstruction,
                                 contents: [{ parts }]
                             }),
-                            signal: AbortSignal.timeout(12000)
+                            signal: controller.signal
                         }
                     );
+
+                    clearTimeout(timeoutId);
 
                     if (apiResponse.ok && apiResponse.body) {
                         res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
@@ -123,85 +145,42 @@ export default async function handler(req, res) {
                         const parsedErr = JSON.parse(rawErr);
                         formattedErr = parsedErr?.error?.message || JSON.stringify(parsedErr);
                     } catch (_) {}
-                    console.error(`Modelul ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}) a eșuat (${apiResponse.status}): ${formattedErr}`);
+                    console.error(`Model ${currentGeminiModel} [Cheia #${keyIdx + 1}] a eșuat (${apiResponse.status}): ${formattedErr}`);
 
-                    if (apiResponse.status === 429 || apiResponse.status === 404 || apiResponse.status === 401 || apiResponse.status === 403) {
+                    // Dacă cheia are cota atinsă (429) sau e invalidă (401/403), trece imediat la următoarea cheie
+                    if (apiResponse.status === 429 || apiResponse.status === 401 || apiResponse.status === 403) {
+                        continue;
+                    }
+
+                    // Dacă modelul nu există (404), sărim direct la următorul model
+                    if (apiResponse.status === 404) {
                         break;
                     }
 
-                    if (apiResponse.status === 503 && i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 1200));
+                    // La 503 (supraîncărcare), mică pauză înainte de următoarea încercare
+                    if (apiResponse.status === 503) {
+                        await new Promise(r => setTimeout(r, 1000));
                     }
                 } catch (err) {
+                    clearTimeout(timeoutId);
                     lastStatus = 503;
-                    const reason = err?.name === 'TimeoutError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
-                    console.error(`Excepție la ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}):`, reason);
-                    if (i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 1200));
-                    }
+                    const reason = err?.name === 'AbortError' ? `Timeout la ${currentGeminiModel}` : (err?.message || 'Eroare Gemini');
+                    console.error(`Excepție la ${currentGeminiModel} [Cheia #${keyIdx + 1}]:`, reason);
+                    await new Promise(r => setTimeout(r, 1000));
                 }
             }
         }
 
-        if ((lowerModel.includes('deepseek') || lowerModel.includes('backup 1')) && deepseekApiKey) {
-            try {
-                const dsText = await callOpenAiCompatible(
-                    'https://api.deepseek.com/chat/completions',
-                    deepseekApiKey,
-                    'deepseek-chat',
-                    systemPromptText,
-                    userPrompt
-                );
-                if (dsText) return streamTextAsSse(res, dsText);
-            } catch (_) {}
-        }
-
-        if ((lowerModel.includes('gpt') || lowerModel.includes('openai') || lowerModel.includes('backup 2')) && openaiApiKey) {
-            try {
-                const oaiText = await callOpenAiCompatible(
-                    'https://api.openai.com/v1/chat/completions',
-                    openaiApiKey,
-                    'gpt-4o-mini',
-                    systemPromptText,
-                    userPrompt
-                );
-                if (oaiText) return streamTextAsSse(res, oaiText);
-            } catch (_) {}
-        }
-
-        if (falKey) {
-            try {
-                const falRes = await fetch('https://fal.run/fal-ai/any-llm', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Key ${falKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'google/gemini-3.8-flash',
-                        system_prompt: systemPromptText,
-                        prompt: userPrompt
-                    }),
-                    signal: AbortSignal.timeout(8000)
-                });
-                const falData = await falRes.json().catch(() => ({}));
-                const falText = falData?.output || falData?.text || falData?.response || '';
-                if (falRes.ok && falText) {
-                    return streamTextAsSse(res, String(falText));
-                }
-            } catch (_) {}
-        }
-
         if (lastStatus === 429) {
-            return res.status(429).json({
-                error: 'QUOTA_EXCEEDED',
-                message: 'Limita de cereri pentru cheia Gemini a fost atinsă (429).'
-            });
+            return streamTextAsSse(
+                res,
+                '⚠️ Limita zilnică gratuită a fost atinsă pe toate cheile și modelele disponibile. Te rog reîncearcă mai târziu.'
+            );
         }
 
         return streamTextAsSse(
             res,
-            '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503 / timeout). Reîncearcă mesajul în câteva secunde.'
+            '⚠️ Serverele Google Gemini sunt temporar supraîncărcate. Reîncearcă mesajul în câteva secunde.'
         );
     } catch (error) {
         console.error("Eroare server API chat:", error);
@@ -210,31 +189,6 @@ export default async function handler(req, res) {
         }
         res.end();
     }
-}
-
-async function callOpenAiCompatible(endpoint, apiKey, model, systemPrompt, userText) {
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model,
-            messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userText }
-            ],
-            stream: false
-        }),
-        signal: AbortSignal.timeout(8000)
-    });
-
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-        throw new Error(data?.error?.message || `Eroare ${model} (${response.status})`);
-    }
-    return data?.choices?.[0]?.message?.content?.trim() || '';
 }
 
 function streamTextAsSse(res, fullText) {
