@@ -1,9 +1,9 @@
-import { DEPARTMENTS } from '../agentsConfig.js';
+import { getDepartmentConfig } from '../agentsConfig.js';
 
 export const maxDuration = 30;
 
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader(
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
         let specializedRoleDescription = "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).";
 
-        const deptConfig = department && DEPARTMENTS ? DEPARTMENTS[department] : null;
+        const deptConfig = getDepartmentConfig(department);
         if (deptConfig && (deptConfig.systemPrompt || deptConfig.prompt || deptConfig.description)) {
             specializedRoleDescription = deptConfig.systemPrompt || deptConfig.prompt || deptConfig.description;
         }
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
                                 systemInstruction,
                                 contents: [{ parts }]
                             }),
-                            signal: AbortSignal.timeout(4000)
+                            signal: AbortSignal.timeout(12000)
                         }
                     );
 
@@ -120,17 +120,19 @@ export default async function handler(req, res) {
                     const errText = await apiResponse.text().catch(() => '');
                     console.error(`Modelul ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}) a eșuat (${apiResponse.status}): ${errText}`);
 
-                    if ((apiResponse.status === 503 || apiResponse.status === 429) && i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 400));
-                    } else if (apiResponse.status === 404) {
+                    if (apiResponse.status === 429 || apiResponse.status === 404 || apiResponse.status === 401 || apiResponse.status === 403) {
                         break;
+                    }
+
+                    if (apiResponse.status === 503 && i < maxAttempts - 1) {
+                        await new Promise(r => setTimeout(r, 500));
                     }
                 } catch (err) {
                     lastStatus = 503;
                     const reason = err?.name === 'TimeoutError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
                     console.error(`Excepție la ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}):`, reason);
                     if (i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 400));
+                        await new Promise(r => setTimeout(r, 500));
                     }
                 }
             }
@@ -175,7 +177,7 @@ export default async function handler(req, res) {
                         system_prompt: systemPromptText,
                         prompt: userPrompt
                     }),
-                    signal: AbortSignal.timeout(4500)
+                    signal: AbortSignal.timeout(8000)
                 });
                 const falData = await falRes.json().catch(() => ({}));
                 const falText = falData?.output || falData?.text || falData?.response || '';
@@ -185,11 +187,17 @@ export default async function handler(req, res) {
             } catch (_) {}
         }
 
-        const friendlyMsg = lastStatus === 429
-            ? '⚠️ Limita de cereri pentru cheia Gemini a fost atinsă (429). Încearcă din nou puțin mai târziu.'
-            : '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503 / timeout). Reîncearcă mesajul în câteva secunde.';
+        if (lastStatus === 429) {
+            return res.status(429).json({
+                error: 'QUOTA_EXCEEDED',
+                message: 'Limita de cereri pentru cheia Gemini a fost atinsă (429).'
+            });
+        }
 
-        return streamTextAsSse(res, friendlyMsg);
+        return streamTextAsSse(
+            res,
+            '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503 / timeout). Reîncearcă mesajul în câteva secunde.'
+        );
     } catch (error) {
         console.error("Eroare server API chat:", error);
         if (!res.headersSent) {
@@ -214,7 +222,7 @@ async function callOpenAiCompatible(endpoint, apiKey, model, systemPrompt, userT
             ],
             stream: false
         }),
-        signal: AbortSignal.timeout(4000)
+        signal: AbortSignal.timeout(8000)
     });
 
     const data = await response.json().catch(() => ({}));
