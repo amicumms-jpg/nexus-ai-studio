@@ -18,9 +18,14 @@ export default async function handler(req, res) {
     }
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
-    const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    const rawKeys = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+    const apiKeys = rawKeys
+        .split(',')
+        .map(k => k.trim())
+        .filter(Boolean)
+        .sort(() => Math.random() - 0.5);
 
-    if (!token || !geminiApiKey) {
+    if (!token || apiKeys.length === 0) {
         console.error("Lipsește TELEGRAM_BOT_TOKEN sau GEMINI_API_KEY în variabilele de mediu.");
         return res.status(200).json({ ok: false, error: "Missing environment variables" });
     }
@@ -49,63 +54,78 @@ export default async function handler(req, res) {
     const modelsToTry = ['gemini-3.8-flash'];
     let replyText = null;
     let lastStatus = null;
+    const startTime = Date.now();
+    const maxTotalBudgetMs = 24000;
 
     for (const modelName of modelsToTry) {
-        let succeeded = false;
+        if (Date.now() - startTime > maxTotalBudgetMs) break;
 
-        for (let attempt = 1; attempt <= 2; attempt++) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 12000);
+        for (let keyIdx = 0; keyIdx < apiKeys.length; keyIdx++) {
+            if (Date.now() - startTime > maxTotalBudgetMs) break;
 
-                const aiResponse = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        signal: controller.signal,
-                        body: JSON.stringify({
-                            system_instruction: {
-                                parts: [{
-                                    text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
-                                }]
-                            },
-                            contents: [{ parts: [{ text: userMessage }] }]
-                        })
+            const currentKey = apiKeys[keyIdx];
+            let succeeded = false;
+
+            for (let attempt = 1; attempt <= 2; attempt++) {
+                if (Date.now() - startTime > maxTotalBudgetMs) break;
+
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 9000);
+
+                    const aiResponse = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(currentKey)}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            signal: controller.signal,
+                            body: JSON.stringify({
+                                system_instruction: {
+                                    parts: [{
+                                        text: "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro) pe Telegram. Ajută utilizatorii cu ghidaj despre module și abonament. Răspunde scurt, prietenos și util în limba română."
+                                    }]
+                                },
+                                contents: [{ parts: [{ text: userMessage }] }]
+                            })
+                        }
+                    );
+
+                    clearTimeout(timeoutId);
+                    lastStatus = aiResponse.status;
+                    const data = await aiResponse.json().catch(() => ({}));
+
+                    if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        replyText = data.candidates[0].content.parts[0].text;
+                        succeeded = true;
+                        break;
                     }
-                );
 
-                clearTimeout(timeoutId);
-                lastStatus = aiResponse.status;
-                const data = await aiResponse.json().catch(() => ({}));
+                    const errMsg = data?.error?.message || `HTTP ${aiResponse.status}`;
+                    console.error(`Modelul ${modelName} [Cheia #${keyIdx + 1}, încercarea ${attempt}] a eșuat (${aiResponse.status}): ${errMsg}`);
 
-                if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    replyText = data.candidates[0].content.parts[0].text;
-                    succeeded = true;
-                    break;
-                }
+                    if (aiResponse.status === 429 || aiResponse.status === 401 || aiResponse.status === 403 || /quota|resource_exhausted/i.test(errMsg)) {
+                        break;
+                    }
 
-                const errMsg = data?.error?.message || `HTTP ${aiResponse.status}`;
-                console.error(`Modelul ${modelName} (încercarea ${attempt}) a eșuat (${aiResponse.status}):`, errMsg);
-
-                if (aiResponse.status === 429 || /quota|resource_exhausted/i.test(errMsg)) {
-                    break;
-                }
-
-                if (aiResponse.status === 503 && attempt < 2) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                } else {
-                    break;
-                }
-            } catch (apiErr) {
-                console.error(`Eroare la modelul ${modelName} (încercarea ${attempt}):`, apiErr?.message || apiErr);
-                if (attempt < 2) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    if (aiResponse.status === 503 && attempt < 2) {
+                        await new Promise(resolve => setTimeout(resolve, 600));
+                    } else {
+                        break;
+                    }
+                } catch (apiErr) {
+                    lastStatus = 503;
+                    const reason = apiErr?.name === 'AbortError' ? `Timeout la ${modelName}` : (apiErr?.message || 'Eroare Gemini');
+                    console.error(`Eroare la modelul ${modelName} [Cheia #${keyIdx + 1}, încercarea ${attempt}]:`, reason);
+                    if (attempt < 2) {
+                        await new Promise(resolve => setTimeout(resolve, 600));
+                    }
                 }
             }
+
+            if (succeeded) break;
         }
 
-        if (succeeded) break;
+        if (replyText) break;
     }
 
     if (!replyText) {
