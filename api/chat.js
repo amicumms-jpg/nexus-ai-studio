@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
     try {
         const { prompt, message, fileData, model, toolType, department, lang } = req.body || {};
-        
+
         // Citim toate cheile separate prin virgulă și le amestecăm aleatoriu
         const rawKeys = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
         const apiKeys = rawKeys
@@ -83,21 +83,22 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
+        // Stabilim modelul principal din seria 3.8+
         const primaryGemini = lowerModel.includes('lite')
             ? 'gemini-3.8-flash-lite'
-            : (lowerModel.includes('gemini') && !/1\.5|2\.0|2\.5|pro/.test(lowerModel) ? rawModel : 'gemini-3.8-flash');
+            : (lowerModel.includes('gemini-3.8') ? rawModel : 'gemini-3.8-flash');
 
+        // Cascadă exclusivă pe modele de la 3.8 în sus
         const fallbackChain = [
             primaryGemini,
             'gemini-3.8-flash-lite',
-            'gemini-2.5-flash',
-            'gemini-2.5-flash-lite'
+            'gemini-3.8-flash',
+            'gemini-3.8-pro'
         ];
 
         const geminiModelsToTry = [...new Set(fallbackChain)];
         let lastStatus = 503;
 
-        // Iterăm prin modele și prin toate cheile disponibile
         for (const currentGeminiModel of geminiModelsToTry) {
             for (let keyIdx = 0; keyIdx < apiKeys.length; keyIdx++) {
                 const currentKey = apiKeys[keyIdx];
@@ -105,18 +106,17 @@ export default async function handler(req, res) {
                 const timeoutId = setTimeout(() => controller.abort(), 16000);
 
                 try {
-                    const apiResponse = await fetch(
-                        `https://googleapis.com{encodeURIComponent(currentGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`,
-                        {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                systemInstruction,
-                                contents: [{ parts }]
-                            }),
-                            signal: controller.signal
-                        }
-                    );
+                    const apiUrl = `https://googleapis.com{encodeURIComponent(currentGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
+
+                    const apiResponse = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            systemInstruction,
+                            contents: [{ parts }]
+                        }),
+                        signal: controller.signal
+                    });
 
                     clearTimeout(timeoutId);
 
@@ -147,12 +147,12 @@ export default async function handler(req, res) {
                     } catch (_) {}
                     console.error(`Model ${currentGeminiModel} [Cheia #${keyIdx + 1}] a eșuat (${apiResponse.status}): ${formattedErr}`);
 
-                    // Dacă cheia are cota atinsă (429) sau e invalidă (401/403), trece imediat la următoarea cheie
+                    // La 429 (cotă atinsă) sau 401/403 (cheie invalidă), trece imediat la următoarea cheie
                     if (apiResponse.status === 429 || apiResponse.status === 401 || apiResponse.status === 403) {
                         continue;
                     }
 
-                    // Dacă modelul nu există (404), sărim direct la următorul model
+                    // La 404 (model indisponibil), trece imediat la următorul model din listă
                     if (apiResponse.status === 404) {
                         break;
                     }
