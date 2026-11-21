@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active (Gemini + Backup 1 & 2).' });
+        return res.status(200).json({ status: 'Chat API endpoint is active (Gemini + DeepSeek + OpenAI).' });
     }
 
     if (req.method !== 'POST') {
@@ -71,11 +71,22 @@ export default async function handler(req, res) {
             parts: [{ text: systemPromptText }]
         };
 
-        const requestedModel = (model || 'gemini-3.8-flash').trim();
+        const rawModel = String(model || 'gemini-3.8-flash').trim();
+        const lowerModel = rawModel.toLowerCase();
 
-        // Ordinea de încercare: modelul ales din dropdown -> Gemini 3.8 Flash -> Backup 1 (DeepSeek) -> Backup 2 (OpenAI)
-        const pipeline = [...new Set([
-            requestedModel,
+        // Normalizăm selecția din UI către identificatorii reali de model
+        let primaryModel = 'gemini-3.8-flash';
+        if (lowerModel.includes('deepseek') || lowerModel.includes('backup 1')) {
+            primaryModel = 'deepseek-chat';
+        } else if (lowerModel.includes('gpt') || lowerModel.includes('openai') || lowerModel.includes('backup 2')) {
+            primaryModel = 'gpt-4o-mini';
+        } else if (lowerModel.includes('gemini')) {
+            primaryModel = rawModel;
+        }
+
+        // Ordinea de execuție: modelul selectat -> restul disponibilităților
+        const queue = [...new Set([
+            primaryModel,
             'gemini-3.8-flash',
             'deepseek-chat',
             'gpt-4o-mini'
@@ -84,15 +95,12 @@ export default async function handler(req, res) {
         let hitQuota = false;
         let lastError = 'Niciun model nu a putut răspunde.';
 
-        for (const currentModel of pipeline) {
-            const lower = currentModel.toLowerCase();
+        for (const currentModel of queue) {
+            const cLower = currentModel.toLowerCase();
 
-            // 1. Modele Gemini
-            if (lower.includes('gemini')) {
-                if (!geminiApiKey) {
-                    lastError = 'Cheia GEMINI_API_KEY nu este setată în Vercel.';
-                    continue;
-                }
+            // 1. Gemini
+            if (cLower.includes('gemini')) {
+                if (!geminiApiKey) continue;
 
                 try {
                     const apiResponse = await fetch(
@@ -129,24 +137,24 @@ export default async function handler(req, res) {
                     lastError = errText || `Eroare ${currentModel} (${apiResponse.status})`;
                     if (apiResponse.status === 429 || /429|quota|resource_exhausted/i.test(errText)) {
                         hitQuota = true;
-                        console.warn(`Modelul ${currentModel} a atins limita (429), trecem pe backup...`);
-                    } else {
-                        console.warn(`Modelul ${currentModel} a eșuat (${apiResponse.status}), trecem pe backup...`);
                     }
+                    console.warn(`Gemini (${currentModel}) a eșuat (${apiResponse.status}), trecem la următorul...`);
                 } catch (err) {
                     lastError = err?.message || 'Eroare de rețea Gemini.';
+                    console.warn('Eroare de rețea Gemini:', lastError);
                 }
                 continue;
             }
 
-            // 2. Backup 1: DeepSeek Chat
-            if (lower.includes('deepseek')) {
+            // 2. DeepSeek Chat (Backup 1)
+            if (cLower.includes('deepseek')) {
                 if (!deepseekApiKey) continue;
+
                 try {
                     const dsText = await callOpenAiCompatible(
                         'https://api.deepseek.com/chat/completions',
                         deepseekApiKey,
-                        currentModel,
+                        'deepseek-chat',
                         systemPromptText,
                         userPrompt
                     );
@@ -155,18 +163,20 @@ export default async function handler(req, res) {
                     }
                 } catch (err) {
                     lastError = err?.message || 'Eroare DeepSeek.';
+                    console.warn('DeepSeek a eșuat:', lastError);
                 }
                 continue;
             }
 
-            // 3. Backup 2: OpenAI GPT-4o-mini
-            if (lower.includes('gpt') || lower.includes('openai')) {
+            // 3. OpenAI GPT-4o-mini (Backup 2)
+            if (cLower.includes('gpt') || cLower.includes('openai')) {
                 if (!openaiApiKey) continue;
+
                 try {
                     const oaiText = await callOpenAiCompatible(
                         'https://api.openai.com/v1/chat/completions',
                         openaiApiKey,
-                        currentModel,
+                        'gpt-4o-mini',
                         systemPromptText,
                         userPrompt
                     );
@@ -175,6 +185,7 @@ export default async function handler(req, res) {
                     }
                 } catch (err) {
                     lastError = err?.message || 'Eroare OpenAI.';
+                    console.warn('OpenAI a eșuat:', lastError);
                 }
                 continue;
             }
