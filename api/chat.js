@@ -26,7 +26,6 @@ export default async function handler(req, res) {
     try {
         const { prompt, message, fileData, model, toolType, department, lang } = req.body || {};
 
-        // Citim toate cheile separate prin virgulă și le amestecăm aleatoriu
         const rawKeys = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
         const apiKeys = rawKeys
             .split(',')
@@ -85,24 +84,16 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        // Stabilim modelul principal din seria 3.8+
-        const primaryGemini = lowerModel.includes('lite')
-            ? 'gemini-3.8-flash-lite'
-            : (lowerModel.includes('gemini-3.8') && !/1\.5|2\.0|2\.5/.test(lowerModel) ? rawModel : 'gemini-3.8-flash');
+        const targetGeminiModel = lowerModel.includes('gemini-3.8') && !/1\.5|2\.0|2\.5|lite/.test(lowerModel)
+            ? rawModel
+            : 'gemini-3.8-flash';
 
-        // Cascadă pe modelele 3.8 (fără versiuni vechi 1.5/2.5)
-        const fallbackChain = [
-            primaryGemini,
-            'gemini-3.8-flash',
-            'gemini-3.8-flash-lite'
-        ];
-
-        const geminiModelsToTry = [...new Set(fallbackChain)];
         let lastStatus = 503;
         const startTime = Date.now();
         const maxTotalBudgetMs = 24000;
+        const maxRounds = 2;
 
-        for (const currentGeminiModel of geminiModelsToTry) {
+        for (let round = 1; round <= maxRounds; round++) {
             if (Date.now() - startTime > maxTotalBudgetMs) break;
 
             for (let keyIdx = 0; keyIdx < apiKeys.length; keyIdx++) {
@@ -110,10 +101,10 @@ export default async function handler(req, res) {
 
                 const currentKey = apiKeys[keyIdx];
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8500);
+                const timeoutId = setTimeout(() => controller.abort(), 9000);
 
                 try {
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(targetGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
 
                     const apiResponse = await fetch(apiUrl, {
                         method: 'POST',
@@ -152,28 +143,21 @@ export default async function handler(req, res) {
                         const parsedErr = JSON.parse(rawErr);
                         formattedErr = parsedErr?.error?.message || JSON.stringify(parsedErr);
                     } catch (_) {}
-                    console.error(`Model ${currentGeminiModel} [Cheia #${keyIdx + 1}] a eșuat (${apiResponse.status}): ${formattedErr}`);
+                    console.error(`Model ${targetGeminiModel} [Runda ${round}/${maxRounds}, Cheia #${keyIdx + 1}] a eșuat (${apiResponse.status}): ${formattedErr}`);
 
-                    // La 429 (cotă atinsă) sau 401/403 (cheie invalidă), trece imediat la următoarea cheie
-                    if (apiResponse.status === 429 || apiResponse.status === 401 || apiResponse.status === 403) {
+                    if (apiResponse.status === 404 || apiResponse.status === 401 || apiResponse.status === 403) {
                         continue;
                     }
 
-                    // La 404 (model indisponibil), trece imediat la următorul model din listă
-                    if (apiResponse.status === 404) {
-                        break;
-                    }
-
-                    // La 503 (supraîncărcare), mică pauză înainte de următoarea încercare
-                    if (apiResponse.status === 503) {
-                        await new Promise(r => setTimeout(r, 400));
+                    if (apiResponse.status === 503 || apiResponse.status === 429) {
+                        await new Promise(r => setTimeout(r, 800));
                     }
                 } catch (err) {
                     clearTimeout(timeoutId);
                     lastStatus = 503;
-                    const reason = err?.name === 'AbortError' ? `Timeout la ${currentGeminiModel}` : (err?.message || 'Eroare Gemini');
-                    console.error(`Excepție la ${currentGeminiModel} [Cheia #${keyIdx + 1}]:`, reason);
-                    await new Promise(r => setTimeout(r, 400));
+                    const reason = err?.name === 'AbortError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
+                    console.error(`Excepție la ${targetGeminiModel} [Runda ${round}/${maxRounds}, Cheia #${keyIdx + 1}]:`, reason);
+                    await new Promise(r => setTimeout(r, 800));
                 }
             }
         }
@@ -181,7 +165,7 @@ export default async function handler(req, res) {
         if (lastStatus === 429) {
             return res.status(429).json({
                 error: 'QUOTA_EXCEEDED',
-                message: 'Limita zilnică gratuită a fost atinsă pe toate cheile și modelele disponibile.'
+                message: 'Limita zilnică gratuită a fost atinsă pe toate cheile disponibile.'
             });
         }
 
