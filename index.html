@@ -258,7 +258,6 @@
                         <span class="text-[9px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded-full font-bold">24/7</span>
                     </a>
                 </div>
-                
                 <!-- Secțiunea Istoric Conversații în Meniu (Salvare pe conversație) -->
                 <div class="px-1 py-2 mt-3 border-t border-gray-800">
                     <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400 mb-1.5">
@@ -316,7 +315,6 @@
                             </button>
                         </div>
                     </div>
-
                     <!-- HUD Neural Central -->
                     <div class="bg-panelBg border border-cyanNeon/30 rounded-3xl p-4 sm:p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[340px] sm:min-h-[380px]">
                         <div class="absolute top-3 left-3 sm:top-4 sm:left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg" data-i18n="hudCoreBadge">
@@ -386,7 +384,6 @@
                             <button onclick="selectOffice3DAgent('roast')" id="pill-roast" class="office-agent-pill px-2.5 py-1.5 rounded-xl bg-gray-900 border border-tiktokColor/40 text-tiktokColor font-bold cursor-pointer transition hover:bg-tiktokColor hover:text-white" data-i18n="pillRoast">🔥 Roast</button>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
                         <div class="lg:col-span-7 bg-[#0b1021] border border-cyanNeon/30 rounded-2xl relative overflow-hidden h-[290px] sm:h-[340px] shadow-2xl select-none">
                             <div id="office3d-canvas-wrap" class="w-full h-full"></div>
@@ -451,7 +448,6 @@
                                     Rezultatul va apărea aici.
                                 </div>
                             </div>
-
                             <div id="office3d-panel-abtest" class="office-agent-panel hidden space-y-2 flex-1 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-gray-800 pb-2">
                                     <h3 class="text-xs font-bold text-sky-400" data-i18n="abAgentTitle"><i class="fa-solid fa-vials mr-1.5"></i>Agent A/B Testing Titluri</h3>
@@ -507,6 +503,7 @@
                    <div class="flex items-center justify-between gap-2 mb-2 shrink-0 flex-wrap">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> <span data-i18n="chatTitle">Nexus Neural Assistant - Home / Tools Hub</span></h2>
                         <div class="flex items-center gap-2">
+                            <span id="freeCountDisplay" class="text-[10px] font-mono bg-emerald-950/70 border border-emeraldNeon/30 text-emerald-300 px-2 py-0.5 rounded-lg" title="Mesaje gratuite rămase azi">10/10</span>
                             <span id="chatSessionTokens" class="text-[10px] font-mono bg-gray-900 border border-cyanNeon/30 text-cyan-300 px-2 py-0.5 rounded-lg">Sesiune: 0 tok</span>
                             <button onclick="startNewConversation()" class="text-[10px] bg-cyanNeon/15 hover:bg-cyanNeon/25 text-cyanNeon border border-cyanNeon/40 px-2 py-0.5 rounded-lg font-semibold cursor-pointer transition" data-i18n="btnNewChat">+ Nouă</button>
                         </div>
@@ -555,9 +552,8 @@
                         <div class="mb-1 flex items-center space-x-2 px-1">
                             <span class="text-xs text-gray-400 font-medium" data-i18n="aiModelLabel">Model AI:</span>
                             <select id="aiModelSelect" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-3 py-1 border border-gray-700 outline-none focus:border-cyanNeon cursor-pointer">
-                                <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Implicit / Auto-Fallback)</option>
-                                <option value="deepseek-chat">DeepSeek Chat (Backup 1)</option>
-                                <option value="gpt-4o-mini">OpenAI GPT-4o-mini (Backup 2)</option>
+                                <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Primary / Auto-Retry)</option>
+                                <option value="gemini-3.8-flash-lite">Gemini 3.8 Flash Lite (Fast)</option>
                             </select>
                         </div>
                         <div class="flex space-x-2 items-end">
@@ -1427,11 +1423,11 @@
                 try { history.pushState({ tabId: prev.tabId, title: prev.title }, prev.title, '#' + prev.tabId); } catch (e) {}
             }
         });
-
         window.addEventListener('DOMContentLoaded', () => {
             registerPwaServiceWorker();
             updatePwaInstallButtons(Boolean(deferredPwaPrompt));
             initMatrix();
+            refreshFreeQuotaUI();
             refreshTokenCountersUI();
             loadHistoryUI();
             const savedDraft = localStorage.getItem('nexus_chat_draft');
@@ -1519,14 +1515,64 @@
             if (modal) modal.classList.add('hidden');
         };
 
-        let freeMessagesLeft = 10;
+        // --- SISTEM MESAJE GRATUITE ZILNICE (10 / ZI) + VIP ---
+        const DAILY_FREE_LIMIT = 10;
+
+        function getTodayQuotaKey() {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            return `nexus_free_quota_${yyyy}-${mm}-${dd}`;
+        }
+
+        function isVipUnlocked() {
+            return localStorage.getItem('nexus_vip_unlocked') === '1';
+        }
+
+        function getRemainingFreeMessages() {
+            if (isVipUnlocked()) return DAILY_FREE_LIMIT;
+            const key = getTodayQuotaKey();
+            const raw = localStorage.getItem(key);
+            if (raw === null) {
+                localStorage.setItem(key, String(DAILY_FREE_LIMIT));
+                return DAILY_FREE_LIMIT;
+            }
+            const parsed = Number(raw);
+            if (!Number.isFinite(parsed) || parsed < 0) return 0;
+            return Math.min(DAILY_FREE_LIMIT, Math.floor(parsed));
+        }
+
+        function consumeFreeMessage() {
+            if (isVipUnlocked()) return true;
+            const current = getRemainingFreeMessages();
+            if (current <= 0) return false;
+            localStorage.setItem(getTodayQuotaKey(), String(current - 1));
+            refreshFreeQuotaUI();
+            return true;
+        }
+
+        function refreshFreeQuotaUI() {
+            const display = document.getElementById('freeCountDisplay');
+            if (!display) return;
+            if (isVipUnlocked()) {
+                display.innerText = 'VIP ∞';
+                display.className = 'text-[10px] font-mono bg-amber-950/70 border border-amberGlow/40 text-amberGlow px-2 py-0.5 rounded-lg';
+                return;
+            }
+            const rem = getRemainingFreeMessages();
+            display.innerText = `${rem}/${DAILY_FREE_LIMIT}`;
+            display.className = rem > 0
+                ? 'text-[10px] font-mono bg-emerald-950/70 border border-emeraldNeon/30 text-emerald-300 px-2 py-0.5 rounded-lg'
+                : 'text-[10px] font-mono bg-red-950/70 border border-red-500/40 text-red-300 px-2 py-0.5 rounded-lg';
+        }
 
         window.showToast = function(msg, type='info') {
             const container = document.getElementById('toastContainer');
             if(!container) return;
             const toast = document.createElement('div');
             toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
-            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${escapeHtml(msg)}`;
+            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':type==='error'?'fa-triangle-exclamation':'fa-info'}"></i> ${escapeHtml(msg)}`;
             container.appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
             setTimeout(() => {
@@ -1534,6 +1580,7 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         };
+
         let attachedFiles = {};
         
         window.handleFileSelect = function(tabKey) {
@@ -1582,68 +1629,86 @@
         async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
             const departmentSelect = document.getElementById('department-select');
             const selectedDept = departmentSelect ? departmentSelect.value : 'general';
+            const chosenModel = (modelName && String(modelName).includes('gemini'))
+                ? String(modelName).trim()
+                : 'gemini-3.8-flash';
 
-            const modelPipeline = [modelName, 'deepseek-chat', 'gpt-4o-mini'].filter((v, i, a) => a.indexOf(v) === i);
-            let lastError = null;
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: promptText,
+                    fileData: fileData,
+                    model: chosenModel,
+                    department: selectedDept,
+                    lang: currentLang
+                })
+            });
 
-            for (const currentModel of modelPipeline) {
+            if (!response.ok) {
+                let errorMsg = `Eroare server AI (${response.status}).`;
                 try {
-                    const response = await fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: promptText, fileData: fileData, model: currentModel, department: selectedDept, lang: currentLang })
-                    });
+                    const errData = await response.json();
+                    errorMsg = errData.error || errorMsg;
+                } catch(e) {}
+                if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED' || response.status === 429) {
+                    throw new Error('QUOTA_EXCEEDED');
+                }
+                throw new Error(errorMsg);
+            }
 
-                    if (!response.ok) {
-                        let errorMsg = "Eroare de la serverul AI.";
+            if (!response.body) {
+                const rawText = await response.text().catch(() => '');
+                if (onChunkReceived && rawText) onChunkReceived(rawText);
+                return rawText;
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let accumulatedText = "";
+            let textBuffer = "";
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                textBuffer += decoder.decode(value, { stream: true });
+                const lines = textBuffer.split("\n");
+                textBuffer = lines.pop(); 
+                for (const line of lines) {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine.startsWith("data:")) {
                         try {
-                            const errData = await response.json();
-                            errorMsg = errData.error || errorMsg;
-                        } catch(e) {}
-                        if (errorMsg.toLowerCase().includes('quota') || errorMsg === 'QUOTA_EXCEEDED') {
-                            throw new Error('QUOTA_EXCEEDED');
-                        }
-                        throw new Error(errorMsg);
-                    }
-
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder("utf-8");
-                    let accumulatedText = "";
-                    let textBuffer = "";
-
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-                        textBuffer += decoder.decode(value, { stream: true });
-                        const lines = textBuffer.split("\n");
-                        textBuffer = lines.pop(); 
-                        for (const line of lines) {
-                            const trimmedLine = line.trim();
-                            if (trimmedLine.startsWith("data:")) {
-                                try {
-                                    const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
-                                    if (!jsonStr) continue;
-                                    const parsed = JSON.parse(jsonStr);
-                                    if (parsed?.usageMetadata?.totalTokenCount) {
-                                        window.addAutoTokens(Number(parsed.usageMetadata.totalTokenCount));
-                                    }
-                                    const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || parsed.choices?.[0]?.delta?.content || "";
-                                    if (piece) {
-                                        accumulatedText += piece;
-                                        if (onChunkReceived) onChunkReceived(accumulatedText);
-                                    }
-                                } catch (e) {}
+                            const jsonStr = trimmedLine.replace(/^data:\s*/, "").trim();
+                            if (!jsonStr || jsonStr === '[DONE]') continue;
+                            const parsed = JSON.parse(jsonStr);
+                            if (parsed?.usageMetadata?.totalTokenCount) {
+                                window.addAutoTokens(Number(parsed.usageMetadata.totalTokenCount));
                             }
-                        }
+                            const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || parsed.choices?.[0]?.delta?.content || "";
+                            if (piece) {
+                                accumulatedText += piece;
+                                if (onChunkReceived) onChunkReceived(accumulatedText);
+                            }
+                        } catch (e) {}
                     }
-                    if (accumulatedText) return accumulatedText;
-                } catch (err) {
-                    lastError = err;
-                    if (err.message === 'QUOTA_EXCEEDED') break;
                 }
             }
-            if (lastError && lastError.message === 'QUOTA_EXCEEDED') throw new Error('QUOTA_EXCEEDED');
-            throw new Error(lastError?.message || "Toți agenții din rețea au eșuat.");
+
+            if (textBuffer.trim().startsWith("data:")) {
+                try {
+                    const jsonStr = textBuffer.trim().replace(/^data:\s*/, "").trim();
+                    if (jsonStr && jsonStr !== '[DONE]') {
+                        const parsed = JSON.parse(jsonStr);
+                        const piece = parsed.candidates?.[0]?.content?.parts?.[0]?.text || parsed.choices?.[0]?.delta?.content || "";
+                        if (piece) {
+                            accumulatedText += piece;
+                            if (onChunkReceived) onChunkReceived(accumulatedText);
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            return accumulatedText;
         }
 
         window.copyElementText = function(elementId) {
@@ -1663,15 +1728,13 @@
             const file = attachedFiles ? attachedFiles[tabKey] : null;
             if (!text && !file) return;
 
-            if(tabKey === 'chat') {
-                if(freeMessagesLeft <= 0) {
-                    window.showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO!', 'error');
+            if (tabKey === 'chat') {
+                if (!consumeFreeMessage()) {
+                    refreshFreeQuotaUI();
+                    window.showToast('Ai epuizat cele 10 mesaje gratuite de astăzi. Activează PRO!', 'error');
                     window.switchTab('billingCard', 'Abonament & PRO');
                     return;
                 }
-                freeMessagesLeft--;
-                const freeCountDisplay = document.getElementById('freeCountDisplay');
-                if(freeCountDisplay) freeCountDisplay.innerText = freeMessagesLeft + '/10';
             }
 
             let displayHtml = '';
@@ -1721,6 +1784,8 @@
 
                 if (aiReply) {
                     window.addAutoTokens(aiReply);
+                } else {
+                    contentDiv.innerHTML = `<span class="text-amber-400 text-xs">⚠️ Răspuns gol primit de la server. Încearcă din nou.</span>`;
                 }
                 
                 if (tabKey === 'chat') {
@@ -1728,7 +1793,7 @@
                 }
             } catch (err) {
                 if (err.message === 'QUOTA_EXCEEDED') {
-                    contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
+                    contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de cereri/mesaje a fost atinsă. Activează Nexus Pro VIP sau reîncearcă mai târziu!</span>`;
                 } else {
                     contentDiv.innerHTML = `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${escapeHtml(err.message)}</div>`;
                 }
@@ -2012,6 +2077,8 @@
             }
             const validLicenseKeys = ["NEXUS-VIP-2026", "NEXUS-PRIETEN-01", "NEXUS-PRO-EARLY", "CADOU-SPECIAL-2026"];
             if (validLicenseKeys.includes(userKey)) {
+                localStorage.setItem('nexus_vip_unlocked', '1');
+                refreshFreeQuotaUI();
                 statusText.innerText = "Cheie activată cu succes! Acces PRO VIP deblocat ✅";
                 statusText.className = "text-[10px] text-emerald-400 mt-2 font-bold";
                 const badge = document.getElementById('proBadge');
@@ -2158,10 +2225,16 @@
             fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: `[Language: ${currentLang}] ${userText} [Stil: ${style}]`, department: 'general', toolType: 'imageGen' })
+                body: JSON.stringify({
+                    prompt: `[Language: ${currentLang}] ${userText} [Stil: ${style}]`,
+                    model: 'gemini-3.8-flash',
+                    department: 'general',
+                    toolType: 'imageGen',
+                    lang: currentLang
+                })
             })
             .then(async res => {
-                if (!res.ok) throw new Error("Eroare de la serverul AI.");
+                if (!res.ok) throw new Error(`Eroare server AI (${res.status}).`);
                 const reader = res.body.getReader();
                 const decoder = new TextDecoder();
                 let fullText = "";
@@ -2175,7 +2248,7 @@
                         if (trimmed.startsWith("data:")) {
                             try {
                                 const jsonStr = trimmed.replace(/^data:\s*/, "");
-                                if (!jsonStr) continue;
+                                if (!jsonStr || jsonStr === '[DONE]') continue;
                                 const parsed = JSON.parse(jsonStr);
                                 if (parsed?.usageMetadata?.totalTokenCount) {
                                     window.addAutoTokens(Number(parsed.usageMetadata.totalTokenCount));
@@ -2233,6 +2306,7 @@
                 output.innerText = `[Generative AI] Prompt: ${prompt}\nStatus: Serverul AI nu a răspuns (${e.message}).`;
             }
         };
+
         const baseRo = {
             btnBack: "Înapoi",
             btnInstallPwa: "Instalează",
@@ -3489,6 +3563,7 @@
 
             window.setCreativeMode(currentCreativeMode);
             updateOffice3DStatusLabel();
+            refreshFreeQuotaUI();
             refreshTokenCountersUI();
             loadHistoryUI();
         };
