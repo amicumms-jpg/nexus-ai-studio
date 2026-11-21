@@ -79,11 +79,10 @@ export default async function handler(req, res) {
             ? rawModel
             : 'gemini-3.8-flash';
 
-        let lastStatus = 0;
-        let lastError = 'Serviciul AI este temporar indisponibil.';
+        let lastStatus = 503;
 
         if (geminiApiKey) {
-            const maxAttempts = 3;
+            const maxAttempts = 2;
             for (let i = 0; i < maxAttempts; i++) {
                 try {
                     const apiResponse = await fetch(
@@ -95,7 +94,7 @@ export default async function handler(req, res) {
                                 systemInstruction,
                                 contents: [{ parts }]
                             }),
-                            signal: AbortSignal.timeout(4500)
+                            signal: AbortSignal.timeout(4000)
                         }
                     );
 
@@ -119,20 +118,19 @@ export default async function handler(req, res) {
 
                     lastStatus = apiResponse.status;
                     const errText = await apiResponse.text().catch(() => '');
-                    lastError = errText || `Eroare ${targetGeminiModel} (${apiResponse.status})`;
                     console.error(`Modelul ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}) a eșuat (${apiResponse.status}): ${errText}`);
 
                     if ((apiResponse.status === 503 || apiResponse.status === 429) && i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 700));
+                        await new Promise(r => setTimeout(r, 400));
                     } else if (apiResponse.status === 404) {
                         break;
                     }
                 } catch (err) {
-                    if (!lastStatus) lastStatus = 503;
-                    lastError = err?.name === 'TimeoutError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
-                    console.error(`Excepție la ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}):`, lastError);
+                    lastStatus = 503;
+                    const reason = err?.name === 'TimeoutError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
+                    console.error(`Excepție la ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}):`, reason);
                     if (i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 700));
+                        await new Promise(r => setTimeout(r, 400));
                     }
                 }
             }
@@ -148,9 +146,7 @@ export default async function handler(req, res) {
                     userPrompt
                 );
                 if (dsText) return streamTextAsSse(res, dsText);
-            } catch (err) {
-                lastError = err?.message || 'Eroare DeepSeek';
-            }
+            } catch (_) {}
         }
 
         if ((lowerModel.includes('gpt') || lowerModel.includes('openai') || lowerModel.includes('backup 2')) && openaiApiKey) {
@@ -163,9 +159,7 @@ export default async function handler(req, res) {
                     userPrompt
                 );
                 if (oaiText) return streamTextAsSse(res, oaiText);
-            } catch (err) {
-                lastError = err?.message || 'Eroare OpenAI';
-            }
+            } catch (_) {}
         }
 
         if (falKey) {
@@ -181,23 +175,19 @@ export default async function handler(req, res) {
                         system_prompt: systemPromptText,
                         prompt: userPrompt
                     }),
-                    signal: AbortSignal.timeout(5500)
+                    signal: AbortSignal.timeout(4500)
                 });
                 const falData = await falRes.json().catch(() => ({}));
                 const falText = falData?.output || falData?.text || falData?.response || '';
                 if (falRes.ok && falText) {
                     return streamTextAsSse(res, String(falText));
                 }
-            } catch (_) {
-                // ignorăm dacă nu are credit/acces
-            }
+            } catch (_) {}
         }
 
-        const friendlyMsg = lastStatus === 503
-            ? '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503). Reîncearcă mesajul în câteva secunde.'
-            : lastStatus === 429
-                ? '⚠️ Limita de cereri pentru cheia Gemini a fost atinsă (429). Încearcă din nou puțin mai târziu.'
-                : `⚠️ Eroare temporară la generare (${lastStatus || 503}). Te rog retrimite mesajul.`;
+        const friendlyMsg = lastStatus === 429
+            ? '⚠️ Limita de cereri pentru cheia Gemini a fost atinsă (429). Încearcă din nou puțin mai târziu.'
+            : '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503 / timeout). Reîncearcă mesajul în câteva secunde.';
 
         return streamTextAsSse(res, friendlyMsg);
     } catch (error) {
@@ -224,7 +214,7 @@ async function callOpenAiCompatible(endpoint, apiKey, model, systemPrompt, userT
             ],
             stream: false
         }),
-        signal: AbortSignal.timeout(4500)
+        signal: AbortSignal.timeout(4000)
     });
 
     const data = await response.json().catch(() => ({}));
