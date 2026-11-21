@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-        return res.status(200).json({ status: 'Chat API endpoint is active (Gemini + DeepSeek + OpenAI).' });
+        return res.status(200).json({ status: 'Chat API endpoint is active.' });
     }
 
     if (req.method !== 'POST') {
@@ -74,7 +74,6 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        // Normalizăm selecția din UI către identificatorii reali de model
         let primaryModel = 'gemini-3.8-flash';
         if (lowerModel.includes('deepseek') || lowerModel.includes('backup 1')) {
             primaryModel = 'deepseek-chat';
@@ -84,7 +83,6 @@ export default async function handler(req, res) {
             primaryModel = rawModel;
         }
 
-        // Ordinea de execuție: modelul selectat -> restul disponibilităților
         const queue = [...new Set([
             primaryModel,
             'gemini-3.8-flash',
@@ -98,7 +96,6 @@ export default async function handler(req, res) {
         for (const currentModel of queue) {
             const cLower = currentModel.toLowerCase();
 
-            // 1. Gemini
             if (cLower.includes('gemini')) {
                 if (!geminiApiKey) continue;
 
@@ -111,7 +108,8 @@ export default async function handler(req, res) {
                             body: JSON.stringify({
                                 systemInstruction,
                                 contents: [{ parts }]
-                            })
+                            }),
+                            signal: AbortSignal.timeout(8000)
                         }
                     );
 
@@ -138,18 +136,16 @@ export default async function handler(req, res) {
                     if (apiResponse.status === 429 || /429|quota|resource_exhausted/i.test(errText)) {
                         hitQuota = true;
                     }
-                    console.warn(`Gemini (${currentModel}) a eșuat (${apiResponse.status}), trecem la următorul...`);
                 } catch (err) {
-                    lastError = err?.message || 'Eroare de rețea Gemini.';
-                    console.warn('Eroare de rețea Gemini:', lastError);
+                    lastError = err?.name === 'TimeoutError'
+                        ? `Timeout la ${currentModel}`
+                        : (err?.message || 'Eroare de rețea Gemini.');
                 }
                 continue;
             }
 
-            // 2. DeepSeek Chat (Backup 1)
             if (cLower.includes('deepseek')) {
                 if (!deepseekApiKey) continue;
-
                 try {
                     const dsText = await callOpenAiCompatible(
                         'https://api.deepseek.com/chat/completions',
@@ -158,20 +154,15 @@ export default async function handler(req, res) {
                         systemPromptText,
                         userPrompt
                     );
-                    if (dsText) {
-                        return streamTextAsSse(res, dsText);
-                    }
+                    if (dsText) return streamTextAsSse(res, dsText);
                 } catch (err) {
-                    lastError = err?.message || 'Eroare DeepSeek.';
-                    console.warn('DeepSeek a eșuat:', lastError);
+                    lastError = err?.name === 'TimeoutError' ? 'Timeout la DeepSeek' : (err?.message || 'Eroare DeepSeek.');
                 }
                 continue;
             }
 
-            // 3. OpenAI GPT-4o-mini (Backup 2)
             if (cLower.includes('gpt') || cLower.includes('openai')) {
                 if (!openaiApiKey) continue;
-
                 try {
                     const oaiText = await callOpenAiCompatible(
                         'https://api.openai.com/v1/chat/completions',
@@ -180,18 +171,15 @@ export default async function handler(req, res) {
                         systemPromptText,
                         userPrompt
                     );
-                    if (oaiText) {
-                        return streamTextAsSse(res, oaiText);
-                    }
+                    if (oaiText) return streamTextAsSse(res, oaiText);
                 } catch (err) {
-                    lastError = err?.message || 'Eroare OpenAI.';
-                    console.warn('OpenAI a eșuat:', lastError);
+                    lastError = err?.name === 'TimeoutError' ? 'Timeout la OpenAI' : (err?.message || 'Eroare OpenAI.');
                 }
                 continue;
             }
         }
 
-        if (hitQuota && !deepseekApiKey && !openaiApiKey) {
+        if (hitQuota) {
             return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
         }
 
@@ -223,7 +211,8 @@ async function callOpenAiCompatible(endpoint, apiKey, model, systemPrompt, userT
                 { role: 'user', content: userText }
             ],
             stream: false
-        })
+        }),
+        signal: AbortSignal.timeout(8000)
     });
 
     const data = await response.json().catch(() => ({}));
