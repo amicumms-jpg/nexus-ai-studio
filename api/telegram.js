@@ -33,9 +33,9 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    const modelsToTry = ['gemini-3.8-flash', 'gemini-2.5-flash'];
+    const modelsToTry = ['gemini-3.8-flash'];
     let replyText = null;
-    const errorsLog = [];
+    let lastStatus = null;
 
     for (const modelName of modelsToTry) {
         let succeeded = false;
@@ -63,6 +63,7 @@ export default async function handler(req, res) {
                 );
 
                 clearTimeout(timeoutId);
+                lastStatus = aiResponse.status;
                 const data = await aiResponse.json().catch(() => ({}));
 
                 if (aiResponse.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
@@ -72,10 +73,9 @@ export default async function handler(req, res) {
                 }
 
                 const errMsg = data?.error?.message || `HTTP ${aiResponse.status}`;
-                errorsLog.push(`${modelName} [${aiResponse.status}]: ${errMsg}`);
-                console.error(`Modelul ${modelName} (încercarea ${attempt}) a eșuat (${aiResponse.status}):`, JSON.stringify(data));
+                console.error(`Modelul ${modelName} (încercarea ${attempt}) a eșuat (${aiResponse.status}):`, errMsg);
 
-                if (aiResponse.status === 429 || /not supported|unsupported|quota|resource_exhausted/i.test(errMsg)) {
+                if (aiResponse.status === 429 || /quota|resource_exhausted/i.test(errMsg)) {
                     break;
                 }
 
@@ -85,9 +85,7 @@ export default async function handler(req, res) {
                     break;
                 }
             } catch (apiErr) {
-                const netErr = apiErr?.message || String(apiErr);
-                errorsLog.push(`${modelName} [err]: ${netErr}`);
-                console.error(`Eroare la modelul ${modelName} (încercarea ${attempt}):`, netErr);
+                console.error(`Eroare la modelul ${modelName} (încercarea ${attempt}):`, apiErr?.message || apiErr);
                 if (attempt < 2) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 }
@@ -98,7 +96,13 @@ export default async function handler(req, res) {
     }
 
     if (!replyText) {
-        replyText = `⚠️ Erori modele:\n${errorsLog.join('\n').slice(0, 1200)}`;
+        if (lastStatus === 429) {
+            replyText = "⏳ S-a atins limita zilnică de cereri pe planul gratuit (Free Tier). Te rog să revii mai târziu sau să folosești platforma web nexusaistudio.ro.";
+        } else if (lastStatus === 503) {
+            replyText = "⚠️ Serverele AI sunt momentan suprasolicitate. Mai încearcă o dată peste câteva secunde!";
+        } else {
+            replyText = "⚠️ Serviciul AI este momentan indisponibil. Te rog să reîncerci în câteva secunde!";
+        }
     }
 
     await sendTelegramMessage(token, chatId, replyText);
