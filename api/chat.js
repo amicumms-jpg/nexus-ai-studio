@@ -117,22 +117,27 @@ export default async function handler(req, res) {
                     }
 
                     lastStatus = apiResponse.status;
-                    const errText = await apiResponse.text().catch(() => '');
-                    console.error(`Modelul ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}) a eșuat (${apiResponse.status}): ${errText}`);
+                    const rawErr = await apiResponse.text().catch(() => '');
+                    let formattedErr = rawErr;
+                    try {
+                        const parsedErr = JSON.parse(rawErr);
+                        formattedErr = parsedErr?.error?.message || JSON.stringify(parsedErr);
+                    } catch (_) {}
+                    console.error(`Modelul ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}) a eșuat (${apiResponse.status}): ${formattedErr}`);
 
                     if (apiResponse.status === 429 || apiResponse.status === 404 || apiResponse.status === 401 || apiResponse.status === 403) {
                         break;
                     }
 
                     if (apiResponse.status === 503 && i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 500));
+                        await new Promise(r => setTimeout(r, 1200));
                     }
                 } catch (err) {
                     lastStatus = 503;
                     const reason = err?.name === 'TimeoutError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
                     console.error(`Excepție la ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}):`, reason);
                     if (i < maxAttempts - 1) {
-                        await new Promise(r => setTimeout(r, 500));
+                        await new Promise(r => setTimeout(r, 1200));
                     }
                 }
             }
