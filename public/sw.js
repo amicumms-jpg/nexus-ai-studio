@@ -35,7 +35,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Nu intercepta rutele API sau Firebase
+  // Nu intercepta rutele API sau alte origini externe
   if (url.pathname.startsWith('/api/')) return;
 
   event.respondWith(
@@ -49,6 +49,13 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match('/index.html')))
+      .catch(async () => {
+        const cachedExact = await caches.match(request);
+        if (cachedExact) return cachedExact;
+        if (request.mode === 'navigate') {
+          return (await caches.match('/')) || (await caches.match('/index.html'));
+        }
+        return Response.error();
+      })
   );
 });
