@@ -75,22 +75,19 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        // Doar modele Gemini de la 3.8 în sus (fără 1.5 / 2.0 / 2.5)
-        const selectedGemini = lowerModel.includes('gemini') && !/1\.5|2\.0|2\.5/.test(lowerModel)
-            ? rawModel
-            : 'gemini-3.8-flash';
-
-        const geminiCandidates = [...new Set([
-            selectedGemini,
+        // Încercăm de 2 ori pe gemini-3.8-flash (pentru spike-uri 503), apoi gemini-3.8-pro
+        const geminiCandidates = [
+            'gemini-3.8-flash',
             'gemini-3.8-flash',
             'gemini-3.8-pro'
-        ])];
+        ];
 
-        let hitQuotaOrDemand = false;
+        let lastStatus = 0;
         let lastError = 'Serviciul AI este temporar indisponibil.';
 
         if (geminiApiKey) {
-            for (const gModel of geminiCandidates) {
+            for (let i = 0; i < geminiCandidates.length; i++) {
+                const gModel = geminiCandidates[i];
                 try {
                     const apiResponse = await fetch(
                         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(gModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(geminiApiKey)}`,
@@ -101,7 +98,7 @@ export default async function handler(req, res) {
                                 systemInstruction,
                                 contents: [{ parts }]
                             }),
-                            signal: AbortSignal.timeout(5500)
+                            signal: AbortSignal.timeout(7500)
                         }
                     );
 
@@ -123,14 +120,18 @@ export default async function handler(req, res) {
                         return res.end();
                     }
 
+                    lastStatus = apiResponse.status;
                     const errText = await apiResponse.text().catch(() => '');
                     lastError = errText || `Eroare ${gModel} (${apiResponse.status})`;
-                    if (apiResponse.status === 429 || apiResponse.status === 503 || /429|503|quota|high demand|resource_exhausted/i.test(errText)) {
-                        hitQuotaOrDemand = true;
+                    console.error(`Modelul ${gModel} (încercarea ${i + 1}) a eșuat (${apiResponse.status}): ${errText}`);
+
+                    // Pauză scurtă de 1s înainte de a doua încercare pe 503
+                    if (apiResponse.status === 503 && i === 0) {
+                        await new Promise(r => setTimeout(r, 1000));
                     }
                 } catch (err) {
-                    hitQuotaOrDemand = true;
                     lastError = err?.name === 'TimeoutError' ? `Timeout la ${gModel}` : (err?.message || 'Eroare Gemini');
+                    console.error(`Excepție la ${gModel} (încercarea ${i + 1}):`, lastError);
                 }
             }
         }
@@ -190,15 +191,18 @@ export default async function handler(req, res) {
             }
         }
 
-        if (hitQuotaOrDemand) {
-            return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
-        }
+        // Trimitem mesaj clar prin SSE ca să nu mai afișeze "Toți agenții din rețea au eșuat"
+        const friendlyMsg = lastStatus === 503
+            ? '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503). Reîncearcă mesajul în câteva secunde.'
+            : lastStatus === 429
+                ? '⚠️ Limita de cereri pe minut/zi pentru cheia Gemini a fost atinsă (429). Încearcă din nou puțin mai târziu.'
+                : `⚠️ Eroare temporară la generare (${lastStatus || 'Timeout'}). Te rog retrimite mesajul.`;
 
-        return res.status(200).json({ error: lastError });
+        return streamTextAsSse(res, friendlyMsg);
     } catch (error) {
         console.error("Eroare server API chat:", error);
         if (!res.headersSent) {
-            return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
+            return streamTextAsSse(res, '⚠️ Eroare internă temporară. Te rog retrimite mesajul.');
         }
         res.end();
     }
