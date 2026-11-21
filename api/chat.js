@@ -75,22 +75,19 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        // Încercăm de 2 ori pe gemini-3.8-flash (pentru spike-uri 503), apoi gemini-3.8-pro
-        const geminiCandidates = [
-            'gemini-3.8-flash',
-            'gemini-3.8-flash',
-            'gemini-3.8-pro'
-        ];
+        const targetGeminiModel = lowerModel.includes('gemini') && !/1\.5|2\.0|2\.5|pro/.test(lowerModel)
+            ? rawModel
+            : 'gemini-3.8-flash';
 
         let lastStatus = 0;
         let lastError = 'Serviciul AI este temporar indisponibil.';
 
         if (geminiApiKey) {
-            for (let i = 0; i < geminiCandidates.length; i++) {
-                const gModel = geminiCandidates[i];
+            const maxAttempts = 3;
+            for (let i = 0; i < maxAttempts; i++) {
                 try {
                     const apiResponse = await fetch(
-                        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(gModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(geminiApiKey)}`,
+                        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(targetGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(geminiApiKey)}`,
                         {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -98,7 +95,7 @@ export default async function handler(req, res) {
                                 systemInstruction,
                                 contents: [{ parts }]
                             }),
-                            signal: AbortSignal.timeout(7500)
+                            signal: AbortSignal.timeout(4500)
                         }
                     );
 
@@ -122,16 +119,21 @@ export default async function handler(req, res) {
 
                     lastStatus = apiResponse.status;
                     const errText = await apiResponse.text().catch(() => '');
-                    lastError = errText || `Eroare ${gModel} (${apiResponse.status})`;
-                    console.error(`Modelul ${gModel} (încercarea ${i + 1}) a eșuat (${apiResponse.status}): ${errText}`);
+                    lastError = errText || `Eroare ${targetGeminiModel} (${apiResponse.status})`;
+                    console.error(`Modelul ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}) a eșuat (${apiResponse.status}): ${errText}`);
 
-                    // Pauză scurtă de 1s înainte de a doua încercare pe 503
-                    if (apiResponse.status === 503 && i === 0) {
-                        await new Promise(r => setTimeout(r, 1000));
+                    if ((apiResponse.status === 503 || apiResponse.status === 429) && i < maxAttempts - 1) {
+                        await new Promise(r => setTimeout(r, 700));
+                    } else if (apiResponse.status === 404) {
+                        break;
                     }
                 } catch (err) {
-                    lastError = err?.name === 'TimeoutError' ? `Timeout la ${gModel}` : (err?.message || 'Eroare Gemini');
-                    console.error(`Excepție la ${gModel} (încercarea ${i + 1}):`, lastError);
+                    if (!lastStatus) lastStatus = 503;
+                    lastError = err?.name === 'TimeoutError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
+                    console.error(`Excepție la ${targetGeminiModel} (încercarea ${i + 1}/${maxAttempts}):`, lastError);
+                    if (i < maxAttempts - 1) {
+                        await new Promise(r => setTimeout(r, 700));
+                    }
                 }
             }
         }
@@ -179,7 +181,7 @@ export default async function handler(req, res) {
                         system_prompt: systemPromptText,
                         prompt: userPrompt
                     }),
-                    signal: AbortSignal.timeout(6000)
+                    signal: AbortSignal.timeout(5500)
                 });
                 const falData = await falRes.json().catch(() => ({}));
                 const falText = falData?.output || falData?.text || falData?.response || '';
@@ -191,12 +193,11 @@ export default async function handler(req, res) {
             }
         }
 
-        // Trimitem mesaj clar prin SSE ca să nu mai afișeze "Toți agenții din rețea au eșuat"
         const friendlyMsg = lastStatus === 503
             ? '⚠️ Serverele Gemini 3.8 Flash sunt temporar supraîncărcate (503). Reîncearcă mesajul în câteva secunde.'
             : lastStatus === 429
-                ? '⚠️ Limita de cereri pe minut/zi pentru cheia Gemini a fost atinsă (429). Încearcă din nou puțin mai târziu.'
-                : `⚠️ Eroare temporară la generare (${lastStatus || 'Timeout'}). Te rog retrimite mesajul.`;
+                ? '⚠️ Limita de cereri pentru cheia Gemini a fost atinsă (429). Încearcă din nou puțin mai târziu.'
+                : `⚠️ Eroare temporară la generare (${lastStatus || 503}). Te rog retrimite mesajul.`;
 
         return streamTextAsSse(res, friendlyMsg);
     } catch (error) {
