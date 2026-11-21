@@ -25,8 +25,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { prompt, message, fileData, model, toolType } = req.body;
-        const apiKey = process.env.GEMINI_API_KEY;
+        const { prompt, message, fileData, model, toolType, department, lang } = req.body || {};
+        const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
         if (!apiKey) {
             return res.status(500).json({ error: 'Cheia GEMINI_API_KEY nu este setată în Vercel!' });
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
         const userPrompt = prompt || message || "Analizează acest fișier:";
 
-        let parts = [{ text: userPrompt }];
+        const parts = [{ text: userPrompt }];
 
         if (fileData && fileData.base64 && fileData.mimeType) {
             parts.push({
@@ -46,6 +46,11 @@ export default async function handler(req, res) {
         }
 
         let specializedRoleDescription = "Ești Asistentul Virtual Oficial Nexus AI Studio Pro (nexusaistudio.ro).";
+
+        const deptConfig = department && DEPARTMENTS ? DEPARTMENTS[department] : null;
+        if (deptConfig && (deptConfig.systemPrompt || deptConfig.prompt || deptConfig.description)) {
+            specializedRoleDescription = deptConfig.systemPrompt || deptConfig.prompt || deptConfig.description;
+        }
 
         switch (toolType) {
             case 'chat':
@@ -64,68 +69,88 @@ export default async function handler(req, res) {
                 break;
         }
 
+        const langNote = lang ? ` Răspunde în limba "${lang}".` : '';
         const systemInstruction = {
             parts: [{
-                text: `${specializedRoleDescription} Răspunde direct, concis și profesional.`
+                text: `${specializedRoleDescription} Răspunde direct, concis și profesional.${langNote}`
             }]
         };
 
         const activeModel = model || 'gemini-3.8-flash';
 
-        // Setăm antetele pentru streaming instant
-        res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-        res.setHeader('Cache-Control', 'no-cache, no-transform');
-        res.setHeader('Connection', 'keep-alive');
-        res.setHeader('X-Accel-Buffering', 'no');
-
-        // Ordinea de fallback automată în caz de 503 sau 429
+        // Ordinea de fallback automată în caz de 503, 429 sau operație nesuportată
         const modelsToTry = [
             activeModel,
             'gemini-3.8-flash',
-            'gemini-3.6-flash',
-            'gemini-3.5-flash-lite'
+            'gemini-2.5-flash',
+            'gemini-2.0-flash',
+            'gemini-flash-latest'
         ];
-        
+
         // Eliminăm duplicatele din listă
         const uniqueModelsToTry = [...new Set(modelsToTry)];
 
-        let apiResponse;
+        let apiResponse = null;
         let success = false;
+        let lastErrText = '';
+        let hitRateLimit = false;
 
         for (const modelToTest of uniqueModelsToTry) {
             try {
-                apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToTest}:streamGenerateContent?alt=sse&key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        systemInstruction: systemInstruction,
-                        contents: [{ parts: parts }]
-                    })
-                });
+                const candidateRes = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToTest)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            systemInstruction: systemInstruction,
+                            contents: [{ parts: parts }]
+                        })
+                    }
+                );
 
-                if (apiResponse.ok) {
+                if (candidateRes.ok && candidateRes.body) {
+                    apiResponse = candidateRes;
                     success = true;
                     break;
-                } else {
-                    const errText = await apiResponse.clone().text();
-                    // Dacă primim eroare 503 (Unavailable) sau 429 (Rate Limit), trecem la următorul model
-                    if (apiResponse.status === 503 || apiResponse.status === 429 || errText.includes('503') || errText.includes('UNAVAILABLE')) {
-                        console.warn(`Modelul ${modelToTest} este ocupat (Eroare ${apiResponse.status}), încercăm următorul model alternativ...`);
-                        continue;
-                    } else {
-                        // Pentru alte tipuri de erori, oprim bucla
-                        break;
-                    }
                 }
+
+                const errText = await candidateRes.text().catch(() => '');
+                lastErrText = errText || `HTTP ${candidateRes.status}`;
+
+                if (candidateRes.status === 429 || /429|quota|resource_exhausted/i.test(errText)) {
+                    hitRateLimit = true;
+                    console.warn(`Modelul ${modelToTest} a atins limita (429), trecem imediat la următorul model...`);
+                    continue;
+                }
+
+                if (
+                    candidateRes.status === 503 ||
+                    candidateRes.status === 404 ||
+                    /503|unavailable|not supported|unsupported|not found/i.test(errText)
+                ) {
+                    console.warn(`Modelul ${modelToTest} indisponibil/nesuportat (${candidateRes.status}), trecem la următorul model...`);
+                    continue;
+                }
+
+                break;
             } catch (err) {
+                lastErrText = err?.message || 'Eroare de rețea';
                 console.warn(`Eroare de rețea pentru modelul ${modelToTest}:`, err);
             }
         }
 
-        if (!success || !apiResponse.ok) {
-            const errBody = apiResponse ? await apiResponse.text() : 'Eroare de rețea';
-            throw new Error(`Toate modelele sunt momentan suprasolicitate (Eroare 503/429). Detalii: ${errBody}`);
+        if (!success || !apiResponse || !apiResponse.body) {
+            throw new Error(
+                lastErrText || (hitRateLimit ? '429 QUOTA_EXCEEDED' : 'Toate modelele sunt momentan indisponibile.')
+            );
         }
+
+        // Setăm antetele pentru streaming instant doar după ce avem stream valid
+        res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no');
 
         const reader = apiResponse.body.getReader();
         const decoder = new TextDecoder();
@@ -147,10 +172,11 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error("Eroare server API chat:", error);
         if (!res.headersSent) {
-            if (error.message.toLowerCase().includes('quota') || error.message.includes('429')) {
+            const errMessage = error?.message || 'Eroare internă de server.';
+            if (errMessage.toLowerCase().includes('quota') || errMessage.includes('429')) {
                 return res.status(200).json({ error: 'QUOTA_EXCEEDED' });
             }
-            return res.status(500).json({ error: error.message || 'Eroare internă de server.' });
+            return res.status(500).json({ error: errMessage });
         } else {
             res.end();
         }
