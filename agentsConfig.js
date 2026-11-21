@@ -72,3 +72,18 @@ export const DEPARTMENTS = {
         systemPrompt: 'Ești un analist de documente și date expert (PDF-uri, tabele, fișiere). Extragi informații esențiale, interpretezi date și răspunzi punctual pe baza fișierelor primite.'
     }
 };
+
+export function getDepartmentConfig(departmentKeyOrId) {
+    if (!departmentKeyOrId) return null;
+    const normalized = String(departmentKeyOrId).trim().toLowerCase();
+    const entries = Object.values(DEPARTMENTS);
+    return (
+        entries.find(
+            (dept) =>
+                String(dept.id).toLowerCase() === normalized ||
+                String(dept.name).toLowerCase() === normalized
+        ) ||
+        DEPARTMENTS[String(departmentKeyOrId).trim().toUpperCase()] ||
+        null
+    );
+}
