@@ -32,7 +32,7 @@
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Nexus AI Studio Pro - Generare Conținut AI">
-    <meta name="twitter:description" content="Creează conținut pentru TikTok, Instagram, YouTube și articole folosind puterea AI într-o singură platformată integrată.">
+    <meta name="twitter:description" content="Creează conținut pentru TikTok, Instagram, YouTube și articole folosind puterea AI într-o singură platformă integrată.">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -201,7 +201,7 @@
             </div>
         </div>
     </header>
-    <!-- Main Layout -->
+<!-- Main Layout -->
     <div class="flex flex-1 min-h-0 w-full overflow-hidden z-10 relative">
         <!-- Overlay Mobil Corectat -->
         <div id="sidebarOverlay" onclick="closeSidebarMobile()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
@@ -292,7 +292,7 @@
                 </div> 
             </div>
         </aside>
-        <!-- Main Content Container -->
+<!-- Main Content Container -->
         <main class="flex-1 flex flex-col min-h-0 w-full bg-darkBg overflow-hidden relative pb-2 md:pb-0">
             
             <!-- TAB: Nexus Command OS -->
@@ -318,7 +318,7 @@
                     <!-- HUD Neural Central -->
                     <div class="bg-panelBg border border-cyanNeon/30 rounded-3xl p-4 sm:p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center min-h-[340px] sm:min-h-[380px]">
                         <div class="absolute top-3 left-3 sm:top-4 sm:left-4 text-[10px] font-mono text-cyanNeon uppercase tracking-widest bg-cyanNeon/10 border border-cyanNeon/30 px-2.5 py-1 rounded-lg" data-i18n="hudCoreBadge">
-                            NEXUS CORE &bull; ACTIVE NEURAL MESH
+                            NEXUS CORE • ACTIVE NEURAL MESH
                         </div>
                         <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> <span data-i18n="hudOnlineBadge">ONLINE</span>
@@ -364,7 +364,7 @@
                     </div>
                 </div>
             </div>
-            <!-- TAB: Birou Agenți 3D Izometric -->
+<!-- TAB: Birou Agenți 3D Izometric -->
             <div id="tab-office3d" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 pb-6 md:p-4 md:pb-4 space-y-3">
                 <div class="max-w-6xl mx-auto w-full space-y-3">
                     <div class="bg-panelBg border border-emeraldNeon/35 p-3 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-xl">
@@ -496,7 +496,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Tab 1: Chat General -->
             <div id="tab-chat" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-hidden p-3 pb-4 md:pb-3 space-y-2">
                 <div class="bg-panelBg border border-cyanNeon/30 p-4 rounded-2xl flex-1 flex flex-col min-h-0 shadow-xl overflow-hidden">
@@ -553,7 +552,8 @@
                             <span class="text-xs text-gray-400 font-medium" data-i18n="aiModelLabel">Model AI:</span>
                             <select id="aiModelSelect" class="bg-gray-800 text-gray-200 text-xs rounded-xl px-3 py-1 border border-gray-700 outline-none focus:border-cyanNeon cursor-pointer">
                                 <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Primary / Auto-Retry)</option>
-                                <option value="gemini-3.8-flash-lite">Gemini 3.8 Flash Lite (Fast)</option>
+                                <option value="gemini-4-hydrogen">Gemini 4 Hydrogen</option>
+                                <option value="gemini-decision-1">Gemini Decision 1</option>
                             </select>
                         </div>
                         <div class="flex space-x-2 items-end">
@@ -578,7 +578,7 @@
                     </div>
                 </div>
             </div>
-    <!-- Tab: Layers of AI Studio -->
+            <!-- Tab: Layers of AI Studio -->
     <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
@@ -633,7 +633,6 @@
             </div>
         </div>
     </div>
-
     <!-- TAB: Abonament & PRO -->
     <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 items-center justify-center">
         <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
@@ -784,7 +783,6 @@
     </div>
 </main>
 </div>
-
 <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI + TELEGRAM BOT VERIFICAT -->
     <div id="nexus-robot-widget" class="fixed bottom-12 sm:bottom-24 right-3 sm:right-4 z-50">
         <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
@@ -1626,20 +1624,20 @@
             });
         }
 
-        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
-            const departmentSelect = document.getElementById('department-select');
-            const selectedDept = departmentSelect ? departmentSelect.value : 'general';
-            const chosenModel = (modelName && String(modelName).includes('gemini'))
-                ? String(modelName).trim()
-                : 'gemini-3.8-flash';
+        const NEXUS_MODEL_ORDER = [
+            'gemini-3.8-flash',
+            'gemini-4-hydrogen',
+            'gemini-decision-1'
+        ];
 
+        async function requestSingleModelStream(promptText, fileData, modelName, selectedDept, onChunkReceived) {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt: promptText,
                     fileData: fileData,
-                    model: chosenModel,
+                    model: modelName,
                     department: selectedDept,
                     lang: currentLang
                 })
@@ -1673,7 +1671,7 @@
                 if (done) break;
                 textBuffer += decoder.decode(value, { stream: true });
                 const lines = textBuffer.split("\n");
-                textBuffer = lines.pop(); 
+                textBuffer = lines.pop();
                 for (const line of lines) {
                     const trimmedLine = line.trim();
                     if (trimmedLine.startsWith("data:")) {
@@ -1711,6 +1709,54 @@
             return accumulatedText;
         }
 
+        async function fetchFromServer(promptText, fileData = null, modelName = 'gemini-3.8-flash', onChunkReceived = null) {
+            const departmentSelect = document.getElementById('department-select');
+            const selectedDept = departmentSelect ? departmentSelect.value : 'general';
+            const primaryModel = (modelName && String(modelName).trim())
+                ? String(modelName).trim()
+                : 'gemini-3.8-flash';
+
+            const candidateQueue = [
+                primaryModel,
+                ...NEXUS_MODEL_ORDER.filter(m => m !== primaryModel)
+            ];
+
+            let lastError = null;
+            for (let i = 0; i < candidateQueue.length; i++) {
+                const attemptModel = candidateQueue[i];
+                const isFallback = i > 0;
+                try {
+                    const textResult = await requestSingleModelStream(
+                        promptText,
+                        fileData,
+                        attemptModel,
+                        selectedDept,
+                        (currentText) => {
+                            if (!onChunkReceived) return;
+                            const notice = isFallback
+                                ? `> *[Mutat automat pe \`${attemptModel}\` deoarece modelul selectat era ocupat]*\n\n`
+                                : '';
+                            onChunkReceived(notice + currentText);
+                        }
+                    );
+
+                    if (!textResult || !textResult.trim()) {
+                        throw new Error(`Răspuns gol de la ${attemptModel}`);
+                    }
+
+                    return isFallback
+                        ? `> *[Mutat automat pe \`${attemptModel}\` deoarece modelul selectat era ocupat]*\n\n${textResult}`
+                        : textResult;
+                } catch (err) {
+                    lastError = err;
+                    if (err && err.message === 'QUOTA_EXCEEDED') {
+                        throw err;
+                    }
+                }
+            }
+
+            throw lastError || new Error('Toate modelele disponibile sunt ocupate momentan.');
+        }
         window.copyElementText = function(elementId) {
             const el = document.getElementById(elementId);
             if (!el) return;
@@ -1937,10 +1983,10 @@
 
         function escapeHtml(text) {
             return String(text)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;");
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, """);
         }
 
         function parseMarkdown(text) {
@@ -2333,7 +2379,7 @@
             osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
             btnOffice3DShort: "Birou 3D",
             btnTalkToNexus: "Talk to Nexus",
-            hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+            hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
             hudOnlineBadge: "ONLINE",
             nodeContext: "Context",
             nodePodcast: "Podcast",
@@ -2510,7 +2556,7 @@
                 osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
                 btnOffice3DShort: "3D Office",
                 btnTalkToNexus: "Talk to Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; ACTIVE NEURAL MESH",
+                hudCoreBadge: "NEXUS CORE • ACTIVE NEURAL MESH",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Context",
                 nodePodcast: "Podcast",
@@ -2684,7 +2730,7 @@
                 osPrivateWorkspace: "Espacio privado. Aquí solo aparecen tus datos reales, sin datos de ejemplo.",
                 btnOffice3DShort: "Oficina 3D",
                 btnTalkToNexus: "Hablar con Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; RED NEURONAL ACTIVA",
+                hudCoreBadge: "NEXUS CORE • RED NEURONAL ACTIVA",
                 hudOnlineBadge: "EN LÍNEA",
                 nodeContext: "Contexto",
                 nodePodcast: "Podcast",
@@ -2858,7 +2904,7 @@
                 osPrivateWorkspace: "Espace privé. Seules vos vraies données apparaissent ici, sans données fictives.",
                 btnOffice3DShort: "Bureau 3D",
                 btnTalkToNexus: "Parler à Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; RÉSEAU NEURONAL ACTIF",
+                hudCoreBadge: "NEXUS CORE • RÉSEAU NEURONAL ACTIF",
                 hudOnlineBadge: "EN LIGNE",
                 nodeContext: "Contexte",
                 nodePodcast: "Podcast",
@@ -3032,7 +3078,7 @@
                 osPrivateWorkspace: "Privater Arbeitsbereich. Hier erscheinen nur deine echten Daten, keine Beispieldaten.",
                 btnOffice3DShort: "3D-Büro",
                 btnTalkToNexus: "Mit Nexus sprechen",
-                hudCoreBadge: "NEXUS CORE &bull; AKTIVES NEURALES NETZ",
+                hudCoreBadge: "NEXUS CORE • AKTIVES NEURALES NETZ",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Kontext",
                 nodePodcast: "Podcast",
@@ -3206,7 +3252,7 @@
                 osPrivateWorkspace: "Spazio privato. Qui compaiono solo i tuoi dati reali, nessun dato di esempio.",
                 btnOffice3DShort: "Ufficio 3D",
                 btnTalkToNexus: "Parla con Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; RETE NEURALE ATTIVA",
+                hudCoreBadge: "NEXUS CORE • RETE NEURALE ATTIVA",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Contesto",
                 nodePodcast: "Podcast",
@@ -3380,7 +3426,7 @@
                 osPrivateWorkspace: "مساحة عمل خاصة. تظهر هنا بياناتك الحقيقية فقط ولا توجد بيانات تجريبية.",
                 btnOffice3DShort: "المكتب 3D",
                 btnTalkToNexus: "تحدث مع Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; الشبكة العصبية النشطة",
+                hudCoreBadge: "NEXUS CORE • الشبكة العصبية النشطة",
                 hudOnlineBadge: "متصل",
                 nodeContext: "السياق",
                 nodePodcast: "بودكاست",
