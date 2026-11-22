@@ -1,295 +1,288 @@
 <!DOCTYPE html>
-<html lang="ro" dir="ltr" class="dark">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#06b6d4">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Nexus AI">
-    
-    <!-- Google tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W0PJNEF4S5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <title>Nexus AI Studio Pro</title>
 
-      gtag('config', 'G-W0PJNEF4S5');
-    </script>
-    
-    <!-- SEO Meta Tags & Open Graph Optimizate -->
-    <title>Nexus AI Studio Pro - Platformă All-in-One de Generare Conținut AI</title>
-    <meta name="description" content="Creează conținut pentru TikTok, Instagram, YouTube și articole folosind puterea AI într-o singură platformă integrată.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://nexusaistudio.ro/">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://nexusaistudio.ro/">
-    <meta property="og:title" content="Nexus AI Studio Pro - Platformă All-in-One de Generare Conținut AI">
-    <meta property="og:description" content="Platformă completă de generare conținut AI pentru creatori și afaceri.">
-
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Nexus AI Studio Pro - Generare Conținut AI">
-    <meta name="twitter:description" content="Creează conținut pentru TikTok, Instagram, YouTube și articole folosind puterea AI într-o singură platformă integrată.">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Marked & Highlight.js pentru randare profesională Markdown și cod -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
-    <!-- Highlight.js CDN pentru Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
     <!-- Three.js pentru Birou Agenți 3D Izometric -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         darkBg: '#090d16',
                         panelBg: '#111827',
-                        emeraldNeon: '#10b981',
                         cyanNeon: '#06b6d4',
+                        emeraldNeon: '#10b981',
                         amberGlow: '#f59e0b',
                         violetPop: '#8b5cf6',
-                        tiktokColor: '#fe2c55',
-                        instaColor: '#e1306c',
-                        ytColor: '#ff0000',
-                        googleRed: '#ea4335'
+                        tiktokColor: '#fe2c55'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-K2Z74H55');</script>
+
+    <!-- Google Analytics (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag.js?id=G-W0PJNEF4S5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-W0PJNEF4S5');
+    </script>
+
     <style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(6px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .app-tab:not(.hidden) {
-        animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .neon-glow-cyan {
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.15), inset 0 0 10px rgba(0, 243, 255, 0.05);
-        transition: all 0.3s ease;
-    }
-    .neon-glow-cyan:hover {
-        box-shadow: 0 0 25px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
-    }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #030712; }
-    ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #374151; }
-    .btn-neon-glow { transition: all 0.3s ease; }
-    .btn-neon-glow:hover {
-        box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
-        border-color: rgba(6, 182, 212, 0.8);
-        transform: translateY(-1px);
-    }
-    @keyframes neonPulse {
-        0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2); }
-        50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.4); }
-    }
-    .btn-primary-neon {
-        position: relative;
-        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-        transition: all 0.3s ease;
-        animation: neonPulse 3s infinite;
-    }
-    .btn-primary-neon:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 35px rgba(6, 182, 212, 0.9), 0 0 60px rgba(59, 130, 246, 0.5);
-    }
-    .nexus-sphere {
-        background: radial-gradient(circle, rgba(6,182,212,0.4) 0%, rgba(9,13,22,0.9) 70%);
-        box-shadow: 0 0 40px rgba(6,182,212,0.3);
-    }
-    #office3d-labels {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 15;
-    }
-    .agent-3d-tag {
-        position: absolute;
-        transform: translate(-50%, -100%);
-        background: rgba(15, 23, 42, 0.92);
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        color: #f8fafc;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 7px;
-        white-space: nowrap;
-        pointer-events: auto;
-        cursor: pointer;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-        transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-    }
-    .agent-3d-tag:hover, .agent-3d-tag.active-agent-tag {
-        border-color: #22d3ee;
-        background: rgba(8, 145, 178, 0.28);
-        transform: translate(-50%, -112%) scale(1.05);
-    }
-  </style>
-<link rel="manifest" href="./manifest.json" />
-<meta name="theme-color" content="#090d16" />
-<link rel="apple-touch-icon" href="./favicon.ico" />
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+        .nexus-sphere {
+            background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.8), rgba(16, 185, 129, 0.4), rgba(17, 24, 39, 0.9));
+            box-shadow: 0 0 60px rgba(6, 182, 212, 0.6), inset 0 0 30px rgba(16, 185, 129, 0.8);
+        }
+        .btn-neon-glow:hover {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+        }
+        .btn-primary-neon {
+            background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+        .btn-primary-neon:hover {
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+            filter: brightness(1.08);
+        }
+        .markdown-content pre {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+        .markdown-content code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+        .markdown-content p {
+            margin-bottom: 8px;
+        }
+        .markdown-content p:last-child {
+            margin-bottom: 0;
+        }
+        #office3d-labels {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+        }
+        .agent-3d-tag {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            background: rgba(9, 13, 22, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.45);
+            color: #f3f4f6;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 999px;
+            white-space: nowrap;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+        .agent-3d-tag:hover {
+            border-color: #10b981;
+            transform: translate(-50%, -105%) scale(1.05);
+        }
+        .agent-3d-tag.active-agent-tag {
+            background: rgba(16, 185, 129, 0.22);
+            border-color: #10b981;
+            color: #6ee7b7;
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+        }
+    </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans h-dvh min-h-dvh w-full max-w-full flex flex-col overflow-x-hidden overflow-y-hidden">
-    <!-- Canvas Matrix -->
-    <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2Z74H55"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-30"></canvas>
+
     <!-- Toast Container -->
-    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    <div id="toastContainer" class="fixed top-4 right-4 z-[999] flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Top Navigation Bar Foarte Curată -->
-    <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 w-full shadow-lg z-20">
+    <!-- Top Navigation Bar -->
+    <header class="h-12 bg-panelBg/95 backdrop-blur-md border-b border-gray-800 px-3 flex items-center justify-between shrink-0 z-30">
         <div class="flex items-center space-x-2">
-            <button onclick="toggleSidebar()" class="text-cyanNeon p-2 hover:bg-gray-800 rounded-xl text-sm focus:outline-none shrink-0 cursor-pointer" title="Deschide Meniul">
-                <i class="fa-solid fa-bars text-base"></i>
+            <button onclick="toggleSidebar()" class="text-gray-300 hover:text-cyanNeon p-1.5 rounded-xl transition cursor-pointer" title="Meniu">
+                <i class="fa-solid fa-bars text-sm"></i>
             </button>
-            <div class="flex items-center space-x-2 cursor-pointer group" onclick="switchTab('nexusOS', 'Nexus Command OS')">
-                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-emeraldNeon to-cyanNeon flex items-center justify-center text-darkBg font-extrabold shadow-lg shadow-emerald-500/20 text-xs group-hover:scale-105 transition">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
-                <div class="flex flex-col justify-center">
-                    <div class="flex items-center space-x-1">
-                        <h1 class="font-bold text-[11px] text-white tracking-wide group-hover:text-cyanNeon transition leading-tight">Nexus AI</h1>
-                        <span id="proBadge" class="text-[7px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1 py-0.2 rounded-full font-semibold leading-none">FREE</span>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Buton Înapoi Vizibil -->
-            <button id="uiBackBtn" onclick="goBackTab()" class="hidden items-center gap-1 bg-gray-900 hover:bg-gray-800 border border-cyanNeon/40 text-cyanNeon px-2 py-1 rounded-lg text-[10px] font-semibold transition cursor-pointer shadow ml-1" title="Înapoi">
-                <i class="fa-solid fa-arrow-left text-[9px]"></i> <span data-i18n="btnBack">Înapoi</span>
+            <button onclick="switchTab('nexusOS', 'Nexus Command OS')" class="flex items-center space-x-2 cursor-pointer group">
+                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-extrabold text-xs shadow-lg group-hover:scale-105 transition">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span class="font-extrabold text-sm bg-clip-text text-transparent bg-gradient-to-r from-cyanNeon to-emeraldNeon tracking-tight">Nexus AI</span>
+                <span id="proBadge" class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded-full font-bold">FREE</span>
+            </button>
+
+            <button id="uiBackBtn" onclick="goBackTab()" class="hidden items-center gap-1 bg-gray-900 hover:bg-gray-800 text-cyanNeon border border-cyanNeon/30 px-2.5 py-1 rounded-xl text-[11px] font-semibold transition cursor-pointer ml-1">
+                <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                <span data-i18n="btnBack">Înapoi</span>
             </button>
         </div>
 
-        <!-- Utilitare Sus + Contor Automat Tokeni -->
-        <div class="flex items-center gap-1.5 text-xs">
-            <button id="pwaInstallBtn" onclick="installNexusPwa()" class="hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer" title="Instalează Aplicația">
-                <i class="fa-solid fa-download text-[9px]"></i> <span data-i18n="btnInstallPwa">Instalează</span>
+        <div class="flex items-center space-x-2">
+            <button id="pwaInstallBtn" onclick="installNexusPwa()" class="flex items-center gap-1 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emeraldNeon/40 px-2.5 py-1 rounded-xl text-[10px] font-bold transition cursor-pointer">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span data-i18n="btnInstallPwa">Instalează</span>
             </button>
 
-            <div class="flex items-center gap-1 bg-cyan-950/70 px-2 py-0.5 rounded-full text-[10px] text-cyan-300 border border-cyanNeon/30 font-mono" title="Contor automat de tokeni">
-                <i class="fa-solid fa-coins text-amberGlow text-[9px]"></i>
+            <div class="hidden sm:flex items-center gap-1.5 bg-gray-900 border border-cyanNeon/30 px-2.5 py-1 rounded-xl text-[10px] font-mono text-cyanNeon" title="Total tokeni folosiți">
+                <i class="fa-solid fa-microchip text-emeraldNeon"></i>
                 <span id="tokenCounterDisplay">0 tok</span>
             </div>
 
-            <div class="hidden sm:flex items-center gap-1 bg-gray-800/60 px-2 py-0.5 rounded-full text-[10px] text-cyan-400 border border-cyan-500/20">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-                <span id="visitor-count">14</span> <span data-i18n="onlineLabel">online</span>
+            <div class="hidden md:flex items-center gap-1.5 bg-gray-900 border border-gray-800 px-2.5 py-1 rounded-xl text-[10px] text-gray-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="visitor-count">15</span>
+                <span data-i18n="onlineLabel">online</span>
             </div>
-            <div class="flex items-center">
-                <select id="languageSelect" onchange="setLanguage(this.value)" class="bg-gray-800 text-gray-200 text-[11px] rounded-lg px-1.5 py-1 border border-gray-700 outline-none cursor-pointer">
-                    <option value="ro" selected>🇷🇴 RO</option>
-                    <option value="en">🇬🇧 EN</option>
-                    <option value="es">🇪🇸 ES</option>
-                    <option value="fr">🇫🇷 FR</option>
-                    <option value="de">🇩🇪 DE</option>
-                    <option value="it">🇮🇹 IT</option>
-                    <option value="ar">🇸🇦 AR</option>
-                </select>
-            </div>
+
+            <select id="languageSelect" onchange="setLanguage(this.value)" class="bg-gray-900 text-gray-200 text-[11px] font-semibold rounded-xl px-2 py-1 border border-gray-700 outline-none focus:border-cyanNeon cursor-pointer">
+                <option value="ro">🇷🇴 RO</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="es">🇪🇸 ES</option>
+                <option value="fr">🇫🇷 FR</option>
+                <option value="de">🇩🇪 DE</option>
+                <option value="it">🇮🇹 IT</option>
+                <option value="ar">🇸🇦 AR</option>
+            </select>
         </div>
     </header>
-    <!-- Main Layout -->
-    <div class="flex flex-1 min-h-0 w-full overflow-hidden z-10 relative">
-        <!-- Overlay Mobil Corectat -->
-        <div id="sidebarOverlay" onclick="closeSidebarMobile()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebarOverlay" onclick="closeSidebarMobile()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-30 hidden md:hidden"></div>
 
-        <!-- Sidebar Curățat -->
-        <aside id="appSidebar" class="hidden md:flex fixed md:relative top-0 md:top-auto left-0 z-50 flex-col w-[80%] max-w-[280px] md:w-64 bg-panelBg border-r md:border border-gray-800 md:rounded-2xl shrink-0 p-3 h-full md:h-[65vh] max-h-full md:max-h-[65vh] overflow-y-auto shadow-2xl transition-transform duration-300">
-            <!-- Buton închidere mobil în interiorul meniului -->
-            <div class="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-gray-800">
-                <span class="text-xs font-bold text-cyanNeon flex items-center gap-1.5"><i class="fa-solid fa-compass"></i> <span data-i18n="mobileNavTitle">Meniu Navigare</span></span>
-                <button onclick="closeSidebarMobile()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
+    <!-- Main Layout Container -->
+    <div class="flex flex-1 min-h-0 h-full w-full overflow-hidden relative z-10">
 
-            <!-- BUTON INSTALARE PWA ÎN MENIU -->
-            <button id="sidebarInstallBtn" onclick="closeSidebarMobile(); installNexusPwa();" class="hidden w-full py-2 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emeraldNeon/50 text-emerald-300 text-xs font-bold rounded-xl items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer transition">
-                <i class="fa-solid fa-mobile-screen-button text-sm"></i>
-                <span data-i18n="btnInstallPwaFull">Instalează Aplicația</span>
-            </button>
-
-            <!-- BUTON ASISTENT AI -->
-            <button onclick="closeSidebarMobile(); toggleNexusRobot();" class="w-full py-2 px-3 bg-gradient-to-r from-emeraldNeon to-cyanNeon hover:opacity-90 text-darkBg text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer shadow-lg shadow-emerald-500/20">
-                <i class="fa-solid fa-robot font-bold text-sm"></i>
-                <span data-i18n="openAssistant">Asistent AI</span>
-            </button>
-            
-            <!-- NEXUS COMMAND OS, BIROU AGENȚI 3D & LAYERS OF AI STUDIO -->
-            <button onclick="switchTab('nexusOS', 'Nexus Command OS'); closeSidebarMobile();" id="nav-nexusOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10">
-                <i class="fa-solid fa-network-wired text-cyanNeon w-4 text-center"></i>
-                <span class="text-cyanNeon font-bold" data-i18n="navNexusOS">Nexus Command OS</span>
-            </button>
-            <button onclick="switchTab('office3d', 'Birou Agenți 3D'); closeSidebarMobile();" id="nav-office3d" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center justify-between transition cursor-pointer font-medium mb-1 border border-emeraldNeon/30 bg-emeraldNeon/10 btn-neon-glow">
-                <div class="flex items-center space-x-2.5">
-                    <i class="fa-solid fa-cubes text-emeraldNeon w-4 text-center"></i>
-                    <span class="text-emerald-300 font-bold" data-i18n="navOffice3D">Birou Agenți 3D</span>
+        <!-- Sidebar Navigation -->
+        <aside id="appSidebar" class="w-64 max-w-[82vw] bg-panelBg/95 backdrop-blur-md border-r border-gray-800 flex flex-col justify-between p-3 overflow-y-auto shrink-0 z-40 fixed md:static top-12 bottom-0 left-0 hidden md:flex shadow-2xl">
+            <div class="space-y-3">
+                <div class="flex md:hidden items-center justify-between pb-2 border-b border-gray-800">
+                    <span class="text-xs font-bold text-cyanNeon uppercase tracking-wider" data-i18n="mobileNavTitle">Meniu Navigare</span>
+                    <button onclick="closeSidebarMobile()" class="text-gray-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
                 </div>
-                <span class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded-full font-bold">6 AI</span>
-            </button>
-            <button onclick="switchTab('layersAi', 'Layers of AI Studio'); closeSidebarMobile();" id="nav-layersAi" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1">
-                <i class="fa-solid fa-layer-group text-violetPop w-4 text-center"></i>
-                <span data-i18n="navLayers">Layers of AI Studio</span>
-            </button>
 
-            <div class="flex-1 space-y-1 overflow-y-auto max-h-[75vh] md:max-h-full pr-1 pb-12" style="scrollbar-width: thin; -webkit-overflow-scrolling: touch;">
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2" data-i18n="menuMainPanel">PANOU PRINCIPAL</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('chat', 'Home / Tools Hub'); closeSidebarMobile();" id="nav-chat" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-2 cursor-pointer transition">
+                <button id="sidebarInstallBtn" onclick="installNexusPwa()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600/30 to-cyan-600/30 hover:from-emerald-600/40 hover:to-cyan-600/40 text-emerald-300 border border-emeraldNeon/40 p-2 rounded-xl text-xs font-bold transition cursor-pointer">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <span data-i18n="btnInstallPwaFull">Instalează Aplicația</span>
+                </button>
+
+                <button onclick="toggleNexusRobot()" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-cyan-600/20 to-indigo-600/20 hover:from-cyan-600/30 hover:to-indigo-600/30 text-cyanNeon border border-cyanNeon/30 p-2 rounded-xl text-xs font-bold transition shadow-md cursor-pointer btn-neon-glow">
+                    <i class="fa-solid fa-robot"></i>
+                    <span data-i18n="openAssistant">Asistent AI</span>
+                </button>
+
+                <button onclick="switchTab('nexusOS', 'Nexus Command OS')" id="nav-nexusOS" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1 border border-cyanNeon/30 bg-cyanNeon/10 text-cyanNeon">
+                    <i class="fa-solid fa-network-wired text-cyanNeon text-sm"></i>
+                    <span class="text-xs font-semibold" data-i18n="navNexusOS">Nexus Command OS</span>
+                </button>
+
+                <button onclick="switchTab('office3d', 'Birou Agenți 3D')" id="nav-office3d" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center justify-between transition cursor-pointer font-medium mb-1 border border-emeraldNeon/30 bg-emeraldNeon/10 btn-neon-glow">
+                    <div class="flex items-center space-x-2.5">
+                        <i class="fa-solid fa-cubes text-emeraldNeon text-sm"></i>
+                        <span class="text-xs font-semibold" data-i18n="navOffice3D">Birou Agenți 3D</span>
+                    </div>
+                    <span class="text-[9px] bg-emeraldNeon/20 text-emerald-300 px-1.5 py-0.5 rounded-full font-bold">6 AI</span>
+                </button>
+
+                <button onclick="switchTab('layersAi', 'Layers of AI Studio')" id="nav-layersAi" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium mb-1">
+                    <i class="fa-solid fa-layer-group text-violetPop text-sm"></i>
+                    <span class="text-xs font-semibold" data-i18n="navLayers">Layers of AI Studio</span>
+                </button>
+
+                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-wider px-2 pt-1" data-i18n="menuMainPanel">PANOU PRINCIPAL</div>
+                <nav class="space-y-1 text-xs">
+                    <button onclick="switchTab('chat', 'Home / Tools Hub')" class="w-full text-left p-2 rounded-xl hover:bg-gray-800/70 text-gray-300 flex items-center space-x-2.5 transition cursor-pointer btn-neon-glow">
                         <i class="fa-solid fa-house text-cyanNeon w-4 text-center"></i>
-                        <span class="text-xs font-semibold" data-i18n="navHomeHub">Home / Tools Hub</span>
+                        <span data-i18n="navHomeHub">Home / Tools Hub</span>
                     </button>
-                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" onclick="closeSidebarMobile();" class="w-full text-left p-2.5 rounded-xl hover:bg-sky-950/60 text-sky-300 hover:text-sky-200 flex items-center justify-between cursor-pointer transition border border-sky-500/25">
-                        <div class="flex items-center gap-2">
+                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" class="w-full text-left p-2 rounded-xl hover:bg-gray-800/70 text-gray-300 flex items-center justify-between transition cursor-pointer btn-neon-glow bg-sky-950/20 border border-sky-500/20">
+                        <div class="flex items-center space-x-2.5">
                             <i class="fa-brands fa-telegram text-sky-400 w-4 text-center"></i>
-                            <span class="text-xs font-semibold" data-i18n="navTelegramBot">Telegram Bot AI</span>
+                            <span data-i18n="navTelegramBot">Telegram Bot AI</span>
                         </div>
-                        <span class="text-[9px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded-full font-bold">24/7</span>
+                        <span class="text-[9px] bg-sky-500/20 text-sky-300 px-1.5 py-0.2 rounded-full font-bold">24/7</span>
                     </a>
-                </div>
-                <!-- Secțiunea Istoric Conversații în Meniu (Salvare pe conversație) -->
-                <div class="px-1 py-2 mt-3 border-t border-gray-800">
-                    <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400 mb-1.5">
-                        <span data-i18n="historyTitle">🕒 Conversații Salvate</span>
-                        <div class="flex items-center gap-2">
+                </nav>
+
+                <!-- Conversații Salvate -->
+                <div class="pt-3 border-t border-gray-800 space-y-2">
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" data-i18n="historyTitle">🕒 Conversații Salvate</span>
+                        <div class="flex items-center space-x-1.5">
                             <button onclick="startNewConversation()" class="text-[9px] text-cyanNeon hover:underline cursor-pointer" data-i18n="btnNewChat">+ Nouă</button>
                             <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:underline cursor-pointer" data-i18n="btnClearAll">Șterge tot</button>
                         </div>
                     </div>
-                    <div id="chatHistoryList" class="space-y-1 max-h-32 overflow-y-auto text-[11px]">
+                    <div id="chatHistoryList" class="space-y-1 max-h-36 overflow-y-auto pr-0.5 text-[11px]">
                         <p class="text-gray-500 text-[10px] italic px-1" data-i18n="noHistorySaved">Nicio conversație salvată.</p>
                     </div>
                 </div>
 
-                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-extrabold px-2 pt-3 block" data-i18n="menuSettingsAccount">Setări & Cont</span>
-                <div class="mt-1 space-y-1 text-xs">
-                    <button onclick="switchTab('billingCard', 'Abonament & PRO'); closeSidebarMobile();" id="nav-billingCard" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
+                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-wider px-2 pt-2" data-i18n="menuSettingsAccount">Setări & Cont</div>
+                <nav class="space-y-1 text-xs">
+                    <button onclick="switchTab('billingCard', 'Abonament & PRO')" class="w-full text-left p-2 rounded-xl hover:bg-gray-800/70 text-gray-300 flex items-center space-x-2.5 transition cursor-pointer btn-neon-glow">
                         <i class="fa-solid fa-crown text-amberGlow w-4 text-center"></i>
                         <span data-i18n="navBilling">Abonament & PRO</span>
                     </button>
-                    <button onclick="switchTab('authAccount', 'Cont, Google & Înregistrare'); closeSidebarMobile();" id="nav-authAccount" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800/80 text-gray-200 flex items-center space-x-2.5 transition cursor-pointer font-medium btn-neon-glow">
-                        <i class="fa-solid fa-user-shield text-cyanNeon w-4 text-center"></i>
+                    <button onclick="switchTab('authAccount', 'Cont, Google & Login')" class="w-full text-left p-2 rounded-xl hover:bg-gray-800/70 text-gray-300 flex items-center space-x-2.5 transition cursor-pointer btn-neon-glow">
+                        <i class="fa-solid fa-user-check text-emeraldNeon w-4 text-center"></i>
                         <span data-i18n="navAuth">Cont, Google & Login</span>
                     </button>
-                    <button onclick="switchTab('supportTab', 'Suport & Asistență Clienți'); closeSidebarMobile();" id="nav-supportTab" class="w-full text-left p-2.5 rounded-xl hover:bg-gray-800 text-gray-300 hover:text-white flex items-center justify-between transition cursor-pointer group btn-neon-glow">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-headset text-amberGlow group-hover:scale-110 transition-transform w-4 text-center"></i>
-                            <span class="text-xs font-semibold" data-i18n="navSupport">Suport & Ajutor</span>
+                    <button onclick="switchTab('supportTab', 'Suport & Ajutor')" class="w-full text-left p-2 rounded-xl hover:bg-gray-800/70 text-gray-300 flex items-center justify-between transition cursor-pointer btn-neon-glow">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="fa-solid fa-headset text-cyanNeon w-4 text-center"></i>
+                            <span data-i18n="navSupport">Suport & Ajutor</span>
                         </div>
-                        <span class="text-[9px] bg-amberGlow/20 text-amberGlow border border-amberGlow/40 px-1.5 py-0.5 rounded-full font-bold">LIVE</span>
-                    </button> 
-                </div> 
+                        <span class="text-[9px] bg-amberGlow/20 text-amberGlow border border-amberGlow/30 px-1.5 py-0.2 rounded-full font-bold">LIVE</span>
+                    </button>
+                </nav>
             </div>
         </aside>
         <!-- Main Content Container -->
@@ -580,7 +573,7 @@
                     </div>
                 </div>
             </div>
-    <!-- Tab: Layers of AI Studio -->
+                <!-- Tab: Layers of AI Studio -->
     <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:pb-4 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
@@ -785,67 +778,81 @@
     </div>
 </main>
 </div>
-<!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI + TELEGRAM BOT VERIFICAT -->
-    <div id="nexus-robot-widget" class="fixed bottom-12 sm:bottom-24 right-3 sm:right-4 z-50">
-        <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
-            <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
-            <span class="absolute top-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
+    <!-- Floating Nexus Robot Widget -->
+    <div id="nexus-robot-container" class="fixed bottom-4 right-4 z-50">
+        <div id="nexus-robot-window" class="hidden flex-col bg-slate-900 border border-cyan-500/50 rounded-2xl w-80 max-w-[92vw] shadow-2xl overflow-hidden mb-3">
+            <div class="bg-gradient-to-r from-cyan-600 to-indigo-600 p-3 flex justify-between items-center text-white">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-robot text-lg"></i>
+                    <span class="font-bold text-xs" data-i18n="robotTitle">Nexus Gemini Bot</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" class="text-[10px] bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded-lg flex items-center gap-1 font-semibold transition">
+                        <i class="fa-brands fa-telegram"></i> <span data-i18n="btnTelegram">Telegram</span>
+                    </a>
+                    <button onclick="toggleNexusRobot()" class="text-white hover:text-gray-200 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div id="nexus-robot-messages" class="p-3 h-52 overflow-y-auto space-y-2 text-xs text-slate-200 bg-slate-950/50">
+                <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 max-w-[85%]"><b data-i18n="robotSenderName">Nexus AI:</b> <span data-i18n="robotWelcome">Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!</span></div>
+            </div>
+            <div class="px-3 py-1 bg-slate-900 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+                <span id="speechStatus" data-i18n="speechReady">Gata de ascultare</span>
+                <button type="button" onclick="toggleRobotAudio()" id="robotAudioToggleBtn" class="text-cyan-400 hover:underline flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-volume-high"></i> <span data-i18n="audioOn">Audio ON</span>
+                </button>
+            </div>
+            <div class="p-2.5 bg-slate-900 border-t border-slate-800 flex items-center space-x-2">
+                <button type="button" onclick="startVoiceRecognition()" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 p-2 rounded-xl cursor-pointer transition" title="Vorbește"><i class="fa-solid fa-microphone"></i></button>
+                <input type="text" id="nexus-robot-input" placeholder="Scrie sau vorbește..." data-i18n-placeholder="robotInputPlaceholder" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" onkeydown="if(event.key==='Enter') sendNexusRobotMessage()">
+                <button type="button" onclick="sendNexusRobotMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white p-2 rounded-xl cursor-pointer transition"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+            </div>
+        </div>
+        <button onclick="toggleNexusRobot()" class="w-12 h-12 rounded-full bg-gradient-to-tr from-cyanNeon to-emeraldNeon text-darkBg flex items-center justify-center shadow-lg hover:scale-105 transition cursor-pointer ml-auto">
+            <i class="fa-solid fa-robot text-lg"></i>
         </button>
-        <div id="nexus-robot-window" class="hidden flex-col absolute bottom-10 sm:bottom-12 right-0 w-[90vw] sm:w-[380px] h-[440px] sm:h-[480px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
-            <div class="flex items-center justify-between px-3 py-2 bg-slate-800 border-b border-slate-700 shrink-0">
-                <div class="flex items-center space-x-2">
-                    <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
-                    <span class="font-bold text-xs text-white" data-i18n="robotTitle">Nexus Gemini Bot</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <a href="https://t.me/NexusAiStudioRo_bot" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 text-xs flex items-center gap-1 bg-sky-950/60 border border-sky-500/30 px-2 py-0.5 rounded-lg transition font-semibold" title="Deschide în Telegram (@NexusAiStudioRo_bot)"><i class="fa-brands fa-telegram"></i> <span data-i18n="btnTelegram">Telegram</span></a>
-                    <button onclick="toggleNexusRobot()" class="text-slate-400 hover:text-white p-1 cursor-pointer"><i class="fa-solid fa-xmark text-sm"></i></button>
-                </div>
+    </div>
+
+    <!-- Modal Politica de Confidențialitate -->
+    <div id="privacyModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-panelBg border border-gray-800 p-6 rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-cyanNeon"></i> <span data-i18n="privacyModalTitle">Politică de Confidențialitate (GDPR)</span></h3>
+                <button onclick="closeModal('privacyModal')" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <div id="nexus-robot-messages" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs text-slate-200">
-                <div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700 max-w-[85%]">
-                    <b data-i18n="robotSenderName">Nexus AI:</b> <span data-i18n="robotWelcome">Salut! Sunt asistentul tău rapid Gemini. Poți folosi microfonul 🎙️ sau trimite un mesaj!</span>
-                </div>
-            </div>
-            <div class="p-2.5 bg-slate-800 border-t border-slate-700 flex flex-col space-y-1.5 shrink-0">
-                <div class="flex items-center justify-between px-1 text-[10px] text-slate-400">
-                    <span id="speechStatus" data-i18n="speechReady">Gata de ascultare</span>
-                    <button onclick="toggleRobotAudio()" id="robotAudioToggleBtn" class="text-slate-400 hover:text-cyan-400 transition flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-volume-high text-cyan-400"></i> <span data-i18n="audioOn">Audio ON</span></button>
-                </div>
-                <div class="flex items-center space-x-1.5">
-                    <button onclick="startVoiceRecognition()" id="micBtn" class="bg-slate-700 hover:bg-slate-600 text-slate-200 p-2 rounded-xl text-xs transition cursor-pointer" title="Apasă și vorbește"><i class="fa-solid fa-microphone"></i></button>
-                    <input type="text" id="nexus-robot-input" placeholder="Scrie sau vorbește..." data-i18n-placeholder="robotInputPlaceholder" onkeydown="if(event.key==='Enter') sendNexusRobotMessage()" class="flex-1 bg-slate-900 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-cyan-500" />
-                    <button onclick="sendNexusRobotMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-2 rounded-xl text-xs cursor-pointer transition"><i class="fa-solid fa-paper-plane"></i></button>
-                </div>
+            <div class="text-xs text-gray-300 space-y-3 leading-relaxed">
+                <p data-i18n="privacyText1">Respectăm confidențialitatea datelor dumneavoastră. Toate datele introduse în platformă sunt prelucrate în condiții de securitate maximă conform reglementărilor GDPR în vigoare.</p>
+                <p data-i18n="privacyText2">Puteți solicita oricând ștergerea datelor contului dumneavoastră contactându-ne pe e-mail.</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal Politică Confidențialitate (GDPR) -->
-    <div id="privacyModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-lg w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto text-xs text-gray-300 space-y-3">
-        <button onclick="closeModal('privacyModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl cursor-pointer">✕</button>
-        <h3 class="text-base font-bold text-white mb-2" data-i18n="privacyModalTitle">Politică de Confidențialitate (GDPR)</h3>
-        <p data-i18n="privacyText1">Respectăm confidențialitatea datelor dumneavoastră. Toate datele introduse în platformă sunt prelucrate în condiții de securitate maximă conform reglementărilor GDPR în vigoare.</p>
-        <p data-i18n="privacyText2">Puteți solicita oricând ștergerea datelor contului dumneavoastră contactându-ne pe e-mail.</p>
-      </div>
-    </div>
-
     <!-- Modal Termeni și Condiții -->
-    <div id="termsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-lg w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto text-xs text-gray-300 space-y-3">
-        <button onclick="closeModal('termsModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl cursor-pointer">✕</button>
-        <h3 class="text-base font-bold text-white mb-2" data-i18n="termsModalTitle">Termeni și Condiții</h3>
-        <p data-i18n="termsText1">Prin utilizarea platformei Nexus AI Studio Pro, sunteți de acord cu termenii și condițiile stabilite. Serviciile noastre sunt oferite "ca atare" pentru creatori și afaceri.</p>
-      </div>
+    <div id="termsModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-panelBg border border-gray-800 p-6 rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-file-contract text-amberGlow"></i> <span data-i18n="termsModalTitle">Termeni și Condiții</span></h3>
+                <button onclick="closeModal('termsModal')" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="text-xs text-gray-300 space-y-3 leading-relaxed">
+                <p data-i18n="termsText1">Prin utilizarea platformei Nexus AI Studio Pro, sunteți de acord cu termenii și condițiile stabilite. Serviciile noastre sunt oferite "ca atare" pentru creatori și afaceri.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
-    <footer class="w-full py-1.5 px-3 text-center text-[9px] text-gray-400 shrink-0 border-t border-gray-800/80 bg-panelBg/95 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
-        <span data-i18n="footerStripe">Plăți Securizate Stripe</span> • 
-        <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon/80" data-i18n="footerPrivacy">Politică Confidențialitate (GDPR)</a> • 
-        <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline" data-i18n="footerTerms">Termeni și Condiții</a> • 
-        <span><span data-i18n="footerCreator">Creat de</span> <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
+    <footer class="bg-panelBg border-t border-gray-800 py-2 px-4 text-center text-[10px] text-gray-400 shrink-0 z-20">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3">
+            <span class="flex items-center gap-1"><i class="fa-brands fa-stripe text-cyanNeon text-xs"></i> <span data-i18n="footerStripe">Plăți Securizate Stripe</span></span>
+            <span class="hidden sm:inline text-gray-600">&bull;</span>
+            <div class="flex items-center justify-center gap-3">
+                <button onclick="openModal('privacyModal')" class="hover:text-cyanNeon transition cursor-pointer underline" data-i18n="footerPrivacy">Politică Confidențialitate (GDPR)</button>
+                <span class="text-gray-600">&bull;</span>
+                <button onclick="openModal('termsModal')" class="hover:text-amberGlow transition cursor-pointer underline" data-i18n="footerTerms">Termeni și Condiții</button>
+            </div>
+            <span class="hidden sm:inline text-gray-600">&bull;</span>
+            <span><span data-i18n="footerCreator">Creat de</span> <strong class="text-gray-200">S.V@lentin</strong></span>
+        </div>
     </footer>
     <!-- Scripturi & Logica Aplicației -->
     <script type="module">
@@ -871,7 +878,7 @@
             const topBtn = document.getElementById('pwaInstallBtn');
             const sideBtn = document.getElementById('sidebarInstallBtn');
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            const shouldShow = Boolean(show && !isStandalone);
+            const shouldShow = !isStandalone;
 
             if (topBtn) {
                 topBtn.classList.toggle('hidden', !shouldShow);
@@ -2605,6 +2612,7 @@
                 aiModelLabel: "AI Model:",
                 inputPlaceholder: "Type your message or describe a visual...",
                 layersSub: "Build and test tools across every layer of Artificial Intelligence",
+                layerBtnNeural: "🕸️ Neural Networks",
                 layerAgenticDesc: "Create autonomous agents capable of planning, tool use, and complex task execution.",
                 layerGoalLabel: "Agent Objective:",
                 layerGoalPlaceholder: "Ex: Analyze the market and send a detailed report",
@@ -3194,7 +3202,7 @@
                 layerNeuralDesc: "Regola funzioni di attivazione e Backpropagation.",
                 layerNeuralBox: "Pannello percettroni.",
                 layerMlTitle: "Machine Learning Classico",
-                layerMlDesc: "Modelli di Classificazione, Regressione, Apprendimento Supervisionato e Non Supervisionato.",
+                layerMlDesc: "Modelli di Classificazione, Regressione, Apprendimento Supervisionato e Non Supervisato.",
                 layerMlBox: "Carica il tuo dataset (.csv).",
                 layerOutputTitle: "Risultato Generato / Output:",
                 layerOutputWaiting: "In attesa di comando...",
