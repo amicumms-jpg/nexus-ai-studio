@@ -83,27 +83,42 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
-        const targetGeminiModel = lowerModel.includes('gemini-3.8') && !/1\.5|2\.0|2\.5|lite/.test(lowerModel)
-            ? rawModel
-            : 'gemini-3.8-flash';
+        const supportedModels = [
+            'gemini-3.8-flash',
+            'gemini-4-hydrogen',
+            'gemini-decision-1'
+        ];
+
+        let primaryModel = 'gemini-3.8-flash';
+        if (supportedModels.includes(lowerModel)) {
+            primaryModel = lowerModel;
+        } else if (lowerModel.includes('gemini-3.8') && !/1\.5|2\.0|2\.5|lite/.test(lowerModel)) {
+            primaryModel = rawModel;
+        }
+
+        const modelsQueue = [
+            primaryModel,
+            ...supportedModels.filter(m => m !== primaryModel)
+        ];
 
         let lastStatus = 503;
         const startTime = Date.now();
-        const maxTotalBudgetMs = 25000;
-        const maxRounds = 2;
+        const maxTotalBudgetMs = 26000;
 
-        for (let round = 1; round <= maxRounds; round++) {
+        for (let mIdx = 0; mIdx < modelsQueue.length; mIdx++) {
             if (Date.now() - startTime > maxTotalBudgetMs) break;
+            const currentModel = modelsQueue[mIdx];
+            const isFallback = currentModel !== primaryModel;
 
             for (let keyIdx = 0; keyIdx < apiKeys.length; keyIdx++) {
                 if (Date.now() - startTime > maxTotalBudgetMs) break;
 
                 const currentKey = apiKeys[keyIdx];
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 9500);
+                const timeoutId = setTimeout(() => controller.abort(), 8500);
 
                 try {
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(targetGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
 
                     const apiResponse = await fetch(apiUrl, {
                         method: 'POST',
@@ -122,6 +137,20 @@ export default async function handler(req, res) {
                         res.setHeader('Cache-Control', 'no-cache, no-transform');
                         res.setHeader('Connection', 'keep-alive');
                         res.setHeader('X-Accel-Buffering', 'no');
+
+                        if (isFallback) {
+                            const noticePayload = {
+                                candidates: [{
+                                    content: {
+                                        parts: [{
+                                            text: `> ⚡ *Modelul **${primaryModel}** a fost ocupat — răspuns preluat automat de **${currentModel}**.*\n\n`
+                                        }]
+                                    }
+                                }]
+                            };
+                            res.write(`data: ${JSON.stringify(noticePayload)}\n\n`);
+                            if (typeof res.flush === 'function') res.flush();
+                        }
 
                         const reader = apiResponse.body.getReader();
                         const decoder = new TextDecoder();
@@ -142,23 +171,25 @@ export default async function handler(req, res) {
                         const parsedErr = JSON.parse(rawErr);
                         formattedErr = parsedErr?.error?.message || JSON.stringify(parsedErr);
                     } catch (_) {}
-                    console.error(`Model ${targetGeminiModel} [Runda ${round}/${maxRounds}, Cheia #${keyIdx + 1}] a eșuat (${apiResponse.status}): ${formattedErr}`);
+                    console.error(`Model ${currentModel} [Cheia #${keyIdx + 1}] a eșuat (${apiResponse.status}): ${formattedErr}`);
 
-                    if (apiResponse.status === 404 || apiResponse.status === 401 || apiResponse.status === 403) {
+                    if (apiResponse.status === 404) {
+                        break;
+                    }
+
+                    if (apiResponse.status === 401 || apiResponse.status === 403) {
                         continue;
                     }
 
                     if (apiResponse.status === 503 || apiResponse.status === 429) {
-                        const waitMs = round === 1 ? 1500 : 2500;
-                        await new Promise(r => setTimeout(r, waitMs));
+                        await new Promise(r => setTimeout(r, 900));
                     }
                 } catch (err) {
                     clearTimeout(timeoutId);
                     lastStatus = 503;
-                    const reason = err?.name === 'AbortError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
-                    console.error(`Excepție la ${targetGeminiModel} [Runda ${round}/${maxRounds}, Cheia #${keyIdx + 1}]:`, reason);
-                    const waitMs = round === 1 ? 1500 : 2500;
-                    await new Promise(r => setTimeout(r, waitMs));
+                    const reason = err?.name === 'AbortError' ? `Timeout la ${currentModel}` : (err?.message || 'Eroare Gemini');
+                    console.error(`Excepție la ${currentModel} [Cheia #${keyIdx + 1}]:`, reason);
+                    await new Promise(r => setTimeout(r, 900));
                 }
             }
         }
@@ -172,7 +203,7 @@ export default async function handler(req, res) {
 
         return streamTextAsSse(
             res,
-            '⚠️ Serverele Google Gemini sunt temporar supraîncărcate. Reîncearcă mesajul în câteva secunde.'
+            '⚠️ Serverele Google Gemini sunt temporar supraîncărcate pe toate modelele disponibile. Reîncearcă mesajul în câteva secunde.'
         );
     } catch (error) {
         console.error("Eroare server API chat:", error);
