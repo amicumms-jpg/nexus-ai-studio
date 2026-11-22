@@ -30,8 +30,7 @@ export default async function handler(req, res) {
         const apiKeys = rawKeys
             .split(',')
             .map(k => k.trim())
-            .filter(Boolean)
-            .sort(() => Math.random() - 0.5);
+            .filter(Boolean);
 
         if (apiKeys.length === 0) {
             return res.status(500).json({
@@ -90,7 +89,7 @@ export default async function handler(req, res) {
 
         let lastStatus = 503;
         const startTime = Date.now();
-        const maxTotalBudgetMs = 24000;
+        const maxTotalBudgetMs = 25000;
         const maxRounds = 2;
 
         for (let round = 1; round <= maxRounds; round++) {
@@ -101,7 +100,7 @@ export default async function handler(req, res) {
 
                 const currentKey = apiKeys[keyIdx];
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 9000);
+                const timeoutId = setTimeout(() => controller.abort(), 9500);
 
                 try {
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(targetGeminiModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
@@ -150,14 +149,16 @@ export default async function handler(req, res) {
                     }
 
                     if (apiResponse.status === 503 || apiResponse.status === 429) {
-                        await new Promise(r => setTimeout(r, 800));
+                        const waitMs = round === 1 ? 1500 : 2500;
+                        await new Promise(r => setTimeout(r, waitMs));
                     }
                 } catch (err) {
                     clearTimeout(timeoutId);
                     lastStatus = 503;
                     const reason = err?.name === 'AbortError' ? `Timeout la ${targetGeminiModel}` : (err?.message || 'Eroare Gemini');
                     console.error(`Excepție la ${targetGeminiModel} [Runda ${round}/${maxRounds}, Cheia #${keyIdx + 1}]:`, reason);
-                    await new Promise(r => setTimeout(r, 800));
+                    const waitMs = round === 1 ? 1500 : 2500;
+                    await new Promise(r => setTimeout(r, waitMs));
                 }
             }
         }
