@@ -83,10 +83,10 @@ export default async function handler(req, res) {
         const rawModel = String(model || 'gemini-3.8-flash').trim();
         const lowerModel = rawModel.toLowerCase();
 
+        // Am eliminat gemini-decision-1 deoarece returna 404 pe v1beta / generateContent
         const supportedModels = [
             'gemini-3.8-flash',
-            'gemini-4-hydrogen',
-            'gemini-decision-1'
+            'gemini-4-hydrogen'
         ];
 
         let primaryModel = 'gemini-3.8-flash';
@@ -115,7 +115,7 @@ export default async function handler(req, res) {
 
                 const currentKey = apiKeys[keyIdx];
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8500);
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
 
                 try {
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(currentKey)}`;
@@ -182,14 +182,14 @@ export default async function handler(req, res) {
                     }
 
                     if (apiResponse.status === 503 || apiResponse.status === 429) {
-                        await new Promise(r => setTimeout(r, 900));
+                        await new Promise(r => setTimeout(r, 600));
                     }
                 } catch (err) {
                     clearTimeout(timeoutId);
                     lastStatus = 503;
                     const reason = err?.name === 'AbortError' ? `Timeout la ${currentModel}` : (err?.message || 'Eroare Gemini');
                     console.error(`Excepție la ${currentModel} [Cheia #${keyIdx + 1}]:`, reason);
-                    await new Promise(r => setTimeout(r, 900));
+                    await new Promise(r => setTimeout(r, 600));
                 }
             }
         }
