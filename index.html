@@ -161,30 +161,30 @@
                 </div>
                 <div class="flex flex-col justify-center">
                     <div class="flex items-center space-x-1">
-                        <h1 class="font-bold text-[11px] text-white tracking-wide group-hover:text-cyanNeon transition leading-tight">Nexus AI</h1>
+                        <h1 class="font-bold text-[11px] text-white tracking-wide group-hover:text-cyanNeon transition leading-tight whitespace-nowrap">Nexus AI</h1>
                         <span id="proBadge" class="text-[7px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1 py-0.2 rounded-full font-semibold leading-none">FREE</span>
                     </div>
                 </div>
             </div>
 
             <!-- Buton Înapoi Vizibil -->
-            <button id="uiBackBtn" onclick="goBackTab()" class="hidden items-center gap-1 bg-gray-900 hover:bg-gray-800 border border-cyanNeon/40 text-cyanNeon px-2 py-1 rounded-lg text-[10px] font-semibold transition cursor-pointer shadow ml-1" title="Înapoi">
+            <button id="uiBackBtn" onclick="goBackTab()" class="hidden items-center gap-1 bg-gray-900 hover:bg-gray-800 border border-cyanNeon/40 text-cyanNeon px-2 py-1 rounded-lg text-[10px] font-semibold transition cursor-pointer shadow ml-1 whitespace-nowrap" title="Înapoi">
                 <i class="fa-solid fa-arrow-left text-[9px]"></i> <span data-i18n="btnBack">Înapoi</span>
             </button>
         </div>
 
         <!-- Utilitare Sus + Contor Automat Tokeni -->
         <div class="flex items-center gap-1.5 text-xs">
-            <button id="pwaInstallBtn" onclick="installNexusPwa()" class="flex md:hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer" title="Instalează Aplicația">
+            <button id="pwaInstallBtn" onclick="installNexusPwa()" class="flex md:hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer whitespace-nowrap" title="Instalează Aplicația">
                 <i class="fa-solid fa-download text-[9px]"></i> <span data-i18n="btnInstallPwa">Instalează</span>
             </button>
 
-            <div class="flex items-center gap-1 bg-cyan-950/70 px-2 py-0.5 rounded-full text-[10px] text-cyan-300 border border-cyanNeon/30 font-mono" title="Contor automat de tokeni">
+            <div class="flex items-center gap-1 bg-cyan-950/70 px-2 py-0.5 rounded-full text-[10px] text-cyan-300 border border-cyanNeon/30 font-mono whitespace-nowrap" title="Contor automat de tokeni">
                 <i class="fa-solid fa-coins text-amberGlow text-[9px]"></i>
                 <span id="tokenCounterDisplay">0 tok</span>
             </div>
 
-            <div class="hidden sm:flex items-center gap-1 bg-gray-800/60 px-2 py-0.5 rounded-full text-[10px] text-cyan-400 border border-cyan-500/20">
+            <div class="hidden sm:flex items-center gap-1 bg-gray-800/60 px-2 py-0.5 rounded-full text-[10px] text-cyan-400 border border-cyan-500/20 whitespace-nowrap">
                 <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
                 <span id="visitor-count">14</span> <span data-i18n="onlineLabel">online</span>
             </div>
@@ -302,7 +302,7 @@
                         <div>
                             <div class="flex items-center space-x-2">
                                 <span class="w-2.5 h-2.5 rounded-full bg-emeraldNeon animate-pulse"></span>
-                                <h2 class="text-base font-bold text-white tracking-wide" data-i18n="osGreeting">Good afternoon, S.V@lentin.</h2>
+                                <h2 id="osGreetingHeading" class="text-base font-bold text-white tracking-wide">Bună ziua.</h2>
                             </div>
                             <p class="text-xs text-gray-400 mt-1" data-i18n="osPrivateWorkspace">Private workspace. Only your real data appears here, and nothing is sample data.</p>
                         </div>
@@ -359,8 +359,10 @@
                             </div>
                         </div>
 
-                        <div class="text-center text-xs text-gray-400 mt-2" data-i18n="hudHintText">
-                            Click pe orice nod, pe nucleul central sau intră în <button onclick="switchTab('office3d', 'Birou Agenți 3D')" class="text-emerald-400 underline cursor-pointer">Birou Agenți 3D</button> pentru a controla roboții AI.
+                        <div class="text-center text-xs text-gray-400 mt-2">
+                            <span data-i18n="hudHintPrefix">Click pe orice nod, pe nucleul central sau intră în</span>
+                            <button onclick="switchTab('office3d', 'Birou Agenți 3D')" class="text-emerald-400 underline cursor-pointer" data-i18n="navOffice3D">Birou Agenți 3D</button>
+                            <span data-i18n="hudHintSuffix">pentru a controla roboții AI.</span>
                         </div>
                     </div>
                 </div>
@@ -505,8 +507,8 @@
                    <div class="flex items-center justify-between gap-2 mb-2 shrink-0 flex-wrap">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> <span data-i18n="chatTitle">Nexus Neural Assistant - Home / Tools Hub</span></h2>
                         <div class="flex items-center gap-2">
-                            <span id="chatSessionTokens" class="text-[10px] font-mono bg-gray-900 border border-cyanNeon/30 text-cyan-300 px-2 py-0.5 rounded-lg">Sesiune: 0 tok</span>
-                            <button onclick="startNewConversation()" class="text-[10px] bg-cyanNeon/15 hover:bg-cyanNeon/25 text-cyanNeon border border-cyanNeon/40 px-2 py-0.5 rounded-lg font-semibold cursor-pointer transition" data-i18n="btnNewChat">+ Nouă</button>
+                            <span id="chatSessionTokens" class="text-[10px] font-mono bg-gray-900 border border-cyanNeon/30 text-cyan-300 px-2 py-0.5 rounded-lg whitespace-nowrap">Sesiune: 0 tok</span>
+                            <button onclick="startNewConversation()" class="text-[10px] bg-cyanNeon/15 hover:bg-cyanNeon/25 text-cyanNeon border border-cyanNeon/40 px-2 py-0.5 rounded-lg font-semibold cursor-pointer transition whitespace-nowrap" data-i18n="btnNewChat">+ Nouă</button>
                         </div>
                     </div>
                     <div class="mb-2.5 shrink-0">
@@ -884,6 +886,59 @@
             'gemini-4-hydrogen',
             'gemini-flash-latest'
         ];
+
+        // --- SALUT DINAMIC LA LOGARE ---
+        function getTimeGreetingByLang(lang) {
+            const hour = new Date().getHours();
+            const period = hour < 12 ? 'morning' : (hour < 18 ? 'afternoon' : 'evening');
+            const greetings = {
+                ro: { morning: 'Bună dimineața', afternoon: 'Bună ziua', evening: 'Bună seara' },
+                en: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening' },
+                es: { morning: 'Buenos días', afternoon: 'Buenas tardes', evening: 'Buenas noches' },
+                fr: { morning: 'Bonjour', afternoon: 'Bon après-midi', evening: 'Bonsoir' },
+                de: { morning: 'Guten Morgen', afternoon: 'Guten Tag', evening: 'Guten Abend' },
+                it: { morning: 'Buongiorno', afternoon: 'Buon pomeriggio', evening: 'Buonasera' },
+                ar: { morning: 'صباح الخير', afternoon: 'مساء الخير', evening: 'مساء الخير' }
+            };
+            const map = greetings[lang] || greetings.ro;
+            return map[period];
+        }
+
+        function deriveDisplayName(userOrName, emailFallback = '') {
+            if (typeof userOrName === 'string' && userOrName.trim()) {
+                return userOrName.trim();
+            }
+            if (userOrName && typeof userOrName === 'object') {
+                if (userOrName.displayName && userOrName.displayName.trim()) {
+                    return userOrName.displayName.trim();
+                }
+                if (userOrName.email && userOrName.email.includes('@')) {
+                    return userOrName.email.split('@')[0];
+                }
+            }
+            if (emailFallback && emailFallback.includes('@')) {
+                return emailFallback.split('@')[0];
+            }
+            return '';
+        }
+
+        window.updateGreetingFromUser = function(explicitName = null) {
+            const heading = document.getElementById('osGreetingHeading');
+            if (!heading) return;
+
+            if (typeof explicitName === 'string') {
+                const cleaned = explicitName.trim();
+                if (cleaned) {
+                    localStorage.setItem('nexus_logged_user_name', cleaned);
+                } else {
+                    localStorage.removeItem('nexus_logged_user_name');
+                }
+            }
+
+            const savedName = (localStorage.getItem('nexus_logged_user_name') || '').trim();
+            const baseGreeting = getTimeGreetingByLang(currentLang);
+            heading.innerText = savedName ? `${baseGreeting}, ${savedName}.` : `${baseGreeting}.`;
+        };
 
         // --- PWA SERVICE WORKER & INSTALL PROMPT ---
         let deferredPwaPrompt = null;
@@ -1498,6 +1553,7 @@
                 const browserLang = (navigator.language || 'ro').slice(0, 2).toLowerCase();
                 window.setLanguage(i18nDictionary[browserLang] ? browserLang : 'ro');
             }
+            window.updateGreetingFromUser();
         });
 
         window.appendEmoji = function(emoji, el) {
@@ -2126,7 +2182,9 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const userName = escapeHtml(user.displayName || user.email || 'Utilizator');
+                const resolvedName = deriveDisplayName(user);
+                window.updateGreetingFromUser(resolvedName);
+                const userName = escapeHtml(resolvedName || 'Utilizator');
                 const userPhoto = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
                 const parentEl = document.getElementById('tab-authAccount');
                 const container = parentEl ? parentEl.querySelector('.max-w-md') : null;
@@ -2141,6 +2199,8 @@
                         </div>
                     `;
                 }
+            } else {
+                window.updateGreetingFromUser('');
             }
         });
 
@@ -2148,8 +2208,9 @@
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 const signedUser = result.user;
-                const userName = escapeHtml((signedUser && (signedUser.displayName || signedUser.email)) || 'Utilizator');
-                window.showToast("Autentificat cu succes: " + userName, "success");
+                const resolvedName = deriveDisplayName(signedUser);
+                window.updateGreetingFromUser(resolvedName);
+                window.showToast("Autentificat cu succes: " + escapeHtml(resolvedName || 'Utilizator'), "success");
             } catch (error) {
                 const errMsg = error && error.message ? error.message : "Eroare necunoscută";
                 alert("Eroare la autentificare: " + errMsg);
@@ -2172,14 +2233,17 @@
             }
             try {
                 const res = await createUserWithEmailAndPassword(auth, email, password);
+                const resolvedName = deriveDisplayName(fullName, res.user.email);
+                window.updateGreetingFromUser(resolvedName);
                 alert("Cont creat cu succes pentru: " + res.user.email);
-                if (statusEl) statusEl.innerText = `Cont creat pentru ${escapeHtml(fullName || res.user.email)} ✅`;
+                if (statusEl) statusEl.innerText = `Cont creat pentru ${escapeHtml(resolvedName || res.user.email)} ✅`;
             } catch (err) {
                 alert("Eroare la crearea contului: " + err.message);
             }
         };
 
         window.logoutUser = async function() {
+            window.updateGreetingFromUser('');
             try {
                 await signOut(auth);
             } catch (error) {}
@@ -2341,7 +2405,6 @@
             navBilling: "Abonament & PRO",
             navAuth: "Cont, Google & Login",
             navSupport: "Suport & Ajutor",
-            osGreeting: "Good afternoon, S.V@lentin.",
             osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
             btnOffice3DShort: "Birou 3D",
             btnTalkToNexus: "Talk to Nexus",
@@ -2353,7 +2416,8 @@
             nodeCalendar: "Calendar",
             nodeAbTest: "A/B Test",
             nodeAgents: "Agents",
-            hudHintText: "Click pe orice nod, pe nucleul central sau intră în <button onclick=\"switchTab('office3d', 'Birou Agenți 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Birou Agenți 3D</button> pentru a controla roboții AI.",
+            hudHintPrefix: "Click pe orice nod, pe nucleul central sau intră în",
+            hudHintSuffix: "pentru a controla roboții AI.",
             office3dTitle: "Nexus 3D HQ — Birou Agenți AI",
             office3dSub: "Atinge un robot pe harta 3D sau alege un flux rapid pentru a lucra cu agentul respectiv.",
             pillCalendar: "📅 Calendar",
@@ -2518,7 +2582,6 @@
                 navBilling: "Subscription & PRO",
                 navAuth: "Account, Google & Login",
                 navSupport: "Support & Help",
-                osGreeting: "Good afternoon, S.V@lentin.",
                 osPrivateWorkspace: "Private workspace. Only your real data appears here, and nothing is sample data.",
                 btnOffice3DShort: "3D Office",
                 btnTalkToNexus: "Talk to Nexus",
@@ -2530,7 +2593,8 @@
                 nodeCalendar: "Calendar",
                 nodeAbTest: "A/B Test",
                 nodeAgents: "Agents",
-                hudHintText: "Click any node, the central core, or enter <button onclick=\"switchTab('office3d', '3D Agents Office')\" class=\"text-emerald-400 underline cursor-pointer\">3D Agents Office</button> to control the AI bots.",
+                hudHintPrefix: "Click any node, the central core, or enter",
+                hudHintSuffix: "to control the AI bots.",
                 office3dTitle: "Nexus 3D HQ — AI Agents Office",
                 office3dSub: "Tap a robot on the 3D map or pick a quick workflow to work with that agent.",
                 pillCalendar: "📅 Calendar",
@@ -2692,7 +2756,6 @@
                 navBilling: "Suscripción y PRO",
                 navAuth: "Cuenta, Google y Login",
                 navSupport: "Soporte y Ayuda",
-                osGreeting: "Buenas tardes, S.V@lentin.",
                 osPrivateWorkspace: "Espacio privado. Aquí solo aparecen tus datos reales, sin datos de ejemplo.",
                 btnOffice3DShort: "Oficina 3D",
                 btnTalkToNexus: "Hablar con Nexus",
@@ -2704,7 +2767,8 @@
                 nodeCalendar: "Calendario",
                 nodeAbTest: "Test A/B",
                 nodeAgents: "Agentes",
-                hudHintText: "Haz clic en cualquier nodo, en el núcleo central o entra en <button onclick=\"switchTab('office3d', 'Oficina Agentes 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Oficina Agentes 3D</button> para controlar los robots AI.",
+                hudHintPrefix: "Haz clic en cualquier nodo, en el núcleo central o entra en",
+                hudHintSuffix: "para controlar los robots AI.",
                 office3dTitle: "Nexus 3D HQ — Oficina de Agentes AI",
                 office3dSub: "Toca un robot en el mapa 3D o elige un flujo rápido para trabajar con ese agente.",
                 pillCalendar: "📅 Calendario",
@@ -2866,7 +2930,6 @@
                 navBilling: "Abonnement & PRO",
                 navAuth: "Compte, Google & Connexion",
                 navSupport: "Support & Aide",
-                osGreeting: "Bon après-midi, S.V@lentin.",
                 osPrivateWorkspace: "Espace privé. Seules vos vraies données apparaissent ici, sans données fictives.",
                 btnOffice3DShort: "Bureau 3D",
                 btnTalkToNexus: "Parler à Nexus",
@@ -2878,7 +2941,8 @@
                 nodeCalendar: "Calendrier",
                 nodeAbTest: "Test A/B",
                 nodeAgents: "Agents",
-                hudHintText: "Cliquez sur un nœud, le noyau central ou entrez dans <button onclick=\"switchTab('office3d', 'Bureau Agents 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Bureau Agents 3D</button> pour contrôler les robots AI.",
+                hudHintPrefix: "Cliquez sur un nœud, le noyau central ou entrez dans",
+                hudHintSuffix: "pour contrôler les robots AI.",
                 office3dTitle: "Nexus 3D HQ — Bureau des Agents AI",
                 office3dSub: "Touchez un robot sur la carte 3D ou choisissez un flux rapide pour travailler avec cet agent.",
                 pillCalendar: "📅 Calendrier",
@@ -3040,7 +3104,6 @@
                 navBilling: "Abo & PRO",
                 navAuth: "Konto, Google & Login",
                 navSupport: "Support & Hilfe",
-                osGreeting: "Guten Tag, S.V@lentin.",
                 osPrivateWorkspace: "Privater Arbeitsbereich. Hier erscheinen nur deine echten Daten, keine Beispieldaten.",
                 btnOffice3DShort: "3D-Büro",
                 btnTalkToNexus: "Mit Nexus sprechen",
@@ -3052,7 +3115,8 @@
                 nodeCalendar: "Kalender",
                 nodeAbTest: "A/B-Test",
                 nodeAgents: "Agenten",
-                hudHintText: "Klicke auf einen Knoten, den zentralen Kern oder öffne das <button onclick=\"switchTab('office3d', '3D-Agenten-Büro')\" class=\"text-emerald-400 underline cursor-pointer\">3D-Agenten-Büro</button>, um die AI-Bots zu steuern.",
+                hudHintPrefix: "Klicke auf einen Knoten, den zentralen Kern oder öffne das",
+                hudHintSuffix: "um die AI-Bots zu steuern.",
                 office3dTitle: "Nexus 3D HQ — AI-Agenten-Büro",
                 office3dSub: "Tippe auf einen Roboter auf der 3D-Karte oder wähle einen Schnell-Workflow aus.",
                 pillCalendar: "📅 Kalender",
@@ -3214,7 +3278,6 @@
                 navBilling: "Abbonamento & PRO",
                 navAuth: "Account, Google & Login",
                 navSupport: "Supporto & Aiuto",
-                osGreeting: "Buon pomeriggio, S.V@lentin.",
                 osPrivateWorkspace: "Spazio privato. Qui compaiono solo i tuoi dati reali, nessun dato di esempio.",
                 btnOffice3DShort: "Ufficio 3D",
                 btnTalkToNexus: "Parla con Nexus",
@@ -3226,7 +3289,8 @@
                 nodeCalendar: "Calendario",
                 nodeAbTest: "Test A/B",
                 nodeAgents: "Agenti",
-                hudHintText: "Clicca su un nodo, sul nucleo centrale o entra in <button onclick=\"switchTab('office3d', 'Ufficio Agenti 3D')\" class=\"text-emerald-400 underline cursor-pointer\">Ufficio Agenti 3D</button> per controllare i robot AI.",
+                hudHintPrefix: "Clicca su un nodo, sul nucleo centrale o entra in",
+                hudHintSuffix: "per controllare i robot AI.",
                 office3dTitle: "Nexus 3D HQ — Ufficio Agenti AI",
                 office3dSub: "Tocca un robot sulla mappa 3D o scegli un flusso rapido per lavorare con quell'agente.",
                 pillCalendar: "📅 Calendario",
@@ -3388,7 +3452,6 @@
                 navBilling: "الاشتراك و PRO",
                 navAuth: "الحساب، Google وتسجيل الدخول",
                 navSupport: "الدعم والمساعدة",
-                osGreeting: "مساء الخير، S.V@lentin.",
                 osPrivateWorkspace: "مساحة عمل خاصة. تظهر هنا بياناتك الحقيقية فقط ولا توجد بيانات تجريبية.",
                 btnOffice3DShort: "المكتب 3D",
                 btnTalkToNexus: "تحدث مع Nexus",
@@ -3400,7 +3463,8 @@
                 nodeCalendar: "التقويم",
                 nodeAbTest: "اختبار A/B",
                 nodeAgents: "الوكلاء",
-                hudHintText: "انقر على أي عقدة أو النواة المركزية أو ادخل إلى <button onclick=\"switchTab('office3d', 'مكتب الوكلاء 3D')\" class=\"text-emerald-400 underline cursor-pointer\">مكتب الوكلاء 3D</button> للتحكم في روبوتات الذكاء الاصطناعي.",
+                hudHintPrefix: "انقر على أي عقدة أو النواة المركزية أو ادخل إلى",
+                hudHintSuffix: "للتحكم في روبوتات الذكاء الاصطناعي.",
                 office3dTitle: "Nexus 3D HQ — مكتب وكلاء الذكاء الاصطناعي",
                 office3dSub: "المس روبوتًا على الخريطة ثلاثية الأبعاد أو اختر مسار عمل سريعًا للتعاون مع الوكيل.",
                 pillCalendar: "📅 التقويم",
@@ -3573,6 +3637,7 @@
                 }
             });
 
+            window.updateGreetingFromUser();
             window.setCreativeMode(currentCreativeMode);
             updateOffice3DStatusLabel();
             refreshTokenCountersUI();
