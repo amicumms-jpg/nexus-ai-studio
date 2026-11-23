@@ -143,14 +143,14 @@
 <meta name="theme-color" content="#090d16" />
 <link rel="apple-touch-icon" href="./favicon.ico" />
 </head>
-<body class="bg-darkBg text-gray-100 font-sans h-dvh min-h-dvh w-full max-w-full flex flex-col overflow-x-hidden overflow-y-hidden">
+<body class="bg-darkBg text-gray-100 font-sans min-h-dvh w-full max-w-full flex flex-col overflow-x-hidden">
     <!-- Canvas Matrix -->
     <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
     <!-- Toast Container -->
-    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    <div id="toastContainer" class="fixed top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 z-50 flex flex-col space-y-2 pointer-events-none w-[92vw] max-w-sm"></div>
 
     <!-- Top Navigation Bar Foarte Curată -->
-    <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 w-full shadow-lg z-20">
+    <header class="bg-panelBg border-b border-cyanNeon/20 px-3 py-2 flex items-center justify-between shrink-0 w-full shadow-lg z-30 sticky top-0">
         <div class="flex items-center space-x-2">
             <button onclick="toggleSidebar()" class="text-cyanNeon p-2 hover:bg-gray-800 rounded-xl text-sm focus:outline-none shrink-0 cursor-pointer" title="Deschide Meniul">
                 <i class="fa-solid fa-bars text-base"></i>
@@ -175,7 +175,7 @@
 
         <!-- Utilitare Sus + Contor Automat Tokeni -->
         <div class="flex items-center gap-1.5 text-xs">
-            <button id="pwaInstallBtn" onclick="installNexusPwa()" class="flex md:hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer whitespace-nowrap" title="Instalează Aplicația">
+            <button id="pwaInstallBtn" type="button" onclick="installNexusPwa()" class="flex md:hidden items-center gap-1 bg-emeraldNeon/20 hover:bg-emeraldNeon hover:text-darkBg border border-emeraldNeon/50 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer whitespace-nowrap" title="Instalează Aplicația">
                 <i class="fa-solid fa-download text-[9px]"></i> <span data-i18n="btnInstallPwa">Instalează</span>
             </button>
 
@@ -202,7 +202,7 @@
         </div>
     </header>
     <!-- Main Layout -->
-    <div class="flex flex-1 min-h-0 w-full overflow-hidden z-10 relative">
+    <div class="flex flex-1 min-h-0 w-full relative z-10">
         <!-- Overlay Mobil Corectat -->
         <div id="sidebarOverlay" onclick="closeSidebarMobile()" class="hidden fixed inset-0 bg-black/85 z-40 transition-opacity"></div>
 
@@ -215,7 +215,7 @@
             </div>
 
             <!-- BUTON INSTALARE PWA ÎN MENIU -->
-            <button id="sidebarInstallBtn" onclick="closeSidebarMobile(); installNexusPwa();" class="w-full py-2 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emeraldNeon/50 text-emerald-300 text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer transition">
+            <button id="sidebarInstallBtn" type="button" onclick="closeSidebarMobile(); installNexusPwa();" class="w-full py-2 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emeraldNeon/50 text-emerald-300 text-xs font-bold rounded-xl flex items-center justify-center space-x-1.5 mb-2 shrink-0 cursor-pointer transition">
                 <i class="fa-solid fa-mobile-screen-button text-sm"></i>
                 <span data-i18n="btnInstallPwaFull">Instalează Aplicația</span>
             </button>
@@ -293,10 +293,10 @@
             </div>
         </aside>
         <!-- Main Content Container -->
-        <main class="flex-1 flex flex-col min-h-0 w-full bg-darkBg overflow-hidden relative pb-2 md:pb-0">
+        <main class="flex-1 flex flex-col min-h-0 w-full bg-darkBg overflow-y-auto md:overflow-hidden relative pb-14 md:pb-0">
             
             <!-- TAB: Nexus Command OS -->
-            <div id="tab-nexusOS" class="app-tab flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 sm:p-4 pb-6 md:pb-4 space-y-4">
+            <div id="tab-nexusOS" class="app-tab flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 sm:p-4 pb-16 md:pb-6 space-y-4">
                 <div class="max-w-5xl mx-auto w-full space-y-4">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between bg-panelBg border border-cyanNeon/40 p-4 rounded-2xl shadow-xl">
                         <div>
@@ -368,7 +368,7 @@
                 </div>
             </div>
             <!-- TAB: Birou Agenți 3D Izometric -->
-            <div id="tab-office3d" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 pb-6 md:p-4 md:pb-4 space-y-3">
+            <div id="tab-office3d" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-3 pb-16 md:p-4 md:pb-6 space-y-3">
                 <div class="max-w-6xl mx-auto w-full space-y-3">
                     <div class="bg-panelBg border border-emeraldNeon/35 p-3 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-xl">
                         <div>
@@ -502,8 +502,8 @@
             </div>
 
             <!-- Tab 1: Chat General -->
-            <div id="tab-chat" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-hidden p-2.5 sm:p-3 pb-4 md:pb-3 space-y-2">
-                <div class="bg-panelBg border border-cyanNeon/30 p-3 sm:p-4 rounded-2xl flex-1 flex flex-col min-h-0 shadow-xl overflow-hidden">
+            <div id="tab-chat" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto md:overflow-hidden p-2.5 sm:p-3 pb-16 md:pb-3 space-y-2">
+                <div class="bg-panelBg border border-cyanNeon/30 p-3 sm:p-4 rounded-2xl flex-1 flex flex-col min-h-[420px] md:min-h-0 shadow-xl overflow-hidden">
                    <div class="flex items-center justify-between gap-2 mb-2 shrink-0 flex-wrap">
                         <h2 class="font-bold text-xs text-cyanNeon"><i class="fa-solid fa-comments mr-2"></i> <span data-i18n="chatTitle">Nexus Neural Assistant - Home / Tools Hub</span></h2>
                         <div class="flex items-center gap-2">
@@ -528,7 +528,7 @@
                         </select>
                     </div>
 
-                    <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 min-h-0 overflow-y-auto space-y-2 border border-gray-800 mb-2">
+                    <div id="chatMessages" class="bg-gray-950 p-3 rounded-xl text-xs text-gray-200 flex-1 min-h-[160px] overflow-y-auto space-y-2 border border-gray-800 mb-2">
                         <div class="text-gray-400" data-i18n="welcomeMsg">Salut! Sunt asistentul tău general. Cu ce începem?</div>
                     </div>
 
@@ -594,7 +594,7 @@
                 </div>
             </div>
     <!-- Tab: Layers of AI Studio -->
-    <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:pb-4 space-y-4">
+    <div id="tab-layersAi" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-16 md:pb-6 space-y-4">
         <div class="max-w-6xl mx-auto w-full space-y-6">
             <header class="text-center my-4">
                 <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-400 to-pink-500" data-i18n="layersTitle">Layers of AI Creator</h1>
@@ -650,7 +650,7 @@
     </div>
 
     <!-- TAB: Abonament & PRO -->
-    <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 items-center justify-center">
+    <div id="tab-billingCard" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-16 md:p-4 md:pb-6 items-center justify-start md:justify-center">
         <div class="max-w-4xl w-full space-y-4 mx-auto my-auto">
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amberGlow to-orange-500 flex items-center justify-center text-darkBg font-bold text-xl mx-auto shadow-lg"><i class="fa-solid fa-crown"></i></div>
@@ -684,7 +684,7 @@
                         <div class="text-base font-extrabold text-amberGlow">49 RON <span class="text-[10px] font-normal text-gray-400" data-i18n="perMonth">/ lună</span></div>
                         <p class="text-[11px] text-gray-300" data-i18n="planProDesc">Generare nelimitată și viteză maximă de procesare.</p>
                     </div>
-                    <a href="https://buy.stripe.com/live_4gM14mdAW8Iz71e59K4ko00" target="_blank" rel="noopener noreferrer" class="w-full block text-center text-darkBg font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer bg-amberGlow hover:opacity-90" data-i18n="btnSubscribePro">Abonează-te Pro (49 RON)</a>
+                    <button type="button" onclick="handleCardUnavailable()" class="w-full block text-center bg-gray-800/90 border border-amberGlow/40 text-amber-300/90 font-bold text-xs py-2 rounded-xl transition shadow cursor-pointer hover:bg-gray-800" data-i18n="btnCardUnavailable">Plata cu cardul — Momentan indisponibil</button>
                 </div>
                 <div class="bg-panelBg border border-purple-500/40 p-4 rounded-2xl space-y-3 shadow-lg flex flex-col justify-between">
                     <div class="space-y-2">
@@ -699,12 +699,12 @@
                 </div>
             </div>
             <div class="text-center text-[11px] text-gray-500 space-y-1 pt-2">
-                <p data-i18n="securePaymentsText">Plăți securizate 100% prin <strong>Stripe</strong> & <strong>Revolut</strong>.</p>
+                <p data-i18n="securePaymentsText">Plata cu cardul: <strong>Momentan indisponibil</strong> • Suport prin <strong>Revolut</strong> & <strong>Cheie Licență</strong>.</p>
             </div>
         </div>
     </div>
     <!-- TAB: Cont, Google & Înregistrare -->
-    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 items-center justify-center">
+    <div id="tab-authAccount" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-16 md:p-4 md:pb-6 items-center justify-start md:justify-center">
         <div class="bg-panelBg border border-cyanNeon/30 p-6 rounded-3xl max-w-md w-full space-y-4 shadow-2xl mx-auto my-auto">
             <div class="text-center space-y-1">
                 <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyanNeon to-emeraldNeon flex items-center justify-center text-darkBg font-bold text-lg mx-auto shadow-lg"><i class="fa-solid fa-user-shield"></i></div>
@@ -760,7 +760,7 @@
     </div>
 
     <!-- TAB: Suport & Asistență Clienți -->
-    <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-6 md:p-4 space-y-4">
+    <div id="tab-supportTab" class="app-tab hidden flex-1 flex-col min-h-0 h-full overflow-y-auto p-4 pb-16 md:p-4 md:pb-6 space-y-4">
         <div class="bg-panelBg border border-amberGlow/30 p-5 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
                 <h2 class="text-lg font-bold text-amberGlow flex items-center gap-2" data-i18n="supportCenterTitle"><i class="fa-solid fa-headset"></i> Centrul de Suport & Asistență Clienți</h2>
@@ -801,7 +801,7 @@
 </div>
 
 <!-- WIDGET FLOTANT ROBĂȚEL AI / GEMINI + TELEGRAM BOT VERIFICAT -->
-    <div id="nexus-robot-widget" class="fixed bottom-12 sm:bottom-24 right-3 sm:right-4 z-50">
+    <div id="nexus-robot-widget" class="fixed bottom-12 sm:bottom-14 right-3 sm:right-4 z-40">
         <button id="nexus-robot-toggle-btn" onclick="toggleNexusRobot()" class="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 focus:outline-none cursor-pointer" title="Deschide Asistent AI">
             <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
             <span class="absolute top-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-500 border border-slate-900 rounded-full animate-pulse"></span>
@@ -836,6 +836,23 @@
         </div>
     </div>
 
+    <!-- Modal Instalare Aplicație (Fallback Mobil / Chrome) -->
+    <div id="installHelpModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-emeraldNeon/40 rounded-2xl max-w-md w-full p-5 shadow-2xl relative text-xs text-gray-200 space-y-3">
+        <button onclick="closeModal('installHelpModal')" class="absolute top-3.5 right-3.5 text-gray-400 hover:text-white text-lg cursor-pointer">✕</button>
+        <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span data-i18n="installModalTitle">Instalează Nexus AI pe telefon</span>
+        </div>
+        <p id="installModalBody" class="text-gray-300 leading-relaxed" data-i18n="installModalBody">
+          Dacă butonul automat nu s-a deschis direct, apasă pe meniul <strong>⋮</strong> (sus sau jos în dreapta browserului) și selectează <strong>„Instalează aplicația”</strong> sau <strong>„Adaugă pe ecranul principal”</strong>.
+        </p>
+        <div class="flex justify-end pt-1">
+          <button onclick="closeModal('installHelpModal')" class="bg-emeraldNeon text-darkBg font-bold px-4 py-2 rounded-xl text-xs cursor-pointer hover:opacity-90" data-i18n="btnGotIt">Am înțeles</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal Politică Confidențialitate (GDPR) -->
     <div id="privacyModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-lg w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto text-xs text-gray-300 space-y-3">
@@ -855,9 +872,9 @@
       </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="w-full py-1.5 px-3 text-center text-[9px] text-gray-400 shrink-0 border-t border-gray-800/80 bg-panelBg/95 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-20">
-        <span data-i18n="footerStripe">Plăți Securizate Stripe</span> • 
+    <!-- Footer Fixat la Bază -->
+    <footer class="w-full py-2 px-3 text-center text-[9px] text-gray-400 shrink-0 border-t border-gray-800/80 bg-panelBg/95 backdrop-blur-md flex items-center justify-center gap-2 flex-wrap z-30 sticky bottom-0">
+        <span data-i18n="footerCardStatus">Card: Momentan indisponibil</span> • 
         <a href="#" onclick="openModal('privacyModal'); return false;" class="hover:underline text-cyanNeon/80" data-i18n="footerPrivacy">Politică Confidențialitate (GDPR)</a> • 
         <a href="#" onclick="openModal('termsModal'); return false;" class="hover:underline" data-i18n="footerTerms">Termeni și Condiții</a> • 
         <span><span data-i18n="footerCreator">Creat de</span> <span class="font-semibold text-indigo-400">S.V@lentin</span></span>
@@ -886,6 +903,12 @@
             'gemini-4-hydrogen',
             'gemini-flash-latest'
         ];
+
+        // --- PLATA CU CARDUL MOMENTAN INDISPONIBILĂ ---
+        window.handleCardUnavailable = function() {
+            const msg = i18nDictionary[currentLang]?.cardUnavailableToast || "Plata cu cardul este momentan indisponibilă. Poți folosi Revolut sau o cheie de activare.";
+            window.showToast(msg, "info");
+        };
 
         // --- SALUT DINAMIC LA LOGARE ---
         function getTimeGreetingByLang(lang) {
@@ -967,17 +990,28 @@
         });
 
         window.installNexusPwa = async function() {
-            if (!deferredPwaPrompt) {
-                window.showToast('În Chrome (⋮): apasă "Instalează aplicația" sau "Adaugă pe ecranul principal".', 'info');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isStandalone) {
+                window.showToast('Nexus AI este deja instalat pe acest dispozitiv.', 'success');
                 return;
             }
-            deferredPwaPrompt.prompt();
-            const choiceResult = await deferredPwaPrompt.userChoice;
-            if (choiceResult && choiceResult.outcome === 'accepted') {
-                window.showToast('Nexus AI se instalează pe ecranul principal!', 'success');
+            if (!deferredPwaPrompt) {
+                window.openModal('installHelpModal');
+                return;
             }
-            deferredPwaPrompt = null;
-            updatePwaInstallButtons(false);
+            try {
+                deferredPwaPrompt.prompt();
+                const choiceResult = await deferredPwaPrompt.userChoice;
+                if (choiceResult && choiceResult.outcome === 'accepted') {
+                    window.showToast('Nexus AI se instalează pe ecranul principal!', 'success');
+                    deferredPwaPrompt = null;
+                    updatePwaInstallButtons(false);
+                } else {
+                    window.openModal('installHelpModal');
+                }
+            } catch (err) {
+                window.openModal('installHelpModal');
+            }
         };
 
         window.addEventListener('appinstalled', () => {
@@ -1612,13 +1646,13 @@
             if(!container) return;
             const toast = document.createElement('div');
             toast.className = `p-3 rounded-xl text-xs shadow-lg text-white font-semibold transition transform translate-y-2 opacity-0 flex items-center gap-2 ${type==='success'?'bg-emerald-600':type==='error'?'bg-red-600':'bg-cyan-600'}`;
-            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> ${escapeHtml(msg)}`;
+            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check':'fa-info'}"></i> <span>${escapeHtml(msg)}</span>`;
             container.appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 3200);
         };
         let attachedFiles = {};
         
@@ -1798,7 +1832,7 @@
 
             if(tabKey === 'chat') {
                 if(freeMessagesLeft <= 0) {
-                    window.showToast('Ai epuizat mesajele gratuite de astăzi. Activează PRO!', 'error');
+                    window.showToast('Ai epuizat mesajele gratuite de astăzi.', 'error');
                     window.switchTab('billingCard', 'Abonament & PRO');
                     return;
                 }
@@ -1865,7 +1899,7 @@
                 }
             } catch (err) {
                 if (err.message === 'QUOTA_EXCEEDED') {
-                    contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă. Activează Nexus Pro VIP!</span>`;
+                    contentDiv.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Limita de mesaje a fost temporar atinsă.</span>`;
                 } else {
                     contentDiv.innerHTML = `<div class="text-red-400 bg-red-950/30 p-2.5 rounded-xl border border-red-500/30 text-xs"><b>Eroare:</b> ${escapeHtml(err.message)}</div>`;
                 }
@@ -2387,6 +2421,9 @@
             btnBack: "Înapoi",
             btnInstallPwa: "Instalează",
             btnInstallPwaFull: "Instalează Aplicația",
+            installModalTitle: "Instalează Nexus AI pe telefon",
+            installModalBody: "Dacă butonul automat nu s-a deschis direct, apasă pe meniul <strong>⋮</strong> din browser și selectează <strong>„Instalează aplicația”</strong> sau <strong>„Adaugă pe ecranul principal”</strong>.",
+            btnGotIt: "Am înțeles",
             onlineLabel: "online",
             mobileNavTitle: "Meniu Navigare",
             openAssistant: "Asistent AI",
@@ -2507,13 +2544,14 @@
             badgeRecommended: "Recomandat",
             perMonth: "/ lună",
             planProDesc: "Generare nelimitată și viteză maximă de procesare.",
-            btnSubscribePro: "Abonează-te Pro (49 RON)",
+            btnCardUnavailable: "Plata cu cardul — Momentan indisponibil",
+            cardUnavailableToast: "Plata cu cardul este momentan indisponibilă. Poți folosi Revolut sau o cheie de activare.",
             planDonateTitle: "Susține Proiectul ☕",
             badgeDonation: "Donație",
             donationSubtitle: "O cafea virtuală",
             donationDesc: "Îți place platforma și vrei să susții dezvoltarea ei continuă?",
             btnRevolut: "Trimite o cafea pe Revolut",
-            securePaymentsText: "Plăți securizate 100% prin <strong>Stripe</strong> & <strong>Revolut</strong>.",
+            securePaymentsText: "Plata cu cardul: <strong>Momentan indisponibil</strong> • Suport prin <strong>Revolut</strong> & <strong>Cheie Licență</strong>.",
             authTitle: "Autentificare & Cont Personal",
             authSub: "Conectează-te rapid sau creează un cont nou.",
             orNewForm: "SAU FORMULAR NOU",
@@ -2552,7 +2590,7 @@
             privacyText2: "Puteți solicita oricând ștergerea datelor contului dumneavoastră contactându-ne pe e-mail.",
             termsModalTitle: "Termeni și Condiții",
             termsText1: "Prin utilizarea platformei Nexus AI Studio Pro, sunteți de acord cu termenii și condițiile stabilite. Serviciile noastre sunt oferite \"ca atare\" pentru creatori și afaceri.",
-            footerStripe: "Plăți Securizate Stripe",
+            footerCardStatus: "Card: Momentan indisponibil",
             footerPrivacy: "Politică Confidențialitate (GDPR)",
             footerTerms: "Termeni și Condiții",
             footerCreator: "Creat de"
@@ -2564,6 +2602,9 @@
                 btnBack: "Back",
                 btnInstallPwa: "Install",
                 btnInstallPwaFull: "Install App",
+                installModalTitle: "Install Nexus AI on your phone",
+                installModalBody: "If the automatic prompt didn't open directly, tap the <strong>⋮</strong> menu in your browser and select <strong>\"Install app\"</strong> or <strong>\"Add to Home screen\"</strong>.",
+                btnGotIt: "Got it",
                 onlineLabel: "online",
                 mobileNavTitle: "Navigation Menu",
                 openAssistant: "AI Assistant",
@@ -2684,13 +2725,14 @@
                 badgeRecommended: "Recommended",
                 perMonth: "/ month",
                 planProDesc: "Unlimited generation and maximum processing speed.",
-                btnSubscribePro: "Subscribe Pro (49 RON)",
+                btnCardUnavailable: "Card payments — Currently unavailable",
+                cardUnavailableToast: "Card payments are currently unavailable. You can use Revolut or an activation key.",
                 planDonateTitle: "Support the Project ☕",
                 badgeDonation: "Donation",
                 donationSubtitle: "A virtual coffee",
                 donationDesc: "Love the platform and want to support its continuous development?",
                 btnRevolut: "Send a coffee via Revolut",
-                securePaymentsText: "100% secure payments via <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                securePaymentsText: "Card payments: <strong>Currently unavailable</strong> • Support via <strong>Revolut</strong> & <strong>License Key</strong>.",
                 authTitle: "Authentication & Personal Account",
                 authSub: "Sign in quickly or create a new account.",
                 orNewForm: "OR NEW FORM",
@@ -2729,7 +2771,7 @@
                 privacyText2: "You may request deletion of your account data at any time by contacting us via email.",
                 termsModalTitle: "Terms and Conditions",
                 termsText1: "By using the Nexus AI Studio Pro platform, you agree to the established terms and conditions. Our services are provided \"as is\" for creators and businesses.",
-                footerStripe: "Stripe Secure Payments",
+                footerCardStatus: "Card: Currently unavailable",
                 footerPrivacy: "Privacy Policy (GDPR)",
                 footerTerms: "Terms & Conditions",
                 footerCreator: "Created by"
@@ -2738,6 +2780,9 @@
                 btnBack: "Atrás",
                 btnInstallPwa: "Instalar",
                 btnInstallPwaFull: "Instalar Aplicación",
+                installModalTitle: "Instala Nexus AI en tu teléfono",
+                installModalBody: "Si el aviso automático no se abrió directamente, toca el menú <strong>⋮</strong> del navegador y selecciona <strong>«Instalar aplicación»</strong> o <strong>«Añadir a pantalla de inicio»</strong>.",
+                btnGotIt: "Entendido",
                 onlineLabel: "en línea",
                 mobileNavTitle: "Menú de Navegación",
                 openAssistant: "Asistente AI",
@@ -2858,13 +2903,14 @@
                 badgeRecommended: "Recomendado",
                 perMonth: "/ mes",
                 planProDesc: "Generación ilimitada y máxima velocidad de procesamiento.",
-                btnSubscribePro: "Suscribirse Pro (49 RON)",
+                btnCardUnavailable: "Pago con tarjeta — No disponible por ahora",
+                cardUnavailableToast: "El pago con tarjeta no está disponible por ahora. Puedes usar Revolut o una clave de licencia.",
                 planDonateTitle: "Apoya el Proyecto ☕",
                 badgeDonation: "Donación",
                 donationSubtitle: "Un café virtual",
                 donationDesc: "¿Te gusta la plataforma y quieres apoyar su desarrollo continuo?",
                 btnRevolut: "Enviar un café en Revolut",
-                securePaymentsText: "Pagos 100% seguros mediante <strong>Stripe</strong> y <strong>Revolut</strong>.",
+                securePaymentsText: "Pago con tarjeta: <strong>No disponible por ahora</strong> • Soporte vía <strong>Revolut</strong> y <strong>Clave de Licencia</strong>.",
                 authTitle: "Autenticación y Cuenta Personal",
                 authSub: "Inicia sesión rápidamente o crea una cuenta nueva.",
                 orNewForm: "O FORMULARIO NUEVO",
@@ -2903,7 +2949,7 @@
                 privacyText2: "Puede solicitar en cualquier momento la eliminación de los datos de su cuenta contactándonos por correo.",
                 termsModalTitle: "Términos y Condiciones",
                 termsText1: "Al utilizar la plataforma Nexus AI Studio Pro, acepta los términos y condiciones establecidos. Nuestros servicios se ofrecen \"tal cual\" para creadores y empresas.",
-                footerStripe: "Pagos Seguros Stripe",
+                footerCardStatus: "Tarjeta: No disponible por ahora",
                 footerPrivacy: "Política de Privacidad (GDPR)",
                 footerTerms: "Términos y Condiciones",
                 footerCreator: "Creado por"
@@ -2912,6 +2958,9 @@
                 btnBack: "Retour",
                 btnInstallPwa: "Installer",
                 btnInstallPwaFull: "Installer l'Application",
+                installModalTitle: "Installer Nexus AI sur votre téléphone",
+                installModalBody: "Si l'invite automatique ne s'est pas ouverte directement, appuyez sur le menu <strong>⋮</strong> du navigateur et sélectionnez <strong>« Installer l'application »</strong> ou <strong>« Ajouter à l'écran d'accueil »</strong>.",
+                btnGotIt: "Compris",
                 onlineLabel: "en ligne",
                 mobileNavTitle: "Menu de Navigation",
                 openAssistant: "Assistant AI",
@@ -3032,13 +3081,14 @@
                 badgeRecommended: "Recommandé",
                 perMonth: "/ mois",
                 planProDesc: "Génération illimitée et vitesse de traitement maximale.",
-                btnSubscribePro: "S'abonner Pro (49 RON)",
+                btnCardUnavailable: "Paiement par carte — Indisponible pour le moment",
+                cardUnavailableToast: "Le paiement par carte est indisponible pour le moment. Vous pouvez utiliser Revolut ou une clé de licence.",
                 planDonateTitle: "Soutenir le Projet ☕",
                 badgeDonation: "Don",
                 donationSubtitle: "Un café virtuel",
                 donationDesc: "Vous aimez la plateforme et souhaitez soutenir son développement continu ?",
                 btnRevolut: "Offrir un café via Revolut",
-                securePaymentsText: "Paiements 100% sécurisés via <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                securePaymentsText: "Paiement par carte : <strong>Indisponible pour le moment</strong> • Support via <strong>Revolut</strong> & <strong>Clé de Licence</strong>.",
                 authTitle: "Authentification & Compte Personnel",
                 authSub: "Connectez-vous rapidement ou créez un nouveau compte.",
                 orNewForm: "OU NOUVEAU FORMULAIRE",
@@ -3077,7 +3127,7 @@
                 privacyText2: "Vous pouvez demander la suppression des données de votre compte à tout moment par e-mail.",
                 termsModalTitle: "Conditions Générales",
                 termsText1: "En utilisant la plateforme Nexus AI Studio Pro, vous acceptez les conditions générales établies. Nos services sont fournis « en l'état » pour les créateurs et les entreprises.",
-                footerStripe: "Paiements Sécurisés Stripe",
+                footerCardStatus: "Carte : Indisponible pour le moment",
                 footerPrivacy: "Politique de Confidentialité (RGPD)",
                 footerTerms: "Conditions Générales",
                 footerCreator: "Créé par"
@@ -3086,6 +3136,9 @@
                 btnBack: "Zurück",
                 btnInstallPwa: "Installieren",
                 btnInstallPwaFull: "App Installieren",
+                installModalTitle: "Nexus AI auf dem Smartphone installieren",
+                installModalBody: "Falls der automatische Dialog nicht direkt erscheint, tippe im Browser auf das Menü <strong>⋮</strong> und wähle <strong>„App installieren“</strong> oder <strong>„Zum Startbildschirm hinzufügen“</strong>.",
+                btnGotIt: "Verstanden",
                 onlineLabel: "online",
                 mobileNavTitle: "Navigationsmenü",
                 openAssistant: "AI-Assistent",
@@ -3206,13 +3259,14 @@
                 badgeRecommended: "Empfohlen",
                 perMonth: "/ Monat",
                 planProDesc: "Unbegrenzte Generierung und maximale Verarbeitungsgeschwindigkeit.",
-                btnSubscribePro: "Pro abonnieren (49 RON)",
+                btnCardUnavailable: "Kartenzahlung — Derzeit nicht verfügbar",
+                cardUnavailableToast: "Kartenzahlung ist derzeit nicht verfügbar. Du kannst Revolut oder einen Lizenzschlüssel nutzen.",
                 planDonateTitle: "Projekt unterstützen ☕",
                 badgeDonation: "Spende",
                 donationSubtitle: "Ein virtueller Kaffee",
                 donationDesc: "Gefällt dir die Plattform und möchtest du die Weiterentwicklung unterstützen?",
                 btnRevolut: "Kaffee über Revolut senden",
-                securePaymentsText: "100% sichere Zahlungen über <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                securePaymentsText: "Kartenzahlung: <strong>Derzeit nicht verfügbar</strong> • Support über <strong>Revolut</strong> & <strong>Lizenzschlüssel</strong>.",
                 authTitle: "Authentifizierung & Persönliches Konto",
                 authSub: "Schnell anmelden oder ein neues Konto erstellen.",
                 orNewForm: "ODER NEUES FORMULAR",
@@ -3251,7 +3305,7 @@
                 privacyText2: "Sie können jederzeit per E-Mail die Löschung Ihrer Kontodaten anfordern.",
                 termsModalTitle: "Allgemeine Geschäftsbedingungen",
                 termsText1: "Durch die Nutzung der Plattform Nexus AI Studio Pro stimmen Sie den festgelegten Bedingungen zu. Unsere Dienste werden für Creator und Unternehmen „wie besehen“ bereitgestellt.",
-                footerStripe: "Sichere Stripe-Zahlungen",
+                footerCardStatus: "Karte: Derzeit nicht verfügbar",
                 footerPrivacy: "Datenschutz (DSGVO)",
                 footerTerms: "AGB",
                 footerCreator: "Erstellt von"
@@ -3260,6 +3314,9 @@
                 btnBack: "Indietro",
                 btnInstallPwa: "Installa",
                 btnInstallPwaFull: "Installa App",
+                installModalTitle: "Installa Nexus AI sul telefono",
+                installModalBody: "Se la finestra automatica non si è aperta direttamente, tocca il menu <strong>⋮</strong> del browser e seleziona <strong>«Installa app»</strong> o <strong>«Aggiungi a schermata Home»</strong>.",
+                btnGotIt: "Ho capito",
                 onlineLabel: "online",
                 mobileNavTitle: "Menu di Navigazione",
                 openAssistant: "Assistente AI",
@@ -3281,7 +3338,7 @@
                 osPrivateWorkspace: "Spazio privato. Qui compaiono solo i tuoi dati reali, nessun dato di esempio.",
                 btnOffice3DShort: "Ufficio 3D",
                 btnTalkToNexus: "Parla con Nexus",
-                hudCoreBadge: "NEXUS CORE &bull; RETE NEURALE ATTIVA",
+                hudCoreBadge: "NEXUS CORE &bull; RETE NEURONAL ATTIVA",
                 hudOnlineBadge: "ONLINE",
                 nodeContext: "Contesto",
                 nodePodcast: "Podcast",
@@ -3380,13 +3437,14 @@
                 badgeRecommended: "Consigliato",
                 perMonth: "/ mese",
                 planProDesc: "Generazione illimitata e massima velocità di elaborazione.",
-                btnSubscribePro: "Abbonati Pro (49 RON)",
+                btnCardUnavailable: "Pagamento con carta — Momentanente non disponibile",
+                cardUnavailableToast: "Il pagamento con carta è momentaneamente non disponibile. Puoi usare Revolut o una chiave di licenza.",
                 planDonateTitle: "Sostieni il Progetto ☕",
                 badgeDonation: "Donazione",
                 donationSubtitle: "Un caffè virtuale",
                 donationDesc: "Ti piace la piattaforma e vuoi sostenerne lo sviluppo continuo?",
                 btnRevolut: "Offri un caffè su Revolut",
-                securePaymentsText: "Pagamenti sicuri al 100% tramite <strong>Stripe</strong> & <strong>Revolut</strong>.",
+                securePaymentsText: "Pagamento con carta: <strong>Momentanente non disponibile</strong> • Supporto tramite <strong>Revolut</strong> & <strong>Chiave Licenza</strong>.",
                 authTitle: "Autenticazione & Account Personale",
                 authSub: "Accedi rapidamente o crea un nuovo account.",
                 orNewForm: "OPPURE NUOVO MODULO",
@@ -3425,7 +3483,7 @@
                 privacyText2: "Puoi richiedere in qualsiasi momento la cancellazione dei dati del tuo account contattandoci via email.",
                 termsModalTitle: "Termini e Condizioni",
                 termsText1: "Utilizzando la piattaforma Nexus AI Studio Pro, accetti i termini e le condizioni stabilite. I nostri servizi sono forniti \"così come sono\" per creator e aziende.",
-                footerStripe: "Pagamenti Sicuri Stripe",
+                footerCardStatus: "Carta: Non disponibile al momento",
                 footerPrivacy: "Privacy Policy (GDPR)",
                 footerTerms: "Termini e Condizioni",
                 footerCreator: "Creato da"
@@ -3434,6 +3492,9 @@
                 btnBack: "رجوع",
                 btnInstallPwa: "تثبيت",
                 btnInstallPwaFull: "تثبيت التطبيق",
+                installModalTitle: "تثبيت Nexus AI على هاتفك",
+                installModalBody: "إذا لم تفتح نافذة التثبيت تلقائيًا، اضغط على قائمة <strong>⋮</strong> في المتصفح واختر <strong>«تثبيت التطبيق»</strong> أو <strong>«إضافة إلى الشاشة الرئيسية»</strong>.",
+                btnGotIt: "فهمت",
                 onlineLabel: "متصل",
                 mobileNavTitle: "قائمة التنقل",
                 openAssistant: "مساعد الذكاء الاصطناعي",
@@ -3554,13 +3615,14 @@
                 badgeRecommended: "موصى به",
                 perMonth: "/ شهر",
                 planProDesc: "توليد غير محدود وأقصى سرعة معالجة.",
-                btnSubscribePro: "اشترك في Pro (49 RON)",
+                btnCardUnavailable: "الدفع بالبطاقة — غير متاح حاليًا",
+                cardUnavailableToast: "الدفع بالبطاقة غير متاح حاليًا. يمكنك استخدام Revolut أو مفتاح تفعيل.",
                 planDonateTitle: "ادعم المشروع ☕",
                 badgeDonation: "تبرع",
                 donationSubtitle: "قهوة افتراضية",
                 donationDesc: "هل تعجبك المنصة وتريد دعم تطويرها المستمر؟",
                 btnRevolut: "أرسل قهوة عبر Revolut",
-                securePaymentsText: "مدفوعات آمنة 100% عبر <strong>Stripe</strong> و <strong>Revolut</strong>.",
+                securePaymentsText: "الدفع بالبطاقة: <strong>غير متاح حاليًا</strong> • الدعم عبر <strong>Revolut</strong> و <strong>مفتاح الترخيص</strong>.",
                 authTitle: "المصادقة والحساب الشخصي",
                 authSub: "سجّل الدخول بسرعة أو أنشئ حسابًا جديدًا.",
                 orNewForm: "أو نموذج جديد",
@@ -3599,7 +3661,7 @@
                 privacyText2: "يمكنك طلب حذف بيانات حسابك في أي وقت عبر التواصل معنا بالبريد الإلكتروني.",
                 termsModalTitle: "الشروط والأحكام",
                 termsText1: "باستخدامك لمنصة Nexus AI Studio Pro، فإنك توافق على الشروط والأحكام المحددة. تُقدم خدماتنا «كما هي» لصناع المحتوى والشركات.",
-                footerStripe: "مدفوعات آمنة عبر Stripe",
+                footerCardStatus: "البطاقة: غير متاحة حاليًا",
                 footerPrivacy: "سياسة الخصوصية (GDPR)",
                 footerTerms: "الشروط والأحكام",
                 footerCreator: "تم التطوير بواسطة"
